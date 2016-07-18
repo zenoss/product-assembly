@@ -56,7 +56,6 @@ create_zodb_session_db
 echo "Create zep db..."
 create_zep_db
 
-
 # set up the zope instance
 echo "Set up zope instance..."
 run_mkzopeinstance
@@ -65,9 +64,9 @@ run_mkzopeinstance
 echo "Initializing zproxy..."
 init_zproxy
 
-
 # Remediate file ownership under $ZENHOME.
-# fix_zenhome_owner_and_group ${OS_USERNAME} # maybe we don't need this
+fix_zenhome_owner_and_group
+
 echo "Run zenbuild..."
 run_zenbuild
 

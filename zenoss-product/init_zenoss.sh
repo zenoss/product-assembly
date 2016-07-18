@@ -3,8 +3,6 @@
 set -e
 set -x 
 
-echo "127.0.0.1 rbt0" >> /etc/hosts
-
 echo "Starting mysql..."
 /usr/bin/mysql_install_db --user=mysql
 /usr/bin/mysqld_safe &
@@ -13,6 +11,7 @@ echo "Starting redis..."
 /usr/bin/redis-server /etc/redis.conf &
 
 echo "Starting rabbit..."
+echo "127.0.0.1 rbt0" >> /etc/hosts
 /usr/sbin/rabbitmq-server &
 sleep 5
 /usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management
@@ -45,6 +44,4 @@ echo "Stopping rabbit..."
 echo "Deleting pyc and pyo files..."
 find /opt/zenoss -name \*.py[co] -delete
 /sbin/scrub.sh
-
-ps -ef
 

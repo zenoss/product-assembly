@@ -62,11 +62,6 @@ run_mkzopeinstance()
     echo "Initializing zope with default admin/zenoss user..."
     #initializes zope with default admin/zenoss user
     su zenoss -l -c 'python $ZENHOME/bin/mkzopeinstance --dir="$ZENHOME" --user="admin:zenoss" || fail Unable to create Zope instance.'
-
-    echo "TODO: Setting permissions on pyraw and zensocket."
-    #chown root:zenoss $ZENHOME/bin/{pyraw,zensocket} 2>/dev/null
-    #chmod 04750 $ZENHOME/bin/{pyraw,zensocket} 2>/dev/null
-    
 }
 
 init_zproxy() 
@@ -105,15 +100,14 @@ run_zenbuild()
 }
 
 
-zenoss_bashrc()
+# Set permission and ownership under zenhome
+fix_zenhome_owner_and_group()
 {
-    #TODO should this move to the zenoss-centos-base image build since that is where the zenoss user as well as the python env is created
-    cat <<EOF>> /home/zenoss/.bashrc
-export ZENHOME=/opt/zenoss
-source $ZENHOME/bin/activate
-export PYTHONPATH=/opt/zenoss/lib/python
-export PATH=${ZENHOME}/bin:${ZENHOME}/var/ext/bin:$PATH
-EOF
+    set -e
+    chown -Rf zenoss:zenoss /opt/zenoss/*
+    echo "TODO: Setting permissions on pyraw and zensocket."
+#    chown root:zenoss /opt/zenoss/bin/{zensocket,pyraw}
+#    chmod 04750 /opt/zenos/bin/{zensocket,pyraw}
 }
 
 
