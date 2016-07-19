@@ -1,3 +1,54 @@
+function get_var {
+    VAR_NAME=$1
+
+    OUTPUT=`su zenoss  -c "$ZENHOME/bin/zenglobalconf -p $VAR_NAME"`
+    if [ $? != 0 ]; then
+       exit 1
+    fi
+    echo $OUTPUT
+}
+
+export ZENHOME=/opt/zenoss
+
+export ZEP_DB_TYPE="`get_var zep-db-type`"
+export ZEP_HOST="`get_var zep-host`"
+export ZEP_DB="`get_var zep-db`"
+export ZEP_PORT="`get_var zep-port`"
+export ZEP_ADMIN_USER="`get_var zep-admin-user`"
+export ZEP_ADMIN_PASSWORD="`get_var zep-admin-password`"
+export ZEP_USER="`get_var zep-user`"
+export ZEP_PASSWORD="`get_var zep-password`"
+
+export ZODB_DB_TYPE=`get_var zodb-db-type`
+export ZODB_HOST="`get_var zodb-host`"
+export ZODB_DB="`get_var zodb-db`"
+export ZODB_PORT="`get_var zodb-port`"
+export ZODB_ADMIN_USER="`get_var zodb-admin-user`"
+export ZODB_ADMIN_PASSWORD="`get_var zodb-admin-password`"
+export ZODB_USER="`get_var zodb-user`"
+export ZODB_PASSWORD="`get_var zodb-password`"
+
+export RABBITMQ_HOST="`get_var amqphost`"
+export RABBITMQ_SSL="`get_var amqpusessl`"
+export RABBITMQ_PORT="`get_var amqpport`"
+export RABBITMQ_VHOST="`get_var amqpvhost`"
+export RABBITMQ_USER="`get_var amqpuser`"
+export RABBITMQ_PASS="`get_var amqppassword`"
+
+
+fail()
+{
+    echo $*
+    exit 1
+}
+
+shebang() {
+   # replace the first line of any python sh-bang script with
+   # #!$ZENHOME/bin/python
+   find $ZENHOME/bin \( -type f -o -type l \) -exec readlink -e '{}' \; | \
+      egrep -v "zensocket|pyraw" | \
+      xargs sed -i '1,1 s%#!.*python$%#!'"$ZENHOME/bin/python"'%'
+}
 
 configure_amqp() {
     RABBITMQ_ADMIN="`which rabbitmqadmin`"
@@ -58,10 +109,23 @@ run_mkzopeinstance()
     set -e
     echo "Syncing zenglobal conf, whatver that means."
     su zenoss -l -c "$ZENHOME/bin/zenglobalconf -s"
-    
+
+    echo "Moving zope scripts around..."
+    # If these are present mkzopeinstance won't put the shell scripts in place
+    mkdir -p /opt/zenoss/zopehome
+    mv /opt/zenoss/bin/addzope2user   /opt/zenoss/zopehome
+    mv /opt/zenoss/bin/mkzopeinstance /opt/zenoss/zopehome
+    mv /opt/zenoss/bin/runzope        /opt/zenoss/zopehome
+    mv /opt/zenoss/bin/zopectl        /opt/zenoss/zopehome
+    mv /opt/zenoss/bin/zpasswd        /opt/zenoss/zopehome
+    sed -i -e's/^import os.*activate_this$$//g' /opt/zenoss/zopehome/*
+
     echo "Initializing zope with default admin/zenoss user..."
     #initializes zope with default admin/zenoss user
-    su zenoss -l -c 'python $ZENHOME/bin/mkzopeinstance --dir="$ZENHOME" --user="admin:zenoss" || fail Unable to create Zope instance.'
+    su zenoss -l -c 'python $ZENHOME/zopehome/mkzopeinstance --dir="$ZENHOME" --user="admin:zenoss" || fail Unable to create Zope instance.'
+
+#    cp /opt/zenoss/lib/python2.7/site-packages/Zope2/utilities/skel/bin/runzope.in /opt/zenoss/bin/runzope
+#    cp /opt/zenoss/lib/python2.7/site-packages/Zope2/utilities/skel/bin/zopectl.in /opt/zenoss/bin/zopectl
 }
 
 init_zproxy() 
@@ -103,11 +167,12 @@ run_zenbuild()
 # Set permission and ownership under zenhome
 fix_zenhome_owner_and_group()
 {
+    echo "Setting zenoss owner in /opt/zenoss..."
     set -e
     chown -Rf zenoss:zenoss /opt/zenoss/*
     echo "TODO: Setting permissions on pyraw and zensocket."
+    chown root:zenoss /opt/zenoss/bin/zensocket
+    chmod 04750 /opt/zenoss/bin/zensocket
 #    chown root:zenoss /opt/zenoss/bin/{zensocket,pyraw}
-#    chmod 04750 /opt/zenos/bin/{zensocket,pyraw}
+#    chmod 04750 /opt/zenoss/bin/{zensocket,pyraw}
 }
-
-

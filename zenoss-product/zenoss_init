@@ -19,12 +19,8 @@
 set -e
 set +x
 
-# load startup parameters
-. ${ZENHOME}/bin/zenoss_install_config
-
 # load the installation functions
-. ${ZENHOME}/bin/shared-functions.sh
-. ${ZENHOME}/bin/install-functions.sh
+. ${ZENHOME}/bin/install_lib.sh
 
 
 # set the python shebang line
