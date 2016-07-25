@@ -4,10 +4,13 @@ set -e
 set -x 
 
 #Files added via docker will be owned by root, set to zenoss
-chown -Rf zenoss:zenoss /opt/zenoss/*
+chown -Rf zenoss:zenoss ${ZENHOME}/*
 
 # Install Prodbin
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/prodbin-${PRODBIN_VERSION}.tar.gz | tar -C ${ZENHOME} -xzv"
+su - zenoss -c "source ${ZENHOME}/bin/activate; pip install ${ZENHOME}/dist/*.whl"
+su - zenoss -c "rm -rf ${ZENHOME}/dist"
+
 
 # Install MetricConsumer
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/metric-consumer-app-${METRICCONSUMER_VERSION}-zapp.tar.gz | tar -C ${ZENHOME} -xzv"
@@ -32,7 +35,7 @@ su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/zproxy-1.0.0.tar.gz 
 
 # TODO add upgrade templates to /root  - probably done in core/rm image builds
 
-su - zenoss -c "source /opt/zenoss/bin/activate; pip install -i http://zenpip.zendev.org/simple/ --trusted-host zenpip.zendev.org  servicemigration"
+su - zenoss -c "source ${ZENHOME}/bin/activate; pip install -i http://zenpip.zendev.org/simple/ --trusted-host zenpip.zendev.org  servicemigration==${SERVICEMIGRATION_VERSION}"
 
 
 
@@ -56,7 +59,7 @@ sleep 5
 sleep 5
 
 echo "Running zenoss_init"
-/opt/zenoss/bin/zenoss_init
+${ZENHOME}/bin/zenoss_init
 
 
 echo "Cleaning up dmd.uuid"
@@ -82,10 +85,10 @@ rm /var/lib/mysql/ib_logfile0
 rm /var/lib/mysql/ib_logfile1
 
 echo "TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT MIGRATE TESTS"
-rm -rf /opt/zenoss/Products/ZenModel/migrate/tests
+rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
 
 echo "Cleaning up after install..."
-find /opt/zenoss -name \*.py[co] -delete
-rm -f /opt/zenoss/log/*
+find ${ZENHOME} -name \*.py[co] -delete
+rm -f ${ZENHOME}/log/*
 /sbin/scrub.sh
 
