@@ -1,0 +1,26 @@
+{
+  "install_order": [
+    "ZenPacks.zenoss.ApacheMonitor",
+    "ZenPacks.zenoss.PythonCollector",
+    "ZenPacks.zenoss.HttpMonitor",
+    "ZenPacks.zenoss.ZenMail",
+    "ZenPacks.zenoss.MySqlMonitor",
+    "ZenPacks.zenoss.NtpMonitor",
+    "ZenPacks.zenoss.LinuxMonitor",
+    "ZenPacks.zenoss.DeviceSearch",
+    "ZenPacks.zenoss.Dashboard",
+    "ZenPacks.zenoss.Microsoft.Windows"
+  ],
+  "included_not_installed": [
+    "ZenPacks.zenoss.WBEM",
+    "ZenPacks.zenoss.DellMonitor",
+    "ZenPacks.zenoss.DigMonitor",
+    "ZenPacks.zenoss.DnsMonitor",
+    "ZenPacks.zenoss.FtpMonitor",
+    "ZenPacks.zenoss.HPMonitor",
+    "ZenPacks.zenoss.LDAPMonitor",
+    "ZenPacks.zenoss.ZenJMX"
+  ],
+  "version_overrides": {}
+}
+

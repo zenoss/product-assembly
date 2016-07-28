@@ -20,7 +20,7 @@ set -e
 set +x
 
 # load the installation functions
-. ${ZENHOME}/bin/install_lib.sh
+. ${ZENHOME}/install_scripts/install_lib.sh
 
 
 # set the python shebang line
@@ -68,3 +68,21 @@ run_zenbuild
 
 echo "Add default system user..."
 ${ZENHOME}/bin/zendmd --script ${ZENHOME}/bin/addSystemUser.py
+
+echo "Checking for zenpack file ${ZENHOME}/install_scripts/zenpacks.json ..."
+if [ -f "${ZENHOME}/install_scripts/zenpacks.json" ]; then
+    echo "Starting zeneventserver for zenpack install..."
+    su - zenoss  -c "${ZENHOME}/bin/zeneventserver start"
+
+    # run zp install
+    #TODO the output from zp_install.py and the zenpack install subprocesses it creates comes out of order, need to fix
+    echo "Installing zenpacks..."
+    su - zenoss  -c "${ZENHOME}/install_scripts/zp_install.py ${ZENHOME}/install_scripts/zenpacks.json ${ZENHOME}/packs"
+
+    echo "Stopping zeneventserver..."
+    su - zenoss  -c "${ZENHOME}/bin/zeneventserver stop"
+fi
+
+
+ensure_dfs_dirs
+

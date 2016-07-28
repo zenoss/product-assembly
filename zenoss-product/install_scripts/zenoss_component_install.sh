@@ -1,7 +1,7 @@
 #!/bin/sh
 
 set -e
-set -x 
+set -x
 
 #Files added via docker will be owned by root, set to zenoss
 chown -Rf zenoss:zenoss ${ZENHOME}/*
@@ -33,62 +33,13 @@ su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/redis-mon-${REDISMON
 # Install zproxy
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/zproxy-1.0.0.tar.gz | tar --strip-components=2 -C ${ZENHOME} -xzv"
 
-# TODO add upgrade templates to /root  - probably done in core/rm image builds
-
 su - zenoss -c "source ${ZENHOME}/bin/activate; pip install -i http://zenpip.zendev.org/simple/ --trusted-host zenpip.zendev.org  servicemigration==${SERVICEMIGRATION_VERSION}"
 
-
-
-
-
-echo "Starting mysql..."
-/usr/bin/mysql_install_db --user=mysql
-/usr/bin/mysqld_safe &
-
-echo "Starting redis..."
-/usr/bin/redis-server /etc/redis.conf &
-
-echo "Starting rabbit..."
-echo "127.0.0.1 rbt0" >> /etc/hosts
-/usr/sbin/rabbitmq-server &
-sleep 5
-/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management
-/sbin/rabbitmqctl stop
-sleep 5
-/usr/sbin/rabbitmq-server &
-sleep 5
-
-echo "Running zenoss_init"
-${ZENHOME}/bin/zenoss_init
-
-
-echo "Cleaning up dmd.uuid"
-echo "dmd.uuid = None" > /tmp/cleanuuid.zendmd
-su - zenoss -c "zendmd --commit --script=/tmp/cleanuuid.zendmd"
-
-echo "Truncating heartbeats"
-mysql -u root zenoss_zep -e "truncate daemon_heartbeat;"
-
-echo "Stopping mysql..."
-mysqladmin shutdown
-
-#TODO stop and clean content of rabbit queues
-echo "Stopping redis..."
-pkill redis
-
-echo "Stopping rabbit..."
-/sbin/rabbitmqctl stop
-
-sleep 10
-echo "Cleaning up mysql data..."
-rm /var/lib/mysql/ib_logfile0
-rm /var/lib/mysql/ib_logfile1
+# TODO add upgrade templates to /root  - probably done in core/rm image builds
 
 echo "TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT MIGRATE TESTS"
 rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
 
 echo "Cleaning up after install..."
 find ${ZENHOME} -name \*.py[co] -delete
-rm -f ${ZENHOME}/log/*
 /sbin/scrub.sh
-

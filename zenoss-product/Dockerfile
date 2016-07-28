@@ -1,28 +1,29 @@
 FROM zenoss/zenoss-centos-base:1.2.1
-MAINTAINER Zenoss <dev@zenoss.com>
+
+# maintener is redundant since base image is ours as well
+#MAINTAINER Zenoss <dev@zenoss.com>
 
 
-ENV ZENHOME /opt/zenoss
-ENV PRODBIN_VERSION 5.2.0-develop
-ENV METRICCONSUMER_VERSION 0.1.3
-ENV CENTRALQUERY_VERSION 0.1.11
-ENV ZEP_VERSION 2.0.3
-ENV METRICSHIPPER_VERSION 1.1.2
-ENV ZMINION_VERSION 1.3.2
-ENV REDISMON_VERSION 0.1.2
-ENV ZPROXY_VERSION 1.0.0 
-ENV SERVICEMIGRATION_VERSION 1.0.0 
+ENV ZENHOME=/opt/zenoss            \
+    PRODBIN_VERSION=5.2.0-develop  \
+    METRICCONSUMER_VERSION=0.1.3   \
+    CENTRALQUERY_VERSION=0.1.11    \
+    ZEP_VERSION=2.2.1              \
+    METRICSHIPPER_VERSION=1.1.2    \
+    ZMINION_VERSION=1.3.2          \
+    REDISMON_VERSION=0.1.2         \
+    ZPROXY_VERSION=1.0.0           \
+    SERVICEMIGRATION_VERSION=1.0.0
 
 
 # TODO add license file for core? License.zenoss and license.core.html - these will be overwritten by non-core installs as needed
 
 ADD zope.conf global.conf zproxy_registration.conf /opt/zenoss/etc/
 
-ADD zenoss_init install_lib.sh /opt/zenoss/bin/
+ADD sitecustomize.py /opt/zenoss/lib/python/
 
-# Initialize zenoss
-ADD create_zenoss.sh /usr/bin/create_zenoss.sh
+ADD install_scripts /opt/zenoss/install_scripts/
 
-RUN chmod +x /usr/bin/create_zenoss.sh /opt/zenoss/bin/zenoss_init; /usr/bin/create_zenoss.sh
+RUN chmod +x /opt/zenoss/install_scripts/* && /opt/zenoss/install_scripts/zenoss_component_install.sh
 
 

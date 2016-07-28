@@ -1,7 +1,7 @@
 function get_var {
     VAR_NAME=$1
 
-    OUTPUT=`su zenoss  -c "$ZENHOME/bin/zenglobalconf -p $VAR_NAME"`
+    OUTPUT=`su - zenoss  -c "$ZENHOME/bin/zenglobalconf -p $VAR_NAME"`
     if [ $? != 0 ]; then
        exit 1
     fi
@@ -175,4 +175,47 @@ fix_zenhome_owner_and_group()
     chmod 04750 /opt/zenoss/bin/zensocket
 #    chown root:zenoss /opt/zenoss/bin/{zensocket,pyraw}
 #    chmod 04750 /opt/zenoss/bin/{zensocket,pyraw}
+}
+
+DESIRED_OWNERSHIP=${DESIRED_OWNERSHIP:-"zenoss:zenoss"}
+
+function die { echo "ERROR: ${*}" >&2; exit 1; }
+
+function ensure_dir
+{
+    local dirs="$@"
+    for dirpath in "$@"; do
+        # ensure directory exists
+        if [[ ! -d "$dirpath" ]]; then
+            \mkdir -p "$dirpath" || die "unable to create dir: $dirpath"
+        fi
+
+        # ensure at least one file in the directory for dfs
+        if [[ $(\ls -a1 "$dirpath"|\wc -l) -le 2 ]]; then   # an empty dir will always have '.' and '..'
+            \touch "$dirpath/README.txt" || die "unable to create file: $dirpath/README.txt"
+        fi
+
+        # ensure ownership
+        if [[ -n "$DESIRED_OWNERSHIP" ]]; then
+            \chown -R "$DESIRED_OWNERSHIP" "$dirpath" || die "unable to chown to $DESIRED_OWNERSHIP for $dirpath"
+        fi
+    done
+}
+
+function ensure_dfs_dirs
+{
+    # assuming ImageID comes before ContainerPath in each service.json
+    # the paths listed below are generated from a subset of:
+    #   egrep -r 'ImageID|ContainerPath' ~/src/europa/build/services/ |
+    #       awk '/ImageID/{img=$NF} /ContainerPath/ {print img, $NF}' | sort -u
+    ensure_dir \
+        "/opt/zenoss/log/jobs" \
+        "/opt/zenoss/log" \
+        "/opt/zenoss/var/ext" \
+        "/home/zenoss/.ssh" \
+        "/opt/zenoss/export" \
+        "/opt/zenoss/patches" \
+        "/opt/zenoss/.pc" \
+        "/var/zenoss/ZenPacks" \
+        "/var/zenoss/ZenPackSource"
 }

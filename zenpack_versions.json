@@ -1,0 +1,147 @@
+[
+  {
+    "name": "ZenPacks.zenoss.ApacheMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/view/0%20-%20Master/job/master-ZenPacks.zenoss.ApacheMonitor/3/artifact/dist/ZenPacks.zenoss.ApacheMonitor-2.1.4-py2.7.egg",
+    "version": "2.1.4",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.ApacheMonitor.git",
+    "git_ref": "2.1.4"
+  },
+  {
+    "name": "ZenPacks.zenoss.PythonCollector",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/view/0%20-%20Master/job/master-ZenPacks.zenoss.PythonCollector/28/artifact/dist/ZenPacks.zenoss.PythonCollector-1.8.1-py2.7.egg",
+    "version": "1.8.1",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.PythonCollector.git",
+    "git_ref": "1.8.1"
+  },
+  {
+    "name": "ZenPacks.zenoss.HttpMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/view/0%20-%20Master/job/master-ZenPacks.zenoss.HttpMonitor/2/artifact/dist/ZenPacks.zenoss.HttpMonitor-2.1.0-py2.7.egg",
+    "version": "2.1.0",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.HttpMonitor.git",
+    "git_ref": "2.1.0"
+  },
+  {
+    "name": "ZenPacks.zenoss.ZenMail",
+    "type": "download",
+    "URL": "http://.....",
+    "version": "blam",
+    "git_repo": "",
+    "git_ref": ""
+  },
+  {
+    "name": "ZenPacks.zenoss.MySqlMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/view/0%20-%20Master/job/master-ZenPacks.zenoss.MySqlMonitor/13/artifact/dist/ZenPacks.zenoss.MySqlMonitor-3.0.7-py2.7.egg",
+    "version": "3.0.7",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.MySqlMonitor.git",
+    "git_ref": "3.0.7"
+  },
+  {
+    "name": "ZenPacks.zenoss.NtpMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/view/0%20-%20Master/job/master-ZenPacks.zenoss.NtpMonitor/4/artifact/dist/ZenPacks.zenoss.NtpMonitor-2.2.2-py2.7.egg",
+    "version": "2.2.2",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.NtpMonitor.git",
+    "git_ref": "2.2.2"
+  },
+  {
+    "name": "ZenPacks.zenoss.LinuxMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/view/0%20-%20Master/job/master-ZenPacks.zenoss.LinuxMonitor/7/artifact/dist/ZenPacks.zenoss.LinuxMonitor-2.0.2-py2.7.egg",
+    "version": "2.0.2",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.LinuxMonitor.git",
+    "git_ref": "2.0.2"
+  },
+  {
+    "name": "ZenPacks.zenoss.DeviceSearch",
+    "type": "download",
+    "URL": "http://.....",
+    "version": "blam",
+    "git_repo": "",
+    "git_ref": ""
+  },
+  {
+    "name": "ZenPacks.zenoss.Dashboard",
+    "type": "download",
+    "URL": "http://.....",
+    "version": "blam",
+    "git_repo": "",
+    "git_ref": ""
+  },
+  {
+    "name": "ZenPacks.zenoss.Microsoft.Windows",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.Microsoft.Windows/51/artifact/dist/ZenPacks.zenoss.Microsoft.Windows-2.6.1-py2.7.egg",
+    "version": "2.6.1",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.Microsoft.Windows.git",
+    "git_ref": "2.6.1"
+  },
+  {
+    "name": "ZenPacks.zenoss.WBEM",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.WBEM/3/artifact/dist/ZenPacks.zenoss.WBEM-1.0.3-py2.7.egg",
+    "version": "1.0.3",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.WBEM.git",
+    "git_ref": "1.0.3"
+  },
+  {
+    "name": "ZenPacks.zenoss.DellMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.DellMonitor/2/artifact/dist/ZenPacks.zenoss.DellMonitor-2.2.0-py2.7.egg",
+    "version": "2.2.0",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.DellMonitor.git",
+    "git_ref": "2.2.0"
+  },
+  {
+    "name": "ZenPacks.zenoss.DigMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.DigMonitor/2/artifact/dist/ZenPacks.zenoss.DigMonitor-1.1.0-py2.7.egg",
+    "version": "1.1.0",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.DigMonitor.git",
+    "git_ref": "1.1.0"
+  },
+  {
+    "name": "ZenPacks.zenoss.DnsMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.DnsMonitor/2/artifact/dist/ZenPacks.zenoss.DnsMonitor-2.1.0-py2.7.egg",
+    "version": "2.1.0",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.DigMonitor.git",
+    "git_ref": "2.1.0"
+  },
+  {
+    "name": "ZenPacks.zenoss.FtpMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.FtpMonitor/2/artifact/dist/ZenPacks.zenoss.FtpMonitor-1.1.0-py2.7.egg",
+    "version": "1.1.0",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.FtpMonitor.git",
+    "git_ref": "1.1.0"
+  },
+  {
+    "name": "ZenPacks.zenoss.HPMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.HPMonitor/2/artifact/dist/ZenPacks.zenoss.HPMonitor-2.1.0-py2.7.egg",
+    "version": "2.1.0",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.HPMonitor.git",
+    "git_ref": "2.1.0"
+  },
+  {
+    "name": "ZenPacks.zenoss.LDAPMonitor",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.LDAPMonitor/2/artifact/dist/ZenPacks.zenoss.LDAPMonitor-1.4.1-py2.7.egg",
+    "version": "1.4.1",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.LDAPMonitor.git",
+    "git_ref": "1.4.1"
+  },
+  {
+    "name": "ZenPacks.zenoss.ZenJMX",
+    "type": "download",
+    "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.ZenJMX/7/artifact/dist/ZenPacks.zenoss.ZenJMX-3.12.1-py2.7.egg",
+    "version": "3.12.1",
+    "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.ZenJMX.git",
+    "git_ref": "3.12.1"
+  }
+]
+
