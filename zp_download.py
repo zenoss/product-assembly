@@ -30,6 +30,7 @@ def urlDownload(zpVersionInfo, outdir):
         parsed = urlparse.urlparse(url)
         if not parsed.scheme or not parsed.netloc or not parsed.path:
             print("Skipping download for %s" % zpVersionInfo)
+            # TODO: this needs to raise if URL is invalid or not set
             # raise Exception("url invalid: %s" % zpVersionInfo)
         else:
             response = urllib2.urlopen(url)
