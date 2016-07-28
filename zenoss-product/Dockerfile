@@ -16,10 +16,10 @@ ENV ZENHOME=/opt/zenoss            \
     SERVICEMIGRATION_VERSION=1.0.0
 
 
-# TODO add license file for core? License.zenoss and license.core.html - these will be overwritten by non-core installs as needed
-
+#TODO: These files belong in prodbin
 ADD zope.conf global.conf zproxy_registration.conf /opt/zenoss/etc/
 
+#TODO: this may belong in prodbin as well
 ADD sitecustomize.py /opt/zenoss/lib/python/
 
 ADD install_scripts /opt/zenoss/install_scripts/
