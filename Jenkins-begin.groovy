@@ -4,11 +4,11 @@ node ('build-ubuntu') {
 
     stage 'Checkout product-assembly repo'
         // FIXME: parameterize the git credentialsID
-        sshagent(['6ece10bd-11c1-4e23-8f36-6848f6c4c704']) {
-            sh("git rev-parse HEAD >git_sha.id")
-            git_sha=readFile('git_sha.id').trim()
-            println("Building from git commit='${git_sha}'")
-        }
+        //sshagent(['796808e0-a2b9-4b66-88d6-1ce283234ad1']) {
+        sh("git rev-parse HEAD >git_sha.id")
+        git_sha=readFile('git_sha.id').trim()
+        println("Building from git commit='${git_sha}'")
+        //}
 
     stage 'Build product-base'
         sh("MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
