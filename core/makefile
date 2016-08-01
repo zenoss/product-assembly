@@ -29,4 +29,4 @@ push:
 clean:
 	rm -rf downloads
 	rm -f Dockerfile
-	docker rmi $(TAG)
+	-docker rmi -f $(TAG)

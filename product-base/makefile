@@ -14,4 +14,4 @@ push:
 	docker push $(TAG)
 
 clean:
-	docker rmi $(TAG)
+	-docker rmi -f $(TAG)
