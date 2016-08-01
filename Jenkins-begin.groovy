@@ -31,7 +31,7 @@ node ('build-ubuntu') {
                     [$class: 'StringParameterValue', name: 'BRANCH_NAME', value: BRANCH_NAME],
                     [$class: 'StringParameterValue', name: 'GIT_SHA', value: $gjones-develop-pipeline-core],
                     [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
-                    [$class: 'ChoiceParameterValue', name: 'MATURITY', value: MATURITY],
+                    [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                     [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                 ]
             },
@@ -41,7 +41,7 @@ node ('build-ubuntu') {
                     [$class: 'StringParameterValue', name: 'BRANCH_NAME', value: BRANCH_NAME],
                     [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                     [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
-                    [$class: 'ChoiceParameterValue', name: 'MATURITY', value: MATURITY],
+                    [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                     [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                 ]
             },
