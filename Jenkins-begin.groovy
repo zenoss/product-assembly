@@ -1,4 +1,4 @@
-node{
+node ('build-ubuntu') {
     PRODUCT_BUILD_NUMBER=env.BUILD_NUMBER
     currentBuild.displayName = "product bld #${PRODUCT_BUILD_NUMBER}"
 
@@ -7,7 +7,7 @@ node{
         sshagent(['6ece10bd-11c1-4e23-8f36-6848f6c4c704']) {
             sh("git rev-parse HEAD >git_sha.id")
             git_sha=readFile('git_sha.id').trim()
-            println("Got sha='#${git_sha}'")
+            println("Building from git commit='${git_sha}'")
         }
 
     stage 'Build product-base'
