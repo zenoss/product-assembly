@@ -4,7 +4,8 @@ node ('build-ubuntu') {
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
 
     stage 'Build image'
-        git branch: '${GIT_SHA}', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
+        git branch: 'develop', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
+        sh("git checkout ${GIT_SHA}")
         sh("cd ${targetProduct};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
 
     stage 'Push image'

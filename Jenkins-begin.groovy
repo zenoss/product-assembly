@@ -14,8 +14,8 @@ node ('build-ubuntu') {
 
         // Record the current git commit id in the variable 'git_sha'
         sh("git rev-parse HEAD >git_sha.id")
-        git_sha=readFile('git_sha.id').trim()
-        println("Building from git commit='${git_sha}' for MATURITY='${MATURITY}'")
+        GIT_SHA=readFile('git_sha.id').trim()
+        println("Building from git commit='${GIT_SHA}' for MATURITY='${MATURITY}'")
 
     stage 'Build product-base'
         sh("pwd;cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
@@ -25,17 +25,17 @@ node ('build-ubuntu') {
 
     stage 'Build all product pipelines'
         def branches = [
-            'core': {
+            'core-pipeline': {
                 println "Starting core-pipeline"
                 build job: 'core-pipeline', parameters: [
                     [$class: 'StringParameterValue', name: 'BRANCH_NAME', value: BRANCH_NAME],
-                    [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
+                    [$class: 'StringParameterValue', name: 'GIT_SHA', value: $gjones-develop-pipeline-core],
                     [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
                     [$class: 'ChoiceParameterValue', name: 'MATURITY', value: MATURITY],
                     [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                 ]
             },
-            'resmgr': {
+            'resmgr-pipeline': {
                 println "Starting resmgr-pipeline"
                 build job: 'resmgr-pipeline', parameters: [
                     [$class: 'StringParameterValue', name: 'BRANCH_NAME', value: BRANCH_NAME],
