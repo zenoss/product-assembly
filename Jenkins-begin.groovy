@@ -12,7 +12,8 @@ node ('build-ubuntu') {
         println("Building from git commit='${git_sha}' for MATURITY='${MATURITY}'")
 
     stage 'Build product-base'
-        sh("cd $WORKSPACE/product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
+        echo env.WORKSPACE
+        sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
 
     stage 'Build all products'
         def branches = [
