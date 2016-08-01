@@ -1,4 +1,4 @@
-IMAGENAME  = zenoss-product-base
+IMAGENAME  = product-base
 VERSION   ?= 5.2.0
 MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
