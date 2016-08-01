@@ -488,7 +488,7 @@
         "version": "1.4.9"
     },
     {
-        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.vSphere/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.vSphere-3.4.0-py2.7.egg",
+        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.vSphere/22/artifact/dist/ZenPacks.zenoss.vSphere-3.4.1-py2.7.egg",
         "git_ref": "3.4.0",
         "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.vSphere.git",
         "name": "ZenPacks.zenoss.vSphere",
