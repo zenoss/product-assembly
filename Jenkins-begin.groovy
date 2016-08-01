@@ -10,7 +10,6 @@ node ('build-ubuntu') {
 
     stage 'Checkout product-assembly repo'
         // FIXME: find a way to pass BRANCH_NAME to the git dsl
-        echo ${BRANCH_NAME}
         git branch: 'develop', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
 
         // Record the current git commit id in the variable 'git_sha'
