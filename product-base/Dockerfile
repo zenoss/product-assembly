@@ -24,6 +24,6 @@ ADD sitecustomize.py /opt/zenoss/lib/python/
 
 ADD install_scripts /opt/zenoss/install_scripts/
 
-RUN chmod +x /opt/zenoss/install_scripts/* && /opt/zenoss/install_scripts/zenoss_component_install.sh
-
-
+# Split these 2 commands into separate RUN statements because of problems building w/Docker 1.11.1
+RUN chmod +x /opt/zenoss/install_scripts/*
+RUN /opt/zenoss/install_scripts/zenoss_component_install.sh
