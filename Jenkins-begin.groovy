@@ -3,12 +3,11 @@ node{
     currentBuild.displayName = "product bld #${PRODUCT_BUILD_NUMBER}"
 
     stage 'Checkout product-assembly repo'
-        //git branch: 'develop', credentialsId: '6ece10bd-11c1-4e23-8f36-6848f6c4c704', url: 'https://github.com/zenoss/product-assembly'
-        echo env.GIT_COMMIT
-
+        // FIXME: parameterize the git credentialsID
         sshagent(['6ece10bd-11c1-4e23-8f36-6848f6c4c704']) {
             sh("git rev-parse HEAD >git_sha.id")
-            println("Got sha=#${GIT_SHA}")
+            git_sha=readFile('git_sha.id').trim()
+            println("Got sha='#${git_sha}'")
         }
 
     stage 'Build product-base'
