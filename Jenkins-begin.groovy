@@ -1,10 +1,13 @@
 node ('build-ubuntu') {
     PRODUCT_BUILD_NUMBER=env.BUILD_NUMBER
+
     currentBuild.displayName = "product bld #${PRODUCT_BUILD_NUMBER}"
+    echo env.GIT_COMMIT
 
     stage 'Checkout product-assembly repo'
         // FIXME: parameterize the git credentialsID
         //sshagent(['796808e0-a2b9-4b66-88d6-1ce283234ad1']) {
+        git branch: 'develop', credentialsId: '796808e0-a2b9-4b66-88d6-1ce283234ad1', url: 'https://github.com/zenoss/product-assembly'
         sh("git rev-parse HEAD >git_sha.id")
         git_sha=readFile('git_sha.id').trim()
         println("Building from git commit='${git_sha}'")
