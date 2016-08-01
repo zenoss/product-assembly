@@ -9,6 +9,7 @@ node ('build-ubuntu') {
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
 
     stage 'Checkout product-assembly repo'
+        echo ${BRANCH_NAME}
         git branch: '${BRANCH_NAME}', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
 
         // Record the current git commit id in the variable 'git_sha'
