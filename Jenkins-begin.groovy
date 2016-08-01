@@ -5,7 +5,6 @@
 //    GIT_CREDENTIAL_ID - the UUID of the GIT credentials used to checkout stuff from github
 //
 node ('build-ubuntu') {
-    BRANCH_NAME=env.BRANCH_NAME
     PRODUCT_BUILD_NUMBER=env.BUILD_NUMBER
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
 
