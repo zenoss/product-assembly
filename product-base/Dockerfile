@@ -5,15 +5,16 @@ FROM zenoss/zenoss-centos-base:1.2.1
 
 
 ENV ZENHOME=/opt/zenoss            \
-    PRODBIN_VERSION=5.2.0-develop  \
-    METRICCONSUMER_VERSION=0.1.3   \
     CENTRALQUERY_VERSION=0.1.11    \
-    ZEP_VERSION=2.2.1              \
+    ICMPECHO_VERSION=1.0.1         \
+    METRICCONSUMER_VERSION=0.1.3   \
     METRICSHIPPER_VERSION=1.1.2    \
-    ZMINION_VERSION=1.3.2          \
+    PRODBIN_VERSION=5.2.0-develop  \
     REDISMON_VERSION=0.1.2         \
-    ZPROXY_VERSION=1.0.0           \
-    SERVICEMIGRATION_VERSION=1.0.0
+    SERVICEMIGRATION_VERSION=1.0.0 \
+    ZEP_VERSION=2.2.1              \
+    ZMINION_VERSION=1.3.2          \
+    ZPROXY_VERSION=1.0.0
 
 
 #TODO: These files belong in prodbin

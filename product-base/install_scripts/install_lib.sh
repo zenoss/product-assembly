@@ -66,7 +66,7 @@ configure_amqp() {
         local perm_exists=`"$RABBITMQ_ADMIN" list permissions user | tail -n +4 | egrep -v "^\+" | awk '{ print $2 }' | grep '^'"$RABBITMQ_USER"'$'`
         if [ -z "$perm_exists" ]; then
             echo "Setting RabbitMQ permissions for user: $RABBITMQ_USER"
-            "$RABBITMQ_ADMIN" declare permission vhost="$RABBITMQ_VHOST" user="$RABBITMQ_USER" configure='.*' write='.*' read='.*' 
+            "$RABBITMQ_ADMIN" declare permission vhost="$RABBITMQ_VHOST" user="$RABBITMQ_USER" configure='.*' write='.*' read='.*'
         fi
     else
         echo "Unable to find rabbitmqadmin. Please refer to the installation"
@@ -128,7 +128,7 @@ run_mkzopeinstance()
 #    cp /opt/zenoss/lib/python2.7/site-packages/Zope2/utilities/skel/bin/zopectl.in /opt/zenoss/bin/zopectl
 }
 
-init_zproxy() 
+init_zproxy()
 {
     set -e
     echo "Validating redis is running"
@@ -170,11 +170,11 @@ fix_zenhome_owner_and_group()
     echo "Setting zenoss owner in /opt/zenoss..."
     set -e
     chown -Rf zenoss:zenoss /opt/zenoss/*
-    echo "TODO: Setting permissions on pyraw and zensocket."
+    echo "Setting permissions on pyraw and zensocket."
+    chown root:zenoss /opt/zenoss/bin/pyraw
+    chmod 04750 /opt/zenoss/bin/pyraw
     chown root:zenoss /opt/zenoss/bin/zensocket
     chmod 04750 /opt/zenoss/bin/zensocket
-#    chown root:zenoss /opt/zenoss/bin/{zensocket,pyraw}
-#    chmod 04750 /opt/zenoss/bin/{zensocket,pyraw}
 }
 
 DESIRED_OWNERSHIP=${DESIRED_OWNERSHIP:-"zenoss:zenoss"}

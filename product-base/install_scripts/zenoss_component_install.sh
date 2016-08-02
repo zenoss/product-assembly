@@ -18,6 +18,11 @@ su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/metric-consumer-app-
 # Install CentralQuery
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/central-query-${CENTRALQUERY_VERSION}-zapp.tar.gz | tar -C ${ZENHOME} -xzv"
 
+# Install icmpecho
+su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/icmpecho-${ICMPECHO_VERSION}.tar.gz | tar -C /tmp -xzv"
+su - zenoss -c "mv /tmp/pyraw ${ZENHOME}/bin"
+su - zenoss -c "source ${ZENHOME}/bin/activate; pip install /tmp/icmpecho*.whl"
+
 # Install zep
 su - zenoss -c "wget -qO- http://nexus.zendev.org:8081/nexus/service/local/repositories/releases/content/org/zenoss/zep/zep-dist/${ZEP_VERSION}/zep-dist-${ZEP_VERSION}.tar.gz | tar -C ${ZENHOME} -xzv"
 
