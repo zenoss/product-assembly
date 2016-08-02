@@ -10,7 +10,7 @@
 //    PRODUCT_BUIlD_NUMBER - the build number for any given execution of this build pipeline; set by the begin job.
 //    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
 //
-node ('build-ubuntu') {
+node ('build-zenoss-product') {
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
 
     stage 'Build image'

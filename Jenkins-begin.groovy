@@ -8,7 +8,7 @@
 //    GIT_CREDENTIAL_ID - the UUID of the Jenkins GIT credentials used to checkout stuff from github
 //    MATURITY          - the image maturity level (e.g. 'unstable', 'testing', 'stable')
 //
-node ('build-ubuntu') {
+node ('build-zenoss-product') {
     // To avoid naming confusion with downstream jobs that have their own BUILD_NUMBER variables,
     // define 'PRODUCT_BUILD_NUMBER' as the parameter name that will be used by all downstream
     // jobs to identify a particular execution of the build pipeline.
