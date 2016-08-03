@@ -36,7 +36,8 @@ node ('build-zenoss-product') {
         dir('svcdefs/build/zenoss-service') {
             def SVCDEF_GIT_SHA = 'develop'
             echo "Cloning zenoss-service - ${SVCDEF_GIT_SHA}"
-            git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service'
+            echo "GIT_CREDENTIAL_ID='${GIT_CREDENTIAL_ID}'"
+            git branch: 'master', credentialsId: '796808e0-a2b9-4b66-88d6-1ce283234ad1', url: 'https://github.com/zenoss/zenoss-service'
             sh("git checkout ${SVCDEF_GIT_SHA}")
         }
         
