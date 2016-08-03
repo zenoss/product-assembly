@@ -53,10 +53,11 @@ TEMP_DIR := build
 default: build
 
 buildTempDir:
-	if [[ ! -d $(TEMP_DIR) ]]; then mkdir $(TEMP_DIR); fi
+	if [ ! -d $(TEMP_DIR) ]; then mkdir $(TEMP_DIR); fi
 
 build: verifyInputs buildTempDir
-	cd $(TEMP_DIR) && git clone git@github.com:zenoss/zenoss-service.git && git checkout $(SVCDEF_GIT_SHA)
+	cd $(TEMP_DIR) && git clone git@github.com:zenoss/zenoss-service.git 
+	cd $(TEMP_DIR)/zenoss-service && git checkout $(SVCDEF_GIT_SHA)
 	cd $(TEMP_DIR)/zenoss-service && \
 		BUILD_NUMBER=$(BUILD_NUMBER) \
 		hbase_VERSION=$(HBASE_VERSION) \
