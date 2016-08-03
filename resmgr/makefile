@@ -27,6 +27,6 @@ push:
 	docker push $(TAG)
 
 clean:
-	rm -rf downloads
+	rm -rf zenpacks
 	rm -f Dockerfile
 	-docker rmi -f $(TAG)
