@@ -33,7 +33,7 @@ node ('build-zenoss-product') {
     //
     stage 'Compile service definitions and build RPM'
         sh("mkdir -p svcdefs/build/zenoss-service")
-        dir path: 'svcdefs/build/zenoss-service'  {
+        dir('svcdefs/build/zenoss-service') {
             def SVCDEF_GIT_SHA = 'develop'
             echo "Cloning zenoss-service - ${SVCDEF_GIT_SHA}"
             git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service'
