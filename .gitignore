@@ -5,3 +5,5 @@ core/Dockerfile
 
 resmgr/zenpacks
 resmgr/Dockerfile
+
+svcdefs/build

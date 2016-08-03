@@ -11,6 +11,7 @@
 //    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
 //
 node ('build-zenoss-product') {
+    pipelineBuildNumber = env.BUILD_NUMBER
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
 
     stage 'Build image'
@@ -23,9 +24,28 @@ node ('build-zenoss-product') {
     stage 'Push image'
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
 
-    // compile svc defs
-    // build svc def rpm
-    // push svc-dev rpm
-    stage 'Compile service definitions'
-       echo 'TODO - compile service defs'
+    //
+    // FIXME:
+    // 1. Parameterize HBASE, HDFS, OPENTSDB image versions
+    // 2. Parameterize SVCDEF_GIT_SHA
+    // 3. Remove duplication of SHORT_VERSION and VERSION here vs things like IMAGENAME and VERSION in
+    //    core/makefile, resmgr/makefile, etc
+    //
+    stage 'Compile service definitions and build RPM'
+       def makeArgs = "BUILD_NUMBER=${pipelineBuildNumber}\
+            HBASE_VERSION=24.0.0\
+            HDFS_VERSION=24.0.0\
+            IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
+            MATURITY=${MATURITY}\
+            OPENTSDB_VERSION=24.0.0\
+            SHORT_VERSION=5.2\
+            SVCDEF_GIT_SHA=develop\
+            TARGET_PRODUCT=${TARGET_PRODUCT}\
+            VERSION=5.2.0"
+       sh("cd svcdefs;make build ${makeArgs}")
+       archiveArtifacts artifacts: 'svcdefs/tmp/output/*', fingerprint: true
+
+    stage 'Push RPM'
+        echo "TODO - implement rpm repo push"
+
 }
