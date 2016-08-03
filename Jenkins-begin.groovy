@@ -31,7 +31,7 @@ node ('build-zenoss-product') {
     stage 'Push product-base'
         sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
 
-    stage 'Build all product pipelines'
+    stage 'Run all product pipelines'
         def branches = [
             'core-pipeline': {
                 build job: 'core-pipeline', parameters: [
