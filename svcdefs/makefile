@@ -10,13 +10,13 @@
 # SVCDEF_GIT_SHA	the git branch, tag name or SHA for the version of the
 # 					github.com:zenoss/zenoss-service repo to checkout and build
 # TARGET_PRODUCT	the target product name (e.g. 'core', 'resmgr', 'ucspm', etc)
-# VERSION			the full Zenoss product version; e.g. 5.2.0
+# VERSION		the full Zenoss product version; e.g. 5.2.0
 #
 # The following input variables are OPTIONAL:
 #
 # BUILD_NUMBER	the build number for this product pipeline build; defaults to YYYYMMDDhhmmss
 # IMAGE_NUMBER	the docker image number for this build; defaults to DEV
-# MATURITY		the image maturity level (e.g. 'unstable', 'testing', 'stable'); defaults to DEV
+# MATURITY	the image maturity level (e.g. 'unstable', 'testing', 'stable'); defaults to DEV
 #
 
 BUILD_NUMBER ?= $(shell date +%Y%m%d%H%M%S)
@@ -29,6 +29,17 @@ ifndef HBASE_VERSION
 endif
 ifndef HDFS_VERSION
 	$(error HDFS_VERSION is not set)
+endif
+#
+# FIXME: this is really a problem in the svcdefs makefile itself, but since that makefile
+#        proceeds quietly, producing the wrong artifact names when MILESTONE != 'unstable'
+#        flag that error so it's obvious in a pipeline build that we have problem.
+#
+#        Once the makefile in the svcdefs has been fixed to handle different values for
+#        MILESTONE, then the check below can be removed.
+#
+ifneq ($(MATURITY),unstable)
+	$(error MATURITY=$(MATURITY) is invalid; the only valid value is unstable)
 endif
 ifndef OPENTSDB_VERSION
 	$(error OPENTSDB_VERSION is not set)
