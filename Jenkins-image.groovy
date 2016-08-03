@@ -43,7 +43,7 @@ node ('build-zenoss-product') {
             TARGET_PRODUCT=${TARGET_PRODUCT}\
             VERSION=5.2.0"
        sh("cd svcdefs;make build ${makeArgs}")
-       archiveArtifacts artifacts: 'svcdefs/tmp/output/*', fingerprint: true
+       archiveArtifacts artifacts: 'svcdefs/build/zenoss-service/output/*', fingerprint: true
 
     stage 'Push RPM'
         echo "TODO - implement rpm repo push"
