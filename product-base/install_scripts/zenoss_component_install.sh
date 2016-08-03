@@ -9,7 +9,9 @@ chown -Rf zenoss:zenoss ${ZENHOME}/*
 # Install Prodbin
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/prodbin-${PRODBIN_VERSION}.tar.gz | tar -C ${ZENHOME} -xzv"
 su - zenoss -c "source ${ZENHOME}/bin/activate; pip install ${ZENHOME}/dist/*.whl"
-su - zenoss -c "rm -rf ${ZENHOME}/dist"
+su - zenoss -c "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
+su - zenoss -c "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
+
 
 
 # Install MetricConsumer
