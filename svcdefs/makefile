@@ -24,11 +24,17 @@ IMAGE_NUMBER ?= DEV
 MATURITY     ?= DEV
 
 verifyInputs:
+ifndef BUILD_NUMBER
+	$(error BUILD_NUMBER is not set)
+endif
 ifndef HBASE_VERSION
 	$(error HBASE_VERSION is not set)
 endif
 ifndef HDFS_VERSION
 	$(error HDFS_VERSION is not set)
+endif
+ifndef IMAGE_NUMBER
+	$(error IMAGE_NUMBER is not set)
 endif
 #
 # FIXME: this is really a problem in the svcdefs makefile itself, but since that makefile
