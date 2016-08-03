@@ -17,12 +17,6 @@ ENV ZENHOME=/opt/zenoss            \
     ZPROXY_VERSION=1.0.0
 
 
-#TODO: These files belong in prodbin
-ADD zope.conf global.conf zproxy_registration.conf /opt/zenoss/etc/
-
-#TODO: this may belong in prodbin as well
-ADD sitecustomize.py /opt/zenoss/lib/python/
-
 ADD install_scripts /opt/zenoss/install_scripts/
 
 # Split these 2 commands into separate RUN statements because of problems building w/Docker 1.11.1

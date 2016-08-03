@@ -48,7 +48,7 @@
         "version": ""
     },
     {
-        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.CalculatedPerformance/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.CalculatedPerformance-2.2.0-py2.7.egg",
+        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.CalculatedPerformance/12/artifact/dist/ZenPacks.zenoss.CalculatedPerformance-2.2.1-py2.7.egg",
         "git_ref": "2.2.0",
         "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.CalculatedPerformance.git",
         "name": "ZenPacks.zenoss.CalculatedPerformance",
