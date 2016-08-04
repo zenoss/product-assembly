@@ -33,13 +33,11 @@ node ('build-zenoss-product') {
     //
     stage 'Compile service definitions and build RPM'
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
-        dir('svcdefs/build/zenoss-service') {
-            def SVCDEF_GIT_SHA = 'develop'
-            echo "Cloning zenoss-service - ${SVCDEF_GIT_SHA} with credentialsId=${GIT_CREDENTIAL_ID}"
-            git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
-            sh("git checkout ${SVCDEF_GIT_SHA}")
-        }
-        
+        def SVCDEF_GIT_SHA = 'develop'
+        echo "Cloning zenoss-service - ${SVCDEF_GIT_SHA} with credentialsId=${GIT_CREDENTIAL_ID}"
+        git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
+        sh("git checkout ${SVCDEF_GIT_SHA}")
+
         def makeArgs = "BUILD_NUMBER=${pipelineBuildNumber}\
             HBASE_VERSION=24.0.0\
             HDFS_VERSION=24.0.0\
@@ -50,8 +48,8 @@ node ('build-zenoss-product') {
             SVCDEF_GIT_READY=true\
             TARGET_PRODUCT=${TARGET_PRODUCT}\
             VERSION=5.2.0"
-       sh("cd svcdefs;make clean build ${makeArgs}")
-       archive includes: 'svcdefs/build/zenoss-service/output/**'
+        sh("cd svcdefs;make build ${makeArgs}")
+        archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
         echo "TODO - implement rpm repo push"
