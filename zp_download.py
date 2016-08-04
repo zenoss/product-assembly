@@ -33,6 +33,7 @@ def urlDownload(zpVersionInfo, outdir):
             # TODO: this needs to raise if URL is invalid or not set
             # raise Exception("url invalid: %s" % zpVersionInfo)
         else:
+            print("Downloading %s" % url)
             response = urllib2.urlopen(url)
             finalDestination = (os.path.join(outdir, os.path.basename(url)))
             downloadDestination = finalDestination
@@ -45,7 +46,7 @@ def urlDownload(zpVersionInfo, outdir):
                 sig = md5Hash(finalDestination)
 
             with open(downloadDestination, "wb") as local_file:
-                print "downloading %s to %s" % (url, downloadDestination)
+                print "Saving artifact to %s" % downloadDestination
                 local_file.write(response.read())
             
             # check if we detected a file already

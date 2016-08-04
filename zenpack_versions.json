@@ -72,12 +72,12 @@
         "version": "2.0.0"
     },
     {
-        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.CiscoMonitor/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.CiscoMonitor-5.7.0-py2.7.egg",
-        "git_ref": "5.7.0",
+        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.CiscoMonitor/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.CiscoMonitor-5.7.1-py2.7.egg",
+        "git_ref": "5.7.1",
         "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.CiscoMonitor.git",
         "name": "ZenPacks.zenoss.CiscoMonitor",
         "type": "download",
-        "version": "5.7.0"
+        "version": "5.7.1"
     },
     {
         "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.CiscoUCS/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.CiscoUCS-2.4.3-py2.7.egg",
