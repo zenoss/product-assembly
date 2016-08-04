@@ -32,17 +32,19 @@ node ('build-zenoss-product') {
     //    core/makefile, resmgr/makefile, etc
     //
     stage 'Compile service definitions and build RPM'
-        // Run the checkout in a separate directory
+        // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
         dir('svcdefs/build/zenoss-service') {
             def SVCDEF_GIT_SHA = 'develop'
             echo "Cloning zenoss-service - ${SVCDEF_GIT_SHA} with credentialsId=${GIT_CREDENTIAL_ID}"
+            // NOTE: The 'master' branch name here is only used to clone the github repo.
+            //       The next checkout command will align the build with the correct target revision.
             git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
             sh("git checkout ${SVCDEF_GIT_SHA}")
-            sh("pwd;ls -l")
         }
-        sh("pwd;ls -l")
 
+        // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
+        //     Jenkins credentials instead
         def makeArgs = "BUILD_NUMBER=${pipelineBuildNumber}\
             HBASE_VERSION=24.0.0\
             HDFS_VERSION=24.0.0\
