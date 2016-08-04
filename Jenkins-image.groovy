@@ -32,7 +32,7 @@ node ('build-zenoss-product') {
     //    core/makefile, resmgr/makefile, etc
     //
     stage 'Compile service definitions and build RPM'
-        sh("mkdir -p svcdefs/build/zenoss-service")
+        sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
         dir('svcdefs/build/zenoss-service') {
             def SVCDEF_GIT_SHA = 'develop'
             echo "Cloning zenoss-service - ${SVCDEF_GIT_SHA} with credentialsId=${GIT_CREDENTIAL_ID}"
@@ -47,11 +47,11 @@ node ('build-zenoss-product') {
             MATURITY=${MATURITY}\
             OPENTSDB_VERSION=24.0.0\
             SHORT_VERSION=5.2\
-            SVCDEF_GIT_SHA=develop\
+            SVCDEF_GIT_READY=true\
             TARGET_PRODUCT=${TARGET_PRODUCT}\
             VERSION=5.2.0"
-       sh("cd svcdefs;make build ${makeArgs}")
-       archiveArtifacts artifacts: 'svcdefs/build/zenoss-service/output/*', fingerprint: true
+       sh("cd svcdefs;make clean build ${makeArgs}")
+       archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
         echo "TODO - implement rpm repo push"
