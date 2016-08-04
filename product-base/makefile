@@ -8,7 +8,7 @@ TAG = zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 .PHONY: build push clean
 
 build:
-	docker build  -t $(TAG) .
+	docker build --no-cache=true -t $(TAG) .
 
 push:
 	docker push $(TAG)
