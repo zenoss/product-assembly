@@ -32,11 +32,16 @@ node ('build-zenoss-product') {
     //    core/makefile, resmgr/makefile, etc
     //
     stage 'Compile service definitions and build RPM'
+        // Run the checkout in a separate directory
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
-        def SVCDEF_GIT_SHA = 'develop'
-        echo "Cloning zenoss-service - ${SVCDEF_GIT_SHA} with credentialsId=${GIT_CREDENTIAL_ID}"
-        git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
-        sh("git checkout ${SVCDEF_GIT_SHA}")
+        dir('svcdefs/build/zenoss-service') {
+            def SVCDEF_GIT_SHA = 'develop'
+            echo "Cloning zenoss-service - ${SVCDEF_GIT_SHA} with credentialsId=${GIT_CREDENTIAL_ID}"
+            git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
+            sh("git checkout ${SVCDEF_GIT_SHA}")
+            sh("pwd;ls -l")
+        }
+        sh("pwd;ls -l")
 
         def makeArgs = "BUILD_NUMBER=${pipelineBuildNumber}\
             HBASE_VERSION=24.0.0\
