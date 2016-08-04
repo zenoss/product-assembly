@@ -16,9 +16,13 @@ su - zenoss -c "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
 
 # Install MetricConsumer
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/metric-consumer-app-${METRICCONSUMER_VERSION}-zapp.tar.gz | tar -C ${ZENHOME} -xzv"
+# TODO: remove this and make sure files marked as executable in tar file
+su - zenoss -c "chmod +x ${ZENHOME}/bin/metric-consumer-app.sh"
 
 # Install CentralQuery
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/central-query-${CENTRALQUERY_VERSION}-zapp.tar.gz | tar -C ${ZENHOME} -xzv"
+# TODO: remove this and make sure files marked as executable in tar file
+su - zenoss -c "chmod +x ${ZENHOME}/bin/central-query.sh"
 
 # Install icmpecho
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/icmpecho-${ICMPECHO_VERSION}.tar.gz | tar -C /tmp -xzv"
