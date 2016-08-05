@@ -4,6 +4,7 @@ import json
 
 def main(args):
     versions = json.load(args.zp_versions)
+    args.zp_versions.close()
     def zpName(versionInfo):
         return versionInfo["name"]
     print json.dumps(sorted(versions, key=zpName), indent=4, sort_keys=True, separators=(',', ': '))
