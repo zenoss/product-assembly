@@ -5,9 +5,9 @@ FROM zenoss/zenoss-centos-base:1.2.2
 
 
 ENV ZENHOME=/opt/zenoss            \
-    CENTRALQUERY_VERSION=0.1.11    \
+    CENTRALQUERY_VERSION=0.1.12    \
     ICMPECHO_VERSION=1.0.1         \
-    METRICCONSUMER_VERSION=0.1.3   \
+    METRICCONSUMER_VERSION=0.1.4   \
     METRICSHIPPER_VERSION=1.1.2    \
     PRODBIN_VERSION=5.2.0-develop  \
     REDISMON_VERSION=0.1.2         \
