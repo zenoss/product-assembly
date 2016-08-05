@@ -18,11 +18,15 @@ su - zenoss -c "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/metric-consumer-app-${METRICCONSUMER_VERSION}-zapp.tar.gz | tar -C ${ZENHOME} -xzv"
 # TODO: remove this and make sure files marked as executable in tar file
 su - zenoss -c "chmod +x ${ZENHOME}/bin/metric-consumer-app.sh"
+# TODO: remove this and make sure the tar file contains the proper links
+su - zenoss -c "ln -s ${ZENHOME}/etc/metric-consumer-app/metric-consumer-app_supervisor.conf ${ZENHOME}/etc/supervisor/metric-consumer-app_supervisor.conf"
 
 # Install CentralQuery
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/central-query-${CENTRALQUERY_VERSION}-zapp.tar.gz | tar -C ${ZENHOME} -xzv"
 # TODO: remove this and make sure files marked as executable in tar file
 su - zenoss -c "chmod +x ${ZENHOME}/bin/central-query.sh"
+# TODO: remove this and make sure the tar file contains the proper links
+su - zenoss -c "ln -s ${ZENHOME}/etc/central-query/central-query_supervisor.conf ${ZENHOME}/etc/supervisor/central-query_supervisor.conf"
 
 # Install icmpecho
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/icmpecho-${ICMPECHO_VERSION}.tar.gz | tar -C /tmp -xzv"
