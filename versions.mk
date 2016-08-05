@@ -1,6 +1,8 @@
 #
 # versions.mk - Common version numbers for various portions of the product assembly process
 #
+# NOTE: This file must be formatted as a Java Properties file becuase it is ready from Jenkins-image.groovy.
+#       Fortunately, Java properties and make properties are equivalent in the simplist case.
 
 #
 # HBASE_VERSION     the HBase image version
