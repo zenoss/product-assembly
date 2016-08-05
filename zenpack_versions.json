@@ -24,12 +24,12 @@
         "version": "2.1.4"
     },
     {
-        "URL": "http://...",
-        "git_ref": "",
-        "git_repo": "",
+        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.AuditLog/1/artifact/dist/ZenPacks.zenoss.AuditLog-1.4.0-py2.7.egg",
+        "git_ref": "https://github.com/zenoss/ZenPacks.zenoss.AuditLog.git",
+        "git_repo": "1.4.0",
         "name": "ZenPacks.zenoss.AuditLog",
         "type": "download",
-        "version": ""
+        "version": "1.4.0"
     },
     {
         "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.BigIpMonitor/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.BigIpMonitor-2.7.0-py2.7.egg",
@@ -104,12 +104,12 @@
         "version": "1.2.2"
     },
     {
-        "URL": "http://.....",
-        "git_ref": "",
-        "git_repo": "",
+        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.Dashboard/1/artifact/dist/ZenPacks.zenoss.Dashboard-1.2.1-py2.7.egg",
+        "git_ref": "1.2.1",
+        "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.Dashboard.git",
         "name": "ZenPacks.zenoss.Dashboard",
         "type": "download",
-        "version": "blam"
+        "version": "1.2.1"
     },
     {
         "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.DellMonitor/2/artifact/dist/ZenPacks.zenoss.DellMonitor-2.2.0-py2.7.egg",
