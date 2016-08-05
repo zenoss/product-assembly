@@ -8,6 +8,8 @@ chown -Rf zenoss:zenoss ${ZENHOME}/*
 
 # Install Prodbin
 su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/prodbin-${PRODBIN_VERSION}.tar.gz | tar -C ${ZENHOME} -xzv"
+# TODO: remove this and make sure the tar file contains the proper links
+su - zenoss -c "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
 su - zenoss -c "source ${ZENHOME}/bin/activate; pip install ${ZENHOME}/dist/*.whl"
 su - zenoss -c "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
 su - zenoss -c "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
