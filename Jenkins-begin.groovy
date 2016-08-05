@@ -4,7 +4,8 @@
 //
 // The Jenkins job parameters for this script are:
 //
-//    BRANCH_NAME       - the name of the GIT branch to build from
+//    BRANCH            - the name of the GIT branch to build from. Note - do not use "BRANCH_NAME" becuase that term is reserved
+//                        for use by the workflow-scm-step plugin
 //    GIT_CREDENTIAL_ID - the UUID of the Jenkins GIT credentials used to checkout stuff from github
 //    MATURITY          - the image maturity level (e.g. 'unstable', 'testing', 'stable')
 //
@@ -16,14 +17,13 @@ node ('build-zenoss-product') {
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
 
     stage 'Checkout product-assembly repo'
-        // FIXME: find a way to pass BRANCH_NAME to the git dsl so we don't have to edit this
-        //        script for each new support/N.n.x branch.
-        git branch: 'develop', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
+        // Checkout the tip of the target branch
+        git branch: '${BRANCH}', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
 
         // Record the current git commit sha in the variable 'GIT_SHA'
         sh("git rev-parse HEAD >git_sha.id")
         GIT_SHA=readFile('git_sha.id').trim()
-        println("Building from git commit='${GIT_SHA}' for MATURITY='${MATURITY}'")
+        println("Building from git commit='${GIT_SHA}' on branch ${BRANCH} for MATURITY='${MATURITY}'")
 
     stage 'Build product-base'
         sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
@@ -35,7 +35,7 @@ node ('build-zenoss-product') {
         def branches = [
             'core-pipeline': {
                 build job: 'core-pipeline', parameters: [
-                    [$class: 'StringParameterValue', name: 'BRANCH_NAME', value: BRANCH_NAME],
+                    [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
                     [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
                     [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                     [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
@@ -44,7 +44,7 @@ node ('build-zenoss-product') {
             },
             'resmgr-pipeline': {
                 build job: 'resmgr-pipeline', parameters: [
-                    [$class: 'StringParameterValue', name: 'BRANCH_NAME', value: BRANCH_NAME],
+                    [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
                     [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
                     [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                     [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
