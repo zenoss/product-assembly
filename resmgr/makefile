@@ -1,5 +1,6 @@
-IMAGENAME  = resmgr_5.2
-VERSION   ?= 5.2.0
+include ../versions.mk
+IMAGENAME  = resmgr_$(SHORT_VERSION)
+
 MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
 
@@ -10,7 +11,7 @@ TAG = zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 .PHONY: build push clean
 
 
-build: Dockerfile zenpack_download 
+build: Dockerfile zenpack_download
 	docker build  -t $(TAG) .
 
 Dockerfile:

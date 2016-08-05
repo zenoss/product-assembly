@@ -26,10 +26,7 @@ node ('build-zenoss-product') {
 
     //
     // FIXME:
-    // 1. Parameterize HBASE, HDFS, OPENTSDB image versions
     // 2. Parameterize SVCDEF_GIT_SHA
-    // 3. Remove duplication of SHORT_VERSION and VERSION here vs things like IMAGENAME and VERSION in
-    //    core/makefile, resmgr/makefile, etc
     //
     stage 'Compile service definitions and build RPM'
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
@@ -46,15 +43,10 @@ node ('build-zenoss-product') {
         // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
         //     Jenkins credentials instead
         def makeArgs = "BUILD_NUMBER=${pipelineBuildNumber}\
-            HBASE_VERSION=24.0.0\
-            HDFS_VERSION=24.0.0\
             IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
             MATURITY=${MATURITY}\
-            OPENTSDB_VERSION=24.0.0\
-            SHORT_VERSION=5.2\
             SVCDEF_GIT_READY=true\
-            TARGET_PRODUCT=${TARGET_PRODUCT}\
-            VERSION=5.2.0"
+            TARGET_PRODUCT=${TARGET_PRODUCT}"
         sh("cd svcdefs;make build ${makeArgs}")
         archive includes: 'svcdefs/build/zenoss-service/output/**'
 
