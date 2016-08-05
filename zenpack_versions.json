@@ -56,12 +56,12 @@
         "version": "2.2.0"
     },
     {
-        "URL": "http://...",
-        "git_ref": "",
-        "git_repo": "",
+        "URL": "http://jenkins.zenosslabs.com/view/0%20-%20Master/job/master-ZenPacks.zenoss.CatalogService/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.CatalogService-3.1.0-py2.7.egg",
+        "git_ref": "3.1.0",
+        "git_repo": "ZenPacks.zenoss.CatalogService",
         "name": "ZenPacks.zenoss.CatalogService",
         "type": "download",
-        "version": ""
+        "version": "3.1.0"
     },
     {
         "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.CheckPointMonitor/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.CheckPointMonitor-2.0.0-py2.7.egg",
@@ -120,12 +120,12 @@
         "version": "2.2.0"
     },
     {
-        "URL": "http://.....",
-        "git_ref": "",
-        "git_repo": "",
+        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.DeviceSearch/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.DeviceSearch-1.2.2-py2.7.egg",
+        "git_ref": "1.2.2",
+        "git_repo": "ZenPacks.zenoss.DeviceSearch",
         "name": "ZenPacks.zenoss.DeviceSearch",
         "type": "download",
-        "version": "blam"
+        "version": "1.2.2"
     },
     {
         "URL": "http://...",
@@ -200,12 +200,12 @@
         "version": ""
     },
     {
-        "URL": "http://...",
-        "git_ref": "",
-        "git_repo": "",
+        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.EnterpriseSkin/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.EnterpriseSkin-3.3.4-py2.7.egg",
+        "git_ref": "3.3.4",
+        "git_repo": "ZenPacks.zenoss.EnterpriseSkin",
         "name": "ZenPacks.zenoss.EnterpriseSkin",
         "type": "download",
-        "version": ""
+        "version": "3.3.4"
     },
     {
         "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.FtpMonitor/2/artifact/dist/ZenPacks.zenoss.FtpMonitor-1.1.0-py2.7.egg",
