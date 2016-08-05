@@ -24,20 +24,18 @@ node ('build-zenoss-product') {
     stage 'Push image'
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
 
-    //
-    // FIXME:
-    // 2. Parameterize SVCDEF_GIT_SHA
-    //
     stage 'Compile service definitions and build RPM'
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
+        def versionProps = readProperties file: 'versions.mk'
+        def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
+        echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
         dir('svcdefs/build/zenoss-service') {
-            def SVCDEF_GIT_SHA = 'develop'
-            echo "Cloning zenoss-service - ${SVCDEF_GIT_SHA} with credentialsId=${GIT_CREDENTIAL_ID}"
+            echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
             // NOTE: The 'master' branch name here is only used to clone the github repo.
             //       The next checkout command will align the build with the correct target revision.
             git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
-            sh("git checkout ${SVCDEF_GIT_SHA}")
+            sh("git checkout ${SVCDEF_GIT_REF}")
         }
 
         // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use

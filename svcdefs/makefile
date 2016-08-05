@@ -22,8 +22,8 @@ include ../versions.mk
 # IMAGE_NUMBER      the docker image number for this build; defaults to DEV
 # MATURITY          the image maturity level (e.g. 'unstable', 'testing', 'stable'); defaults to DEV
 # SVCDEF_GIT_READY  a flag that is only set when the svcdef repo has already been checked out
-#                   by the caller. If this flag is set, SVCDEF_GIT_SHA is ignored.
-# SVCDEF_GIT_SHA    the git branch, tag name or SHA for the version of the
+#                   by the caller. If this flag is set, SVCDEF_GIT_REF is ignored.
+# SVCDEF_GIT_REF    the git branch name, tag name or SHA for the version of the
 #                   github.com:zenoss/zenoss-service repo to checkout and build
 #                   Ignored (i.e. optional) if SVCDEF_GET_READY is set; required if
 #                   SVCDEF_GIT_READY is NOT set.
@@ -64,8 +64,8 @@ ifndef SHORT_VERSION
 	$(error SHORT_VERSION is not set)
 endif
 ifndef SVCDEF_GIT_READY
-ifndef SVCDEF_GIT_SHA
-	$(error SVCDEF_GIT_SHA is not set)
+ifndef SVCDEF_GIT_REF
+	$(error SVCDEF_GIT_REF is not set)
 endif
 endif
 ifndef TARGET_PRODUCT
@@ -87,7 +87,7 @@ buildTempDir:
 build: verifyInputs buildTempDir
 ifndef SVCDEF_GIT_READY
 	cd $(TEMP_DIR) && git clone git@github.com:zenoss/zenoss-service.git
-	cd $(TEMP_DIR)/zenoss-service && git checkout $(SVCDEF_GIT_SHA)
+	cd $(TEMP_DIR)/zenoss-service && git checkout $(SVCDEF_GIT_REF)
 endif
 	cd $(TEMP_DIR)/zenoss-service && \
 		BUILD_NUMBER=$(BUILD_NUMBER) \
