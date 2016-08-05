@@ -24,37 +24,27 @@ node ('build-zenoss-product') {
     stage 'Push image'
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
 
-    //
-    // FIXME:
-    // 1. Parameterize HBASE, HDFS, OPENTSDB image versions
-    // 2. Parameterize SVCDEF_GIT_SHA
-    // 3. Remove duplication of SHORT_VERSION and VERSION here vs things like IMAGENAME and VERSION in
-    //    core/makefile, resmgr/makefile, etc
-    //
     stage 'Compile service definitions and build RPM'
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
+        def versionProps = readProperties file: 'versions.mk'
+        def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
+        echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
         dir('svcdefs/build/zenoss-service') {
-            def SVCDEF_GIT_SHA = 'develop'
-            echo "Cloning zenoss-service - ${SVCDEF_GIT_SHA} with credentialsId=${GIT_CREDENTIAL_ID}"
+            echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
             // NOTE: The 'master' branch name here is only used to clone the github repo.
             //       The next checkout command will align the build with the correct target revision.
             git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
-            sh("git checkout ${SVCDEF_GIT_SHA}")
+            sh("git checkout ${SVCDEF_GIT_REF}")
         }
 
         // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
         //     Jenkins credentials instead
         def makeArgs = "BUILD_NUMBER=${pipelineBuildNumber}\
-            HBASE_VERSION=24.0.0\
-            HDFS_VERSION=24.0.0\
             IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
             MATURITY=${MATURITY}\
-            OPENTSDB_VERSION=24.0.0\
-            SHORT_VERSION=5.2\
             SVCDEF_GIT_READY=true\
-            TARGET_PRODUCT=${TARGET_PRODUCT}\
-            VERSION=5.2.0"
+            TARGET_PRODUCT=${TARGET_PRODUCT}"
         sh("cd svcdefs;make build ${makeArgs}")
         archive includes: 'svcdefs/build/zenoss-service/output/**'
 
