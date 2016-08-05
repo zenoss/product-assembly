@@ -16,7 +16,7 @@ components included in the various product images.
 | Artifact | Source | Version Defined Here |
 | -------- | ------ | -------------------- |
 | Zenoss Product Version | this repo | See `VERSION` and `SHORT_VERSION` in [versions.mk](versions.mk) |
-| Supplementary Docker images such as HBase | [Docker Hub](https://hub.docker.com/u/zenoss/dashboard/)  | E.g. `HBASE_VERSION` in versions.mk](versions.mk) |
+| Supplementary Docker images such as HBase | [Docker Hub](https://hub.docker.com/u/zenoss/dashboard/)  | E.g. `HBASE_VERSION` in [versions.mk](versions.mk) |
 | CC Service Templates | [github/zenoss/zenoss.service](https://github.com/zenoss/zenoss-service) | See `SVCDEF_GIT_REF` in [versions.mk](versions.mk) |
-| Component versions defined in the `zenoss/product-base` | various | TBD |
+| Component versions defined in the `zenoss/product-base` | various locations | TBD |
 | ZenPack versions  | various locations | [zenpack_versions.json](zenpack_versions.json) |
