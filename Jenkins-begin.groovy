@@ -4,8 +4,7 @@
 //
 // The Jenkins job parameters for this script are:
 //
-//    BRANCH            - the name of the GIT branch to build from. Note - do not use "BRANCH_NAME" becuase that term is reserved
-//                        for use by the workflow-scm-step plugin
+//    BRANCH            - the name of the GIT branch to build from.
 //    GIT_CREDENTIAL_ID - the UUID of the Jenkins GIT credentials used to checkout stuff from github
 //    MATURITY          - the image maturity level (e.g. 'unstable', 'testing', 'stable')
 //
@@ -17,8 +16,16 @@ node ('build-zenoss-product') {
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
 
     stage 'Checkout product-assembly repo'
-        // Checkout the tip of the target branch
-        git branch: '${BRANCH}', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
+        // FIXME: for whatever reason the current version of the workflow-scm-step plugin does not
+        //        allow job params to be passed to the git plugin, so we have to hard-code 'develop'
+        //        for now. Once that bug is fixed, this should be replaced with ${BRANCH}
+        //        See these issues:
+        //          https://issues.jenkins-ci.org/browse/JENKINS-33719
+        //          https://issues.jenkins-ci.org/browse/JENKINS-34126
+        //          https://issues.jenkins-ci.org/browse/JENKINS-28447
+        //          https://issues.jenkins-ci.org/browse/JENKINS-34876
+        //
+        git branch: 'develop', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
 
         // Record the current git commit sha in the variable 'GIT_SHA'
         sh("git rev-parse HEAD >git_sha.id")
