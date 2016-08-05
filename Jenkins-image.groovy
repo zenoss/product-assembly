@@ -25,10 +25,12 @@ node ('build-zenoss-product') {
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
 
     stage 'Compile service definitions and build RPM'
-        // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
+        // Get the value of SVCDEF_GIT_REF out of the versions.mk file
         def versionProps = readProperties file: 'versions.mk'
         def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
+
+        // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
         dir('svcdefs/build/zenoss-service') {
             echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
