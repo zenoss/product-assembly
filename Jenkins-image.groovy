@@ -11,8 +11,8 @@
 //    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
 //
 node ('build-zenoss-product') {
-    pipelineBuildNumber = env.BUILD_NUMBER
-    currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
+    def pipelineBuildNumber = env.BUILD_NUMBER
+    currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber})"
 
     stage 'Build image'
         // NOTE: The 'master' branch name here is only used to clone the github repo.
