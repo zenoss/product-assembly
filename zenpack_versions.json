@@ -80,12 +80,12 @@
         "version": "5.7.1"
     },
     {
-        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.CiscoUCS/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.CiscoUCS-2.4.3-py2.7.egg",
-        "git_ref": "2.4.3",
+        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.CiscoUCS/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.CiscoUCS-2.4.4-py2.7.egg",
+        "git_ref": "2.4.4",
         "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.CiscoUCS.git",
         "name": "ZenPacks.zenoss.CiscoUCS",
         "type": "download",
-        "version": "2.4.3"
+        "version": "2.4.4"
     },
     {
         "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.ComponentGroups/lastSuccessfulBuild/artifact/dist/ZenPacks.zenoss.ComponentGroups-1.1.1-py2.7.egg",
