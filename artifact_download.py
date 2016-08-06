@@ -23,13 +23,14 @@ def md5Hash(filePath):
             bytes = f.read(4096)
 
     return md5.hexdigest()
-def urlDownload(zpVersionInfo, outdir):
-    url = zpVersionInfo['URL']
+
+def urlDownload(versionInfo, outdir):
+    url = versionInfo['URL']
     parsed = urlparse.urlparse(url)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
-        print("Skipping download for %s" % zpVersionInfo)
+        print("Skipping download for %s" % versionInfo)
         # TODO: this needs to raise if URL is invalid or not set
-        # raise Exception("url invalid: %s" % zpVersionInfo)
+        # raise Exception("url invalid: %s" % versionInfo)
     else:
         print("Downloading %s" % url)
         response = urllib2.urlopen(url)
