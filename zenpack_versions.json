@@ -384,12 +384,12 @@
         "version": "1.4.1"
     },
     {
-        "URL": "http://...",
-        "git_ref": "",
-        "git_repo": "",
+        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.SupportBundle/4/artifact/dist/ZenPacks.zenoss.SupportBundle-1.1.0-py2.7.egg",
+        "git_ref": "1.1.0",
+        "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.SupportBundle.git",
         "name": "ZenPacks.zenoss.SupportBundle",
         "type": "download",
-        "version": ""
+        "version": "1.1.0"
     },
     {
         "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.TomcatMonitor/1/artifact/dist/ZenPacks.zenoss.TomcatMonitor-2.3.0-py2.7.egg",
