@@ -6,53 +6,70 @@ set -x
 #Files added via docker will be owned by root, set to zenoss
 chown -Rf zenoss:zenoss ${ZENHOME}/*
 
+function artifactDownload
+{
+    local artifact="$@"
+    su - zenoss -c "${ZENHOME}/install_scripts/artifact_download.py --out_dir /tmp ${ZENHOME}/install_scripts/component_versions.json ${artifact}"
+}
+
 # Install Prodbin
-su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/prodbin-${PRODBIN_VERSION}.tar.gz | tar -C ${ZENHOME} -xzv"
+artifactDownload "zenoss-prodbin"
+su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/prodbin*"
 # TODO: remove this and make sure the tar file contains the proper links
 su - zenoss -c "mkdir -p ${ZENHOME}/etc/supervisor"
 su - zenoss -c "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
 
-su - zenoss -c "source ${ZENHOME}/bin/activate; pip install ${ZENHOME}/dist/*.whl"
+su - zenoss -c "pip install ${ZENHOME}/dist/*.whl"
 su - zenoss -c "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
 su - zenoss -c "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
 
 
 
 # Install MetricConsumer
-su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/metric-consumer-app-${METRICCONSUMER_VERSION}-zapp.tar.gz | tar -C ${ZENHOME} -xzv"
+artifactDownload "metric-consumer"
+su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/metric-consumer*"
 # TODO: remove this and make sure files marked as executable in tar file
 su - zenoss -c "chmod +x ${ZENHOME}/bin/metric-consumer-app.sh"
 # TODO: remove this and make sure the tar file contains the proper links
 su - zenoss -c "ln -s ${ZENHOME}/etc/metric-consumer-app/metric-consumer-app_supervisor.conf ${ZENHOME}/etc/supervisor/metric-consumer-app_supervisor.conf"
 
 # Install CentralQuery
-su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/central-query-${CENTRALQUERY_VERSION}-zapp.tar.gz | tar -C ${ZENHOME} -xzv"
+artifactDownload "central-query"
+su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/central-query*"
 # TODO: remove this and make sure files marked as executable in tar file
 su - zenoss -c "chmod +x ${ZENHOME}/bin/central-query.sh"
 # TODO: remove this and make sure the tar file contains the proper links
 su - zenoss -c "ln -s ${ZENHOME}/etc/central-query/central-query_supervisor.conf ${ZENHOME}/etc/supervisor/central-query_supervisor.conf"
 
 # Install icmpecho
-su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/icmpecho-${ICMPECHO_VERSION}.tar.gz | tar -C /tmp -xzv"
+artifactDownload "icmpecho"
+su - zenoss -c "tar -C /tmp -xzvf /tmp/icmpecho*"
 su - zenoss -c "mv /tmp/pyraw ${ZENHOME}/bin"
-su - zenoss -c "source ${ZENHOME}/bin/activate; pip install /tmp/icmpecho*.whl"
+su - zenoss -c "pip install /tmp/icmpecho*.whl"
 
 # Install zep
-su - zenoss -c "wget -qO- http://nexus.zendev.org:8081/nexus/service/local/repositories/releases/content/org/zenoss/zep/zep-dist/${ZEP_VERSION}/zep-dist-${ZEP_VERSION}.tar.gz | tar -C ${ZENHOME} -xzv"
+artifactDownload "zep" 
+su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/zep-dist*"
 
 # Install metricshipper
-su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/metricshipper-${METRICSHIPPER_VERSION}.tgz | tar -C ${ZENHOME} -xzv"
+artifactDownload "metricshipper"
+su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/metricshipper*"
 
 # Install zminion
-su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/zminion-${ZMINION_VERSION}.tgz | tar -C ${ZENHOME} -xzv"
+artifactDownload "zminion"
+su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/zminion*"
 
 # Install redis-mon
-su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/redis-mon-${REDISMON_VERSION}.tgz | tar -C ${ZENHOME} -xzv"
+artifactDownload "redis-mon"
+su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/redis-mon*"
 
 # Install zproxy
-su - zenoss -c "wget -qO- http://zenpip.zendev.org/packages/zproxy-1.0.0.tar.gz | tar --strip-components=2 -C ${ZENHOME} -xzv"
+artifactDownload "zproxy"
+su - zenoss -c "tar --strip-components=2 -C ${ZENHOME} -xzvf /tmp/zproxy*"
 
-su - zenoss -c "source ${ZENHOME}/bin/activate; pip install -i http://zenpip.zendev.org/simple/ --trusted-host zenpip.zendev.org  servicemigration==${SERVICEMIGRATION_VERSION}"
+
+artifactDownload "servicemigration"
+su - zenoss -c "pip install /tmp/servicemigration*"
 
 # TODO add upgrade templates to /root  - probably done in core/rm image builds
 

@@ -22,7 +22,7 @@ zenpacks:
 	@mkdir zenpacks
 
 zenpack_download: zenpacks
-	../zp_download.py ../zenpack_versions.json zenpacks.json zenpacks
+	../artifact_download.py ../zenpack_versions.json --zp_manifest zenpacks.json --out_dir zenpacks
 
 push:
 	docker push $(TAG)
