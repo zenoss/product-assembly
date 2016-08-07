@@ -1,6 +1,6 @@
 [
     {
-        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.AdvancedSearch/3/artifact/dist/ZenPacks.zenoss.AdvancedSearch-1.2.0-py2.7.eg",
+        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.AdvancedSearch/3/artifact/dist/ZenPacks.zenoss.AdvancedSearch-1.2.0-py2.7.egg",
         "git_ref": "1.2.0",
         "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.AdvancedSearch.git",
         "name": "ZenPacks.zenoss.AdvancedSearch",
