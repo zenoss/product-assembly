@@ -45,7 +45,6 @@
         "ZenPacks.zenoss.BrocadeMonitor",
         "ZenPacks.zenoss.WebsphereMonitor",
         "ZenPacks.zenoss.AixMonitor",
-        "ZenPacks.zenoss.EnterpriseLinux",
         "ZenPacks.zenoss.CheckPointMonitor",
         "ZenPacks.zenoss.AdvancedSearch",
         "ZenPacks.zenoss.Diagram",

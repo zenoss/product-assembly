@@ -176,14 +176,6 @@
         "version": "1.7.0"
     },
     {
-        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.EnterpriseLinux/5/artifact/dist/ZenPacks.zenoss.EnterpriseLinux-1.4.0-py2.7.egg",
-        "git_ref": "1.4.0",
-        "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.EnterpriseLinux.git",
-        "name": "ZenPacks.zenoss.EnterpriseLinux",
-        "type": "download",
-        "version": "1.4.0"
-    },
-    {
         "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.EnterpriseReports/2/artifact/dist/ZenPacks.zenoss.EnterpriseReports-2.4.0-py2.7.egg",
         "git_ref": "2.4.0",
         "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.EnterpriseReports.git",
