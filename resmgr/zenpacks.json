@@ -16,6 +16,7 @@
         "ZenPacks.zenoss.NtpMonitor",
         "ZenPacks.zenoss.ZenJMX",
         "ZenPacks.zenoss.LinuxMonitor",
+        "ZenPacks.zenoss.WBEM",
         "ZenPacks.zenoss.AuditLog",
         "ZenPacks.zenoss.DynamicView",
         "ZenPacks.zenoss.StorageBase",
