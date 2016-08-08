@@ -25,7 +25,7 @@
     },
     {
         "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.AuditLog/1/artifact/dist/ZenPacks.zenoss.AuditLog-1.4.0-py2.7.egg",
-        "git_ref": "https://github.com/zenoss/ZenPacks.zenoss.AuditLog.git",
+        "git_ref": "1.4.0",
         "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.AuditLog.git",
         "name": "ZenPacks.zenoss.AuditLog",
         "type": "download",
