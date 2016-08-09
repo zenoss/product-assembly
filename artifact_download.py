@@ -29,38 +29,38 @@ def md5Hash(filePath):
 
 def urlDownload(versionInfo, outdir):
     url = versionInfo['URL']
-    downloadArtifact(url, outdir)
-
-def downloadArtifact(url, outdir):
     parsed = urlparse.urlparse(url)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
-        print("Skipping download for %s" % url)
-        # TODO: this needs to raise if URL is invalid or not set
-        # raise Exception("url invalid: %s" % url)
-    else:
-        print("Downloading %s" % url)
-        response = urllib2.urlopen(url)
-        finalDestination = (os.path.join(outdir, os.path.basename(url)))
-        downloadDestination = finalDestination
-        sig = None
-        if os.path.exists(finalDestination):
-            print "existing found, computing hash: %s" % finalDestination
-            tmpFile = tempfile.NamedTemporaryFile()
-            downloadDestination = tmpFile.name
-            sig = md5Hash(finalDestination)
+        raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (versionInfo['name'], url))
 
-        with open(downloadDestination, "wb") as local_file:
-            print "Saving artifact to %s" % downloadDestination
-            local_file.write(response.read())
+    downloadArtifact(url, outdir)
 
-        # check if we detected a file already
-        if sig:
-            # get md5 of downloaded file to compare to
-            newSig = md5Hash(downloadDestination)
-            print sig
-            if newSig != sig:
-                print("Replacing file: %s" % finalDestination)
-                shutil.copy(downloadDestination, finalDestination)
+#
+# NOTE: Caller is responsible for validating basic URL syntax
+def downloadArtifact(url, outdir):
+    print("Downloading %s" % url)
+    response = urllib2.urlopen(url)
+    finalDestination = (os.path.join(outdir, os.path.basename(url)))
+    downloadDestination = finalDestination
+    sig = None
+    if os.path.exists(finalDestination):
+        print "existing found, computing hash: %s" % finalDestination
+        tmpFile = tempfile.NamedTemporaryFile()
+        downloadDestination = tmpFile.name
+        sig = md5Hash(finalDestination)
+
+    with open(downloadDestination, "wb") as local_file:
+        print "Saving artifact to %s" % downloadDestination
+        local_file.write(response.read())
+
+    # check if we detected a file already
+    if sig:
+        # get md5 of downloaded file to compare to
+        newSig = md5Hash(downloadDestination)
+        print sig
+        if newSig != sig:
+            print("Replacing file: %s" % finalDestination)
+            shutil.copy(downloadDestination, finalDestination)
 
 def jenkinsDownload(versionInfo, outdir):
     artifactName = versionInfo['name']
@@ -76,7 +76,7 @@ def jenkinsDownload(versionInfo, outdir):
     queryURL = "%s/api/json?tree=artifacts[*],number" % baseURL
     parsed = urlparse.urlparse(queryURL)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
-        print("Skipping download for %s" % queryURL)
+        raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (artifactName, queryURL))
 
     response = json.loads(urllib2.urlopen(queryURL).read())
     artifacts = response['artifacts']
