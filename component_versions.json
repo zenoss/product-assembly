@@ -48,20 +48,29 @@
         "version": "1.1.1"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/prodbin-5.2.0-develop.tar.gz",
+        "jenkinsInfo": {
+            "server": "http://jenkins.zendev.org",
+            "job": "prodbin-merge-develop",
+            "pattern": "prodbin*.tar.gz"
+        },
         "git_ref": "develop",
         "git_repo": "https://github.com/zenoss/zenoss-prodbin.git",
         "name": "zenoss-prodbin",
-        "type": "download",
+        "type": "jenkins",
         "version": "develop"
     },
     {
-        "URL": "http://nexus.zendev.org:8081/nexus/service/local/repositories/releases/content/org/zenoss/zep/zep-dist/2.2.1/zep-dist-2.2.1.tar.gz",
-        "git_ref": "2.2.1",
+        "jenkinsInfo": {
+            "server": "http://jenkins.zendev.org",
+            "job": "zenoss-zep-develop",
+            "subModule": "org.zenoss.zep$zep-dist",
+            "pattern": "zep*.tar.gz"
+        },
+        "git_ref": "develop",
         "git_repo": "https://github.com/zenoss/zenoss-zep.git",
         "name": "zep",
-        "type": "download",
-        "version": "2.2.1"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/zminion-1.3.2.tgz",

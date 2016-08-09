@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+
 import argparse
+import fnmatch
 import hashlib
 import json
 import os
@@ -24,13 +26,17 @@ def md5Hash(filePath):
 
     return md5.hexdigest()
 
+
 def urlDownload(versionInfo, outdir):
     url = versionInfo['URL']
+    downloadArtifact(url, outdir)
+
+def downloadArtifact(url, outdir):
     parsed = urlparse.urlparse(url)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
-        print("Skipping download for %s" % versionInfo)
+        print("Skipping download for %s" % url)
         # TODO: this needs to raise if URL is invalid or not set
-        # raise Exception("url invalid: %s" % versionInfo)
+        # raise Exception("url invalid: %s" % url)
     else:
         print("Downloading %s" % url)
         response = urllib2.urlopen(url)
@@ -42,11 +48,11 @@ def urlDownload(versionInfo, outdir):
             tmpFile = tempfile.NamedTemporaryFile()
             downloadDestination = tmpFile.name
             sig = md5Hash(finalDestination)
-            
+
         with open(downloadDestination, "wb") as local_file:
             print "Saving artifact to %s" % downloadDestination
             local_file.write(response.read())
-            
+
         # check if we detected a file already
         if sig:
             # get md5 of downloaded file to compare to
@@ -56,9 +62,49 @@ def urlDownload(versionInfo, outdir):
                 print("Replacing file: %s" % finalDestination)
                 shutil.copy(downloadDestination, finalDestination)
 
+def jenkinsDownload(versionInfo, outdir):
+    artifactName = versionInfo['name']
+    jenkinsInfo = versionInfo['jenkinsInfo']
+
+    job = jenkinsInfo['job']
+    server = jenkinsInfo['server']
+    baseURL = "%s/job/%s/lastSuccessfulBuild" % (server, job)
+    if "subModule" in jenkinsInfo and jenkinsInfo['subModule'] != "":
+        baseURL = "%s/%s" % (baseURL, jenkinsInfo['subModule'])
+
+    # First we have to query the API to determine which artifacts are available
+    queryURL = "%s/api/json?tree=artifacts[*],number" % baseURL
+    parsed = urlparse.urlparse(queryURL)
+    if not parsed.scheme or not parsed.netloc or not parsed.path:
+        print("Skipping download for %s" % queryURL)
+
+    response = json.loads(urllib2.urlopen(queryURL).read())
+    artifacts = response['artifacts']
+    number = response['number']
+    if len(artifacts) == 0:
+        raise Exception("No artifacts available for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (artifactName, job, number, server))
+
+    # Secondly, loop through the list of build artifacts and download any that match the specified pattern
+    nDownloaded = 0
+    pattern = jenkinsInfo['pattern']
+    for artifact in artifacts:
+        fileName = artifact['fileName']
+        if fnmatch.fnmatch(fileName, pattern):
+            print ("Found artifact %s for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (fileName, artifactName, job, number, server))
+            relativePath = artifact['relativePath']
+            downloadURL = "%s/artifact/%s" % (baseURL, relativePath)
+            downloadArtifact(downloadURL, outdir)
+            nDownloaded += 1
+
+    if nDownloaded == 0:
+        raise Exception("No artifacts downloaded from lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (artifactName, job, number, server))
+
 
 # downloaders is a dictionary of "type" to function that can
-downloaders = {"download": urlDownload}
+downloaders = {
+    "download": urlDownload,
+    "jenkins": jenkinsDownload
+}
 
 
 def downloadArtifacts(versionsFile, artifacts, downloadDir):
