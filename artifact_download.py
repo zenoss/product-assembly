@@ -73,15 +73,16 @@ def jenkinsDownload(versionInfo, outdir):
         baseURL = "%s/%s" % (baseURL, jenkinsInfo['subModule'])
 
     # First we have to query the API to determine which artifacts are available
-    queryURL = "%s/api/json?tree=artifacts[*]" % baseURL
+    queryURL = "%s/api/json?tree=artifacts[*],number" % baseURL
     parsed = urlparse.urlparse(queryURL)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
         print("Skipping download for %s" % queryURL)
 
     response = json.loads(urllib2.urlopen(queryURL).read())
     artifacts = response['artifacts']
+    number = response['number']
     if len(artifacts) == 0:
-        raise Exception("No artifacts available for lastSuccessfulBuild of %s job %s on Jenkins server %s" % (artifactName, job, server))
+        raise Exception("No artifacts available for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (artifactName, job, number, server))
 
     # Secondly, loop through the list of build artifacts and download any that match the specified pattern
     nDownloaded = 0
@@ -89,13 +90,14 @@ def jenkinsDownload(versionInfo, outdir):
     for artifact in artifacts:
         fileName = artifact['fileName']
         if fnmatch.fnmatch(fileName, pattern):
+            print ("Found artifact %s for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (fileName, artifactName, job, number, server))
             relativePath = artifact['relativePath']
             downloadURL = "%s/artifact/%s" % (baseURL, relativePath)
             downloadArtifact(downloadURL, outdir)
             nDownloaded += 1
 
     if nDownloaded == 0:
-        raise Exception("No artifacts downloaded from lastSuccessfulBuild of %s job %s on Jenkins server %s" % (artifactName, job, server))
+        raise Exception("No artifacts downloaded from lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (artifactName, job, number, server))
 
 
 # downloaders is a dictionary of "type" to function that can
