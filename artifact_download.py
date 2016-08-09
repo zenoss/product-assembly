@@ -29,7 +29,7 @@ def md5Hash(filePath):
 
 def urlDownload(versionInfo, outdir):
     url = versionInfo['URL']
-    downloadArtfact(url, outdir)
+    downloadArtifact(url, outdir)
 
 def downloadArtifact(url, outdir):
     parsed = urlparse.urlparse(url)
