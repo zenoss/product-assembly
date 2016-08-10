@@ -17,7 +17,9 @@ artifactDownload "zenoss-prodbin"
 su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/prodbin*"
 # TODO: remove this and make sure the tar file contains the proper links
 su - zenoss -c "mkdir -p ${ZENHOME}/etc/supervisor"
+su - zenoss -c "mkdir -p ${ZENHOME}/var/zauth"
 su - zenoss -c "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
+
 
 su - zenoss -c "pip install  --use-wheel --no-index  ${ZENHOME}/dist/*.whl"
 su - zenoss -c "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
