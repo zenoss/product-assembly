@@ -13,7 +13,6 @@ import urlparse
 
 from itertools import chain
 
-
 def md5Hash(filePath):
     if not os.path.exists(filePath):
         raise Exception("file does not exist: %s" % filePath)
@@ -27,13 +26,19 @@ def md5Hash(filePath):
     return md5.hexdigest()
 
 
-def urlDownload(versionInfo, outdir):
+def urlDownload(versionInfo, outdir, downloadReport):
     url = versionInfo['URL']
     parsed = urlparse.urlparse(url)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
         raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (versionInfo['name'], url))
 
     downloadArtifact(url, outdir)
+
+    artifactInfo = {}
+    artifactInfo['name'] = versionInfo['name']
+    artifactInfo['version'] = versionInfo['version']
+    artifactInfo['downloader'] = 'download'
+    downloadReport.append(artifactInfo)
 
 #
 # NOTE: Caller is responsible for validating basic URL syntax
@@ -62,7 +67,7 @@ def downloadArtifact(url, outdir):
             print("Replacing file: %s" % finalDestination)
             shutil.copy(downloadDestination, finalDestination)
 
-def jenkinsDownload(versionInfo, outdir):
+def jenkinsDownload(versionInfo, outdir, downloadReport):
     artifactName = versionInfo['name']
     jenkinsInfo = versionInfo['jenkinsInfo']
 
@@ -95,6 +100,19 @@ def jenkinsDownload(versionInfo, outdir):
             downloadURL = "%s/artifact/%s" % (baseURL, relativePath)
             downloadArtifact(downloadURL, outdir)
             nDownloaded += 1
+            #
+            # TODOs:
+            # 1. Add git_ref
+            # 2. Add changelog info
+            # 3. Update Jenkins-image.groovy to include the report as a job artifact
+            #
+            artifactInfo = {}
+            artifactInfo['name'] = versionInfo['name']
+            artifactInfo['downloader'] = 'jenkins'
+            artifactInfo['version'] = versionInfo['version']
+            artifactInfo['job_nbr'] = number
+            # artifactInfo.git_ref = ??
+            downloadReport.append(artifactInfo)
 
     if nDownloaded == 0:
         raise Exception("No artifacts downloaded from lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (artifactName, job, number, server))
@@ -107,12 +125,11 @@ downloaders = {
 }
 
 
-def downloadArtifacts(versionsFile, artifacts, downloadDir):
+def downloadArtifacts(versionsFile, artifacts, downloadDir, downloadReport):
     versions = json.load(versionsFile)
     versionsMap = {}
     for version in versions:
         versionsMap[version['name']]=version
-
 
     if not os.path.isdir(downloadDir):
         raise Exception("Path is not a directory: %s" % downloadDir)
@@ -123,11 +140,31 @@ def downloadArtifacts(versionsFile, artifacts, downloadDir):
         versionInfo = versionsMap[artifactName]
         if versionInfo['type'] not in downloaders:
             raise Exception("Cannot not download artifact, unknown download type: %s %s" % (artifactName, versionInfo['type']))
-        downloaders[versionInfo['type']](versionInfo, downloadDir)
+        downloaders[versionInfo['type']](versionInfo, downloadDir, downloadReport)
 
+#
+# Update the report file - updates the report file with one or more artifacts from downloadReport
+#
+def updateReport(reportFile, downloadReport):
+    lastReport = []
+    if os.path.exists(reportFile):
+        with open(reportFile, 'r') as inFile:
+            lastReport = json.load(inFile)
+
+    # First remove any items from lastReport that match something we've just downloaded
+    for item in downloadReport:
+        lastReport = [rpt for rpt in lastReport if rpt['name'] != item['name']]
+
+    # Now add our items to the report and sort it
+    lastReport.extend(downloadReport)
+    def artifactName(artifactInfo):
+        return artifactInfo["name"]
+    sortedReport = sorted(lastReport, key=artifactName)
+
+    with open(reportFile, 'w') as outFile:
+        json.dump(sortedReport, outFile, indent=4, sort_keys=True, separators=(',', ': '))
 
 def main(args):
-
     artifacts = args.artifacts
 
     if args.zp_manifest != None:
@@ -137,8 +174,11 @@ def main(args):
     if not artifacts or len(artifacts) == 0:
         sys.exit("No artifacts to download")
 
-    downloadArtifacts(args.versions, artifacts, args.out_dir)
+    downloadReport = []
+    downloadArtifacts(args.versions, artifacts, args.out_dir, downloadReport)
 
+    if args.reportFile:
+        updateReport(args.reportFile, downloadReport)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Download artifacts')
@@ -154,6 +194,9 @@ if __name__ == '__main__':
 
     parser.add_argument('artifacts', nargs='*',
                         help='artifacts to download')
+
+    parser.add_argument('--reportFile', type=str, default="",
+                        help='json report of downloaded artifacts')
 
     args = parser.parse_args()
     main(args)
