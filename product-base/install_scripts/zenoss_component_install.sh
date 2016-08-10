@@ -19,10 +19,9 @@ su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/prodbin*"
 su - zenoss -c "mkdir -p ${ZENHOME}/etc/supervisor"
 su - zenoss -c "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
 
-su - zenoss -c "pip install ${ZENHOME}/dist/*.whl"
+su - zenoss -c "pip install  --use-wheel --no-index  ${ZENHOME}/dist/*.whl"
 su - zenoss -c "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
 su - zenoss -c "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
-
 
 
 # Install MetricConsumer
@@ -45,7 +44,19 @@ su - zenoss -c "ln -s ${ZENHOME}/etc/central-query/central-query_supervisor.conf
 artifactDownload "icmpecho"
 su - zenoss -c "tar -C /tmp -xzvf /tmp/icmpecho*"
 su - zenoss -c "mv /tmp/pyraw ${ZENHOME}/bin"
-su - zenoss -c "pip install /tmp/icmpecho*.whl"
+su - zenoss -c "pip install  --use-wheel --no-index  /tmp/icmpecho*.whl"
+
+# Install zenoss-protocols
+artifactDownload "zenoss-protocols"
+su - zenoss -c "pip install  --use-wheel --no-index  /tmp/zenoss.protocols*.whl"
+
+# Install pynetsnmp
+artifactDownload "pynetsnmp"
+su - zenoss -c "pip install  --use-wheel --no-index  /tmp/pynetsnmp*.whl"
+
+# Install zenoss-extjs
+artifactDownload "zenoss-extjs"
+su - zenoss -c "pip install  --no-index  /tmp/zenoss.extjs*"
 
 # Install zep
 artifactDownload "zep" 
@@ -69,7 +80,7 @@ su - zenoss -c "tar --strip-components=2 -C ${ZENHOME} -xzvf /tmp/zproxy*"
 
 
 artifactDownload "servicemigration"
-su - zenoss -c "pip install /tmp/servicemigration*"
+su - zenoss -c "pip install  --use-wheel --no-index  /tmp/servicemigration*"
 
 # TODO add upgrade templates to /root  - probably done in core/rm image builds
 
