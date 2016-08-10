@@ -74,24 +74,41 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
     job = jenkinsInfo['job']
     server = jenkinsInfo['server']
     baseURL = "%s/job/%s/lastSuccessfulBuild" % (server, job)
-    if "subModule" in jenkinsInfo and jenkinsInfo['subModule'] != "":
-        baseURL = "%s/%s" % (baseURL, jenkinsInfo['subModule'])
-
-    # First we have to query the API to determine which artifacts are available
-    queryURL = "%s/api/json?tree=artifacts[*],number" % baseURL
+    queryURL = "%s/api/json?tree=artifacts[*],number,actions[lastBuiltRevision[*,branch[*]]]" % baseURL
     parsed = urlparse.urlparse(queryURL)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
         raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (artifactName, queryURL))
 
     response = json.loads(urllib2.urlopen(queryURL).read())
-    artifacts = response['artifacts']
+
+    #
+    # If the artifact has a subModule in Jenkins, then we need to query a different URL to get the subModule's artifacts
+    #
+    if "subModule" in jenkinsInfo and jenkinsInfo['subModule'] != "":
+        baseURL = "%s/%s" % (baseURL, jenkinsInfo['subModule'])
+        artifactsURL = "%s/api/json?tree=artifacts[*]" % baseURL
+        parsed = urlparse.urlparse(artifactsURL)
+        if not parsed.scheme or not parsed.netloc or not parsed.path:
+            raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (artifactName, artifactsURL))
+
+        artifactsResponse = json.loads(urllib2.urlopen(artifactsURL).read())
+        artifacts = artifactsResponse['artifacts']
+    else:
+        artifacts = response['artifacts']
+
     number = response['number']
     if len(artifacts) == 0:
         raise Exception("No artifacts available for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (artifactName, job, number, server))
 
+    pattern = jenkinsInfo['pattern']
+    lastBuiltRevision = [item['lastBuiltRevision'] for item in response['actions'] if len(item) > 0 and item['lastBuiltRevision']]
+    git_ref = lastBuiltRevision[0]['SHA1']
+    branchData = lastBuiltRevision[0]['branch'][0]
+    if branchData:
+        git_branch = branchData['name']
+
     # Secondly, loop through the list of build artifacts and download any that match the specified pattern
     nDownloaded = 0
-    pattern = jenkinsInfo['pattern']
     for artifact in artifacts:
         fileName = artifact['fileName']
         if fnmatch.fnmatch(fileName, pattern):
@@ -102,16 +119,15 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
             nDownloaded += 1
             #
             # TODOs:
-            # 1. Add git_ref
-            # 2. Add changelog info
-            # 3. Update Jenkins-image.groovy to include the report as a job artifact
+            # 1. Add changelog info
             #
             artifactInfo = {}
             artifactInfo['name'] = versionInfo['name']
             artifactInfo['downloader'] = 'jenkins'
             artifactInfo['version'] = versionInfo['version']
             artifactInfo['job_nbr'] = number
-            # artifactInfo.git_ref = ??
+            artifactInfo['git_ref'] = git_ref
+            artifactInfo['git_branch'] = git_branch
             downloadReport.append(artifactInfo)
 
     if nDownloaded == 0:
