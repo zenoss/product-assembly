@@ -58,5 +58,5 @@ echo "Component Artifact Report"
 cat ${ZENHOME}/log/zenoss_component_artifact.log
 
 echo "ZenPack Artifact Report"
-cat ${ZENHOME}/log/zenpack_artifact.log
+cat ${ZENHOME}/log/zenpacks_artifact.log
 
