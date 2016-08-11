@@ -54,3 +54,9 @@ find ${ZENHOME} -name \*.py[co] -delete
 rm -f ${ZENHOME}/log/\*.log
 /sbin/scrub.sh
 
+echo "Component Artifact Report"
+cat ${ZENHOME}/log/zenoss_component_artifact.log
+
+echo "ZenPack Artifact Report"
+cat ${ZENHOME}/log/zenpack_artifact.log
+

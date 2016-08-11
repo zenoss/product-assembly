@@ -12,7 +12,7 @@ chown -Rf zenoss:zenoss ${ZENHOME}/*
 function artifactDownload
 {
     local artifact="$@"
-    su - zenoss -c "${ZENHOME}/install_scripts/artifact_download.py --out_dir /tmp ${ZENHOME}/install_scripts/component_versions.json ${artifact} --reportFile ${ZENHOME}/log/zenoss_component_install.log"
+    su - zenoss -c "${ZENHOME}/install_scripts/artifact_download.py --out_dir /tmp ${ZENHOME}/install_scripts/component_versions.json ${artifact} --reportFile ${ZENHOME}/log/zenoss_component_artifact.log"
 }
 
 # Install Prodbin
@@ -95,3 +95,7 @@ rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
 echo "Cleaning up after install..."
 find ${ZENHOME} -name \*.py[co] -delete
 /sbin/scrub.sh
+
+echo "Component Artifact Report"
+cat ${ZENHOME}/log/zenoss_component_artifact.log
+

@@ -22,7 +22,7 @@ zenpacks:
 	@mkdir zenpacks
 
 zenpack_download: zenpacks
-	../artifact_download.py ../zenpack_versions.json --zp_manifest zenpacks.json --out_dir zenpacks --reportFile zenpacks_install.log
+	../artifact_download.py ../zenpack_versions.json --zp_manifest zenpacks.json --out_dir zenpacks --reportFile zenpacks_artifact.log
 
 push:
 	docker push $(TAG)
@@ -30,9 +30,9 @@ push:
 clean:
 	rm -rf zenpacks
 	rm -f Dockerfile
-	rm -f zenoss_component_install.log
-	rm -f zenpacks_install.log
+	rm -f zenoss_component_artifact.log
+	rm -f zenpacks_artifact.log
 	-docker rmi -f $(TAG)
 
 getDownloadLogs:
-	docker run --rm -v $(PWD):/mnt/export -ti $(TAG) rsync -a /opt/zenoss/log/zenoss_component_install.log /opt/zenoss/log/zenpacks_install.log /mnt/export
+	docker run --rm -v $(PWD):/mnt/export -t $(TAG) rsync -a /opt/zenoss/log/zenoss_component_artifact.log /opt/zenoss/log/zenpacks_artifact.log /mnt/export
