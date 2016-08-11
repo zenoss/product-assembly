@@ -20,8 +20,13 @@ node ('build-zenoss-product') {
         git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
         sh("git checkout ${GIT_SHA}")
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
-        archive includes: '${TARGET_PRODUCT}/*.log'
-
+        
+        // This is a hack, but I couldn't figure out another way to read the job parameter
+        sh("echo ${TARGET_PRODUCT} >target_product")
+        target=readFile('target_product').trim()
+        def includePattern = target + '/*artifact.log'
+        archive includes: includePattern
+        
     stage 'Push image'
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
 
