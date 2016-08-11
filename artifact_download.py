@@ -125,9 +125,10 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
             artifactInfo['name'] = versionInfo['name']
             artifactInfo['type'] = 'jenkinsBuild'
             artifactInfo['version'] = versionInfo['version']
-            artifactInfo['job_nbr'] = number
             artifactInfo['git_ref'] = git_ref
             artifactInfo['git_branch'] = git_branch
+            artifactInfo['jenkinsInfo'] = jenkinsInfo
+            artifactInfo['jenkinsInfo']['job_nbr'] = number
             downloadReport.append(artifactInfo)
 
     if nDownloaded == 0:
