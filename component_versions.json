@@ -105,11 +105,15 @@
         "version": "1.3.2"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zproxy-1.0.0.tar.gz",
-        "git_ref": "1.0.0",
+        "git_ref": "develop",
         "git_repo": "https://github.com/zenoss/zproxy.git",
+        "jenkinsInfo": {
+            "job": "core-zproxy-develop",
+            "pattern": "zproxy*.tar.gz",
+            "server": "http://jenkins.zendev.org"
+        },
         "name": "zproxy",
-        "type": "download",
-        "version": "1.0.0"
+        "type": "jenkins",
+        "version": "develop"
     }
 ]
