@@ -19,7 +19,8 @@ node ('build-zenoss-product') {
         //       The next checkout command will align the build with the correct target revision.
         git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
         sh("git checkout ${GIT_SHA}")
-        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
+        archive includes: '${TARGET_PRODUCT}/*.log'
 
     stage 'Push image'
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
