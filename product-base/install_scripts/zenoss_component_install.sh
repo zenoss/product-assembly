@@ -3,13 +3,16 @@
 set -e
 set -x
 
+mkdir -p ${ZENHOME}/log/
+
 #Files added via docker will be owned by root, set to zenoss
 chown -Rf zenoss:zenoss ${ZENHOME}/*
+
 
 function artifactDownload
 {
     local artifact="$@"
-    su - zenoss -c "${ZENHOME}/install_scripts/artifact_download.py --out_dir /tmp ${ZENHOME}/install_scripts/component_versions.json ${artifact}"
+    su - zenoss -c "${ZENHOME}/install_scripts/artifact_download.py --out_dir /tmp ${ZENHOME}/install_scripts/component_versions.json ${artifact} --reportFile ${ZENHOME}/log/zenoss_component_install.log"
 }
 
 # Install Prodbin
@@ -61,7 +64,7 @@ artifactDownload "zenoss-extjs"
 su - zenoss -c "pip install  --no-index  /tmp/zenoss.extjs*"
 
 # Install zep
-artifactDownload "zep" 
+artifactDownload "zep"
 su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/zep-dist*"
 
 # Install metricshipper
