@@ -37,7 +37,7 @@ def urlDownload(versionInfo, outdir, downloadReport):
     artifactInfo = {}
     artifactInfo['name'] = versionInfo['name']
     artifactInfo['version'] = versionInfo['version']
-    artifactInfo['downloader'] = 'download'
+    artifactInfo['type'] = 'releasedArtifact'
     downloadReport.append(artifactInfo)
 
 #
@@ -123,7 +123,7 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
             #
             artifactInfo = {}
             artifactInfo['name'] = versionInfo['name']
-            artifactInfo['downloader'] = 'jenkins'
+            artifactInfo['type'] = 'jenkinsBuild'
             artifactInfo['version'] = versionInfo['version']
             artifactInfo['job_nbr'] = number
             artifactInfo['git_ref'] = git_ref
