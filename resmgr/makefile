@@ -8,7 +8,7 @@ FROM_IMAGE = product-base:$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
 TAG = zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
-.PHONY: build push clean
+.PHONY: build push clean getDownloadLogs
 
 
 build: Dockerfile zenpack_download
@@ -30,4 +30,9 @@ push:
 clean:
 	rm -rf zenpacks
 	rm -f Dockerfile
+	rm -f zenoss_component_install.log
+	rm -f zenpacks_install.log
 	-docker rmi -f $(TAG)
+
+getDownloadLogs:
+	docker run --rm -v $(PWD):/mnt/export -ti $(TAG) rsync -a /opt/zenoss/log/zenoss_component_install.log /opt/zenoss/log/zenpacks_install.log /mnt/export
