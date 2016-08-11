@@ -8,7 +8,7 @@ ADD licenses.core.html /opt/zenoss/Products/ZenUI3/docs/licenses.html
 
 # the manifest of zenpacks to install
 ADD zenpacks.json /opt/zenoss/install_scripts/
-ADD zenpacks_install.log /opt/zenoss/log/
+ADD zenpacks_artifact.log /opt/zenoss/log/
 
 # the zenpacks shipped in the images
 COPY zenpacks /opt/zenoss/packs/

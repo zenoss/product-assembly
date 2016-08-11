@@ -1,6 +1,9 @@
 *~
 product-base/component_info
 
+*/zenpacks_artifact.log
+*/zenoss_component_artifact.log
+
 core/zenpacks
 core/Dockerfile
 

@@ -126,6 +126,7 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
             artifactInfo['type'] = 'jenkinsBuild'
             artifactInfo['version'] = versionInfo['version']
             artifactInfo['git_ref'] = git_ref
+            artifactInfo['git_ref_url'] = versionInfo['git_repo'].replace('.git', '/tree/%s' % git_ref)
             artifactInfo['git_branch'] = git_branch
             artifactInfo['jenkinsInfo'] = jenkinsInfo
             artifactInfo['jenkinsInfo']['job_nbr'] = number
