@@ -21,8 +21,8 @@ Each of the subdirectories `core`, `resmgr`, and `product-base` have a makefile 
 The `zenoss/product-base` image must be built first. This image contains the
 [core Zenoss platform](https://github.com/zenoss/zenoss-prodbin)
 and all of the third-party services required to run Zenoss (Zope, RabbitMQ, redis, etc).
-The  docker images for Core and RM are start with `zenoss/product-base` and
-simply add the ZenPacks appropriate for that particular product.
+The  docker images for Core and RM start with `zenoss/product-base`, then
+the build initializes Zenoss, and adds the ZenPacks appropriate for that particular product.
 
 ## Updating Version Numbers
 
@@ -47,7 +47,10 @@ Currently, all such components are installed in the `zenoss/product-base` image,
 both Core and RM. The list of components to be installed is maintained in the file
 [component_versions.json](component_versions.json).
 
-So to add or a remove a component, simply modify [component_versions.json](component_versions.json).
+So to add or remove a component, simply modify [component_versions.json](component_versions.json).
+The other file that needs to be changed is [product-base/install_scripts/zenoss_component_install.sh](product-base/install_scripts/zenoss_component_install.sh). This script is run inside the Docker image as it is being
+built.  It is responsible for downloading the artifact by name and then unpacking it into the image at the
+correct location.
 
 ### Adding or Removing ZenPacks
 ZenPack information is split across two files
