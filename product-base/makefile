@@ -1,5 +1,5 @@
+include ../versions.mk
 IMAGENAME  = product-base
-VERSION   ?= 5.2.0
 MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
 
@@ -7,7 +7,7 @@ TAG = zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
 .PHONY: build push clean
 
-build:  component_versions
+build:  component_versions $(SHORT_VERSION).x/pull-docker-images.sh Dockerfile
 	docker build --no-cache=true -t $(TAG) .
 
 push:
@@ -15,6 +15,7 @@ push:
 
 clean:
 	rm -rf component_info
+	rm -f $(SHORT_VERSION).x/pull-docker-images.sh
 	-docker rmi -f $(TAG)
 
 component_versions: component_info 
@@ -22,3 +23,10 @@ component_versions: component_info
 
 component_info:
 	@mkdir component_info 
+
+$(SHORT_VERSION).x/pull-docker-images.sh:
+	@mkdir -p $(SHORT_VERSION).x
+	@sed -e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g; s/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g;'  pull-docker-images.sh.in > $@
+
+Dockerfile:
+	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g;'  Dockerfile.in > $@

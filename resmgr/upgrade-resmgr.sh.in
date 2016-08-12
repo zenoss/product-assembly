@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+###############################################################################
+#
+# Upgrade Zenoss Resource Manager
+#
+###############################################################################
+set -e
+serviced script run /root/%SHORT_VERSION%.x/upgrade-resmgr.txt --service Zenoss.resmgr
+/opt/serviced/bin/serviced-set-version Zenoss.resmgr %VERSION%

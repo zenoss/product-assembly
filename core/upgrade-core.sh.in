@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+###############################################################################
+#
+# Upgrade Zenoss Core
+#
+###############################################################################
+set -e
+serviced script run /root/%SHORT_VERSION%.x/upgrade-core.txt --service Zenoss.core
+/opt/serviced/bin/serviced-set-version Zenoss.core %VERSION%

@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+###############################################################################
+#
+# Pull all of the images needed to upgrade Control Center and Resource Manager
+#
+###############################################################################
+
+echo "Pulling the image for HBase ..."
+sudo docker pull zenoss/hbase:%HBASE_VERSION%
+
+echo "Pulling the image for OpenTSDB ..."
+sudo docker pull zenoss/opentsdb:%OPENTSDB_VERSION%
