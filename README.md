@@ -5,7 +5,7 @@
   - [Updating Version Numbers](#updating-version-numbers)
   - [Adding/Removing a new component or ZenPack](#adding-or-removing-a-new-component-or-zenpack)
     - [Adding or Removing components](#adding-or-removing-components)
-    - [Adding or Removing ZenPacks](#adding-or-removing-ZenPacks)
+    - [Adding or Removing ZenPacks](#adding-or-removing-zenpacks)
   - [Using Nightly Builds](#using-nightly-builds)
   - [Setting up Builds for a Maintenance Release](#setting-up-builds-for-a-maintenance-release)
 
@@ -39,7 +39,7 @@ components included in the various product images.
 | Versions of components such as centralquery and core (prodbin) included in `zenoss/product-base` | various locations | [component_versions.json](component_versions.json) |
 | ZenPack versions  | various locations | [zenpack_versions.json](zenpack_versions.json) |
 
-## Adding/Removing a new component or ZenPack
+## Adding or Removing a new component or ZenPack
 
 ### Adding or Removing components
 In this context a "component" is anything in the image that is NOT a ZenPack.
