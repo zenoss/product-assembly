@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+###############################################################################
+#
+# Upgrade Zenoss Resource Manager with Service Impact
+#
+###############################################################################
+set -e
+serviced script run /root/%SHORT_VERSION%.x/upgrade-impact.txt --service Zenoss.resmgr
+/opt/serviced/bin/serviced-set-version Zenoss.resmgr %VERSION%
