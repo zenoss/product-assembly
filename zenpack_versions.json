@@ -56,12 +56,16 @@
         "version": "2.2.0"
     },
     {
-        "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.CatalogService/3/artifact/dist/ZenPacks.zenoss.CatalogService-3.1.0-py2.7.egg",
-        "git_ref": "3.1.0",
+        "git_ref": "develop",
         "git_repo": "https://github.com/zenoss/ZenPacks.zenoss.CatalogService.git",
+        "jenkinsInfo": {
+            "job": "develop-ZenPacks.zenoss.CatalogService",
+            "pattern": "ZenPacks.zenoss.CatalogService-*-py2.7.egg",
+            "server": "http://jenkins.zenosslabs.com/"
+        },
         "name": "ZenPacks.zenoss.CatalogService",
-        "type": "download",
-        "version": "3.1.0"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "URL": "http://jenkins.zenosslabs.com/job/master-ZenPacks.zenoss.CheckPointMonitor/3/artifact/dist/ZenPacks.zenoss.CheckPointMonitor-2.0.0-py2.7.egg",
