@@ -5,6 +5,8 @@ FROM zenoss/zenoss-centos-base:1.2.3
 
 ENV ZENHOME=/opt/zenoss
 
+ADD %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
+
 ADD install_scripts component_info /opt/zenoss/install_scripts/
 
 # Split these 2 commands into separate RUN statements because of problems building w/Docker 1.11.1
