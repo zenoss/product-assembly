@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import copy
 import fnmatch
 import hashlib
 import json
@@ -24,6 +25,194 @@ def md5Hash(filePath):
             bytes = f.read(4096)
 
     return md5.hexdigest()
+
+
+def zenpackDownload(versionInfo, outdir, downloadReport):
+    """Download ZenPack based on requirements in versionInfo.
+
+    Uses http://zenpacks.zenosslabs.com/requirement/ API endpoint to
+    download the best ZenPack given the following versionInfo dict.
+
+    Full versionInfo JSON example:
+
+        {
+            "name": "ZenPacks.zenoss.Example",
+            "type": "zenpack",
+            "requirement": "ZenPacks.zenoss.Example>=0.0.1",
+            "pre": false,
+            "feature": null
+        }
+
+    name:
+        Required. Name for artifact. Should be the ZenPack's Python
+        package name.
+
+    type:
+        Required. Must be set to "zenpack" to use this downloader.
+
+    requirement:
+        Optional. Default value is that of the name field. Accepts any
+        setuptools pkg_resources requirement format. Prelease builds
+        will be excluded unless the pre field is set to true (see
+        below), and feature builds will be excluded unless the feature
+        field is set (see below).
+
+        http://setuptools.readthedocs.io/en/latest/pkg_resources.html#requirements-parsing
+
+    pre:
+        Optional. Default value is false. When set to false, no
+        prerelease builds matching requirement will be returned. When
+        set to true, prerelease, release, and postrelease builds
+        matching requirement will be returned.
+
+        Prerelease is defined by PEP 440 and includes both pre-releases
+        and developmental releases.
+
+        https://www.python.org/dev/peps/pep-0440/#pre-releases
+        https://www.python.org/dev/peps/pep-0440/#developmental-releases
+
+    feature:
+        Optional. Default value is null. When set to null, no feature
+        builds matching requirement will be returned. When set to a
+        string value, only builds of a feature matching the string value
+        that also match requirement will be returned.
+
+        Setting feature to a non-null value implies setting the pre
+        field to true. This because all feature builds are inherently
+        pre-releases.
+
+    Credible examples:
+
+    - Specific release version:
+
+        {
+            "name": "ZenPacks.zenoss.Example",
+            "type": "zenpack",
+            "requirement": "ZenPacks.zenoss.Example===1.0.0"
+        }
+
+    - Newest release version:
+
+        {
+            "name": "ZenPacks.zenoss.Example",
+            "type": "zenpack"
+        }
+
+    - Newest patch release within a minor release series:
+
+        {
+            "name": "ZenPacks.zenoss.Example",
+            "type": "zenpack",
+            "requirement": "ZenPacks.zenoss.Example>=1.0.*"
+        }
+
+    - Newest pre-release version:
+
+        {
+            "name": "ZenPacks.zenoss.Example",
+            "type": "zenpack",
+            "pre": true
+        }
+
+    - Newest pre-release within a minor release series:
+
+        {
+            "name": "ZenPacks.zenoss.Example",
+            "type": "zenpack",
+            "requirement": "ZenPacks.zenoss.Example>=1.0.*",
+            "pre": true
+        }
+
+    - Specific feature by name regardless of version.
+
+        {
+            "name": "ZenPacks.zenoss.Example",
+            "type": "zenpack",
+            "feature": "fireworks"
+        }
+
+    """
+    endpoint = "http://zenpacks.zenosslabs.com/requirement"
+
+    # artifactInfo gets published to downloadReport. Copy versionInfo
+    # into it, and specify any defaults. This ensures that all
+    # information about what was requested from the endpoint gets
+    # captured in the report.
+    artifactInfo = copy.copy(versionInfo)
+    artifactInfo.setdefault("requirement", artifactInfo["name"])
+    artifactInfo.setdefault("feature", None)
+    artifactInfo.setdefault("pre", False)
+
+    requirement = urllib2.quote(artifactInfo["requirement"])
+    feature = urllib2.quote(artifactInfo["feature"] or "")
+    pre = bool(artifactInfo["pre"])
+
+    # <endpoint>/<requirement>[/<feature>][?pre]
+    url = "".join((
+        endpoint,
+        "/{}".format(requirement),
+        "/{}".format(feature) if feature else "",
+        "?pre" if pre else ""
+        ))
+
+    # Find best ZenPack match based on requirements.
+    #
+    # Example response:
+    #
+    #   {
+    #       "md5sum": "cb67ad2fb88e07abcb7a78744010f0b2",
+    #       "name": "ZenPacks.zenoss.Example",
+    #       "parsed_version": {
+    #           "base_version": "1.0.0",
+    #           "is_postrelease": False,
+    #           "is_prerelease": True",
+    #           "local": "g0abcdef",
+    #           "public": "1.0.0.dev2"
+    #       },
+    #       "platform": None,
+    #       "py_version": "2.7",
+    #       "requires": [
+    #           "ZenPacks.zenoss.AnotherExample",
+    #           "ZenPacks.zenoss.ThirdExample>=1.5"
+    #       ],
+    #       "shasum": "b0d69c0e175b45bdf3ecf1c455232bdcd66e3f43",
+    #       "url": "http://zenpacks.zenosslabs.com/download/ZenPacks.zenoss.Example-1.0.0.dev2+g0abcdef-py2.7.egg",
+    #       "version": "1.0.0.dev2+g0abcdef"
+    #   }
+    try:
+        zenpack = json.loads(urllib2.urlopen(url).read())
+    except urllib2.HTTPError as e:
+        artifactInfo["zenpack"] = {
+            "url": e.url,
+            "code": e.code,
+            "reason": e.reason,
+            }
+
+        downloadReport.append(artifactInfo)
+        raise
+    except Exception as e:
+        artifactInfo["zenpack"] = {
+            "error": str(e),
+            }
+
+        downloadReport.append(artifactInfo)
+        raise
+
+    # Include unaltered response under "zenpack" key in download report.
+    artifactInfo["zenpack"] = zenpack
+
+    if "url" not in zenpack:
+        artifactInfo["zenpack"] = {
+            "error": "no url in returned data",
+            }
+
+        downloadReport.append(artifactInfo)
+        raise Exception(
+            "No 'url' in zenpack data for artifact {}."
+            .format(versionInfo["name"]))
+
+    downloadReport.append(artifactInfo)
+    downloadArtifact(zenpack["url"], outdir)
 
 
 def urlDownload(versionInfo, outdir, downloadReport):
@@ -139,7 +328,8 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
 # downloaders is a dictionary of "type" to function that can
 downloaders = {
     "download": urlDownload,
-    "jenkins": jenkinsDownload
+    "jenkins": jenkinsDownload,
+    "zenpack": zenpackDownload,
 }
 
 
