@@ -11,6 +11,7 @@
 //    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
 //
 node ('build-zenoss-product') {
+    def pipelineBuildName = env.BUILD_NAME
     def pipelineBuildNumber = env.BUILD_NUMBER
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber})"
 
@@ -20,13 +21,13 @@ node ('build-zenoss-product') {
         git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
         sh("git checkout ${GIT_SHA}")
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
-        
+
         // This is a hack, but I couldn't figure out another way to read the job parameter
         sh("echo ${TARGET_PRODUCT} >target_product")
         target=readFile('target_product').trim()
         def includePattern = target + '/*artifact.log'
         archive includes: includePattern
-        
+
     stage 'Push image'
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
 
@@ -57,6 +58,12 @@ node ('build-zenoss-product') {
         archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
-        echo "TODO - implement rpm repo push"
-
+       sh("echo '${TARGET_PRODUCT} product build #${PRODUCT_BUILD_NUMBER}' >rpmPushLabel.txt"
+       jobLabel=readFile('rpmPushLabel.txt').trim()
+       build job: 'rpm_repo_push', parameters: [
+            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+            [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
+            [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
+            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: '/yum/zenoss/unstable/centos/el7/os/x86_64']
+        ]
 }
