@@ -16,12 +16,17 @@
         "version": "1.0.1"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/metric-consumer-app-0.1.4-zapp.tar.gz",
+        "jenkinsInfo": {
+            "job": "metric-consumer%20develop",
+            "pattern": "metric-consumer-app*.tar.gz",
+            "server": "http://jenkins.zendev.org",
+            "subModule": "org.zenoss$metric-consumer-app"
+        },
         "git_ref": "0.1.4",
         "git_repo": "https://github.com/zenoss/zenoss.metric.consumer.git",
         "name": "metric-consumer",
-        "type": "download",
-        "version": "0.1.4"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/metricshipper-1.1.2.tgz",
