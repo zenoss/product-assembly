@@ -64,11 +64,14 @@ node ('build-zenoss-product') {
         // This is a hack, but I couldn't figure out another way to read the job parameter
        sh("echo '${TARGET_PRODUCT} product build #${PRODUCT_BUILD_NUMBER}' >rpmPushLabel.txt")
        jobLabel=readFile('rpmPushLabel.txt').trim()
+       
+       // FIXME - in the arguments below, "unstable" needs to be replaced with ${MATURITY}, but there has to be a better
+       //         way than the writing/reading file hack
        build job: 'rpm_repo_push', parameters: [
             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
             [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
-            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: '/yum/zenoss/${MATURITY}/centos/el7/os/x86_64']
+            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: '/yum/zenoss/unstable/centos/el7/os/x86_64']
         ]
 
     stage 'Build Appliances'
