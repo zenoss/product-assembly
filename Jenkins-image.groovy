@@ -28,6 +28,9 @@ node ('build-zenoss-product') {
         def includePattern = target + '/*artifact.log'
         archive includes: includePattern
 
+    stage 'Test image'
+        echo "TODO - setup and run /opt/zenoss/bin/runtests"
+
     stage 'Push image'
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
 
