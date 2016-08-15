@@ -61,7 +61,8 @@ node ('build-zenoss-product') {
         archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
-       sh("echo '${TARGET_PRODUCT} product build #${PRODUCT_BUILD_NUMBER}' >rpmPushLabel.txt"
+        // This is a hack, but I couldn't figure out another way to read the job parameter
+       sh("echo '${TARGET_PRODUCT} product build #${PRODUCT_BUILD_NUMBER}' >rpmPushLabel.txt")
        jobLabel=readFile('rpmPushLabel.txt').trim()
        build job: 'rpm_repo_push', parameters: [
             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
