@@ -268,7 +268,12 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
     if not parsed.scheme or not parsed.netloc or not parsed.path:
         raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (artifactName, queryURL))
 
-    response = json.loads(urllib2.urlopen(queryURL).read())
+    try:
+        response = json.loads(urllib2.urlopen(queryURL).read())
+    except urllib2.HTTPError as e:
+        raise Exception("Error downloading %s: %s" % (queryURL, e))
+        
+        
 
     #
     # If the artifact has a subModule in Jenkins, then we need to query a different URL to get the subModule's artifacts

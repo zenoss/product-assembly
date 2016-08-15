@@ -17,7 +17,7 @@
     },
     {
         "jenkinsInfo": {
-            "job": "metric-consumer%20develop",
+            "job": "zenoss.metric.consumer-develop",
             "pattern": "metric-consumer-app*.tar.gz",
             "server": "http://jenkins.zendev.org",
             "subModule": "org.zenoss$metric-consumer-app"
@@ -72,7 +72,7 @@
         "git_ref": "develop",
         "git_repo": "https://github.com/zenoss/zenoss-prodbin.git",
         "jenkinsInfo": {
-            "job": "prodbin-merge-develop",
+            "job": "zenoss-prodbin-develop",
             "pattern": "prodbin*.tar.gz",
             "server": "http://jenkins.zendev.org"
         },
@@ -113,7 +113,7 @@
         "git_ref": "develop",
         "git_repo": "https://github.com/zenoss/zproxy.git",
         "jenkinsInfo": {
-            "job": "core-zproxy-develop",
+            "job": "zproxy-develop",
             "pattern": "zproxy*.tar.gz",
             "server": "http://jenkins.zendev.org"
         },
