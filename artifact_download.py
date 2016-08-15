@@ -257,12 +257,13 @@ def downloadArtifact(url, outdir):
             shutil.copy(downloadDestination, finalDestination)
 
 def jenkinsDownload(versionInfo, outdir, downloadReport):
-    artifactName = versionInfo['name']
-    jenkinsInfo = versionInfo['jenkinsInfo']
+    jenkinsInfo = JenkinsInfo(versionInfo)
+    artifactName = jenkinsInfo.name
 
-    job = jenkinsInfo['job']
-    server = jenkinsInfo['server']
-    baseURL = "%s/job/%s/lastSuccessfulBuild" % (server, job)
+
+    job = jenkinsInfo.job
+    server = jenkinsInfo.server
+    baseURL = "%s/lastSuccessfulBuild" % jenkinsInfo.jobURL
     queryURL = "%s/api/json?tree=artifacts[*],number,actions[lastBuiltRevision[*,branch[*]]]" % baseURL
     parsed = urlparse.urlparse(queryURL)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
@@ -278,8 +279,8 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
     #
     # If the artifact has a subModule in Jenkins, then we need to query a different URL to get the subModule's artifacts
     #
-    if "subModule" in jenkinsInfo and jenkinsInfo['subModule'] != "":
-        baseURL = "%s/%s" % (baseURL, jenkinsInfo['subModule'])
+    if jenkinsInfo.subModule:
+        baseURL = "%s/%s" % (baseURL, jenkinsInfo.subModule)
         artifactsURL = "%s/api/json?tree=artifacts[*]" % baseURL
         parsed = urlparse.urlparse(artifactsURL)
         if not parsed.scheme or not parsed.netloc or not parsed.path:
@@ -294,7 +295,6 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
     if len(artifacts) == 0:
         raise Exception("No artifacts available for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (artifactName, job, number, server))
 
-    pattern = jenkinsInfo['pattern']
     lastBuiltRevision = [item['lastBuiltRevision'] for item in response['actions'] if len(item) > 0 and item['lastBuiltRevision']]
     git_ref = lastBuiltRevision[0]['SHA1']
     branchData = lastBuiltRevision[0]['branch'][0]
@@ -305,29 +305,32 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
     nDownloaded = 0
     for artifact in artifacts:
         fileName = artifact['fileName']
-        if fnmatch.fnmatch(fileName, pattern):
-            print ("Found artifact %s for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (fileName, artifactName, job, number, server))
-            relativePath = artifact['relativePath']
-            downloadURL = "%s/artifact/%s" % (baseURL, relativePath)
-            downloadArtifact(downloadURL, outdir)
-            nDownloaded += 1
-            #
-            # TODOs:
-            # 1. Add changelog info
-            #
-            artifactInfo = {}
-            artifactInfo['name'] = versionInfo['name']
-            artifactInfo['type'] = 'jenkinsBuild'
-            artifactInfo['version'] = versionInfo['version']
-            artifactInfo['git_ref'] = git_ref
-            artifactInfo['git_ref_url'] = versionInfo['git_repo'].replace('.git', '/tree/%s' % git_ref)
-            artifactInfo['git_branch'] = git_branch
-            artifactInfo['jenkinsInfo'] = jenkinsInfo
-            artifactInfo['jenkinsInfo']['job_nbr'] = number
-            downloadReport.append(artifactInfo)
+        for pattern in jenkinsInfo.patterns:
+            if fnmatch.fnmatch(fileName, pattern):
+                print ("Found artifact %s for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (fileName, artifactName, job, number, server))
+                relativePath = artifact['relativePath']
+                downloadURL = "%s/artifact/%s" % (baseURL, relativePath)
+                downloadArtifact(downloadURL, outdir)
+                nDownloaded += 1
+                #
+                # TODOs:
+                # 1. Add changelog info
+                #
+                artifactInfo = {}
+                artifactInfo['name'] = versionInfo['name']
+                artifactInfo['type'] = 'jenkinsBuild'
+                artifactInfo['version'] = versionInfo['version']
+                artifactInfo['git_ref'] = git_ref
+                artifactInfo['git_ref_url'] = jenkinsInfo.gitRepo.replace('.git', '/tree/%s' % git_ref)
+                artifactInfo['git_branch'] = git_branch
+                artifactInfo['jenkinsInfo'] = jenkinsInfo.info
+                artifactInfo['jenkinsInfo']['job_nbr'] = number
+                downloadReport.append(artifactInfo)
 
     if nDownloaded == 0:
         raise Exception("No artifacts downloaded from lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (artifactName, job, number, server))
+    if nDownloaded >1 :
+        raise Exception("Dowload pattern is ambiguous, more than one artifact matched")
 
 
 # downloaders is a dictionary of "type" to function that can
@@ -393,6 +396,60 @@ def main(args):
     if args.reportFile:
         updateReport(args.reportFile, downloadReport)
 
+
+class ArtifactInfo(object):
+    def __init__(self, versionInfo):
+        self.info = versionInfo
+
+    @property
+    def name(self):
+        return self.info['name']
+
+    @property
+    def version(self):
+        return self.info['version']
+
+    @property
+    def gitRepo(self):
+        """
+        git hub repo url for artifact. Use value if present or generate url base on artifact name.
+        """
+        if 'git_repo' in self.info:
+            return self.info['git_repo']
+        return 'https://github.com/zenoss/%s.git' % self.info['name']
+
+class JenkinsInfo(ArtifactInfo):
+    def __init__(self, versionInfo):
+        super(JenkinsInfo, self).__init__(versionInfo)
+    
+    @property
+    def server(self):
+        if 'jenkins.server' in self.info:
+            return self.info['jenkins.server']
+        return 'http://jenkins.zendev.org'
+
+    @property
+    def job(self):
+        if 'jenkins.job' in self.info:
+            return self.info['jenkins.job']
+        return '%s-%s' %(self.name, self.version)
+
+    @property
+    def jobURL(self):
+        return "%s/job/%s" % (self.server, self.job)
+
+    @property
+    def subModule(self):
+        return self.info.get('jenkins.subModule')
+
+    @property
+    def patterns(self):
+        if 'jenkins.pattern' in self.info:
+            return [self.info['jenkins.pattern']]
+            
+        return ['*.whl', '*.tgz', '*.tar.gz']
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Download artifacts')
 
@@ -413,3 +470,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     main(args)
+

@@ -1,11 +1,9 @@
 [
     {
-        "URL": "http://zenpip.zendev.org/packages/central-query-0.1.12-zapp.tar.gz",
-        "git_ref": "0.1.12",
-        "git_repo": "https://github.com/zenoss/query.git",
-        "name": "central-query",
-        "type": "download",
-        "version": "0.1.12"
+        "name": "query",
+        "type": "jenkins",
+        "jenkins.subModule": "org.zenoss$central-query",
+        "version": "develop"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/icmpecho-1.0.1.tar.gz",
@@ -16,15 +14,8 @@
         "version": "1.0.1"
     },
     {
-        "jenkinsInfo": {
-            "job": "zenoss.metric.consumer-develop",
-            "pattern": "metric-consumer-app*.tar.gz",
-            "server": "http://jenkins.zendev.org",
-            "subModule": "org.zenoss$metric-consumer-app"
-        },
-        "git_ref": "0.1.4",
-        "git_repo": "https://github.com/zenoss/zenoss.metric.consumer.git",
-        "name": "metric-consumer",
+        "jenkins.subModule": "org.zenoss$metric-consumer-app",
+        "name": "zenoss.metric.consumer",
         "type": "jenkins",
         "version": "develop"
     },
@@ -69,13 +60,6 @@
         "version": "4.1.3"
     },
     {
-        "git_ref": "develop",
-        "git_repo": "https://github.com/zenoss/zenoss-prodbin.git",
-        "jenkinsInfo": {
-            "job": "zenoss-prodbin-develop",
-            "pattern": "prodbin*.tar.gz",
-            "server": "http://jenkins.zendev.org"
-        },
         "name": "zenoss-prodbin",
         "type": "jenkins",
         "version": "develop"
@@ -89,15 +73,8 @@
         "version": "2.1.4-1"
     },
     {
-        "git_ref": "develop",
-        "git_repo": "https://github.com/zenoss/zenoss-zep.git",
-        "jenkinsInfo": {
-            "job": "zenoss-zep-develop",
-            "pattern": "zep*.tar.gz",
-            "server": "http://jenkins.zendev.org",
-            "subModule": "org.zenoss.zep$zep-dist"
-        },
-        "name": "zep",
+        "jenkins.subModule": "org.zenoss.zep$zep-dist",
+        "name": "zenoss-zep",
         "type": "jenkins",
         "version": "develop"
     },
@@ -110,13 +87,6 @@
         "version": "1.3.2"
     },
     {
-        "git_ref": "develop",
-        "git_repo": "https://github.com/zenoss/zproxy.git",
-        "jenkinsInfo": {
-            "job": "zproxy-develop",
-            "pattern": "zproxy*.tar.gz",
-            "server": "http://jenkins.zendev.org"
-        },
         "name": "zproxy",
         "type": "jenkins",
         "version": "develop"
