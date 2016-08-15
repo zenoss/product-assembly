@@ -28,6 +28,9 @@ node ('build-zenoss-product') {
         def includePattern = target + '/*artifact.log'
         archive includes: includePattern
 
+    stage 'Test image'
+        echo "TODO - setup and run /opt/zenoss/bin/runtests"
+
     stage 'Push image'
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
 
@@ -66,4 +69,7 @@ node ('build-zenoss-product') {
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
             [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: '/yum/zenoss/unstable/centos/el7/os/x86_64']
         ]
+
+    stage 'Build Appliances'
+        echo "TODO - figure this out"
 }
