@@ -11,7 +11,7 @@
 //    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
 //
 node ('build-zenoss-product') {
-    def pipelineBuildName = env.BUILD_NAME
+    def pipelineBuildName = env.JOB_NAME
     def pipelineBuildNumber = env.BUILD_NUMBER
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber})"
 
@@ -68,7 +68,7 @@ node ('build-zenoss-product') {
             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
             [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
-            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: '/yum/zenoss/unstable/centos/el7/os/x86_64']
+            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: '/yum/zenoss/${MATURITY}/centos/el7/os/x86_64']
         ]
 
     stage 'Build Appliances'
