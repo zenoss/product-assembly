@@ -69,4 +69,7 @@ node ('build-zenoss-product') {
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
             [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: '/yum/zenoss/unstable/centos/el7/os/x86_64']
         ]
+
+    stage 'Build Appliances'
+        echo "TODO - figure this out"
 }
