@@ -216,16 +216,16 @@ def zenpackDownload(versionInfo, outdir, downloadReport):
 
 
 def urlDownload(versionInfo, outdir, downloadReport):
-    url = versionInfo['URL']
+    info = URLDownloadInfo(versionInfo)
+    url = info.url
+    print url
     parsed = urlparse.urlparse(url)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
-        raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (versionInfo['name'], url))
+        raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (info.name, url))
 
     downloadArtifact(url, outdir)
 
-    artifactInfo = {}
-    artifactInfo['name'] = versionInfo['name']
-    artifactInfo['version'] = versionInfo['version']
+    artifactInfo = info.toDict()
     artifactInfo['type'] = 'releasedArtifact'
     downloadReport.append(artifactInfo)
 
@@ -311,21 +311,17 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
                 # TODOs:
                 # 1. Add changelog info
                 #
-                artifactInfo = {}
-                artifactInfo['name'] = versionInfo['name']
-                artifactInfo['type'] = 'jenkinsBuild'
-                artifactInfo['version'] = versionInfo['version']
+                artifactInfo = jenkinsInfo.toDict()
                 artifactInfo['git_ref'] = git_ref
                 artifactInfo['git_ref_url'] = jenkinsInfo.gitRepo.replace('.git', '/tree/%s' % git_ref)
                 artifactInfo['git_branch'] = git_branch
-                artifactInfo['jenkinsInfo'] = jenkinsInfo.info
-                artifactInfo['jenkinsInfo']['job_nbr'] = number
+                artifactInfo['jenkins.job_nbr'] = number
                 downloadReport.append(artifactInfo)
 
     if nDownloaded == 0:
         raise Exception("No artifacts downloaded from lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (artifactName, job, number, server))
-    if nDownloaded >1 :
-        raise Exception("Dowload pattern is ambiguous, more than one artifact matched")
+    if nDownloaded > 1:
+        raise Exception("Download pattern is ambiguous, more than one artifact matched")
 
 
 # downloaders is a dictionary of "type" to function that can
@@ -405,13 +401,55 @@ class ArtifactInfo(object):
         return self.info['version']
 
     @property
+    def infoType(self):
+        return self.info['type']
+
+    @property
     def gitRepo(self):
         """
         git hub repo url for artifact. Use value if present or generate url base on artifact name.
         """
         if 'git_repo' in self.info:
             return self.info['git_repo']
-        return 'https://github.com/zenoss/%s.git' % self.info['name']
+        return 'https://github.com/%s/%s.git' % (self.gitOwner, self.info['name'])
+
+    @property
+    def gitRef(self):
+        if 'git_ref' in self.info:
+            return self.info['git_rev']
+        return self.version
+
+    @property
+    def gitOwner(self):
+        if 'git_owner' in self.info:
+            return self.info['git_owner']
+        return 'zenoss'
+
+    def toDict(self):
+        return { 
+            "git_repo": self.gitRepo,
+            "version": self.version,
+            "name": self.name,
+            "type": self.infoType
+        }
+
+class URLDownloadInfo(ArtifactInfo):
+    def __init__(self, versionInfo):
+        super(URLDownloadInfo, self).__init__(versionInfo)
+
+    @property
+    def url(self):
+        baseURL = self.info.get('URL')
+        if not baseURL:
+            baseURL = 'http://zenpip.zendev.org/packages/{name}-{version}.tar.gz'
+        kwargs = super(URLDownloadInfo, self).toDict()
+        return baseURL.format(**kwargs)
+
+    def toDict(self):
+        result = super(URLDownloadInfo, self).toDict()
+        result['url'] = self.url
+        return result
+
 
 class JenkinsInfo(ArtifactInfo):
     def __init__(self, versionInfo):
@@ -444,6 +482,17 @@ class JenkinsInfo(ArtifactInfo):
             
         return ['*.whl', '*.tgz', '*.tar.gz']
 
+    def toDict(self):
+        result = super(JenkinsInfo, self).toDict()
+        jenkinsDict = { 
+            "jenkins.server": self.server,
+            "jenkins.job": self.job,
+            "jenkins.jobURL": self.jobURL,
+            "jenkins.subModule":self.subModule,
+            "jenkins.patterns":self.patterns
+        }
+        result.update(jenkinsDict)
+        return result
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Download artifacts')
