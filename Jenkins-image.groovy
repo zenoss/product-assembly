@@ -52,7 +52,7 @@ node ('build-zenoss-product') {
 
         // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
         //     Jenkins credentials instead
-        def makeArgs = "BUILD_NUMBER=${pipelineBuildNumber}\
+        def makeArgs = "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
             IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
             MATURITY=${MATURITY}\
             SVCDEF_GIT_READY=true\
@@ -64,7 +64,7 @@ node ('build-zenoss-product') {
         // This is a hack, but I couldn't figure out another way to read the job parameter
        sh("echo '${TARGET_PRODUCT} product build #${PRODUCT_BUILD_NUMBER}' >rpmPushLabel.txt")
        jobLabel=readFile('rpmPushLabel.txt').trim()
-       
+  
        // FIXME - in the arguments below, "unstable" needs to be replaced with ${MATURITY}, but there has to be a better
        //         way than the writing/reading file hack
        build job: 'rpm_repo_push', parameters: [
