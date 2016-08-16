@@ -1,60 +1,43 @@
 [
     {
-        "name": "query",
-        "type": "jenkins",
-        "jenkins.subModule": "org.zenoss$central-query",
-        "version": "develop"
-    },
-    {
-        "URL": "http://zenpip.zendev.org/packages/icmpecho-1.0.1.tar.gz",
-        "git_ref": "1.0.1",
-        "git_repo": "https://github.com/zenoss/icmpecho.git",
         "name": "icmpecho",
         "type": "download",
         "version": "1.0.1"
     },
     {
-        "jenkins.subModule": "org.zenoss$metric-consumer-app",
-        "name": "zenoss.metric.consumer",
-        "type": "jenkins",
-        "version": "develop"
-    },
-    {
-        "URL": "http://zenpip.zendev.org/packages/metricshipper-1.1.2.tgz",
-        "git_ref": "1.1.2",
-        "git_repo": "https://github.com/zenoss/metricshipper.git",
+        "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
         "name": "metricshipper",
         "type": "download",
         "version": "1.1.2"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/pynetsnmp-0.40.6-py2-none-any.whl",
-        "git_ref": "0.40.6",
-        "git_repo": "https://github.com/zenoss/pynetsnmp.git",
+        "URL": "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
         "name": "pynetsnmp",
         "type": "download",
         "version": "0.40.6"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/redis-mon-0.1.2.tgz",
-        "git_ref": "0.1.2",
-        "git_repo": "https://github.com/zenoss/redis-mon.git",
+        "jenkins.subModule": "org.zenoss$central-query",
+        "name": "query",
+        "type": "jenkins",
+        "version": "develop"
+    },
+    {
+        "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
         "name": "redis-mon",
         "type": "download",
         "version": "0.1.2"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/servicemigration-1.1.1-py2-none-any.whl",
-        "git_ref": "1.1.1",
-        "git_repo": "https://github.com/control-center/service-migration.git",
+        "URL": "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
+        "git_owner": "control-center",
         "name": "servicemigration",
         "type": "download",
         "version": "1.1.1"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zenoss.extjs-4.1.3.tar.gz",
+        "URL": "http://zenpip.zendev.org/packages/zenoss.extjs-{version}.tar.gz",
         "git_ref": "master",
-        "git_repo": "https://github.com/zenoss/zenoss-extjs.git",
         "name": "zenoss-extjs",
         "type": "download",
         "version": "4.1.3"
@@ -66,8 +49,6 @@
     },
     {
         "URL": "http://zenpip.zendev.org/packages/zenoss.protocols-2.1.4.post1-py2-none-any.whl",
-        "git_ref": "2.1.4-1",
-        "git_repo": "https://github.com/zenoss/zenoss-protocols.git",
         "name": "zenoss-protocols",
         "type": "download",
         "version": "2.1.4-1"
@@ -79,9 +60,13 @@
         "version": "develop"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zminion-1.3.2.tgz",
-        "git_ref": "1.3.2",
-        "git_repo": "https://github.com/zenoss/zminion.git",
+        "jenkins.subModule": "org.zenoss$metric-consumer-app",
+        "name": "zenoss.metric.consumer",
+        "type": "jenkins",
+        "version": "develop"
+    },
+    {
+        "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
         "name": "zminion",
         "type": "download",
         "version": "1.3.2"
