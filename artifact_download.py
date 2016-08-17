@@ -421,7 +421,7 @@ class ArtifactInfo(object):
     @property
     def gitRef(self):
         if 'git_ref' in self.info:
-            return self.info['git_rev']
+            return self.info['git_ref']
         return self.version
 
     @property
