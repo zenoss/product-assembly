@@ -14,7 +14,7 @@ push:
 	docker push $(TAG)
 
 clean:
-	rm -rf component_info
+	rm -rf component_info Dockerfile
 	rm -f $(SHORT_VERSION).x/pull-docker-images.sh
 	-docker rmi -f $(TAG)
 

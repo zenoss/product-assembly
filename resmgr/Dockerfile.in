@@ -3,7 +3,7 @@ FROM zenoss/%FROM_IMAGE%
 # maintener is redundant since base image is ours as well
 #MAINTAINER Zenoss <dev@zenoss.com>
 
-ADD licenses.resmgr.html License.zenoss /opt/zenoss/
+ADD zphistory.json licenses.resmgr.html License.zenoss /opt/zenoss/
 ADD licenses.resmgr.html /opt/zenoss/Products/ZenUI3/docs/licenses.html
 
 # the manifest of zenpacks to install
