@@ -30,7 +30,7 @@ su - zenoss -c "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
 
 
 # Install MetricConsumer
-artifactDownload "metric-consumer"
+artifactDownload "zenoss.metric.consumer"
 su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/metric-consumer*"
 # TODO: remove this and make sure files marked as executable in tar file
 su - zenoss -c "chmod +x ${ZENHOME}/bin/metric-consumer-app.sh"
@@ -38,7 +38,7 @@ su - zenoss -c "chmod +x ${ZENHOME}/bin/metric-consumer-app.sh"
 su - zenoss -c "ln -s ${ZENHOME}/etc/metric-consumer-app/metric-consumer-app_supervisor.conf ${ZENHOME}/etc/supervisor/metric-consumer-app_supervisor.conf"
 
 # Install CentralQuery
-artifactDownload "central-query"
+artifactDownload "query"
 su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/central-query*"
 # TODO: remove this and make sure files marked as executable in tar file
 su - zenoss -c "chmod +x ${ZENHOME}/bin/central-query.sh"
@@ -64,7 +64,7 @@ artifactDownload "zenoss-extjs"
 su - zenoss -c "pip install  --no-index  /tmp/zenoss.extjs*"
 
 # Install zep
-artifactDownload "zep"
+artifactDownload "zenoss-zep"
 su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/zep-dist*"
 
 # Install metricshipper
