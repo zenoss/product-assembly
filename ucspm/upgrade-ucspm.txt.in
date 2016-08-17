@@ -1,0 +1,57 @@
+# This script can be used to upgrade a Zenoss deployment to a new image
+#
+# To minimize downtime and avoid potential out of space disk issues,
+# preseed the master with the images (that the upgrade will automatically
+# pull from the internet) before the upgrade maintenance window:
+#   ssh MASTER
+#       sudo docker pull zenoss/ucspm_%SHORT_VERSION%:%VERSION%  # about 10-20 minutes
+#       sudo docker pull zenoss/hbase:%HBASE_VERSION%        # about  5-10 minutes
+#       sudo docker pull zenoss/opentsdb:%OPENTSDB_VERSION%      # about  7-15 minutes
+#       serviced docker sync                      # about 10m:ucspm 5m:hbase 8m:opentsdb
+#
+# Run via 'serviced script run upgrade-ucspm.txt --service Zenoss' and restart
+# the deployment
+
+###################################################################################
+#
+# PLEASE READ THE FOLLOWING!
+#
+# It is required that the entire UCSPM deployment be stopped prior to
+# performing an upgrade with this script.
+#
+###################################################################################
+
+DESCRIPTION  UCSPM %UCSPM_VERSION% upgrade
+VERSION   ucspm-%VERSION%
+REQUIRE_SVC
+SNAPSHOT preupgrade-ucspm-%VERSION%
+
+# Choose image to upgrade to
+SVC_USE zenoss/ucspm_%SHORT_VERSION%:%VERSION%_%RELEASE_PHASE% zenoss/ucspm_5.1
+SVC_USE zenoss/hbase:%HBASE_VERSION%
+SVC_USE zenoss/opentsdb:%OPENTSDB_VERSION%
+
+# Stop Zenoss
+# SVC_STOP Zenoss auto
+# SVC_WAIT Zenoss stopped 600
+
+# Start all our dependent services
+SVC_START ucspm/Infrastructure/mariadb-model
+SVC_START ucspm/Infrastructure/mariadb-events
+SVC_START ucspm/Infrastructure/RabbitMQ
+SVC_START ucspm/Zenoss/Events/zeneventserver
+SVC_START ucspm/Infrastructure/zencatalogservice
+SVC_START ucspm/Infrastructure/redis
+
+# Wait for our services to start
+SVC_WAIT ucspm/Infrastructure/mariadb-model ucspm/Infrastructure/mariadb-events ucspm/Infrastructure/RabbitMQ ucspm/Zenoss/Events/zeneventserver ucspm/Infrastructure/zencatalogservice ucspm/Infrastructure/redis started 1800
+
+# Run the upgrade 'run'
+SVC_RUN "ucspm/Zenoss/User Interface/Zope" upgrade
+
+# Uncomment this to restart the entire application afterwards
+# SVC_RESTART ucspm auto
+
+# Uncomment this if you have run the install_quilt script first, and are using
+# quilt (based in /opt/zenoss) to manage patches
+# SVC_RUN "ucspm/Zenoss/User Interface/Zope" apply-custom-patches

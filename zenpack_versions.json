@@ -34,6 +34,9 @@
         "name": "ZenPacks.zenoss.CiscoUCS",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.CiscoUCSCentral",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.ComponentGroups",
         "type": "zenpack"
     },{
@@ -55,6 +58,9 @@
         "name": "ZenPacks.zenoss.DigMonitor",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.DiscoveryMapping",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.DistributedCollector",
         "type": "zenpack"
     },{
@@ -62,6 +68,9 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DynamicView",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.EMC.base",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseCollector",
@@ -88,6 +97,9 @@
         "name": "ZenPacks.zenoss.HttpMonitor",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.InstalledTemplatesReport",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.JBossMonitor",
         "type": "zenpack"
     },{
@@ -104,6 +116,9 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LinuxMonitor",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.Microsoft.HyperV",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Windows",
@@ -130,6 +145,9 @@
         "name": "ZenPacks.zenoss.PredictiveThreshold",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.PortalIntegration",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.PropertyMonitor",
         "type": "zenpack"
     },{
@@ -149,6 +167,12 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vCloud",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.UCSCapacity",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.UCSXSkin",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
