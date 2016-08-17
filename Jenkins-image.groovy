@@ -38,7 +38,9 @@ node ('build-zenoss-product') {
         // Get the value of SVCDEF_GIT_REF out of the versions.mk file
         def versionProps = readProperties file: 'versions.mk'
         def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
+        def ZENOSS_VERSION=versionProps['VERSION']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
+        echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
 
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
@@ -62,9 +64,9 @@ node ('build-zenoss-product') {
 
     stage 'Push RPM'
         // This is a hack, but I couldn't figure out another way to read the job parameter
-       sh("echo '${TARGET_PRODUCT} product build #${PRODUCT_BUILD_NUMBER}' >rpmPushLabel.txt")
-       jobLabel=readFile('rpmPushLabel.txt').trim()
-  
+       sh("echo '${TARGET_PRODUCT} product build #${PRODUCT_BUILD_NUMBER}' >rpmJobLabel.txt")
+       jobLabel=readFile('rpmJobLabel.txt').trim()
+
        // FIXME - in the arguments below, "unstable" needs to be replaced with ${MATURITY}, but there has to be a better
        //         way than the writing/reading file hack
        build job: 'rpm_repo_push', parameters: [
@@ -75,5 +77,13 @@ node ('build-zenoss-product') {
         ]
 
     stage 'Build Appliances'
-        echo "TODO - figure this out"
+        sh("echo '${TARGET_PRODUCT} product build #${PRODUCT_BUILD_NUMBER}' >applianceJobLabel.txt")
+        jobLabel=readFile('applianceJobLabel.txt').trim()
+        build job: 'appliance-build', parameters: [
+            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
+            [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: 'develop'],
+            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION]
+        ]
 }
