@@ -43,4 +43,4 @@ upgrade-core.sh:
 	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%VERSION%/$(VERSION)/g;' upgrade-core.sh.in > $@
 
 run-tests:
-	docker run -i --rm $(TAG) /opt/zenoss/install_scripts/starttests.sh
+	-docker run -i --rm $(TAG) /opt/zenoss/install_scripts/starttests.sh
