@@ -19,7 +19,6 @@
 set -e
 set +x
 
-# load the installation functions
 . ${ZENHOME}/install_scripts/install_lib.sh
 
 
