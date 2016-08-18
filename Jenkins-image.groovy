@@ -44,7 +44,7 @@ node ('build-zenoss-product') {
         archive includes: includePattern
 
     stage 'Test image'
-        echo "TODO - setup and run /opt/zenoss/bin/runtests"
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
 
     stage 'Push image'
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
