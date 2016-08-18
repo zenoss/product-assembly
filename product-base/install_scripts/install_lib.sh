@@ -50,6 +50,21 @@ shebang() {
       xargs sed -i '1,1 s%#!.*python$%#!'"$ZENHOME/bin/python"'%'
 }
 
+start_requirements() {
+    echo "Starting mysql..."
+    /usr/bin/mysql_install_db --user=mysql
+    /usr/bin/mysqld_safe &
+    
+    echo "Starting redis..."
+    /usr/bin/redis-server /etc/redis.conf &
+    
+    echo "Starting rabbit..."
+    echo "127.0.0.1 rbt0" >> /etc/hosts
+    /usr/sbin/rabbitmq-server &
+    #TODO: figure out how to wait for rabbit to start
+    sleep 5
+}
+
 configure_amqp() {
     RABBITMQ_ADMIN="`which rabbitmqadmin`"
     if [ ! -z "$RABBITMQ_ADMIN" ]; then
