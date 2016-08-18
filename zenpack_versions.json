@@ -44,7 +44,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dashboard",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.DellMonitor",
         "type": "zenpack"
