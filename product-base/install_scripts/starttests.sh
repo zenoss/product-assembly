@@ -9,6 +9,12 @@ set -x
 
 start_requirements
 
+if [ -f "${ZENHOME}/bin/zencatalogservice" ]; then
+    echo "Starting zencatalogservice..."
+    su - zenoss  -c "${ZENHOME}/bin/zencatalogservice start"
+
+fi
+
 echo "Starting zeneventserver..."
 su - zenoss  -c "${ZENHOME}/bin/zeneventserver start"
 
