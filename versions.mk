@@ -13,6 +13,7 @@
 #                   github.com:zenoss/zenoss-service repo to checkout and build
 # VERSION           the full Zenoss product version; e.g. 5.2.0
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
+#
 HBASE_VERSION=24.0.0
 HDFS_VERSION=24.0.0
 OPENTSDB_VERSION=24.0.0
@@ -21,3 +22,26 @@ SVCDEF_GIT_REF=develop
 VERSION=5.2.0
 UCSPM_VERSION=2.1.0
 
+#
+# The serviced information is used to create the appliance artifacts for a given RM release.
+# There are two ways to identify which version of serviced to use in the appliances:
+#
+# 1. Use the last successful build
+#
+#    Specify SERVICED_BRANCH with the name of the branch, and the appliance build will look
+#    up the last successful build for that branch to get the RPM version information necessary
+#    to install the serviced RPM from the unstable yum repo into the appliances.
+#
+#    If SERVICED_BRANCH is specified, both SERVICED_VERSION and SERVICED_BLD_NUMBER must be blank.
+#
+# 2. Specify a specific version and build
+#
+#    Specify the 3-digit version of serviced with SERVICED_VERSION and the build number with
+#    SERVICE_BUILD_NBR. The corresponding RPM must be available in the stable yum repo.
+#
+#    SERVICED_VERSION and SERVICED_BLD_NUMBER have to be specified together, and
+#    SERVICED_BRANCH must be blank if both are specified.
+#
+SERVICED_BRANCH=develop
+SERVICED_VERSION=
+SERVICED_BUILD_NBR=

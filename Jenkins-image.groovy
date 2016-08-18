@@ -20,6 +20,21 @@ node ('build-zenoss-product') {
         //       The next checkout command will align the build with the correct target revision.
         git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
         sh("git checkout ${GIT_SHA}")
+
+        // Get the values of various versions out of the versions.mk file for use in later stages
+        def versionProps = readProperties file: 'versions.mk'
+        def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
+        def ZENOSS_VERSION=versionProps['VERSION']
+        def SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
+        def SERVICED_VERSION=versionProps['SERVICED_VERSION']
+        def SERVICED_BUILD_NBR=versionProps['SERVICED_BUILD_NBR']
+        echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
+        echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
+        echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
+        echo "SERVICED_VERSION=${SERVICED_VERSION}"
+        echo "SERVICED_BUILD_NBR=${SERVICED_BUILD_NBR}"
+
+        // Make the target product
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
 
         // This is a hack, but I couldn't figure out another way to read the job parameter
@@ -35,13 +50,6 @@ node ('build-zenoss-product') {
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
 
     stage 'Compile service definitions and build RPM'
-        // Get the value of SVCDEF_GIT_REF out of the versions.mk file
-        def versionProps = readProperties file: 'versions.mk'
-        def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
-        def ZENOSS_VERSION=versionProps['VERSION']
-        echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
-        echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
-
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
         dir('svcdefs/build/zenoss-service') {
@@ -68,7 +76,9 @@ node ('build-zenoss-product') {
        jobLabel=readFile('rpmJobLabel.txt').trim()
 
        // FIXME - in the arguments below, "unstable" needs to be replaced with ${MATURITY}, but there has to be a better
-       //         way than the writing/reading file hack
+       //         way than the writing/reading file hack. Alternatively, if we never use the pipeline to build/publish
+       //         artifacts directly to the stable or testing repos, then maybe we leave it hard-coded and remove
+       //         MATURITY as an argument for this job.
        build job: 'rpm_repo_push', parameters: [
             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
             [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
@@ -83,7 +93,10 @@ node ('build-zenoss-product') {
             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
             [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
             [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: 'develop'],
-            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION]
+            [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
+            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+            [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
         ]
 }
