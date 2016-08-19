@@ -15,6 +15,8 @@ node ('build-zenoss-product') {
     def pipelineBuildNumber = env.BUILD_NUMBER
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber})"
 
+    def childJobLabel = TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
+
     stage 'Build image'
         // NOTE: The 'master' branch name here is only used to clone the github repo.
         //       The next checkout command will align the build with the correct target revision.
@@ -37,10 +39,7 @@ node ('build-zenoss-product') {
         // Make the target product
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
 
-        // This is a hack, but I couldn't figure out another way to read the job parameter
-        sh("echo ${TARGET_PRODUCT} >target_product")
-        target=readFile('target_product').trim()
-        def includePattern = target + '/*artifact.log'
+        def includePattern = TARGET_PRODUCT + '/*artifact.log'
         archive includes: includePattern
 
     stage 'Test image'
@@ -53,9 +52,9 @@ node ('build-zenoss-product') {
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
         dir('svcdefs/build/zenoss-service') {
-            echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
             // NOTE: The 'master' branch name here is only used to clone the github repo.
             //       The next checkout command will align the build with the correct target revision.
+            echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
             git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
             sh("git checkout ${SVCDEF_GIT_REF}")
         }
@@ -71,26 +70,19 @@ node ('build-zenoss-product') {
         archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
-        // This is a hack, but I couldn't figure out another way to read the job parameter
-       sh("echo '${TARGET_PRODUCT} product build #${PRODUCT_BUILD_NUMBER}' >rpmJobLabel.txt")
-       jobLabel=readFile('rpmJobLabel.txt').trim()
-
-       // FIXME - in the arguments below, "unstable" needs to be replaced with ${MATURITY}, but there has to be a better
-       //         way than the writing/reading file hack. Alternatively, if we never use the pipeline to build/publish
-       //         artifacts directly to the stable or testing repos, then maybe we leave it hard-coded and remove
-       //         MATURITY as an argument for this job.
-       build job: 'rpm_repo_push', parameters: [
-            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+        // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
+        //         testing repos, then maybe we should remove MATURITY as an argument for this job?
+        def s3Subdirectory = "/yum/zenoss/" + MATURITY + "/centos/el7/os/x86_64"
+        build job: 'rpm_repo_push', parameters: [
+            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
             [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
-            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: '/yum/zenoss/unstable/centos/el7/os/x86_64']
+            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: s3Subdirectory]
         ]
 
     stage 'Build Appliances'
-        sh("echo '${TARGET_PRODUCT} product build #${PRODUCT_BUILD_NUMBER}' >applianceJobLabel.txt")
-        jobLabel=readFile('applianceJobLabel.txt').trim()
         build job: 'appliance-build', parameters: [
-            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
             [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
             [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
             [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
