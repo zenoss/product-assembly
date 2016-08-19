@@ -16,16 +16,7 @@ node ('build-zenoss-product') {
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
 
     stage 'Checkout product-assembly repo'
-        // FIXME: for whatever reason the current version of the workflow-scm-step plugin does not
-        //        allow job params to be passed to the git plugin, so we have to hard-code 'develop'
-        //        for now. Once that bug is fixed, this should be replaced with ${BRANCH}
-        //        See these issues:
-        //          https://issues.jenkins-ci.org/browse/JENKINS-33719
-        //          https://issues.jenkins-ci.org/browse/JENKINS-34126
-        //          https://issues.jenkins-ci.org/browse/JENKINS-28447
-        //          https://issues.jenkins-ci.org/browse/JENKINS-34876
-        //
-        git branch: 'develop', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
+        git branch: BRANCH, credentialsId: GIT_CREDENTIAL_ID, url: 'https://github.com/zenoss/product-assembly'
 
         // Record the current git commit sha in the variable 'GIT_SHA'
         sh("git rev-parse HEAD >git_sha.id")
