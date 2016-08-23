@@ -1,4 +1,4 @@
-FROM zenoss/zenoss-centos-base:1.2.4
+FROM zenoss/%FROM_IMAGE%
 
 # maintener is redundant since base image is ours as well
 #MAINTAINER Zenoss <dev@zenoss.com>
