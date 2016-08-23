@@ -5,7 +5,8 @@ set -x
 
 mkdir -p ${ZENHOME}/log/
 
-#Files added via docker will be owned by root, set to zenoss
+# Files added via docker will be owned by root, set to zenoss to start to avoid conflicts
+# as we unpack components into ZENHOME
 chown -Rf zenoss:zenoss ${ZENHOME}/*
 
 
@@ -83,9 +84,18 @@ su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/redis-mon*"
 artifactDownload "zproxy"
 su - zenoss -c "tar --strip-components=2 -C ${ZENHOME} -xzvf /tmp/zproxy*"
 
-
+# Install the service migration SDK
 artifactDownload "servicemigration"
 su - zenoss -c "pip install  --use-wheel --no-index  /tmp/servicemigration*"
+
+# Some components have files which are read-only by zenoss, so we need to
+# open up the permissions to allow read/write for the group and read for
+# all others.  We need to make this minimal setting here to facilitate
+# creation of a devimg.
+#
+# Note that the final arbitration of permissions will be done by zenoss_init.sh
+# when the actual product image is created.
+chmod -R g+rw,o+r,+X ${ZENHOME}/*
 
 # TODO add upgrade templates to /root  - probably done in core/rm image builds
 
