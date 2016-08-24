@@ -41,6 +41,7 @@ upgrade-%.txt:
 
 upgrade-%.sh:
 	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%VERSION%/$(VERSION)/g;' upgrade-$*.sh.in > $@
+	@chmod +x $@
 
 run-tests:
 	-docker run -i --rm $(TAG) /opt/zenoss/install_scripts/starttests.sh

@@ -27,6 +27,7 @@ component_info:
 $(SHORT_VERSION).x/pull-docker-images.sh:
 	@mkdir -p $(SHORT_VERSION).x
 	@sed -e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g; s/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g;'  pull-docker-images.sh.in > $@
+	@chmod +x $@
 
 Dockerfile:
 	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g;'  Dockerfile.in > $@
