@@ -2,10 +2,13 @@
 #
 # build.sh - build zendev/devimg.
 #
-# This script assumes that zendev/devimg already exists as an incomplete image;
-# see build-devbase.sh. This script then runs create_zenoss.sh with several
-# key directories in the image bind-mounted to source directories in the
-# developer's machine.
+# This script assumes that zendev/devimg-base already exists; see build-devbase.sh.
+# This script runs create_devimg.sh in zendev/devimg-base with several key
+# directories in the image bind-mounted to source directories in the developer's
+# local sandbox.  The create_devimg.sh script creates zenoss, optionally link
+# installs zenpacks and setups some other component links. After
+# create_devimg.sh completes, this script commits the resultant container as a
+# new zendev/devimg image.
 #
 # Required Arguments (specified as environment variables):
 # BASE_TAG    - the tag of image to start from (e.g. zendev/devimg-base:<envName>)
@@ -61,9 +64,6 @@ docker run \
 	-v ${ZENDEV_ROOT}/zenhome:/opt/zenoss \
 	-v ${ZENDEV_ROOT}/var_zenoss:/var/zenoss \
 	-v ${SRCROOT}:/mnt/src \
-	-v ${PRODBIN_SRC}/Products:/opt/zenoss/Products \
-	-v ${PRODBIN_SRC}/devimg:/opt/zenoss/devimg \
-	-v ${ZENPACK_SRC}:/opt/zenoss/packs \
 	-t ${BASE_TAG} \
 	/opt/zenoss/install_scripts/create_devimg.sh
 

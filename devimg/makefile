@@ -18,6 +18,7 @@
 # zenoss user/group remapped to the uid/gid of the developer creating devimg.
 #
 # zendev/devimg is built just like the standard product images, except:
+#   - zenoss-prodbin/Products is mounted/linked into ZENHOME/Products
 #   - the ZenPacks are link-installed with soft-links
 #   - Java apps are soft-linked from ZENHOME/lib/<appDir> back to their
 #     source directory
@@ -41,9 +42,6 @@
 #                 The file name must be "zenpacks.json".
 #                 For example, ZENPACK_FILE=../core/zenpacks.json is equivalent
 #                 to TARGET_PRODUCT=core
-# PRODBIN_SRC     the full directory path to the developers local checkout of zenoss-prodbin
-# ZENPACK_SRC     the full directory path to the parent directory containing all
-#                 of the ZenPacks checked out locally by the developer
 #
 include ../versions.mk
 IMAGENAME  = devimg
@@ -66,7 +64,7 @@ endif
 # Note that this list includes the directories used as mount points. We create
 # need to create those directories here so they are owned by the current user
 # (otherwise, they will be owned by root when docker creates them).
-make-dirs: verifyInputs $(ZENDEV_ROOT)/zenhome $(ZENDEV_ROOT)/zenhome/devimg $(ZENDEV_ROOT)/zenhome/packs $(ZENDEV_ROOT)/var_zenoss
+make-dirs: verifyInputs $(ZENDEV_ROOT)/zenhome  $(ZENDEV_ROOT)/var_zenoss
 
 $(ZENDEV_ROOT)/%:
 	mkdir -p $@
@@ -85,8 +83,8 @@ endif
 	@echo "ZENPACK_FILE='$(ZENPACK_FILE)'"
 	@if [ ! -f $(ZENPACK_FILE) ]; then echo "ZENPACK_FILE=$(ZENPACK_FILE) does not exist"; exit 1; fi
 
-ZENPACK_SRC ?= $(SRCROOT)
-PRODBIN_SRC ?= $(SRCROOT)/zenoss-prodbin
+ZENPACK_SRC = $(SRCROOT)
+PRODBIN_SRC = $(SRCROOT)/zenoss-prodbin
 
 #
 # four major steps to creating the devimg:
@@ -94,8 +92,8 @@ PRODBIN_SRC ?= $(SRCROOT)/zenoss-prodbin
 #    built on the ".devtools" version of zenoss-centos-base.
 # 2. initialize-zenhome - Copies the contents of /opt/zenoss/* from the image
 #    into our local ZENHOME directory
-# 3. add-zenpack-file - Adds the zenpacks to the image based on a file
-#    containing a list of zenpacks (optional)
+# 3. add-zenpack-file - Adds a 'zenpack.json' file to ZENHOME within the image
+#    such that the last step can use that file to install zenpacks (optional)
 # 4. build.sh - Initialize zenoss, link-install zenpacks (if any), and setup other
 #    linkages like Java apps, zenoss-protocols, etc.
 #
@@ -122,7 +120,10 @@ initialize-zenhome: make-dirs
 	docker run --rm \
 		-v $(ZENDEV_ROOT)/zenhome:/mnt/local-zenhome \
 		-t $(BASE_TAG) \
-		bash -c "rm -rf /mnt/local-zenhome/*; cp -rp $(CONTAINER_ZENHOME)/* /mnt/local-zenhome"
+		bash -c "/opt/zenoss/install_scripts/init_devimg_zenhome.sh /mnt/local-zenhome"
+	ln -s /mnt/src/zenoss-prodbin/Products $(ZENDEV_ROOT)/zenhome/Products
+	ln -s /mnt/src/zenoss-prodbin/devimg $(ZENDEV_ROOT)/zenhome/devimg
+	ln -s /mnt/src $(ZENDEV_ROOT)/zenhome/packs
 
 add-zenpack-file:
 	@if [ -z "$(ZENPACK_FILE)" ]; then \
