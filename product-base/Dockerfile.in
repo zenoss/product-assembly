@@ -12,4 +12,4 @@ ADD hubpasswd /opt/zenoss/etc/
 
 ADD install_scripts component_info /opt/zenoss/install_scripts/
 
-RUN /opt/zenoss/install_scripts/zenoss_component_install.sh
+RUN /opt/zenoss/install_scripts/zenoss_component_install.sh %INSTALL_OPTIONS%

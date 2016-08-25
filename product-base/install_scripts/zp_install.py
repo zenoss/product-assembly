@@ -20,7 +20,10 @@ def main(args):
             zpFile = os.path.join(args.zpDir, zpFileName[0])
             print "Installing zenpack: %s %s" % (zpName, zpFile)
             sys.stdout.flush()
-            subprocess.check_call(['zenpack', '--install', zpFile])
+            cmd = ['zenpack', '--install', zpFile]
+            if args.link:
+                cmd.append('--link')
+            subprocess.check_call(cmd)
 
 
 if __name__ == '__main__':
@@ -29,5 +32,7 @@ if __name__ == '__main__':
                         help='json file with list of zenpacks to be installed')
     parser.add_argument('zpDir', type=str, nargs="?", default=".",
                         help='directory where zenpacks are, defaults to pwd')
+    parser.add_argument('--link', action="store_true",
+                        help='link-install the zenpacks')
     args = parser.parse_args()
     main(args)

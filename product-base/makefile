@@ -2,7 +2,7 @@ include ../versions.mk
 IMAGENAME  = product-base
 MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
-FROM_IMAGE ?= zenoss-centos-base:1.2.4
+FROM_IMAGE ?= zenoss-centos-base:1.2.5
 
 TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
@@ -43,4 +43,4 @@ $(SHORT_VERSION).x/pull-docker-images.sh:
 	@chmod +x $@
 
 Dockerfile:
-	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%FROM_IMAGE%/$(FROM_IMAGE)/g;' Dockerfile.in > $@
+	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%FROM_IMAGE%/$(FROM_IMAGE)/g; s/%INSTALL_OPTIONS%/$(INSTALL_OPTIONS)/g;' Dockerfile.in > $@
