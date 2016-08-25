@@ -9,9 +9,7 @@
 # by this script. For instance, if you want to build devimg with a custom version
 # zenoss-centos-base, you could run something like:
 #
-# FROM_IMAGE=zenoss-centos-base:1.3.9-dev BASE_TAG=zendev/devimg:metis ./build-devbase.sh
-#
-# And the value of FROM_IMAGE will be inherited by the make execution
+# BASE_TAG=zendev/devimg:metis ./build-devbase.sh
 #
 if [ -z "${BASE_TAG}" ]
 then

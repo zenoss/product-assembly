@@ -41,8 +41,6 @@
 #                 The file name must be "zenpacks.json".
 #                 For example, ZENPACK_FILE=../core/zenpacks.json is equivalent
 #                 to TARGET_PRODUCT=core
-# FROM_IMAGE      Specifies an alternate copy of zenoss-centos-base to use as
-#                 the basis for zendev/devimg-base
 # PRODBIN_SRC     the full directory path to the developers local checkout of zenoss-prodbin
 # ZENPACK_SRC     the full directory path to the parent directory containing all
 #                 of the ZenPacks checked out locally by the developer
@@ -53,7 +51,6 @@ DEV_ENV ?= metis
 TAG = zendev/$(IMAGENAME):$(DEV_ENV)
 BASE_TAG = zendev/$(IMAGENAME)-base:$(DEV_ENV)
 
-FROM_IMAGE ?= zenoss-centos-base:1.2.5
 CONTAINER_ZENHOME=/opt/zenoss
 
 .PHONY: clean build
@@ -117,7 +114,7 @@ clean:
 
 build-devbase:
 	@echo "Building $(BASE_TAG) ..."
-	FROM_IMAGE=$(FROM_IMAGE) BASE_TAG=$(BASE_TAG) ./build-devbase.sh
+	BASE_TAG=$(BASE_TAG) ./build-devbase.sh
 
 # Initialize our local ZENHOME using the contents from the initial devimg
 initialize-zenhome: make-dirs
