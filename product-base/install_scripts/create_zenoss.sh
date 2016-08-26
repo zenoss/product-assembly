@@ -5,7 +5,7 @@
 . ${ZENHOME}/install_scripts/install_lib.sh
 
 set -e
-set -x 
+set -x
 
 
 start_requirements
@@ -18,7 +18,6 @@ sleep 5
 
 echo "Running zenoss_init"
 ${ZENHOME}/install_scripts/zenoss_init.sh
-
 
 echo "Cleaning up dmd.uuid"
 echo "dmd.uuid = None" > /tmp/cleanuuid.zendmd
@@ -41,9 +40,6 @@ sleep 10
 echo "Cleaning up mysql data..."
 rm /var/lib/mysql/ib_logfile0
 rm /var/lib/mysql/ib_logfile1
-
-echo "TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT MIGRATE TESTS"
-rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
 
 echo "Cleaning up after install..."
 find ${ZENHOME} -name \*.py[co] -delete
