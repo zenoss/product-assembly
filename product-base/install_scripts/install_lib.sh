@@ -62,7 +62,9 @@ start_requirements() {
     echo "127.0.0.1 rbt0" >> /etc/hosts
     /usr/sbin/rabbitmq-server &
     #TODO: figure out how to wait for rabbit to start
-    sleep 5
+    echo "Waiting for rabbitmq to start..."
+    rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
+    echo "rabbitmq is running"
 }
 
 configure_amqp() {
@@ -122,7 +124,7 @@ run_mkzopeinstance()
 {
     set +x
     set -e
-    echo "Syncing zenglobal conf, whatver that means."
+    echo "Syncing zenglobal conf, whatever that means."
     su zenoss -l -c "$ZENHOME/bin/zenglobalconf -s"
 
     echo "Moving zope scripts around..."

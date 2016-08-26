@@ -13,8 +13,9 @@ start_requirements
 /usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management
 /sbin/rabbitmqctl stop
 sleep 5
+rm -r /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
 /usr/sbin/rabbitmq-server 2>&1 > ${ZENHOME}/log/rabbitmq.log &
-sleep 5
+rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
 
 echo "Running zenoss_init"
 ${ZENHOME}/install_scripts/zenoss_init.sh
