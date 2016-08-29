@@ -46,7 +46,7 @@ node ('build-zenoss-product') {
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
 
     stage 'Push image'
-        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
 
     stage 'Compile service definitions and build RPM'
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
