@@ -13,9 +13,7 @@ def main(args):
         dirList = os.listdir(args.zpDir)
         zpFileName = fnmatch.filter(dirList, zpGlob)
         if not zpFileName or len(zpFileName) != 1:
-            # TODO: this needs to raise if zenpack was not found
-            # raise Exception("zenpack file not found for zenpack: %s" % zpName)
-            print "zenpack file not found for zenpack: %s" % zpName
+            raise Exception("zenpack file not found for zenpack: %s" % zpName)
         else:
             zpFile = os.path.join(args.zpDir, zpFileName[0])
             print "Installing zenpack: %s %s" % (zpName, zpFile)
