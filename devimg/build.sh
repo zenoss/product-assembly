@@ -43,6 +43,16 @@ then
 	exit 1
 fi
 
+# Always try to remove the docker container, even on a failed exit.
+cleanup() {
+	if [ ! -z "${CONTAINER_ID}" ]
+	then
+		docker ps -qa --no-trunc | grep ${CONTAINER_ID} | xargs --no-run-if-empty docker rm -f
+	fi
+	rm -f ${CONTAINER_ID_FILE}
+}
+trap cleanup EXIT
+
 echo "Initializing Zenoss and installing Zenpacks ..."
 echo "   ZENHOME=${ZENDEV_ROOT}/zenhome"
 echo "   VAR_ZENOSS=${ZENDEV_ROOT}/var_zenoss"
@@ -70,6 +80,3 @@ docker run \
 echo "Committing all of the changes to ${TAG}"
 CONTAINER_ID=`cat ${CONTAINER_ID_FILE}`
 docker commit ${CONTAINER_ID} ${TAG}
-
-docker rm -f ${CONTAINER_ID}
-rm -f ${CONTAINER_ID_FILE}
