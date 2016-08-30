@@ -111,7 +111,7 @@ artifactDownload "zproxy"
 su - zenoss -c "tar --strip-components=2 -C ${ZENHOME} -xzvf /tmp/zproxy*"
 
 # Install the service migration SDK
-artifactDownload "servicemigration"
+artifactDownload "service-migration"
 su - zenoss -c "pip install  --use-wheel --no-index  /tmp/servicemigration*"
 
 # Some components have files which are read-only by zenoss, so we need to
