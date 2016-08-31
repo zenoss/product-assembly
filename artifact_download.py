@@ -300,7 +300,7 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
             artifactName, job, number, server))
 
     lastBuiltRevision = [item['lastBuiltRevision'] for item in response['actions'] if
-                         len(item) > 0 and item['lastBuiltRevision']]
+                         len(item) > 0 and 'lastBuiltRevision' in item]
     git_ref = lastBuiltRevision[0]['SHA1']
     branchData = lastBuiltRevision[0]['branch'][0]
     if branchData:
@@ -495,13 +495,13 @@ class JenkinsInfo(ArtifactInfo):
     def server(self):
         if 'jenkins.server' in self.info:
             return self.info['jenkins.server']
-        return 'http://jenkins.zendev.org'
+        return 'http://platform-jenkins.zenoss.eng'
 
     @property
     def job(self):
         if 'jenkins.job' in self.info:
             return self.info['jenkins.job']
-        return '%s-%s' % (self.name, self.version)
+        return 'Components/job/%s/job/%s' % (self.name, self.version)
 
     @property
     def jobURL(self):
