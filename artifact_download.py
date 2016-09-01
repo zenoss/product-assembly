@@ -446,7 +446,7 @@ class ArtifactInfo(object):
         """
         if 'git_repo' in self.info:
             return self.info['git_repo']
-        return 'https://github.com/%s/%s.git' % (self.gitOwner, self.info['name'])
+        return 'git@github.com:%s/%s.git' % (self.gitOwner, self.info['name'])
 
     @property
     def gitRef(self):
