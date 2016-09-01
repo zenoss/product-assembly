@@ -9,11 +9,13 @@ import sys
 def main(args):
     manifest = json.load(args.zp_manifest)
     for zpName in manifest['install_order']:
-        zpGlob = '%s*' % zpName
+        zpGlob = '%s-*' % zpName
         dirList = os.listdir(args.zpDir)
         zpFileName = fnmatch.filter(dirList, zpGlob)
-        if not zpFileName or len(zpFileName) != 1:
+        if not zpFileName:
             raise Exception("zenpack file not found for zenpack: %s" % zpName)
+        elif len(zpFileName) != 1:
+            raise Exception("Found multiple files for zenpack: %s" % zpName)
         else:
             zpFile = os.path.join(args.zpDir, zpFileName[0])
             print "Installing zenpack: %s %s" % (zpName, zpFile)
