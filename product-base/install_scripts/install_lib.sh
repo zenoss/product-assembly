@@ -60,7 +60,17 @@ start_requirements() {
     
     echo "Starting rabbit..."
     echo "127.0.0.1 rbt0" >> /etc/hosts
+
+    # make sure there's no previous pid file
     rm -f /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
+
+    # Use 'rabbitmqctl status' to make sure that the erlang cookie for rabbit
+    # is created first so there is no race btwn starting rabbitmq-server and
+    # calling 'rabbitmqctl wait'
+    # Reference - https://bugzilla.redhat.com/show_bug.cgi?id=1059913
+    set +e
+    rabbitmqctl status >/dev/null 2>/dev/null;
+    set -e
     /usr/sbin/rabbitmq-server &
     
     # We've had problems where the wait sometimes waits forever if issued immediately after the start,
