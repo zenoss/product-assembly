@@ -60,8 +60,12 @@ start_requirements() {
     
     echo "Starting rabbit..."
     echo "127.0.0.1 rbt0" >> /etc/hosts
+    rm -f /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
     /usr/sbin/rabbitmq-server &
-    #TODO: figure out how to wait for rabbit to start
+    
+    # We've had problems where the wait sometimes waits forever if issued immediately after the start,
+    #    so as a workaround, give the server just a few seconds to start before checking if it's fully up and running
+    sleep 5
     echo "Waiting for rabbitmq to start..."
     rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
     echo "rabbitmq is running"
