@@ -83,9 +83,6 @@ endif
 	@echo "ZENPACK_FILE='$(ZENPACK_FILE)'"
 	@if [ ! -f $(ZENPACK_FILE) ]; then echo "ZENPACK_FILE=$(ZENPACK_FILE) does not exist"; exit 1; fi
 
-ZENPACK_SRC = $(SRCROOT)
-PRODBIN_SRC = $(SRCROOT)/zenoss-prodbin
-
 #
 # four major steps to creating the devimg:
 # 1. build-devbase - Create a devimg-base image starting the same as product-base, but
@@ -101,8 +98,6 @@ build: make-dirs select-zenpacks build-devbase initialize-zenhome add-zenpack-fi
 	BASE_TAG=$(BASE_TAG) \
 	TAG=$(TAG) \
 	ZENDEV_ROOT=$(ZENDEV_ROOT) \
-	PRODBIN_SRC=$(PRODBIN_SRC) \
-	ZENPACK_SRC=$(ZENPACK_SRC) \
 	./build.sh
 
 clean:
@@ -121,9 +116,6 @@ initialize-zenhome: make-dirs
 		-v $(ZENDEV_ROOT)/zenhome:/mnt/local-zenhome \
 		-t $(BASE_TAG) \
 		bash -c "/opt/zenoss/install_scripts/init_devimg_zenhome.sh /mnt/local-zenhome"
-	ln -s /mnt/src/zenoss-prodbin/Products $(ZENDEV_ROOT)/zenhome/Products
-	ln -s /mnt/src/zenoss-prodbin/devimg $(ZENDEV_ROOT)/zenhome/devimg
-	ln -s /mnt/src $(ZENDEV_ROOT)/zenhome/packs
 
 add-zenpack-file:
 	@if [ -z "$(ZENPACK_FILE)" ]; then \
