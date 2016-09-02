@@ -273,9 +273,12 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
 
     try:
         response = json.loads(urllib2.urlopen(queryURL).read())
+    except urllib2.URLError as e:
+        raise Exception("Error downloading %s: %s" % (queryURL, e))
     except urllib2.HTTPError as e:
         raise Exception("Error downloading %s: %s" % (queryURL, e))
-
+    except httplib.HTTPException, e:
+        raise Exception("Error downloading %s: %s" % (queryURL, e))
 
 
     #
