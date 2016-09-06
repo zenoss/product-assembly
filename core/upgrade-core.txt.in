@@ -27,7 +27,7 @@ REQUIRE_SVC
 SNAPSHOT preupgrade-core-%VERSION%
 
 # Choose image to upgrade to
-SVC_USE zenoss/core_%SHORT_VERSION%:%VERSION%_%RELEASE_PHASE% zenoss/core_5.0 zenoss/core_5.1
+SVC_USE zenoss/core_%SHORT_VERSION%:%VERSION%_%RELEASE_PHASE% zenoss/core_5.0 zenoss/core_5.1 zenoss/core_5.2
 SVC_USE zenoss/hbase:%HBASE_VERSION%
 SVC_USE zenoss/opentsdb:%OPENTSDB_VERSION%
 
