@@ -10,6 +10,9 @@ def main(args):
     manifest = json.load(args.zp_manifest)
     for zpName in manifest['install_order']:
         zpGlob = '%s-*' % zpName
+        if args.link:
+            #exact match for link install
+            zpGlob = zpName
         dirList = os.listdir(args.zpDir)
         zpFileName = fnmatch.filter(dirList, zpGlob)
         if not zpFileName:
