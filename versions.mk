@@ -14,9 +14,9 @@
 # VERSION           the full Zenoss product version; e.g. 5.2.0
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
 #
-HBASE_VERSION=24.0.0
-HDFS_VERSION=24.0.0
-OPENTSDB_VERSION=24.0.0
+HBASE_VERSION=24.0.1
+HDFS_VERSION=24.0.1
+OPENTSDB_VERSION=24.0.1
 SHORT_VERSION=5.2
 SVCDEF_GIT_REF=develop
 VERSION=5.2.0
