@@ -48,6 +48,7 @@ IMAGENAME  = devimg
 DEV_ENV ?= metis
 TAG = zendev/$(IMAGENAME):$(DEV_ENV)
 BASE_TAG = zendev/$(IMAGENAME)-base:$(DEV_ENV)
+DIR = ${CURDIR}
 
 CONTAINER_ZENHOME=/opt/zenoss
 
@@ -114,8 +115,9 @@ initialize-zenhome: make-dirs
 	@echo "Initializing ZENHOME from container contents..."
 	docker run --rm \
 		-v $(ZENDEV_ROOT)/zenhome:/mnt/local-zenhome \
+		-v ${DIR}:/mnt/devimg \
 		-t $(BASE_TAG) \
-		bash -c "/opt/zenoss/install_scripts/init_devimg_zenhome.sh /mnt/local-zenhome"
+		bash -c "/mnt/devimg/init_devimg_zenhome.sh /mnt/local-zenhome"
 
 add-zenpack-file:
 	@if [ -z "$(ZENPACK_FILE)" ]; then \
