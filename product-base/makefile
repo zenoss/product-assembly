@@ -2,7 +2,7 @@ include ../versions.mk
 IMAGENAME  = product-base
 MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
-FROM_IMAGE ?= zenoss-centos-base:1.2.6
+FROM_IMAGE ?= zenoss-centos-base:1.2.7
 
 TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
