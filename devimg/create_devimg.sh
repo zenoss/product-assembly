@@ -59,9 +59,10 @@ rm -rf ${ZENHOME}/lib/metric-consumer-app
 ln -s ${SRCROOT}/zenoss.metric.consumer/metric-consumer-app ${ZENHOME}/lib/metric-consumer-app
 chown zenoss:zenoss ${ZENHOME}/lib/metric-consumer-app
 
-echo "Install zenoss-protocols in development mode"
-su - zenoss -c "pip uninstall -y zenoss.protocols"
-su - zenoss -c "pip install -e ${SRCROOT}/zenoss-protocols/python"
+#TODO figure out how to install protocols in develop mode. The setup.py doesn't buld protobus.
+#echo "Install zenoss-protocols in development mode"
+#su - zenoss -c "pip uninstall -y zenoss.protocols"
+#su - zenoss -c "pip install -e ${SRCROOT}/zenoss-protocols/python"
 
 echo "Install zenwipe"
 su - zenoss -c "ln -s ${SRCROOT}/zenoss-prodbin/devimg ${ZENHOME}/devimg"
