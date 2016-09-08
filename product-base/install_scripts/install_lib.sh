@@ -246,6 +246,7 @@ function ensure_dfs_dirs
         "/home/zenoss/.ssh" \
         "/opt/zenoss/export" \
         "/opt/zenoss/patches" \
+        "/opt/zenoss/.ZenPacks" \
         "/opt/zenoss/.pc" \
         "/var/zenoss/ZenPacks" \
         "/var/zenoss/ZenPackSource"

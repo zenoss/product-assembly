@@ -21,14 +21,12 @@ then
 fi
 
 TARGET_MOUNT=${1}
-
+set -x 
 # Delete anything that's already in the mounted volume. This step executes
 # in the container as root so we can remove any root-owned files that get
 # created in the developer's local ZENHOME.
-rm -rf ${TARGET_MOUNT}/*
+find ${TARGET_MOUNT} -maxdepth 1 -mindepth 1 -exec rm -rf {} +
 
 # Copy out everything in ZENHOME except Products, devimg and packs.
 # These directories will be soft-linked in host OS.
-find ${ZENHOME} -maxdepth 1 |\
-	egrep -v '/Products|/devimg|/packs' |\
-	xargs --no-run-if-empty cp -rp -t ${TARGET_MOUNT}
+rsync -a -exclude "${ZENHOME}/Products" ${ZENHOME}/ ${TARGET_MOUNT}/
