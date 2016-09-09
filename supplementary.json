@@ -21,6 +21,14 @@
     },
     {
         "ref": "develop",
+        "repo": "git@github.com:control-center/serviced-resource-agents.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/QuickVis.git"
+    },
+    {
+        "ref": "develop",
         "repo": "git@github.com:zenoss/zenoss-service.git"
     }
 ]
