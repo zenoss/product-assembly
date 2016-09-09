@@ -52,12 +52,10 @@ echo "Finished create_zenoss.sh"
 
 echo "Link in Java apps"
 rm -rf ${ZENHOME}/lib/central-query
-ln -s ${SRCROOT}/query ${ZENHOME}/lib/central-query
-chown zenoss:zenoss ${ZENHOME}/lib/central-query
+su - zenoss -c "ln -s ${SRCROOT}/query ${ZENHOME}/lib/central-query"
 
 rm -rf ${ZENHOME}/lib/metric-consumer-app
-ln -s ${SRCROOT}/zenoss.metric.consumer/metric-consumer-app ${ZENHOME}/lib/metric-consumer-app
-chown zenoss:zenoss ${ZENHOME}/lib/metric-consumer-app
+su - zenoss -c "ln -s ${SRCROOT}/zenoss.metric.consumer ${ZENHOME}/lib/metric-consumer-app"
 
 #TODO figure out how to install protocols in develop mode. The setup.py doesn't buld protobus.
 #echo "Install zenoss-protocols in development mode"
