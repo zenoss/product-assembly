@@ -64,6 +64,7 @@ docker run \
 	-v ${ZENDEV_ROOT}/var_zenoss:/var/zenoss \
 	-v ${SRCROOT}:/mnt/src \
 	-v ${PWD}:/mnt/devimg \
+        -v ${HOME}/.m2:/home/zenoss/.m2 \
         -t ${BASE_TAG} \
 	/mnt/devimg/create_devimg.sh
 

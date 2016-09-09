@@ -65,7 +65,8 @@ endif
 # Note that this list includes the directories used as mount points. We create
 # need to create those directories here so they are owned by the current user
 # (otherwise, they will be owned by root when docker creates them).
-make-dirs: verifyInputs $(ZENDEV_ROOT)/zenhome  $(ZENDEV_ROOT)/var_zenoss
+make-dirs: verifyInputs $(ZENDEV_ROOT)/zenhome  $(ZENDEV_ROOT)/var_zenoss 
+	@mkdir -p $$HOME/.m2
 
 $(ZENDEV_ROOT)/%:
 	mkdir -p $@
