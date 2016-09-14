@@ -25,8 +25,8 @@ The JSON file sytnax details for each of these types is available [below](#synta
 
 ## Using Nightly Builds for Components
 Assuming the `component_versions.json` file already specifies a pinned version of the component (`"type": "download"`),
-modify the file to use `"type": "jenkins"`.  The following example illustrates the simplest case. Some Java-based artifacts may require additional properties. For more information
-see the section on [Jenkins-type artifacts](#jenkins-type-artifacts) below.
+modify the file to use `"type": "jenkins"`.  The following example illustrates the simplest case. Some Java-based artifacts may require additional properties.
+For more information see the section on [Jenkins-type artifacts](#jenkins-type-artifacts) below.
 
 Before (using a pinned release):
 ```
@@ -50,6 +50,7 @@ After (using the last successful build from Jenkins):
 ## Using Nightly Builds for Zenpacks
 Assuming the `zenpacks_versions.json` file already specifies latest GA release of the zenpack
 modify the file to use `"pre": "true"`.
+For more information see the section on [ZenPack-type artifacts](#zenpack-type-artifacts) below.
 
 Before (using latest release):
 ```
@@ -71,7 +72,9 @@ After (the latest prerelease is the most recent build from the `develop` branch)
 # Pinning Versions
 
 ## Pinning Versions for Components
-To pin the version for a component in `component_versions.json`, change the `type` property to `download` and specify the
+To pin the version for a component in `component_versions.json`, change the `type` property to `download` and specify the `version`.
+For more information see the section on [Download-type artifacts](#download-type-artifacts) below.
+
 Before (using the last successful build from Jenkins):
 ```
     {
@@ -92,13 +95,24 @@ After (using a pinned release):
 ```
 
 ## Pinning Versions for Zenpacks
+To pin the version for a ZenPack in `zenpack_versions.json`, add a `requirement` property with an exact version.
+For more information see the section on [ZenPack-type artifacts](#zenpack-type-artifacts) below.
 
-Before:
+Before (using latest release):
 ```
+    {
+        "name": "ZenPacks.zenoss.Example",
+        "type": "zenpack",
+    }
 ```
 
-After:
+After (using exactly version 1.2.3):
 ```
+    {
+        "name": "ZenPacks.zenoss.Example",
+        "type": "zenpack",
+        "requirement": "ZenPacks.zenoss.Example===1.2.3"
+    }
 ```
 
 # Syntax Details
