@@ -14,19 +14,18 @@
 # VERSION           the full Zenoss product version; e.g. 5.2.0
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
 #
-HBASE_VERSION=24.0.2
 SHORT_VERSION=5.2
 SVCDEF_GIT_REF=develop
 VERSION=5.2.0
 UCSPM_VERSION=2.1.0
 
 #
-# Currently, HDFS and OpenTSDB use the same image as 
-# HBASE.  For this reason, the version numbers need 
-# to match that of HBASE_VERSION.
+# Currently, HDFS and OpenTSDB use the same image as HBASE
+# So these versions should always be the same. 
 #
-HDFS_VERSION=${HBASE_VERSION}
-OPENTSDB_VERSION=${HBASE_VERSION}
+HBASE_VERSION=24.0.2
+HDFS_VERSION=24.0.2
+OPENTSDB_VERSION=24.0.2
 
 
 #
