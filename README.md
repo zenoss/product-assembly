@@ -6,7 +6,6 @@
   - [Adding/Removing a new component or ZenPack](#adding-or-removing-a-new-component-or-zenpack)
     - [Adding or Removing components](#adding-or-removing-components)
     - [Adding or Removing ZenPacks](#adding-or-removing-zenpacks)
-  - [Using Nightly Builds](#using-nightly-builds)
   - [Setting up Builds for a Maintenance Release](#setting-up-builds-for-a-maintenance-release)
 
 ## Overview
@@ -39,6 +38,8 @@ components included in the various product images.
 | Versions of components such as centralquery and core (prodbin) included in `zenoss/product-base` | various locations | [component_versions.json](component_versions.json) |
 | ZenPack versions  | various locations | [zenpack_versions.json](zenpack_versions.json) |
 
+For a detailed description of the syntax for [component_versions.json](component_versions.json) and [zenpack_versions.json](zenpack_versions.json), see [README.versionInfo.md](README.versionInfo.md)
+
 ## Adding or Removing a new component or ZenPack
 
 ### Adding or Removing components
@@ -59,44 +60,6 @@ ZenPack information is split across two files
 * [resmgr/zenpacks.json](resmgr/zenpacks.json) defines the set of ZenPacks included in the Zenoss Resource Manager image
 
 To add a ZenPack, first add an entry to `zenpack_versions.json`, then update the `zenpacks.json` file for Core and/or RM as approviate.
-
-## Using Nightly Builds
-To update nightly builds for a component, find the entry for the component in either
-`component_versions.json` or `zenpack_versions.json`.
-Remove the `URL` attribute,
-change the `type` property to `"jenkins"`, and
-add a `jenkinsInfo` property identifying the jenkins jobs and the associated artifact of that job.
-
-In the following example, the Before illustrates a download-type component, and the After illustrates
-the same component record modified to be a jenkins-type component.
-
-Before:
-```
-    {
-        "URL": "http://zenpip.zendev.org/packages/prodbin-5.2.0-develop.tar.gz",
-        "git_ref": "develop",
-        "git_repo": "https://github.com/zenoss/zenoss-prodbin.git",
-        "name": "zenoss-prodbin",
-        "type": "download",
-        "version": "develop"
-    },
-```
-
-After:
-```
-    {
-        "git_ref": "develop",
-        "git_repo": "https://github.com/zenoss/zenoss-prodbin.git",
-        "jenkinsInfo": {
-            "job": "prodbin-merge-develop",
-            "pattern": "prodbin*.tar.gz",
-            "server": "http://jenkins.zendev.org"
-        },
-        "name": "zenoss-prodbin",
-        "type": "jenkins",
-        "version": "develop"
-    },
-```
 
 ## Setting up Builds for a Maintenance Release
 This section assumes that a maintenance release is based on a branch of this repo like `support/5.2.x`.
