@@ -27,11 +27,17 @@ rm -rf ${ZENHOME}/webapps/zeneventserver
 su - zenoss -c "ln -s ${SRCROOT}/zenoss-zep ${ZENHOME}/webapps/zeneventserver"
 
 #TODO: do we want to do this for prodbin bin files as well?
-for srcfile in ${SRCROOT}/zenoss-zep/dist/src/assembly/bin/*; do
-    filename=$(basename "$srcfile")
-    rm -f ${ZENHOME}/bin/${filename}
-    su - zenoss -c "ln -s ${srcfile} ${ZENHOME}/bin/${filename}"
-done
+if [ -d ${SRCROOT}/zenoss-zep/dist/src/assembly/bin ]
+then
+    for srcfile in ${SRCROOT}/zenoss-zep/dist/src/assembly/bin/*; do
+        filename=$(basename "$srcfile")
+        rm -f ${ZENHOME}/bin/${filename}
+        su - zenoss -c "ln -s ${srcfile} ${ZENHOME}/bin/${filename}"
+    done
+else
+    echo "${SRCROOT}/zenoss-zep/dist/src/assembly/bin does not exist"
+    exit 1
+fi
 
 
 

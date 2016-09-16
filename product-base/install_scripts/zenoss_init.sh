@@ -86,7 +86,7 @@ if [ -f "${ZENHOME}/install_scripts/zenpacks.json" ]; then
     else
        LINK_INSTALL="--link"
     fi
-    su - zenoss  -c "${ZENHOME}/install_scripts/zp_install.py ${ZENHOME}/install_scripts/zenpacks.json ${ZENHOME}/packs ${LINK_INSTALL}"
+    su - zenoss  -c "${ZENHOME}/install_scripts/zp_install.py ${ZENHOME}/install_scripts/zenpacks.json ${ZENHOME}/packs ${ZENHOME}/install_scripts/zp_blacklist.json ${LINK_INSTALL}"
 
     echo "Stopping zeneventserver..."
     su - zenoss  -c "${ZENHOME}/bin/zeneventserver stop"

@@ -28,9 +28,10 @@
 #
 # ZENDEV_ROOT     the parent directory created by zendev which contains the
 #                 zenhome and var_zenoss subdirectories. In other words, the
-#                 developer's ZENHOME=$ZENDEV_ROOT/zenhome.
-# SRCROOT         the root directory of the zendev's environment source code.
-#                 Typically, something like $HOME/src/<envName>/src
+#                 developer's ZENHOME=$ZENDEV_ROOT/zenhome; aka
+#                 $HOME/src/<envName>/zenhome
+# SRCROOT         the root directory of the Zenoss source code.
+#                 Typically, something like $HOME/src/<envName>/src/github.com/zenoss
 #
 # The following input variables are OPTIONAL. They may be set in various special
 # circumstances, but in most case only TARGET_PRODUCT is specified
@@ -42,6 +43,9 @@
 #                 The file name must be "zenpacks.json".
 #                 For example, ZENPACK_FILE=../core/zenpacks.json is equivalent
 #                 to TARGET_PRODUCT=core
+# ZENPACK_BLACKLIST The path to a "zp_blacklist.json" file which contains a list
+#                 of ZenPacks to be excluded from the image.
+#                 If not specifeid, defaults to ../devimg/zp_blacklist.json
 #
 include ../versions.mk
 IMAGENAME  = devimg
@@ -49,6 +53,7 @@ DEV_ENV ?= metis
 TAG = zendev/$(IMAGENAME):$(DEV_ENV)
 BASE_TAG = zendev/$(IMAGENAME)-base:$(DEV_ENV)
 DIR = ${CURDIR}
+ZENPACK_BLACKLIST ?= ${CURDIR}/zp_blacklist.json
 
 CONTAINER_ZENHOME=/opt/zenoss
 
@@ -65,7 +70,7 @@ endif
 # Note that this list includes the directories used as mount points. We create
 # need to create those directories here so they are owned by the current user
 # (otherwise, they will be owned by root when docker creates them).
-make-dirs: verifyInputs $(ZENDEV_ROOT)/zenhome  $(ZENDEV_ROOT)/var_zenoss 
+make-dirs: verifyInputs $(ZENDEV_ROOT)/zenhome  $(ZENDEV_ROOT)/var_zenoss
 	@mkdir -p $$HOME/.m2
 
 $(ZENDEV_ROOT)/%:
@@ -84,6 +89,8 @@ endif
 endif
 	@echo "ZENPACK_FILE='$(ZENPACK_FILE)'"
 	@if [ ! -f $(ZENPACK_FILE) ]; then echo "ZENPACK_FILE=$(ZENPACK_FILE) does not exist"; exit 1; fi
+	@echo "ZENPACK_BLACKLIST='$(ZENPACK_BLACKLIST)'"
+	@if [ ! -f $(ZENPACK_BLACKLIST) ]; then echo "ZENPACK_BLACKLIST=$(ZENPACK_BLACKLIST) does not exist"; exit 1; fi
 
 #
 # four major steps to creating the devimg:
@@ -128,3 +135,5 @@ add-zenpack-file:
 		cp $(ZENPACK_FILE) $(ZENDEV_ROOT)/zenhome/install_scripts; \
 	fi
 	@echo "No downloaded zenpacks; all zenpacks link-installed from source" > $(ZENDEV_ROOT)/zenhome/log/zenpacks_artifact.log
+	@echo "Using the zenpack blacklist defined by $(ZENPACK_BLACKLIST)"
+	cp $(ZENPACK_BLACKLIST) $(ZENDEV_ROOT)/zenhome/install_scripts/zp_blacklist.json
