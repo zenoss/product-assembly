@@ -1,23 +1,12 @@
 #!/bin/sh
-
-# load the installation functions
-. ${ZENHOME}/install_scripts/install_lib.sh
-
+#
+# Start Zenoss and run all platform and ZenPack tests
+#
 set -e
-set -x 
+set -x
 
+${ZENHOME}/install_scripts/startZenossForTests.sh
 
-start_requirements
-
-if [ -f "${ZENHOME}/bin/zencatalogservice" ]; then
-    echo "Starting zencatalogservice..."
-    su - zenoss  -c "${ZENHOME}/bin/zencatalogservice start"
-
-fi
-
-echo "Starting zeneventserver..."
-su - zenoss  -c "${ZENHOME}/bin/zeneventserver start"
-
-su - zenoss  -c "${ZENHOME}/bin/runtests"
+su - zenoss  -c "${ZENHOME}/bin/runtests" $*
 
 
