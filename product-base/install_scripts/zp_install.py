@@ -8,7 +8,14 @@ import sys
 
 def main(args):
     manifest = json.load(args.zp_manifest)
+    blacklist = []
+    if args.zp_blacklist:
+        blacklist = json.load(args.zp_blacklist)
     for zpName in manifest['install_order']:
+        if zpName in blacklist:
+            print "Skipping blacklisted ZenPack %s" % zpName
+            continue
+
         zpGlob = '%s-*' % zpName
         if args.link:
             #exact match for link install
@@ -39,5 +46,7 @@ if __name__ == '__main__':
                         help='directory where zenpacks are, defaults to pwd')
     parser.add_argument('--link', action="store_true",
                         help='link-install the zenpacks')
+    parser.add_argument('zp_blacklist', type=file, nargs="?",
+                        help='json file with list of zenpacks to be blacklisted from the install')
     args = parser.parse_args()
     main(args)
