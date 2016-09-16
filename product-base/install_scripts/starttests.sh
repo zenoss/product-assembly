@@ -7,6 +7,6 @@ set -x
 
 ${ZENHOME}/install_scripts/startZenossForTests.sh
 
-su - zenoss  -c "${ZENHOME}/bin/runtests" $*
+su - zenoss  -c "${ZENHOME}/bin/runtests $*"
 
 
