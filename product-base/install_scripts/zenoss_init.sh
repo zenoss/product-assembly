@@ -83,10 +83,12 @@ if [ -f "${ZENHOME}/install_scripts/zenpacks.json" ]; then
     if [ -z "${BUILD_DEVIMG}" ]
     then
        LINK_INSTALL=""
+       ZENPACK_BLACKLIST=""
     else
        LINK_INSTALL="--link"
+       ZENPACK_BLACKLIST="${ZENHOME}/install_scripts/zp_blacklist.json"
     fi
-    su - zenoss  -c "${ZENHOME}/install_scripts/zp_install.py ${ZENHOME}/install_scripts/zenpacks.json ${ZENHOME}/packs ${ZENHOME}/install_scripts/zp_blacklist.json ${LINK_INSTALL}"
+    su - zenoss  -c "${ZENHOME}/install_scripts/zp_install.py ${ZENHOME}/install_scripts/zenpacks.json ${ZENHOME}/packs ${ZENPACK_BLACKLIST} ${LINK_INSTALL}"
 
     echo "Stopping zeneventserver..."
     su - zenoss  -c "${ZENHOME}/bin/zeneventserver stop"
