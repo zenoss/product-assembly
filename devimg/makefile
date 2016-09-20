@@ -111,8 +111,10 @@ build: make-dirs select-zenpacks build-devbase initialize-zenhome add-zenpack-fi
 
 clean:
 	-cd ../product-base;TAG=$(BASE_TAG) make clean
+	@echo "Removing $(TAG) (if any)..."
 	-docker rmi -f $(TAG)
-	rm -rf $(ZENDEV_ROOT)/zenhome/* $(ZENDEV_ROOT)/var_zenoss/*
+	@echo "Cleaning ZENDEV_ROOT=$(ZENDEV_ROOT) (requires sudo) ..."
+	sudo rm -rf $(ZENDEV_ROOT)/zenhome/* $(ZENDEV_ROOT)/var_zenoss/*
 
 build-devbase:
 	@echo "Building $(BASE_TAG) ..."
