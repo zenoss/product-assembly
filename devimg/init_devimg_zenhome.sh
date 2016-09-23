@@ -29,4 +29,6 @@ find ${TARGET_MOUNT} -maxdepth 1 -mindepth 1 -exec rm -rf {} +
 
 # Copy out everything in ZENHOME except Products, devimg and packs.
 # These directories will be soft-linked in host OS.
-rsync -a -exclude "${ZENHOME}/Products" ${ZENHOME}/ ${TARGET_MOUNT}/
+rsync -a --exclude Products ${ZENHOME}/ ${TARGET_MOUNT}/
+
+ls -lat ${TARGET_MOUNT}

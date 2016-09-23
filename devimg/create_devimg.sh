@@ -16,6 +16,7 @@ set -x
 
 # link source code for zenoss initialization
 echo "Linking in prodbin Products ..."
+rm -rf ${ZENHOME}/Products
 su - zenoss -c "ln -s ${SRCROOT}/zenoss-prodbin/Products ${ZENHOME}/Products"
 echo "Linking in zenpacks directory ..."
 su - zenoss -c "ln -s ${SRCROOT} ${ZENHOME}/packs"
