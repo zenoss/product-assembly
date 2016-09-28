@@ -54,10 +54,10 @@ start_requirements() {
     echo "Starting mysql..."
     /usr/bin/mysql_install_db --user=mysql
     /usr/bin/mysqld_safe &
-    
+
     echo "Starting redis..."
     /usr/bin/redis-server /etc/redis.conf &
-    
+
     echo "Starting rabbit..."
     echo "127.0.0.1 rbt0" >> /etc/hosts
 
@@ -72,7 +72,7 @@ start_requirements() {
     rabbitmqctl status >/dev/null 2>/dev/null;
     set -e
     /usr/sbin/rabbitmq-server &
-    
+
     # We've had problems where the wait sometimes waits forever if issued immediately after the start,
     #    so as a workaround, give the server just a few seconds to start before checking if it's fully up and running
     sleep 5
@@ -206,6 +206,24 @@ fix_zenhome_owner_and_group()
     chmod 04750 /opt/zenoss/bin/pyraw
     chown root:zenoss /opt/zenoss/bin/zensocket
     chmod 04750 /opt/zenoss/bin/zensocket
+}
+
+# Set permissions under /etc
+fix_etc_permissions()
+{
+    set -e
+    echo "Setting permissions on /etc/sudoers.d/"
+    sudoersd_files=("zenoss_dmidecode" "zenoss_nmap" "zenoss_ping" "zenoss_rabbitmq_stats" "zenoss_var_chown")
+    chmod 750 /etc/sudoers.d
+    for f in "${sudoersd_files[@]}"
+    do
+        echo "Setting permissions on /etc/sudoers.d/$f"
+        chmod 440 /etc/sudoers.d/"$f"
+    done
+    echo "Setting permissions on /etc/logrotate.d/"
+    chmod 755 /etc/logrotate.d
+    echo "Setting permissions on /etc/logrotate.d/"
+    chmod 755 /etc/logrotate.d/zenoss
 }
 
 DESIRED_OWNERSHIP=${DESIRED_OWNERSHIP:-"zenoss:zenoss"}
