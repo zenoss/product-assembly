@@ -211,7 +211,7 @@ fix_zenhome_owner_and_group()
 # Set permissions under /etc
 copy_missing_etc_files()
 {
-    echo "Coping missing files from $ZENHOME/etc to /etc"
+    echo "Copying missing files from $ZENHOME/etc to /etc"
     set -e
     sudoersd_files=("zenoss_dmidecode" "zenoss_nmap" "zenoss_ping" "zenoss_rabbitmq_stats" "zenoss_var_chown")
     for f in "${sudoersd_files[@]}"
