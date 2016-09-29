@@ -62,6 +62,9 @@ init_zproxy
 # Remediate file ownership under $ZENHOME.
 fix_zenhome_owner_and_group
 
+# Copy missing files from $ZENHOME/etc into /etc
+copy_missing_etc_files
+
 # Remediate file permissions on /etc/sudoers.d and /etc/logrotate.d
 fix_etc_permissions
 

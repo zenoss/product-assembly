@@ -209,21 +209,56 @@ fix_zenhome_owner_and_group()
 }
 
 # Set permissions under /etc
-fix_etc_permissions()
+copy_missing_etc_files()
 {
+    echo "Coping missing files from $ZENHOME/etc to /etc"
     set -e
-    echo "Setting permissions on /etc/sudoers.d/"
     sudoersd_files=("zenoss_dmidecode" "zenoss_nmap" "zenoss_ping" "zenoss_rabbitmq_stats" "zenoss_var_chown")
-    chmod 750 /etc/sudoers.d
     for f in "${sudoersd_files[@]}"
     do
-        echo "Setting permissions on /etc/sudoers.d/$f"
-        chmod 440 /etc/sudoers.d/"$f"
+        if [ -f /etc/sudoers.d/"$f" ]
+        then
+            echo "/etc/sudoers.d/$f already exists"
+        else
+            if [ -f $ZENHOME/etc/sudoers.d/$f ]
+            then
+                echo "Copying from $ZENHOME/etc/sudoers.d/$f to /etc/sudoers.d/$f"
+                cp -p $ZENHOME/etc/sudoers.d/$f /etc/sudoers.d/$f
+            else
+                echo "$ZENHOME/etc/sudoers.d/$f not found, skipping"
+            fi
+        fi
     done
+}
+
+# Set permissions under /etc
+fix_etc_permissions()
+{
+    echo "Setting correct permissions on files under /etc/"
+    set -e
+    sudoersd_files=("zenoss_dmidecode" "zenoss_nmap" "zenoss_ping" "zenoss_rabbitmq_stats" "zenoss_var_chown")
+    for f in "${sudoersd_files[@]}"
+    do
+        if [ -f /etc/sudoers.d/"$f" ]
+        then
+            echo "Setting permissions on /etc/sudoers.d/$f"
+            chmod 440 /etc/sudoers.d/"$f"
+        else
+            echo "/etc/sudoers.d/$f not found"
+        fi
+    done
+    echo "Setting permissions on /etc/sudoers.d/"
+    chmod 750 /etc/sudoers.d
     echo "Setting permissions on /etc/logrotate.d/"
     chmod 755 /etc/logrotate.d
-    echo "Setting permissions on /etc/logrotate.d/"
-    chmod 755 /etc/logrotate.d/zenoss
+    if [ -f /etc/logrotate.d/zenoss ]
+    then
+        echo "Setting permissions on /etc/logrotate.d/"
+        chmod 755 /etc/logrotate.d/zenoss
+    else
+        echo "/etc/logrotate.d/zenoss not found"
+    fi
+
 }
 
 DESIRED_OWNERSHIP=${DESIRED_OWNERSHIP:-"zenoss:zenoss"}
