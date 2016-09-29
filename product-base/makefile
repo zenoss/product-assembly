@@ -33,6 +33,8 @@ clean:
 
 component_versions: component_info
 	@cp ../artifact_download.py ../component_versions.json component_info/.
+	@echo "export BUILD_NUMBER=$(BUILD_NUMBER)" > component_info/versions.sh
+	@echo "export VERSION=$(VERSION)" >> component_info/versions.sh
 
 component_info:
 	@mkdir component_info
