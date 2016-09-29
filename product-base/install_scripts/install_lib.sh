@@ -249,16 +249,6 @@ fix_etc_permissions()
     done
     echo "Setting permissions on /etc/sudoers.d/"
     chmod 750 /etc/sudoers.d
-    echo "Setting permissions on /etc/logrotate.d/"
-    chmod 755 /etc/logrotate.d
-    if [ -f /etc/logrotate.d/zenoss ]
-    then
-        echo "Setting permissions on /etc/logrotate.d/"
-        chmod 755 /etc/logrotate.d/zenoss
-    else
-        echo "/etc/logrotate.d/zenoss not found"
-    fi
-
 }
 
 DESIRED_OWNERSHIP=${DESIRED_OWNERSHIP:-"zenoss:zenoss"}
