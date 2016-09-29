@@ -243,6 +243,8 @@ fix_etc_permissions()
         then
             echo "Setting permissions on /etc/sudoers.d/$f"
             chmod 440 /etc/sudoers.d/"$f"
+            echo "Changing owner of /etc/sudoers.d/$f to root:root"
+            chown root:root /etc/sudoers.d/$f
         else
             echo "/etc/sudoers.d/$f not found"
         fi
