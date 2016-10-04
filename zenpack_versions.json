@@ -38,7 +38,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ComponentGroups",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.ControlCenter",
         "type": "zenpack"
