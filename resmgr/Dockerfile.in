@@ -16,4 +16,4 @@ COPY zenpacks /opt/zenoss/packs/
 # Initializes zenoss, creates DB and installs zenpacks...
 RUN /opt/zenoss/install_scripts/create_zenoss.sh
 
-ADD upgrade-resmgr.txt upgrade-resmgr.sh upgrade-impact.txt upgrade-impact.sh /root/%SHORT_VERSION%.x/
+ADD upgrade-resmgr.txt upgrade-resmgr.sh upgrade-impact.txt /root/%SHORT_VERSION%.x/

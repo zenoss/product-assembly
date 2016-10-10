@@ -6,5 +6,12 @@
 #
 ###############################################################################
 set -e
-serviced script run /root/%SHORT_VERSION%.x/upgrade-resmgr.txt --service Zenoss.resmgr
+
+if [ $(serviced service status --show-fields Name  Zenoss.resmgr/Infrastructure/Impact | grep Impact) ]; then
+    serviced script run /root/%SHORT_VERSION%.x/upgrade-impact.txt --service Zenoss.resmgr
+else
+    serviced script run /root/%SHORT_VERSION%.x/upgrade-resmgr.txt --service Zenoss.resmgr
+fi
+
 /opt/serviced/bin/serviced-set-version Zenoss.resmgr %VERSION%
+
