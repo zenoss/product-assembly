@@ -181,7 +181,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.WBEM",
         "type": "zenpack"
