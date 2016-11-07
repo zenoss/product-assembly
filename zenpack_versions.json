@@ -182,6 +182,7 @@
     },{
         "name": "ZenPacks.zenoss.vSphere",
         "type": "zenpack",
+        "requirement": "ZenPacks.zenoss.vSphere==3.5.*",
         "pre": true
     },{
         "name": "ZenPacks.zenoss.WBEM",
