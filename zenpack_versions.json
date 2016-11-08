@@ -139,7 +139,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetScreenMonitor",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.NortelMonitor",
         "type": "zenpack"
