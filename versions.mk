@@ -48,6 +48,6 @@ OPENTSDB_VERSION=24.0.2
 #    SERVICED_VERSION and SERVICED_BLD_NUMBER have to be specified together, and
 #    SERVICED_BRANCH must be blank if both are specified.
 #
-SERVICED_BRANCH=develop
+SERVICED_BRANCH=support/1.2.x
 SERVICED_VERSION=
 SERVICED_BUILD_NBR=
