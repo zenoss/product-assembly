@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 
-MIN_VERSION = "2.0.0"
-
 import json
 import subprocess
 
@@ -21,19 +19,20 @@ def serviced(*args, **kwargs):
     stdout, stderr = proc.communicate(kwargs.get("stdin"))
     return '\n'.join((stdout, stderr)).strip()
 
-def check_servicedef_too_old(rootservice):
+def check_servicedef_too_old(rootservice, minversion):
     root = json.loads(serviced('service', 'list', '-v', rootservice))
 
-    return root["Version"] < MIN_VERSION
+    return root["Version"] < minversion
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
     import sys
     ap = ArgumentParser()
     ap.add_argument("rootservice", type=str)
+    ap.add_argument("minversion", type=str)
     args = ap.parse_args()
     try:
-        if check_servicedef_too_old(args.rootservice):
+        if check_servicedef_too_old(args.rootservice, args.minversion):
             sys.exit(1)
     except ServicedefParseError:
         sys.exit(1)

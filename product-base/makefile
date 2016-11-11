@@ -44,5 +44,10 @@ $(SHORT_VERSION).x/pull-docker-images.sh:
 	@sed -e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g; s/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g;'  pull-docker-images.sh.in > $@
 	@chmod +x $@
 
+$(SHORT_VERSION).x/check_for_old_servicedef.py:
+	@mkdir -p $(SHORT_VERSION).x
+	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g;' check_for_old_servicedef.py.in > $@
+	@chmod +x $@
+
 Dockerfile:
 	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%FROM_IMAGE%/$(FROM_IMAGE)/g; s/%INSTALL_OPTIONS%/$(INSTALL_OPTIONS)/g;' Dockerfile.in > $@
