@@ -8,6 +8,6 @@
 set -e
 export UCSPM_TENANT_ID="`serviced service list ucspm --format='{{.ID}}'`"
 serviced snapshot untag $UCSPM_TENANT_ID preupgrade-ucspm-%VERSION%
-/root/%SHORT_VERSION%.x/check_for_old_servicedef.py
+/root/%SHORT_VERSION%.x/check_for_old_servicedef.py ucspm
 serviced script run /root/%SHORT_VERSION%.x/upgrade-ucspm.txt --service ucspm
 /opt/serviced/bin/serviced-set-version UCSPM %UCSPM_VERSION%

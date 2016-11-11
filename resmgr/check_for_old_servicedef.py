@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-MIN_VERSION = "5.1.0"
+MIN_VERSION = "5.0.6"
 
 import json
 import subprocess
@@ -21,34 +21,19 @@ def serviced(*args, **kwargs):
     stdout, stderr = proc.communicate(kwargs.get("stdin"))
     return '\n'.join((stdout, stderr)).strip()
 
-def get_servicedef():
-    try:
-        return json.loads(serviced('service', 'list', '-v'))
-    except ValueError as ve:
-        # JSON decode error
-        raise ServicedefParseError(str(ve))
-
-def check_servicedef_too_old():
-    services = get_servicedef()
-    # Find root service
-    root_id = ""
-    for service in services:
-        if service["ParentServiceID"] == "":
-            root_id = service["ID"]
-            break
-
-    if not root_id:
-        raise ServicedefParseError("No root node detected.")
-
-    root = json.loads(serviced('service', 'list', '-v', root_id))
+def check_servicedef_too_old(rootservice):
+    root = json.loads(serviced('service', 'list', '-v', rootservice))
 
     return root["Version"] < MIN_VERSION
 
-
 if __name__ == '__main__':
+    from argparse import ArgumentParser
     import sys
+    ap = ArgumentParser()
+    ap.add_argument("rootservice", type=str)
+    args = ap.parse_args()
     try:
-        if check_servicedef_too_old():
+        if check_servicedef_too_old(args.rootservice):
             sys.exit(1)
     except ServicedefParseError:
         sys.exit(1)
