@@ -14,9 +14,9 @@
 # VERSION           the full Zenoss product version; e.g. 5.2.0
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
 #
-SHORT_VERSION=5.2
+SHORT_VERSION=5.3
 SVCDEF_GIT_REF=develop
-VERSION=5.2.0
+VERSION=5.3.0
 UCSPM_VERSION=2.1.0
 
 #
@@ -48,6 +48,6 @@ OPENTSDB_VERSION=24.0.2
 #    SERVICED_VERSION and SERVICED_BLD_NUMBER have to be specified together, and
 #    SERVICED_BRANCH must be blank if both are specified.
 #
-SERVICED_BRANCH=support/1.2.x
+SERVICED_BRANCH=develop
 SERVICED_VERSION=
 SERVICED_BUILD_NBR=
