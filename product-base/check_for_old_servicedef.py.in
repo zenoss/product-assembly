@@ -5,24 +5,78 @@ import json
 import subprocess
 
 
+class ServicedRunError(Exception):
+    pass
+
+
 class ServicedefParseError(Exception):
     pass
+
+
+class Version(object):
+    def __init__(self, verstring):
+        major, minor, rev = verstring.split('.')
+        (self.major,
+         self.minor,
+         self.rev) = (int(major, 10),
+                      int(minor, 10),
+                      int(rev, 10))
+
+    def __cmp__(self, other):
+        mj = cmp(self.major, other.major)
+        if mj != 0:
+            return mj
+        mn = cmp(self.minor, other.minor)
+        if mn != 0:
+            return mn
+        return cmp(self.rev, other.rev)
 
 
 def serviced(*args, **kwargs):
     cmd = ["serviced"]
     cmd.extend(args)
-    proc = subprocess.Popen(cmd,
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
-    stdout, stderr = proc.communicate(kwargs.get("stdin"))
-    return '\n'.join((stdout, stderr)).strip()
+    try:
+        proc = subprocess.Popen(cmd,
+                                stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        stdout, stderr = proc.communicate(kwargs.get("stdin"))
+        if stderr or proc.returncode != 0:
+            raise ServicedRunError("Serviced command failed: %s" %
+                                   stderr.strip())
+    except (OSError, ) as e:
+        raise ServicedRunError("Error running serviced: %s" % e)
+    return stdout.strip()
 
 def check_servicedef_too_old(rootservice, minversion):
-    root = json.loads(serviced('service', 'list', '-v', rootservice))
+    minimumversion = None
+    try:
+        minimumversion = Version(minversion)
+    except ValueError:
+        msg = "Could not determine minimum version from '%s'."
+        raise ServicedefParseError(msg % minversion)
 
-    return root["Version"] < minversion
+    # Will raise its own ServicedRunError
+    root_json = serviced('service', 'list', '-v', rootservice)
+    try:
+        root = json.loads(root_json)
+    except ValueError as ve:
+        raise ServicedefParseError("Could not parse servicedef.")
+
+    if "Version" not in root:
+        raise ServicedefParseError("Could not find Version of root service.")
+
+    if not root["Version"]:
+        raise ServicedefParseError("Version of root service is empty.")
+
+    rootversion = None
+    try:
+        rootversion = Version(root["Version"])
+    except ValueError:
+        msg = "Could not determine version of root service '%s'."
+        raise ServicedefParseError(msg % root["Version"])
+
+    return rootversion < minimumversion
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
@@ -33,6 +87,9 @@ if __name__ == '__main__':
     args = ap.parse_args()
     try:
         if check_servicedef_too_old(args.rootservice, args.minversion):
+            msg = "Service '%s' is older than minimum version '%s'.\n"
+            sys.stderr.write(msg % (args.rootservice, args.minversion))
             sys.exit(1)
-    except ServicedefParseError:
+    except (ServicedefParseError, ServicedRunError) as se:
+        sys.stderr.write("%s\n" % se)
         sys.exit(1)
