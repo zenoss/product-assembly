@@ -109,6 +109,12 @@ build: make-dirs select-zenpacks build-devbase initialize-zenhome add-zenpack-fi
 	ZENDEV_ROOT=$(ZENDEV_ROOT) \
 	./build.sh
 
+dumpdb: 
+	TAG=$(TAG) \
+	ZENDEV_ROOT=$(ZENDEV_ROOT) \
+	ZENWIPE_ARGS=$(ZENWIPE_ARGS) \
+	./docker_run_dumpzodb.sh
+
 clean:
 	-cd ../product-base;TAG=$(BASE_TAG) make clean
 	@echo "Removing $(TAG) (if any)..."
