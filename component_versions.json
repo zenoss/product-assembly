@@ -65,7 +65,7 @@
         "jenkins.subModule": "org.zenoss$metric-consumer-app",
         "name": "zenoss.metric.consumer",
         "type": "jenkins",
-        "version": "develop"
+        "version": "0.1.6"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
