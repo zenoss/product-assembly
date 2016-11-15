@@ -127,7 +127,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Windows",
-        "type": "zenpack"
+        "type": "zenpack",
+        "requirement": "ZenPacks.zenoss.Microsoft.Windows==2.6.8"
     },{
         "name": "ZenPacks.zenoss.MySqlMonitor",
         "type": "zenpack"
