@@ -76,6 +76,6 @@
     {
         "name": "zproxy",
         "type": "jenkins",
-        "version": "develop"
+        "version": "1.0.1"
     }
 ]
