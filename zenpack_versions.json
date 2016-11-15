@@ -41,8 +41,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ControlCenter",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dashboard",
         "type": "zenpack",
