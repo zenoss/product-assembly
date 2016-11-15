@@ -23,8 +23,7 @@
         "pre": true
     },{
         "name": "ZenPacks.zenoss.CatalogService",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CheckPointMonitor",
         "type": "zenpack"
