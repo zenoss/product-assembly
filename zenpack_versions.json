@@ -40,7 +40,7 @@
     },{
         "name": "ZenPacks.zenoss.ComponentGroups",
         "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.ComponentGroups==1.2.0"
     },{
         "name": "ZenPacks.zenoss.ControlCenter",
         "type": "zenpack",
