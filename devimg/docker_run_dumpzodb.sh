@@ -5,16 +5,19 @@
 # This script assumes that zendev/devimg already exists; see build.sh.
 # This script runs dump_zodb.sh in zendev/devimg with several key
 # directories in the image bind-mounted to source directories in the developer's
-# local sandbox.  The dump_zodb.sh script creates a clean base zodb from the XML files
+# local sandbox.  The dump_zodb.sh script creates a clean base zodb from the XML files or gz file
 # on the developer's local sandbox (zenoss-prodbin/Products/ZenModel/data).  It then migrates
 # the database to the latest version based on the migrate scripts found in ZenModel/migrate.
 # Finally, it dumps an updated set of xml files and an updated .gz file back out to 
-# zenoss-prodbin/ProductsZenModel/data
+# zenoss-prodbin/Products/ZenModel/data
 #
 # Required Arguments (specified as environment variables):
 # TAG         - the full docker tag of the devimage to use (e.g. zendev/devimg:<envName>)
 # ZENDEV_ROOT - see the description in makefile
 # SRCROOT     - see the description in makefile
+#
+# Optional Argument
+# ZENWIPE_ARGS - set to '--xml' to load DB from XML files, or leave empty to use .gz file
 
 if [ -z "${TAG}" ]
 then

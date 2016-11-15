@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # load the installation functions
+#   so we can use start_requirements
 . ${ZENHOME}/install_scripts/install_lib.sh
 
 
@@ -37,7 +38,6 @@ su - zenoss -c "cd /opt/zenoss/Products/ZenModel/data && ./exportXml.sh"
 echo "Stopping mysql..."
 mysqladmin shutdown
 
-#TODO stop and clean content of rabbit queues
 echo "Stopping redis..."
 pkill redis
 
