@@ -149,7 +149,7 @@
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
         "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.PredictiveThreshold==1.2.0"
     },{
         "name": "ZenPacks.zenoss.PortalIntegration",
         "type": "zenpack"
