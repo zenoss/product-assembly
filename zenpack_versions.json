@@ -147,8 +147,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PortalIntegration",
         "type": "zenpack"
