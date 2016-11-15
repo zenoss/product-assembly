@@ -78,7 +78,7 @@ The first step builds the docker image `zenoss/product-base:5.2.0_DEV_DEV` (or w
 The last 2 makes are performed in parallel for the nightly build. A developer typically only needs to build one of core or resmgr.
 
 # Test Like Jenkins
-The nightly build in Jenkins runs these steps to test an image after it is built
+The nightly build in Jenkins runs these steps to test an image after it is built:
 ```
 cd ../core
 make run-tests
