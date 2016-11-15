@@ -62,9 +62,9 @@
         "version": "develop"
     },
     {
-        "jenkins.subModule": "org.zenoss$metric-consumer-app",
+        "jenkins.subModule": "http://zenpip.zendev.org/packages/metric-consumer-app-{version}-zapp.tar.gz",
         "name": "zenoss.metric.consumer",
-        "type": "jenkins",
+        "type": "download",
         "version": "0.1.6"
     },
     {
