@@ -1,16 +1,30 @@
 #!groovy
 //
-// Jenkins-image.groovy - Jenkins script for building a single Zenoss product image.
+// Jenkins-promote.groovy - Jenkins script for promoting a single Zenoss product image.
+//
+// This script has 4 phases:
+// 1. Pull the specified docker image from docker hub, retag it per the
+//    "to" parameters, push the result back to docker hub.
+// 2. Recompile the service definitions to use the new image and build the
+//    svcdef RPM.
+// 3. Push the RPM to the designated YUM repo (e.g. testing or stable).
+// 4. Build appliances and offline resources based on the new image.
 //
 // The Jenkins job parameters for this script are:
 //
-//    GIT_SHA              - the GIT SHA of product-assembly to checkout for this build
-//    GIT_CREDENTIAL_ID    - the UUID of the Jenkins GIT credentials used to checkout stuff from github
-//    FROM_MATURITY        - the 'from' image maturity level (e.g. 'unstable', 'testing', 'stable')
-//    FROM_RELEASEPHASE    - the 'from' image release phase (e.g. for testing: "BETA01", "CR13").
-//                           Only applies when promoting from 'testing'
-//    PRODUCT_BUIlD_NUMBER - the build number for any given execution of this build pipeline; set by the begin job.
-//    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
+// GIT_SHA              - the GIT SHA of product-assembly to checkout for this build
+// GIT_CREDENTIAL_ID    - the UUID of the Jenkins GIT credentials used to checkout stuff from github
+// PRODUCT_BUIlD_NUMBER - the build number for any given execution of this build pipeline; set by the begin job.
+// TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
+// FROM_MATURITY        - required; the maturity level of the build that is
+//                        being promoted. Must be one of unstable, testing, stable
+// FROM_RELEASEPHASE    - The release phase of the from build (e.g. "RC1", "BETA", etc)
+//                        Only applies when FROM_MATURITY is testing
+// TO_MATURITY          - required; the maturity level of the build that will
+//                        be created. Must be one of testing, or stable
+// TO_RELEASEPHASE      - The release phase of the promoted build.
+//                        If TO_MATURITY is testing, then this value is typically something "BETA" or "RC1".
+//                        If TO_MATURITY is stable, then this value must be a single digit such as 1.
 //
 node ('build-zenoss-product') {
     def pipelineBuildName = env.JOB_NAME
@@ -30,18 +44,20 @@ node ('build-zenoss-product') {
         def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
         def ZENOSS_VERSION=versionProps['VERSION']
         def ZENOSS_SHORT_VERSION=versionProps['SHORT_VERSION']
-        def SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
-        def SERVICED_VERSION=versionProps['SERVICED_VERSION']
-        def SERVICED_BUILD_NBR=versionProps['SERVICED_BUILD_NBR']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}"
-        echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
-        echo "SERVICED_VERSION=${SERVICED_VERSION}"
-        echo "SERVICED_BUILD_NBR=${SERVICED_BUILD_NBR}"
 
-        // Make the target product
-        sh("cd svcdefs;./image_promote.sh")
+        // Promote the docker images
+        def promoteArgs = "TARGET_PRODUCT=${TARGET_PRODUCT}\
+            PRODUCT_BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
+            ZENOSS_VERSION=${ZENOSS_VERSION}\
+            ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}\
+            FROM_MATURITY=${FROM_MATURITY}\
+            FROM_RELEASEPHASE=${FROM_RELEASEPHASE}\
+            TO_MATURITY=${TO_MATURITY}\
+            TO_RELEASEPHASE=${TO_RELEASEPHASE}"
+        sh("cd svcdefs;${promoteArgs} ./image_promote.sh")
 
 /************************
     stage 'Compile service definitions and build RPM'
@@ -55,11 +71,15 @@ node ('build-zenoss-product') {
             sh("git checkout ${SVCDEF_GIT_REF}")
         }
 
+        // FIXME: Change the makefile in svcdefs to use "MATURITY" instead of
+        //        "MILESTONE" for consistency with the rest of terms in the
+        //        build pipeline.
+
         // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
         //     Jenkins credentials instead
         def makeArgs = "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
             IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
-            MATURITY=${MATURITY}\
+            MILESTONE=${TO_MATURITY}\
             SVCDEF_GIT_READY=true\
             TARGET_PRODUCT=${TARGET_PRODUCT}"
         sh("cd svcdefs;make build ${makeArgs}")
@@ -81,7 +101,7 @@ node ('build-zenoss-product') {
             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
             [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
             [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-            [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
+            [$class: 'StringParameterValue', name: 'MATURITY', value: TO_MATURITY],
             [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
             [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
             [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
