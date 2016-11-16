@@ -1,24 +1,74 @@
 #!/usr/bin/env bash
 #
-# http://platform-jenkins.zenoss.eng/job/product-assembly/job/support-5.2.x/image-promote/configure
+# http://platform-jenkins.zenoss.eng/job/product-assembly/job/<branch>/image-promote/configure
 #
 
-# FIXME: Add doc for variables
+#
+# Environment Variables required by this script:
+#
+# TARGET_PRODUCT       - required; identifies the target product
+#                        (e.g. 'core', 'resmgr', 'ucspm', etc)
+# PRODUCT_BUILD_NUMBER - the product build to be promoted.
+#                        Only required if FROM_MATURITY is unstable
+# ZENOSS_VERSION       - required; the 3-digit Zenoss product version number
+#                        (e.g. 5.2.0)
+# ZENOSS_SHORT_VERSION - required; the 2-digit Zenoss product number
+#                        (e.g. 5.2)
+# FROM_MATURITY        - required; the maturity level of the build that is
+#                        being promoted. Must be one of unstable, testing, stable
+# FROM_RELEASEPHASE    - The release phase of the from build (e.g. "RC1", "BETA", etc)
+#                        Only applies when FROM_MATURITY is testing
+# TO_MATURITY          - required; the maturity level of the build that will
+#                        be created. Must be one of testing, or stable
+# TO_RELEASEPHASE      - should be single digit designating the RPM release phase
+#                        Only applies when TO_MATURITY is stable
+#
 
-# Always required:
-# TARGET_PRODUCT
-# PRODUCT_BUILD_NUMBER - required if FROM_MATURITY == unstable
-# ZENOSS_VERSION
-# ZENOSS_SHORT_VERSION
-# FROM_MATURITY - must be one of unstable, testing, stable
-# FROM_RELEASEPHASE - required if FROM_MATURITY != unstable
-# TO_MATURITY - must be one of testing, or stable
-# TO_RELEASEPHASE - for stable, should be single digit matching the RPM
+if [ -z "${TARGET_PRODUCT}" ]
+then
+    echo "ERROR: Missing required argument - TARGET_PRODUCT"
+    exit 1
+elif [ -z "${ZENOSS_VERSION}" ]
+then
+    echo "ERROR: Missing required argument - ZENOSS_VERSION"
+    exit 1
+elif [ -z "${ZENOSS_SHORT_VERSION}" ]
+then
+    echo "ERROR: Missing required argument - ZENOSS_SHORT_VERSION"
+    exit 1
+elif [ -z "${FROM_MATURITY}" ]
+then
+    echo "ERROR: Missing required argument - FROM_MATURITY"
+    exit 1
+elif [ -z "${TO_MATURITY}" ]
+then
+    echo "ERROR: Missing required argument - TO_MATURITY"
+    exit 1
+elif [[ "$FROM_MATURITY" != "unstable" && "$FROM_MATURITY" != "testing" && "$FROM_MATURITY" != "stable" ]]
+then
+    echo "ERROR: FROM_MATURITY=$FROM_MATURITY is invalid; must be one of unstable, testing or stable"
+    exit 1
+elif [[ "$FROM_MATURITY" == "unstable" && -z "${PRODUCT_BUILD_NUMBER}" ]]
+then
+    echo "ERROR: Missing required argument - PRODUCT_BUILD_NUMBER"
+    echo "       When FROM_MATURITY=unstable, PRODUCT_BUILD_NUMBER is required."
+    exit 1
+elif [[ "$FROM_MATURITY" != "testing" && -z "${FROM_RELEASEPHASE}" ]]
+then
+    echo "ERROR: Missing required argument - FROM_RELEASEPHASE"
+    echo "       When FROM_MATURITY=testing, FROM_RELEASEPHASE is required."
+    exit 1
+elif [[ "$TO_MATURITY" != "testing" && "$TO_MATURITY" != "stable" ]]
+then
+    echo "ERROR: TO_MATURITY=$TO_MATURITY is invalid; must be one of testing or stable"
+    exit 1
+elif [[ "$TO_MATURITY" == "stable" && -z "${TO_RELEASEPHASE}" ]]
+then
+    echo "ERROR: Missing required argument - TO_RELEASEPHASE"
+    echo "       When TO_MATURITY=stable, TO_RELEASEPHASE is required."
+    exit 1
+fi
 
-
-# FIXME: Add checks for required variables
-
-# FIXME: Log all variables
 echo "TARGET_PRODUCT=${TARGET_PRODUCT}"
 echo "PRODUCT_BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"
 echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
@@ -103,5 +153,3 @@ if [[ "$TO_MATURITY" = "stable" ]]; then
     docker tag -f "$FROM_STRING" "$LATEST_STRING"
     retry 10 30s docker push "$LATEST_STRING"
 fi
-
-
