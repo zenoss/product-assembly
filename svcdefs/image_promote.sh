@@ -141,7 +141,7 @@ echo "Verifying there is no existing 'to' docker image $TO_STRING"
 docker pull "$TO_STRING" &> /dev/null && echo "Image with tag $TO_STRING already exists on docker hub" && exit 1
 
 # tag the image with the new tag and push
-docker tag -f "$FROM_STRING" "$TO_STRING"
+docker tag "$FROM_STRING" "$TO_STRING"
 retry 10 30s docker push "$TO_STRING"
 if [[ "$TO_MATURITY" = "stable" ]]; then
     echo "Pulling image to ensure it is available ..."
@@ -150,6 +150,6 @@ if [[ "$TO_MATURITY" = "stable" ]]; then
     LATEST_STRING="$(echo $TO_STRING | cut -f1 -d:):${ZENOSS_VERSION}"
     docker pull "$LATEST_STRING" &> /dev/null && echo "Image with tag $LATEST_STRING already exists on docker hub" && exit 1
 
-    docker tag -f "$FROM_STRING" "$LATEST_STRING"
+    docker tag "$FROM_STRING" "$LATEST_STRING"
     retry 10 30s docker push "$LATEST_STRING"
 fi
