@@ -75,7 +75,7 @@ node ('build-zenoss-product') {
             IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
             MATURITY=${TO_MATURITY}\
             SVCDEF_GIT_READY=true\
-            RELEASEPHASE=${TO_RELEASEPHASE}\
+            RELEASE_PHASE=${TO_RELEASEPHASE}\
             TARGET_PRODUCT=${TARGET_PRODUCT}"
         sh("cd svcdefs;make build ${makeArgs}")
         archive includes: 'svcdefs/build/zenoss-service/output/**'
