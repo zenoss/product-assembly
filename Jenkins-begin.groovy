@@ -24,6 +24,12 @@ node ('build-zenoss-product') {
         println("Building from git commit='${GIT_SHA}' on branch ${BRANCH} for MATURITY='${MATURITY}'")
 
     stage 'Build product-base'
+        if (PINNED) {
+            // make sure SVCDEF_GIT_REF has is of the form x.x.x, where x is an integer
+            sh("grep ^SVCDEF_GIT_REF=[0-9]\\{1,\\}\\.[0-9]\\{1,\\}\\.[0-9]\\{1,\\} versions.mk")
+            sh("./artifact_download.py component_versions.json --pinned")
+            sh("./artifact_download.py zenpack_versions.json --pinned")
+        }
         sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
 
     stage 'Push product-base'

@@ -6,6 +6,7 @@ import fnmatch
 import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -298,6 +299,22 @@ def updateReport(reportFile, downloadReport):
 
 
 def main(options):
+    if options.pinned:
+        #verify all versions are explicitly set to a release
+        versions = json.load(options.versions)
+        unpinned = []
+        for artifact in versions:
+            artifactInfo = artifactClass[artifact['type']](artifact)
+            if not artifactInfo.pinned:
+                if isinstance(artifactInfo, ZenPackInfo):
+                    version = "requirement: %s; pre: %s" %(artifactInfo.requirement, artifactInfo.pre)
+                else:
+                    version = "version: %s" % artifactInfo.version
+                unpinned.append("%s %s" % (artifactInfo.name, version))
+        if unpinned:
+            sys.exit("unpinned versions found:\n%s" % '\n'.join(unpinned))
+        sys.exit(0)
+
     artifacts = options.artifacts
     if options.zp_manifest is not None:
         manifest = json.load(options.zp_manifest)
@@ -367,6 +384,15 @@ class ArtifactInfo(object):
         if 'git_owner' in self.info:
             return self.info['git_owner']
         return 'zenoss'
+
+    @property
+    def pinned(self):
+        if not self.version:
+            return False
+        elif re.match('.*(dev).*|.*(snap).*', self.version, re.IGNORECASE):
+            return False
+        return True
+
 
     def toDict(self):
         return {
@@ -462,7 +488,6 @@ class ZenPackInfo(ArtifactInfo):
         :return:
         """
         gitRef = super(ZenPackInfo, self).gitRef
-        # import pdb;pdb.set_trace()
         if not gitRef:
             if self.requirement and '===' in self.requirement and not self.pre:
                 gitRef = self.requirement.split('===')[1]
@@ -477,6 +502,14 @@ class ZenPackInfo(ArtifactInfo):
                         "Please specify desired git_ref field." % self.name)
 
         return gitRef
+
+    @property
+    def pinned(self):
+        if self.pre:
+            return False
+        elif self.requirement and '==' in self.requirement and not ',' in self.requirement:
+            return True
+        return False
 
     def toDict(self):
         result = super(ZenPackInfo, self).toDict()
@@ -519,6 +552,9 @@ if __name__ == '__main__':
 
     parser.add_argument('--append', action="store_true",
                         help='only applicable to --git_output, add to existing git output file')
+
+    parser.add_argument('--pinned', action="store_true",
+                        help='Verify that the versions in the json file are pinned to an explicit release version, i.e. not develop.')
 
     options = parser.parse_args()
     main(options)
