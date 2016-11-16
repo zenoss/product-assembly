@@ -43,8 +43,6 @@ node ('promote-zenoss-product') {
         // Make the target product
         sh("cd svcdefs;./image_promote.sh")
 
-        def includePattern = TARGET_PRODUCT + '/*artifact.log'
-        archive includes: includePattern
 /************************
     stage 'Compile service definitions and build RPM'
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
