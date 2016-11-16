@@ -46,17 +46,6 @@ endif
 ifndef IMAGE_NUMBER
 	$(error IMAGE_NUMBER is not set)
 endif
-#
-# FIXME: this is really a problem in the svcdefs makefile itself, but since that makefile
-#        proceeds quietly, producing the wrong artifact names when MILESTONE != 'unstable'
-#        flag that error so it's obvious in a pipeline build that we have problem.
-#
-#        Once the makefile in the svcdefs has been fixed to handle different values for
-#        MILESTONE, then the check below can be removed.
-#
-ifneq ($(MATURITY),unstable)
-	$(error MATURITY=$(MATURITY) is invalid; the only valid value is unstable)
-endif
 ifndef OPENTSDB_VERSION
 	$(error OPENTSDB_VERSION is not set)
 endif
@@ -95,6 +84,7 @@ endif
 		hdfs_VERSION=$(HDFS_VERSION) \
 		IMAGE_NUMBER=$(IMAGE_NUMBER) \
 		MILESTONE=$(MATURITY) \
+		RELEASE_PHASE=$(RELEASE_PHASE) \
 		opentsdb_VERSION=$(OPENTSDB_VERSION) \
 		SHORT_VERSION=$(SHORT_VERSION) \
 		VERSION=$(VERSION) \
