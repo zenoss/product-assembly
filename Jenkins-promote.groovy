@@ -4,17 +4,17 @@
 //
 // This script has 4 phases:
 // 1. Pull the specified docker image from docker hub, retag it per the
-//    "to" parameters, push the result back to docker hub.
+//    "to" parameters, and push the result back to docker hub.
 // 2. Recompile the service definitions to use the new image and build the
 //    svcdef RPM.
 // 3. Push the RPM to the designated YUM repo (e.g. testing or stable).
-// 4. Build appliances and offline resources based on the new image.
+// 4. Build appliances and offline resources based on the new image and RPM.
 //
 // The Jenkins job parameters for this script are:
 //
 // GIT_SHA              - the GIT SHA of product-assembly to checkout for this build
 // GIT_CREDENTIAL_ID    - the UUID of the Jenkins GIT credentials used to checkout stuff from github
-// PRODUCT_BUIlD_NUMBER - the build number for any given execution of this build pipeline; set by the begin job.
+// PRODUCT_BUIlD_NUMBER - the build number for any given execution of this build pipeline
 // TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
 // FROM_MATURITY        - required; the maturity level of the build that is
 //                        being promoted. Must be one of unstable, testing, stable
@@ -75,13 +75,14 @@ node ('build-zenoss-product') {
             IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
             MATURITY=${TO_MATURITY}\
             SVCDEF_GIT_READY=true\
+            RELEASEPHASE=${TO_RELEASEPHASE}\
             TARGET_PRODUCT=${TARGET_PRODUCT}"
         sh("cd svcdefs;make build ${makeArgs}")
         archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
         echo "FIXME - call rpm_repo_push"
-/************************
+/*******
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
         def s3Subdirectory = "/yum/zenoss/" + TO_MATURITY + "/centos/el7/os/x86_64"
@@ -94,9 +95,9 @@ node ('build-zenoss-product') {
 ********/
 
     stage 'Build Appliances'
-        if (BUILD_APPLIANCE == true) {
+        if (BUILD_APPLIANCES == true) {
             echo "FIXME - Build Appliances"
-/************************
+/*******
             build job: 'appliance-build', parameters: [
                 [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
                 [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
