@@ -20,8 +20,9 @@
 #                        Only applies when FROM_MATURITY is testing
 # TO_MATURITY          - required; the maturity level of the build that will
 #                        be created. Must be one of testing, or stable
-# TO_RELEASEPHASE      - should be single digit designating the RPM release phase
-#                        Only applies when TO_MATURITY is stable
+# TO_RELEASEPHASE      - The release phase of the promoted build.
+#                        If TO_MATURITY is testing, then this value is typically something "BETA" or "RC1".
+#                        If TO_MATURITY is stable, then this value must be a single digit such as 1.
 #
 
 if [ -z "${TARGET_PRODUCT}" ]
@@ -44,6 +45,10 @@ elif [ -z "${TO_MATURITY}" ]
 then
     echo "ERROR: Missing required argument - TO_MATURITY"
     exit 1
+elif [ -z "${TO_RELEASEPHASE}" ]
+then
+    echo "ERROR: Missing required argument - TO_RELEASEPHASE"
+    exit 1
 elif [[ "$FROM_MATURITY" != "unstable" && "$FROM_MATURITY" != "testing" && "$FROM_MATURITY" != "stable" ]]
 then
     echo "ERROR: FROM_MATURITY=$FROM_MATURITY is invalid; must be one of unstable, testing or stable"
@@ -53,7 +58,7 @@ then
     echo "ERROR: Missing required argument - PRODUCT_BUILD_NUMBER"
     echo "       When FROM_MATURITY=unstable, PRODUCT_BUILD_NUMBER is required."
     exit 1
-elif [[ "$FROM_MATURITY" != "testing" && -z "${FROM_RELEASEPHASE}" ]]
+elif [[ "$FROM_MATURITY" == "testing" && -z "${FROM_RELEASEPHASE}" ]]
 then
     echo "ERROR: Missing required argument - FROM_RELEASEPHASE"
     echo "       When FROM_MATURITY=testing, FROM_RELEASEPHASE is required."
@@ -61,11 +66,6 @@ then
 elif [[ "$TO_MATURITY" != "testing" && "$TO_MATURITY" != "stable" ]]
 then
     echo "ERROR: TO_MATURITY=$TO_MATURITY is invalid; must be one of testing or stable"
-    exit 1
-elif [[ "$TO_MATURITY" == "stable" && -z "${TO_RELEASEPHASE}" ]]
-then
-    echo "ERROR: Missing required argument - TO_RELEASEPHASE"
-    echo "       When TO_MATURITY=stable, TO_RELEASEPHASE is required."
     exit 1
 fi
 
