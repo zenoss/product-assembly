@@ -44,9 +44,15 @@ node ('build-zenoss-product') {
         def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
         def ZENOSS_VERSION=versionProps['VERSION']
         def ZENOSS_SHORT_VERSION=versionProps['SHORT_VERSION']
+        def SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
+        def SERVICED_VERSION=versionProps['SERVICED_VERSION']
+        def SERVICED_BUILD_NBR=versionProps['SERVICED_BUILD_NBR']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}"
+        echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
+        echo "SERVICED_VERSION=${SERVICED_VERSION}"
+        echo "SERVICED_BUILD_NBR=${SERVICED_BUILD_NBR}"
 
         // Promote the docker images
         def promoteArgs = "TARGET_PRODUCT=${TARGET_PRODUCT}\
