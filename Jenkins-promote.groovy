@@ -82,8 +82,6 @@ node ('build-zenoss-product') {
         archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
-        echo "FIXME - enable rpm_repo_push"
-/*******
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
         def s3Subdirectory = "/yum/zenoss/" + TO_MATURITY + "/centos/el7/os/x86_64"
@@ -93,12 +91,9 @@ node ('build-zenoss-product') {
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
             [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: s3Subdirectory]
         ]
-********/
 
     stage 'Build Appliances'
         if (BUILD_APPLIANCES == "true") {
-            echo "FIXME - enable Build Appliances"
-/*******
             build job: 'appliance-build', parameters: [
                 [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
                 [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
@@ -109,7 +104,6 @@ node ('build-zenoss-product') {
                 [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
                 [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
             ]
-********/
         } else {
             echo "Skipped Build Appliances"
         }
