@@ -69,15 +69,11 @@ node ('build-zenoss-product') {
             sh("git checkout ${SVCDEF_GIT_REF}")
         }
 
-        // FIXME: Change the makefile in svcdefs to use "MATURITY" instead of
-        //        "MILESTONE" for consistency with the rest of terms in the
-        //        build pipeline.
-
         // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
         //     Jenkins credentials instead
         def makeArgs = "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
             IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
-            MILESTONE=${TO_MATURITY}\
+            MATURITY=${TO_MATURITY}\
             SVCDEF_GIT_READY=true\
             TARGET_PRODUCT=${TARGET_PRODUCT}"
         sh("cd svcdefs;make build ${makeArgs}")
