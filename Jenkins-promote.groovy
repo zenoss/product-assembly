@@ -29,9 +29,8 @@
 node ('build-zenoss-product') {
     def pipelineBuildName = env.JOB_NAME
     def pipelineBuildNumber = env.BUILD_NUMBER
-    currentBuild.displayName = "promote product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber})"
-
-    def childJobLabel = TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
+    currentBuild.displayName = "promote ${TARGET_PRODUCT} from ${FROM_MATURITY} to ${TO_MATURITY}"
+    def childJobLabel = TARGET_PRODUCT + " promote to " + TO_MATURITY
 
     stage 'Promote image'
         // NOTE: The 'master' branch name here is only used to clone the github repo.
@@ -59,7 +58,6 @@ node ('build-zenoss-product') {
             TO_RELEASEPHASE=${TO_RELEASEPHASE}"
         sh("cd svcdefs;${promoteArgs} ./image_promote.sh")
 
-/************************
     stage 'Compile service definitions and build RPM'
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
@@ -86,26 +84,35 @@ node ('build-zenoss-product') {
         archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
+        echo "FIXME - call rpm_repo_push"
+/************************
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
-        def s3Subdirectory = "/yum/zenoss/" + MATURITY + "/centos/el7/os/x86_64"
+        def s3Subdirectory = "/yum/zenoss/" + TO_MATURITY + "/centos/el7/os/x86_64"
         build job: 'rpm_repo_push', parameters: [
             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
             [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
             [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: s3Subdirectory]
         ]
+********/
 
     stage 'Build Appliances'
-        build job: 'appliance-build', parameters: [
-            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
-            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
-            [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-            [$class: 'StringParameterValue', name: 'MATURITY', value: TO_MATURITY],
-            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
-            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
-            [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
-            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
-        ]
+        if (BUILD_APPLIANCE == true) {
+            echo "FIXME - Build Appliances"
+/************************
+            build job: 'appliance-build', parameters: [
+                [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
+                [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
+                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                [$class: 'StringParameterValue', name: 'MATURITY', value: TO_MATURITY],
+                [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+            ]
 ********/
+        } else {
+            echo "Skipped Build Appliances"
+        }
 }
