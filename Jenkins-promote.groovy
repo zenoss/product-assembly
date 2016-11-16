@@ -66,7 +66,7 @@ node ('build-zenoss-product') {
             //       The next checkout command will align the build with the correct target revision.
             echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
             git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
-            sh("git checkout ${SVCDEF_GIT_REF}")
+            sh("pwd;git checkout ${SVCDEF_GIT_REF}")
         }
 
         // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
@@ -81,7 +81,7 @@ node ('build-zenoss-product') {
         archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
-        echo "FIXME - call rpm_repo_push"
+        echo "FIXME - enable rpm_repo_push"
 /*******
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
@@ -95,8 +95,8 @@ node ('build-zenoss-product') {
 ********/
 
     stage 'Build Appliances'
-        if (BUILD_APPLIANCES == true) {
-            echo "FIXME - Build Appliances"
+        if (BUILD_APPLIANCES == "true") {
+            echo "FIXME - enable Build Appliances"
 /*******
             build job: 'appliance-build', parameters: [
                 [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
