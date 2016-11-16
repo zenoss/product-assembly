@@ -12,7 +12,7 @@
 //    PRODUCT_BUIlD_NUMBER - the build number for any given execution of this build pipeline; set by the begin job.
 //    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
 //
-node ('promote-zenoss-product') {
+node ('build-zenoss-product') {
     def pipelineBuildName = env.JOB_NAME
     def pipelineBuildNumber = env.BUILD_NUMBER
     currentBuild.displayName = "promote product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber})"
