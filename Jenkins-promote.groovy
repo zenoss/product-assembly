@@ -35,8 +35,9 @@ node ('build-zenoss-product') {
     stage 'Promote image'
         // NOTE: The 'master' branch name here is only used to clone the github repo.
         //       The next checkout command will align the build with the correct target revision.
-        git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
-        sh("git checkout ${GIT_SHA}")
+        //git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
+        //sh("git checkout ${GIT_SHA}")
+        sh("pwd;git status")
 
         // Get the values of various versions out of the versions.mk file for use in later stages
         def versionProps = readProperties file: 'versions.mk'
