@@ -133,17 +133,12 @@ mkdir output
 # No quoting TARGET_PRODUCTS below in order to split the string on spaces
 FROM_STRING=$(repo_tag "$TARGET_PRODUCT" "$FROM_MATURITY" "$FROM_RELEASEPHASE")
 echo "Pulling 'from' docker image $FROM_STRING"
-# FIXME: uncomment the next line to go live
-#retry 4 5s docker pull "$FROM_STRING"
+retry 4 5s docker pull "$FROM_STRING"
 
 # make sure there isn't already an image with this tag on docker hub
 TO_STRING=$(repo_tag "$TARGET_PRODUCT" "$TO_MATURITY" "$TO_RELEASEPHASE")
 echo "Verifying there is no existing 'to' docker image $TO_STRING"
-# FIXME: uncomment the next line to go live
-#docker pull "$TO_STRING" &> /dev/null && echo "Image with tag $TO_STRING already exists on docker hub" && exit 1
-
-# FIXME: remove the next line to go live
-exit 0
+docker pull "$TO_STRING" &> /dev/null && echo "Image with tag $TO_STRING already exists on docker hub" && exit 1
 
 # tag the image with the new tag and push
 docker tag -f "$FROM_STRING" "$TO_STRING"
