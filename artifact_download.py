@@ -387,7 +387,9 @@ class ArtifactInfo(object):
 
     @property
     def pinned(self):
-        if not self.version:
+        if self.infoType != 'download':
+            return False
+        elif not self.version:
             return False
         elif re.match('.*(dev).*|.*(snap).*', self.version, re.IGNORECASE):
             return False
