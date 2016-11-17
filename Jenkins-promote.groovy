@@ -44,9 +44,15 @@ node ('build-zenoss-product') {
         def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
         def ZENOSS_VERSION=versionProps['VERSION']
         def ZENOSS_SHORT_VERSION=versionProps['SHORT_VERSION']
+        def SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
+        def SERVICED_VERSION=versionProps['SERVICED_VERSION']
+        def SERVICED_BUILD_NBR=versionProps['SERVICED_BUILD_NBR']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}"
+        echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
+        echo "SERVICED_VERSION=${SERVICED_VERSION}"
+        echo "SERVICED_BUILD_NBR=${SERVICED_BUILD_NBR}"
 
         // Promote the docker images
         def promoteArgs = "TARGET_PRODUCT=${TARGET_PRODUCT}\
@@ -94,10 +100,14 @@ node ('build-zenoss-product') {
 
     stage 'Build Appliances'
         if (BUILD_APPLIANCES == "true") {
+            // NOTE: The appliance build parameter PRODUCT_BUILD_NUMBER is used for retrieving RPMs
+            //       and labeling appliance artifacts. However, for promotion builds where MATURITY is
+            //       testing or stable, we do not use the product build number to label the artifacts -
+            //       we use the value of TO_RELEASEPHASE instead.
             build job: 'appliance-build', parameters: [
                 [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
                 [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
-                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: TO_RELEASEPHASE],
                 [$class: 'StringParameterValue', name: 'MATURITY', value: TO_MATURITY],
                 [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
                 [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
