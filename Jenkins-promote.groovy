@@ -94,10 +94,14 @@ node ('build-zenoss-product') {
 
     stage 'Build Appliances'
         if (BUILD_APPLIANCES == "true") {
+            // NOTE: The appliance build parameter PRODUCT_BUILD_NUMBER is used for retrieving RPMs
+            //       and labeling appliance artifacts. However, for promotion builds where MATURITY is
+            //       testing or stable, we do not use the product build number to label the artifacts -
+            //       we use the value of TO_RELEASEPHASE instead.
             build job: 'appliance-build', parameters: [
                 [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
                 [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
-                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: TO_RELEASEPHASE],
                 [$class: 'StringParameterValue', name: 'MATURITY', value: TO_MATURITY],
                 [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
                 [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
