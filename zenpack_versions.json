@@ -73,7 +73,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DigMonitor",
-        "requirement": "ZenPacks.zenoss.DigMonitor===1.1.1",
+        "requirement": "ZenPacks.zenoss.DigMonitor===1.1.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DiscoveryMapping",
