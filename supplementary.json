@@ -1,6 +1,6 @@
 [
     {
-        "ref": "develop",
+        "ref": "support/5.2.x",
         "repo": "git@github.com:zenoss/zenoss-deploy.git"
     },
     {
@@ -16,7 +16,7 @@
         "repo": "git@github.com:zenoss/zenoss.metric.tsdb.git"
     },
     {
-        "ref": "develop",
+        "ref": "support/1.2.x",
         "repo": "git@github.com:control-center/serviced.git"
     },
     {
@@ -28,7 +28,7 @@
         "repo": "git@github.com:zenoss/QuickVis.git"
     },
     {
-        "ref": "develop",
+        "ref": "support/5.2.x",
         "repo": "git@github.com:zenoss/zenoss-service.git"
     }
 ]
