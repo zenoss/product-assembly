@@ -58,8 +58,8 @@
     {
         "jenkins.subModule": "org.zenoss.zep$zep-dist",
         "name": "zenoss-zep",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "2.2.2"
     },
     {
         "jenkins.subModule": "org.zenoss$metric-consumer-app",
