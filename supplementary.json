@@ -1,6 +1,6 @@
 [
     {
-        "ref": "develop",
+        "ref": "support/5.2.x",
         "repo": "git@github.com:zenoss/zenoss-deploy.git"
     },
     {
