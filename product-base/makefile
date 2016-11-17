@@ -29,6 +29,7 @@ push:
 clean:
 	rm -rf component_info Dockerfile
 	rm -f $(SHORT_VERSION).x/pull-docker-images.sh
+	rm -f $(SHORT_VERSION).x/check_for_old_servicedef.py
 	-docker rmi -f $(TAG)
 
 component_versions: component_info
