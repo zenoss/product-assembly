@@ -56,7 +56,7 @@
         "version": "2.1.4-1"
     },
     {
-        "jenkins.subModule": "org.zenoss.zep$zep-dist",
+        "URL": "http://zenpip.zendev.org/packages/zep-dist-{version}.tar.gz",
         "name": "zenoss-zep",
         "type": "download",
         "version": "2.2.2"
