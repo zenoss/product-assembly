@@ -9,6 +9,7 @@ import json
 import os
 import re
 import shutil
+import string
 import sys
 import tempfile
 import urllib2
@@ -72,9 +73,78 @@ def compare_zenpacks(logfile1, logfile2):
             diffIndicator = ""
         print "%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
 
+def buildJobUrl(jobArg):
+    # Break jobArg into an array of words
+    urlParts = string.lstrip(string.rstrip(jobArg, "/"), "/").split("/")
+    n = len(urlParts)
+    if n < 2:
+        print "ERROR: job name '%s' is invalid. Should have at least 2 levels" % jobArg
+        sys.exit(1)
+
+    # given jobArgs like "develop/core-pipeline/2", create a value of url
+    # like "develop/job/core-pipeline/2"
+    jobUrl = string.join(urlParts[0:n-1], "/job/")
+    jobNumber = urlParts[n-1]
+    url = os.path.join(jobUrl, jobNumber)
+
+    # Return the full URL
+    baseURL = "http://platform-jenkins.zenoss.eng/job/product-assembly/job/"
+    return urlparse.urljoin(baseURL, url)
+
+def downloadLogFromJenkins(jobUrl, filename):
+    apiUrl = os.path.join(jobUrl, "api/json?tree=artifacts[*]")
+    try:
+        response = json.loads(urllib2.urlopen(apiUrl).read())
+    except urllib2.URLError as e:
+        raise Exception("Error downloading %s: %s" % (apiUrl, e))
+    except urllib2.HTTPError as e:
+        raise Exception("Error downloading %s: %s" % (apiUrl, e))
+    except httplib.HTTPException, e:
+        raise Exception("Error downloading %s: %s" % (apiUrl, e))
+
+    artifacts = response['artifacts']
+    relativePath = ""
+    for artifact in artifacts:
+        if artifact['fileName'] == filename:
+            relativePath = artifact['relativePath']
+    if relativePath == "":
+        print "ERROR: file '%s' not in job artifacts for %s" % (filename, jobUrl)
+        sys.exit(1)
+
+    fileUrl = os.path.join(jobUrl, "artifact")
+    fileUrl = os.path.join(fileUrl, relativePath)
+
+    try:
+        response = urllib2.urlopen(fileUrl)
+    except urllib2.URLError as e:
+        raise Exception("Error downloading %s: %s" % (fileUrl, e))
+    except urllib2.HTTPError as e:
+        raise Exception("Error downloading %s: %s" % (fileUrl, e))
+    except httplib.HTTPException, e:
+        raise Exception("Error downloading %s: %s" % (fileUrl, e))
+
+    return response
+
 def main(options):
 
-    # FIXME: Add options to specify 2 jenkins builds and download the logs from there
+    if options.build_job_1 is None and options.build_job_2 is not None \
+       or \
+       options.build_job_1 is not None and options.build_job_2 is None:
+       sys.exit("if either of --build_job_1 or --build_job_2 is specified, both must be specified")
+
+    if options.build_job_1:
+        jobUrl = buildJobUrl(options.build_job_1)
+        component_log_1 = downloadLogFromJenkins(jobUrl, "zenoss_component_artifact.log")
+        zenpacks_log_1 = downloadLogFromJenkins(jobUrl, "zenpacks_artifact.log")
+
+        jobUrl = buildJobUrl(options.build_job_2)
+        component_log_2 = downloadLogFromJenkins(jobUrl, "zenoss_component_artifact.log")
+        zenpacks_log_2 = downloadLogFromJenkins(jobUrl, "zenpacks_artifact.log")
+
+        compare_components(component_log_1, component_log_2)
+        print ""
+        compare_zenpacks(zenpacks_log_1, zenpacks_log_2)
+        return
 
     if options.component_log_1 is None and options.component_log_2 is not None \
        or \
@@ -307,9 +377,13 @@ artifactClass = {
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compare build logs')
+    parser.add_argument('-b1', '--build_job_1', type=str,
+                        help='jenkins build job 1; e.g. develop/core-pipeline/5')
+    parser.add_argument('-b2',  '--build_job_2', type=str,
+                        help='jenkins build job 2; e.g. develop/core-pipeline/6')
+
     parser.add_argument('-c1', '--component_log_1', type=file,
                         help='zenoss_component_artifact log file 1')
-
     parser.add_argument('-c2',  '--component_log_2', type=file,
                         help='zenoss_component_artifact log file 2')
 
@@ -318,7 +392,8 @@ if __name__ == '__main__':
     parser.add_argument('-z2', '--zenpacks_log_2', type=file,
                         help='zenpacks_artifact log file 2')
 
-    parser.add_argument('-v', '--verbose', action="store_true")
+    parser.add_argument('-v', '--verbose', action="store_true",
+                        help='show all items compared, not just the ones that are different')
 
     options = parser.parse_args()
     main(options)
