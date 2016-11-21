@@ -46,7 +46,7 @@
         "URL": "http://zenpip.zendev.org/packages/prodbin-{version}-master-5.2.x.tar.gz",
         "name": "zenoss-prodbin",
         "type": "download",
-        "version": "5.2.0"
+        "version": "5.2.0-2"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/zenoss.protocols-2.1.4.post1-py2-none-any.whl",
