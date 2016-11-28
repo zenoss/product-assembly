@@ -16,6 +16,8 @@ node ('build-zenoss-product') {
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
 
     stage 'Checkout product-assembly repo'
+        // Make sure we start in a clean directory to ensure a fresh git clone
+        deleteDir()
         git branch: BRANCH, credentialsId: GIT_CREDENTIAL_ID, url: 'https://github.com/zenoss/product-assembly'
 
         // Record the current git commit sha in the variable 'GIT_SHA'
