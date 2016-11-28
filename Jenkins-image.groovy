@@ -18,6 +18,8 @@ node ('build-zenoss-product') {
     def childJobLabel = TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
 
     stage 'Build image'
+        // Make sure we start in a clean directory to ensure a fresh git clone
+        deleteDir()
         // NOTE: The 'master' branch name here is only used to clone the github repo.
         //       The next checkout command will align the build with the correct target revision.
         git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
