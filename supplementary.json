@@ -30,5 +30,21 @@
     {
         "ref": "develop",
         "repo": "git@github.com:zenoss/zenoss-service.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/impact-server.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/impact-pkg.git"
+    },
+    {
+       "ref": "develop",
+       "repo": "git@github.com:zenoss/ZenPacks.zenoss.ImpactServer.git"
+    },
+    {
+       "ref": "develop",
+       "repo": "git@github.com:zenoss/ZenPacks.zenoss.Impact.git"
     }
 ]
