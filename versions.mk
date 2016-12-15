@@ -21,7 +21,7 @@ UCSPM_VERSION=2.1.0
 
 #
 # Currently, HDFS and OpenTSDB use the same image as HBASE
-# So these versions should always be the same. 
+# So these versions should always be the same.
 #
 HBASE_VERSION=24.0.2
 HDFS_VERSION=24.0.2
@@ -48,6 +48,11 @@ OPENTSDB_VERSION=24.0.2
 #    SERVICED_VERSION and SERVICED_BLD_NUMBER have to be specified together, and
 #    SERVICED_BRANCH must be blank if both are specified.
 #
+#    If SERVICED_BRANCH is specified, then SERVICED_MATURITY must be 'unstable'.
+#    If SERVICED_VERSION and SERVICED_BUILD_NBR are specified, then the
+#    SERVICED_BRANCH should be 'testing' or 'stable'
+#
 SERVICED_BRANCH=
+SERVICED_MATURITY=stable
 SERVICED_VERSION=1.2.1
 SERVICED_BUILD_NBR=1
