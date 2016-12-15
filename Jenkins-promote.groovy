@@ -47,12 +47,14 @@ node ('build-zenoss-product') {
         def ZENOSS_VERSION=versionProps['VERSION']
         def ZENOSS_SHORT_VERSION=versionProps['SHORT_VERSION']
         def SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
+        def SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
         def SERVICED_VERSION=versionProps['SERVICED_VERSION']
         def SERVICED_BUILD_NBR=versionProps['SERVICED_BUILD_NBR']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}"
         echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
+        echo "SERVICED_MATURITY=${SERVICED_MATURITY}"
         echo "SERVICED_VERSION=${SERVICED_VERSION}"
         echo "SERVICED_BUILD_NBR=${SERVICED_BUILD_NBR}"
 
@@ -110,9 +112,10 @@ node ('build-zenoss-product') {
                 [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
                 [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
                 [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: TO_RELEASEPHASE],
-                [$class: 'StringParameterValue', name: 'MATURITY', value: TO_MATURITY],
+                [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: TO_MATURITY],
                 [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
                 [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
                 [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
                 [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
             ]
