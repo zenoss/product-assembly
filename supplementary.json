@@ -21,6 +21,10 @@
     },
     {
         "ref": "develop",
+        "repo": "git@github.com:control-center/serviced-iso.git"
+    },
+    {
+        "ref": "develop",
         "repo": "git@github.com:control-center/serviced-resource-agents.git"
     },
     {
