@@ -32,6 +32,10 @@
         "requirement": "ZenPacks.zenoss.CatalogService===3.1.1",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.Ceph",
+        "requirement": "ZenPacks.zenoss.Ceph===2.0.1",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.CheckPointMonitor",
         "requirement": "ZenPacks.zenoss.CheckPointMonitor===2.0.2",
         "type": "zenpack"
@@ -40,12 +44,24 @@
         "requirement": "ZenPacks.zenoss.CiscoMonitor===5.7.3",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.CiscoNFVI",
+        "requirement": "ZenPacks.zenoss.CiscoNFVI===1.0.1",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.CiscoNFVISkin",
+        "requirement": "ZenPacks.zenoss.CiscoNFVISkin===1.0.0",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.CiscoUCS",
         "requirement": "ZenPacks.zenoss.CiscoUCS===2.5.5",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoUCSCentral",
         "requirement": "ZenPacks.zenoss.CiscoUCSCentral===1.2.0",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.CiscoVIM",
+        "requirement": "ZenPacks.zenoss.CiscoVIM===1.0.4",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ComponentGroups",
@@ -86,6 +102,10 @@
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
         "requirement": "ZenPacks.zenoss.DnsMonitor===2.1.0",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.Docker",
+        "requirement": "ZenPacks.zenoss.Docker===2.0.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DynamicView",
@@ -168,6 +188,10 @@
         "requirement": "ZenPacks.zenoss.MySqlMonitor===3.0.7",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.MultiRealmIP",
+        "requirement": "ZenPacks.zenoss.MultiRealmIP===2.2.0",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.NetAppMonitor",
         "requirement": "ZenPacks.zenoss.NetAppMonitor===3.3.2",
         "type": "zenpack"
@@ -186,6 +210,15 @@
     },{
         "name": "ZenPacks.zenoss.NtpMonitor",
         "requirement": "ZenPacks.zenoss.NtpMonitor===2.2.2",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.OpenStack",
+        "requirement": "ZenPacks.zenoss.OpenStack===1.2.3",
+        "type": "zenpack"
+    },{
+        "feature": "ZEN-25769",
+        "pre": true,
+        "name": "ZenPacks.zenoss.OpenStackInfrastructure",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
