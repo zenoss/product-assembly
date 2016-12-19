@@ -85,9 +85,13 @@ node ('build-zenoss-product') {
         ]
 
     stage 'Build Appliances'
+        appliance_target = TARGET_PRODUCT
+        if (appliance_target == "resmgr") {
+            appliance_target = "zsd"
+        }
         build job: 'appliance-build', parameters: [
             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
-            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
+            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: appliance_target],
             [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
             [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
             [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
