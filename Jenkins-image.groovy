@@ -85,19 +85,34 @@ node ('build-zenoss-product') {
         ]
 
     stage 'Build Appliances'
-        appliance_target = TARGET_PRODUCT
-        if (appliance_target == "resmgr") {
-            appliance_target = "zsd"
-        }
-        build job: 'appliance-build', parameters: [
-            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
-            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: appliance_target],
-            [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-            [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
-            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
-            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
-            [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
-            [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
-            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
-        ]
+        if (TARGET_PRODUCT == "resmgr") {
+            // After building RM, we build two sets of appliances; one for ZSD and another for POC
+            def appliances = ["zsd", "poc"]
+            for (String appliance_target : appliances) {
+                childJobLabel = appliance_target + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
+                build job: 'appliance-build', parameters: [
+                    [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
+                    [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: appliance_target],
+                    [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                    [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
+                    [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                    [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                    [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                    [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                    [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+                ]
+            }
+       } else {
+            build job: 'appliance-build', parameters: [
+                [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
+                [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PROUDCT],
+                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
+                [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+            ]
+       }
 }
