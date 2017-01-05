@@ -105,7 +105,7 @@ node ('build-zenoss-product') {
        } else {
             build job: 'appliance-build', parameters: [
                 [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
-                [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PROUDCT],
+                [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
                 [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                 [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
                 [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
