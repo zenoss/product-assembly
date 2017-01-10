@@ -5,10 +5,11 @@
         "version": "1.0.1"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
         "name": "metricshipper",
-        "type": "download",
-        "version": "1.1.2"
+        "type": "jenkins",
+        "jenkins.server": "http://jenkins.zendev.org",
+        "jenkins.job": "metricshipper-develop",
+        "version": "develop"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
@@ -17,10 +18,9 @@
         "version": "0.40.6"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
-        "type": "download",
-        "version": "0.1.14"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
