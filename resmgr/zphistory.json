@@ -55,6 +55,7 @@
   "ZenPacks.zenoss.ZenMail": "5.0.0",
   "ZenPacks.zenoss.ZenMailTx": "5.0.0",
   "ZenPacks.zenoss.ZenOperatorRole": "5.0.0",
+  "ZenPacks.zenoss.ZenPackLib": "5.2.1",
   "ZenPacks.zenoss.ZenSQLTx": "5.0.0",
   "ZenPacks.zenoss.ZenWebTx": "5.0.0",
   "ZenPacks.zenoss.vCloud": "5.0.0",
