@@ -1,5 +1,6 @@
 {
   "install_order": [
+    "ZenPacks.zenoss.ZenPackLib",
     "ZenPacks.zenoss.ApacheMonitor",
     "ZenPacks.zenoss.PythonCollector",
     "ZenPacks.zenoss.HttpMonitor",
