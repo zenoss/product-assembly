@@ -23,9 +23,9 @@ UCSPM_VERSION=2.1.0
 # Currently, HDFS and OpenTSDB use the same image as HBASE
 # So these versions should always be the same.
 #
-HBASE_VERSION=24.0.2
-HDFS_VERSION=24.0.2
-OPENTSDB_VERSION=24.0.2
+HBASE_VERSION=24.0.3
+HDFS_VERSION=24.0.3
+OPENTSDB_VERSION=24.0.3
 
 
 #
