@@ -35,5 +35,6 @@
   "ZenPacks.zenoss.vSphere": "5.1.0",
   "ZenPacks.zenoss.WBEM": "5.1.0",
   "ZenPacks.zenoss.ZenDeviceACL": "5.1.0",
-  "ZenPacks.zenoss.ZenOperatorRole": "5.1.0"
+  "ZenPacks.zenoss.ZenOperatorRole": "5.1.0",
+  "ZenPacks.zenoss.ZenPackLib": "5.2.1"
 }
