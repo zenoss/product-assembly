@@ -7,6 +7,8 @@
     {
         "name": "metricshipper",
         "type": "jenkins",
+        "jenkins.server": "http://jenkins.zendev.org",
+        "jenkins.job": "metricshipper-develop",
         "version": "develop"
     },
     {
@@ -16,7 +18,6 @@
         "version": "0.40.6"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
         "type": "jenkins",
         "version": "develop"
