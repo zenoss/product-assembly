@@ -507,10 +507,24 @@ class ZenPackInfo(ArtifactInfo):
 
     @property
     def pinned(self):
+        """Return True if artifact is a pinned version. False if not."""
         if self.pre:
+            # Pre-releases can never be considered pinned.
             return False
-        elif self.requirement and '==' in self.requirement and not ',' in self.requirement:
+
+        if not self.requirement:
+            # Pinning can't be done without an explicit requirement.
+            return False
+
+        if ',' in self.requirement:
+            # A comma indicates multiple possibilities. Pinning is specific.
+            return False
+
+        if '===' in self.requirement and ',' not in self.requirement:
+            # Triple-equal for a single (no commas) requirement means pinned.
             return True
+
+        # Anything left is not pinned.
         return False
 
     def toDict(self):
