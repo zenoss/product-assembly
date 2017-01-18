@@ -96,14 +96,19 @@ def zenpackDownload(versionInfo, outdir, downloadReport):
         }
 
         downloadReport.append(artifactInfo)
-        raise
+        raise Exception("Error querying for ZP info from %s: %s" % (url, e))
+    except urllib2.URLError as e:
+        artifactInfo["zenpack"] = {
+            "error": str(e),
+        }
+        downloadReport.append(artifactInfo)
+        raise Exception("Error querying for ZP info from %s: %s" % (url, e))
     except Exception as e:
         artifactInfo["zenpack"] = {
             "error": str(e),
         }
-
         downloadReport.append(artifactInfo)
-        raise
+        raise Exception("Error querying for ZP info from %s: %s" % (url, e))
 
     # Include unaltered response under "zenpack" key in download report.
     artifactInfo["zenpack"] = zenpack
