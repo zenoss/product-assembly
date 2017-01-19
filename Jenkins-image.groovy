@@ -41,26 +41,26 @@ node ('build-zenoss-product') {
         echo "SERVICED_BUILD_NBR=${SERVICED_BUILD_NBR}"
 
         // Make the target product
-        //sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
 
-        //def includePattern = TARGET_PRODUCT + '/*artifact.log'
-        //archive includes: includePattern
+        def includePattern = TARGET_PRODUCT + '/*artifact.log'
+        archive includes: includePattern
 
     stage 'Test image'
-        //sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
 
     stage 'Push image'
-        //sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
 
     stage 'Compile service definitions and build RPM'
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
-        //sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
+        sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
         dir('svcdefs/build/zenoss-service') {
             // NOTE: The 'master' branch name here is only used to clone the github repo.
             //       The next checkout command will align the build with the correct target revision.
             echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
-            //git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
-            //sh("git checkout ${SVCDEF_GIT_REF}")
+            git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
+            sh("git checkout ${SVCDEF_GIT_REF}")
         }
 
         // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
@@ -70,19 +70,19 @@ node ('build-zenoss-product') {
             MATURITY=${MATURITY}\
             SVCDEF_GIT_READY=true\
             TARGET_PRODUCT=${TARGET_PRODUCT}"
-        //sh("cd svcdefs;make build ${makeArgs}")
-        //archive includes: 'svcdefs/build/zenoss-service/output/**'
+        sh("cd svcdefs;make build ${makeArgs}")
+        archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
         def s3Subdirectory = "/yum/zenoss/" + MATURITY + "/centos/el7/os/x86_64"
-//        build job: 'rpm_repo_push', parameters: [
-//            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
-//            [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
-//            [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
-//            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: s3Subdirectory]
-//        ]
+        build job: 'rpm_repo_push', parameters: [
+            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
+            [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
+            [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
+            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: s3Subdirectory]
+        ]
 
     stage 'Build Appliances'
         def appliances = ["zsd", "poc"]
