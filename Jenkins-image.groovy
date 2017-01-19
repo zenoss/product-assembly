@@ -110,7 +110,7 @@ node ('build-zenoss-product') {
                     ]
                 }
 
-                branches[jobLabel] = branch
+                branches[applianceTarget] = branch
             }
         } else {
             branches["core"] = {
