@@ -77,7 +77,7 @@ node ('build-zenoss-product') {
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
         def s3Subdirectory = "/yum/zenoss/" + MATURITY + "/centos/el7/os/x86_64"
-        build job: 'rpm_repo_push', parameters: [
+        build job: 'jb-rpm_repo_push', parameters: [
             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
             [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
