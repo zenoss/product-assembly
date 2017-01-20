@@ -4,6 +4,7 @@
         "ZenPacks.zenoss.ApacheMonitor",
         "ZenPacks.zenoss.PythonCollector",
         "ZenPacks.zenoss.CalculatedPerformance",
+        "ZenPacks.zenoss.DiscoveryMapping",
         "ZenPacks.zenoss.Dashboard",
         "ZenPacks.zenoss.DellMonitor",
         "ZenPacks.zenoss.DigMonitor",
