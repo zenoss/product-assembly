@@ -1,7 +1,8 @@
 [
     {
         "name": "ZenPacks.zenoss.AdvancedSearch",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.AixMonitor",
         "type": "zenpack"
