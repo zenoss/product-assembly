@@ -77,7 +77,7 @@ node ('build-zenoss-product') {
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
         def s3Subdirectory = "/yum/zenoss/" + MATURITY + "/centos/el7/os/x86_64"
-        build job: 'rpm_repo_push', parameters: [
+        build job: 'jb-rpm_repo_push', parameters: [
             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
             [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
@@ -85,7 +85,7 @@ node ('build-zenoss-product') {
         ]
 
     stage 'Build Appliances'
-        def appliances = ["zsd", "poc"]
+        def appliances = ["zsd", "zsd_alderaan", "poc"]
         def branches = [:]
 
         if (TARGET_PRODUCT == "resmgr") {
@@ -95,26 +95,52 @@ node ('build-zenoss-product') {
             // as per https://jenkins.io/doc/pipeline/examples/#parallel-from-list
             for(int i=0; i<appliances.size(); i++) {
                 def applianceTarget = appliances.get(i);
-                def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
-                def branch = {
-                    build job: 'appliance-build', parameters: [
-                            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
-                            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
-                            [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                            [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
-                            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
-                            [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
-                            [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
-                    ]
+
+                if (applianceTarget == "zsd_alderaan") {
+
+                    // specific build for zsd alderaan which includes rm5.2 and cc1.3.
+                    // this is only temporary.
+                    def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
+                    def branch = {
+                        build job: 'jb-appliance-build', parameters: [
+                                [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+                                [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
+                                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                                [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
+                                [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                                [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                                [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                                [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: "1.3.0"],
+                                [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+                        ]
+                    }
+
+                    branches[applianceTarget] = branch
+
+                } else {
+
+                    def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
+                    def branch = {
+                        build job: 'jb-appliance-build', parameters: [
+                                [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+                                [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
+                                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                                [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
+                                [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                                [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                                [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                                [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                                [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+                        ]
+                    }
+
+                    branches[applianceTarget] = branch
                 }
 
-                branches[applianceTarget] = branch
             }
         } else {
             branches["core"] = {
-                build job: 'appliance-build', parameters: [
+                build job: 'jb-appliance-build', parameters: [
                         [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
                         [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
