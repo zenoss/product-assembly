@@ -139,7 +139,6 @@ node ('build-zenoss-product') {
 
                     branches[applianceTarget] = branch
                 }
-
             }
         } else {
             branches["core"] = {
