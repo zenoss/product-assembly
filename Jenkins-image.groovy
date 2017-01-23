@@ -41,16 +41,16 @@ node ('build-zenoss-product') {
         echo "SERVICED_BUILD_NBR=${SERVICED_BUILD_NBR}"
 
         // Make the target product
-//        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
 
         def includePattern = TARGET_PRODUCT + '/*artifact.log'
-//        archive includes: includePattern
+        archive includes: includePattern
 
     stage 'Test image'
-//        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
 
     stage 'Push image'
-//        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
 
     stage 'Compile service definitions and build RPM'
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
@@ -70,19 +70,19 @@ node ('build-zenoss-product') {
             MATURITY=${MATURITY}\
             SVCDEF_GIT_READY=true\
             TARGET_PRODUCT=${TARGET_PRODUCT}"
-//        sh("cd svcdefs;make build ${makeArgs}")
-//        archive includes: 'svcdefs/build/zenoss-service/output/**'
+        sh("cd svcdefs;make build ${makeArgs}")
+        archive includes: 'svcdefs/build/zenoss-service/output/**'
 
     stage 'Push RPM'
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
         def s3Subdirectory = "/yum/zenoss/" + MATURITY + "/centos/el7/os/x86_64"
-//        build job: 'rpm_repo_push', parameters: [
-//            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
-//            [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
-//            [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
-//            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: s3Subdirectory]
-//        ]
+        build job: 'rpm_repo_push', parameters: [
+            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
+            [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
+            [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
+            [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: s3Subdirectory]
+        ]
 
     stage 'Build Appliances'
         def branches = [:]
@@ -99,6 +99,7 @@ node ('build-zenoss-product') {
                 // specific build for zsd alderaan which includes rm5.2 and cc1.3.
                 // this is only temporary.  See BLD-15 in jira
                 def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
+
                 def serviced_branch = SERVICED_BRANCH
                 def serviced_maturity = SERVICED_MATURITY
                 def serviced_version = SERVICED_VERSION
@@ -112,7 +113,7 @@ node ('build-zenoss-product') {
                 }
 
                 def branch = {
-                    build job: 'jb-appliance-build', parameters: [
+                    build job: 'appliance-build', parameters: [
                             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
                             [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
                             [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
@@ -126,11 +127,10 @@ node ('build-zenoss-product') {
                 }
 
                 branches[applianceTarget] = branch
-
             }
         } else {
             branches["core"] = {
-                build job: 'jb-appliance-build', parameters: [
+                build job: 'appliance-build', parameters: [
                         [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
                         [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
