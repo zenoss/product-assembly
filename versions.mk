@@ -18,6 +18,7 @@ SHORT_VERSION=5.3
 SVCDEF_GIT_REF=develop
 VERSION=5.3.0
 UCSPM_VERSION=2.1.0
+VERSION_TAG=1
 
 #
 # Currently, HDFS and OpenTSDB use the same image as HBASE

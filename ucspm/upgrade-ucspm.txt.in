@@ -27,7 +27,7 @@ REQUIRE_SVC
 SNAPSHOT preupgrade-ucspm-%VERSION%
 
 # Choose image to upgrade to
-SVC_USE zenoss/ucspm_%SHORT_VERSION%:%VERSION% zenoss/ucspm_5.1 zenoss/ucspm_5.2
+SVC_USE zenoss/ucspm_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/ucspm_5.1 zenoss/ucspm_5.2
 SVC_USE zenoss/hbase:%HBASE_VERSION%
 SVC_USE zenoss/opentsdb:%OPENTSDB_VERSION%
 
