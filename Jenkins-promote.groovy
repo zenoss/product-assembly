@@ -103,23 +103,57 @@ node ('build-zenoss-product') {
         ]
 
     stage 'Build Appliances'
-        if (BUILD_APPLIANCES == "true") {
-            // NOTE: The appliance build parameter PRODUCT_BUILD_NUMBER is used for retrieving RPMs
-            //       and labeling appliance artifacts. However, for promotion builds where MATURITY is
-            //       testing or stable, we do not use the product build number to label the artifacts -
-            //       we use the value of TO_RELEASEPHASE instead.
-            build job: 'appliance-build', parameters: [
-                [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
-                [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
-                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: TO_RELEASEPHASE],
-                [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: TO_MATURITY],
-                [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
-                [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
-                [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
-                [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
-                [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
-            ]
-        } else {
+        if (BUILD_APPLIANCES != "true") {
             echo "Skipped Build Appliances"
+            return
         }
+
+        // NOTE: The appliance build parameter PRODUCT_BUILD_NUMBER is used for retrieving RPMs
+        //       and labeling appliance artifacts. However, for promotion builds where MATURITY is
+        //       testing or stable, we do not use the product build number to label the artifacts -
+        //       we use the value of TO_RELEASEPHASE instead.
+        def branches = [:]
+        if (TARGET_PRODUCT == "resmgr") {
+            // After building RM, we build two sets of appliances; one for ZSD and another for POC
+
+            // We have to use this version of the for-loop and _not_ the for(String s: strings)
+            // as per https://jenkins.io/doc/pipeline/examples/#parallel-from-list
+            def appliances = ["zsd", "poc"]
+            for(int i=0; i<appliances.size(); i++) {
+                def applianceTarget = appliances.get(i);
+                def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
+                def branch = {
+                    build job: 'appliance-build', parameters: [
+                            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+                            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
+                            [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: TO_RELEASEPHASE],
+                            [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: TO_MATURITY],
+                            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                            [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                            [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+                    ]
+                }
+
+                branches[applianceTarget] = branch
+            }
+        } else {
+            def jobLabel = TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
+            branches["core"] = {
+                build job: 'appliance-build', parameters: [
+                        [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+                        [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
+                        [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: TO_RELEASEPHASE],
+                        [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: TO_MATURITY],
+                        [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                        [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                        [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                        [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                        [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+                ]
+            }
+        }
+
+        parallel branches
 }
