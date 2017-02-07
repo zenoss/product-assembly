@@ -78,7 +78,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseCollector",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.EnterpriseReports",
         "type": "zenpack"
