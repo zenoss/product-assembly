@@ -61,6 +61,10 @@ node ('build-zenoss-product') {
             echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
             git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
             sh("git checkout ${SVCDEF_GIT_REF}")
+
+            // Log the current SHA of zenoss-service so, when building from a branch,
+            // we know exactly which commit went into a particular build
+            sh("echo zenoss/zenoss-service git SHA = \$(git rev-parse HEAD)")
         }
 
         // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
