@@ -8,6 +8,7 @@
     - [Adding or Removing ZenPacks](#adding-or-removing-zenpacks)
   - [Build like Jenkins](#build-like-jenkins)
   - [Test like Jenkins](#test-like-jenkins)
+  - [Compare Builds](#compare-builds)
 
 ## Overview
 
@@ -87,3 +88,40 @@ make run-tests
 ```
 Again, the last 2 makes are performed in parallel for the nightly build. A developer typically only needs to test one of core or resmgr.
 
+# Compare Builds
+
+`compare_builds.py` compares the build logs from 2 different builds to identify which artifacts are different. By default, the comparison only reports differences. If you specify `-v`, it will report all artifacts, not just the different ones.
+
+**NOTE:** This tool does NOT compare:
+* Changes to service definitions, because [zenoss-service](https://github.com/zenoss/zenoss-service) is not built/packaged as an artifact like the other components (though it should be).  See `SVCDEF_GIT_REF` in [versions.mk](versions.mk) for information about which version of service definitions were used in a build.
+* Changes to serviced included in downstream appliances and other build artifacts. Again, see [versions.mk](versions.mk) for details about serviced versions included in a particular build.
+* Changes that may have been made to this repo itself (i.e. changes in the build process).
+* Any changes to the downstream appliance build process (see [zenoss-deploy](https://github.com/zenoss/zenoss-deploy)).
+
+The following examples illustrate that the only difference between Core 5.2.0 RC2 and the Core 5.3.0 pipeline build 3 is zenoss-prodbin.   The ZenPacks output is particular reassuring because all of the zenpacks in Core 5.2.0 RC2 are pinned to a specific version, where as Core 5.3.0 on develop is pulling the most recently released ZPs - so that proves that pinned versions in 5.2.0 RC2 are really the latest ones.
+
+**1. Compare 2 jenkins jobs**
+```
+$ ./compare_builds.py -b1 support-5.2.x/core-pipeline/242 -b2 develop/core-pipeline/3
+Component Differences:
+Name                                     c1 (gitRef)                      c2 (gitRef)                      Different
+zenoss-prodbin                           5.2.0 (5.2.0)                    develop (85f5b99d40e35b)         Y
+
+ZenPack Differences:
+Name                                     z1 (gitRef)                      z2 (gitRef)
+```
+
+**2. Compare just the components (using previously downloaded log files)**
+```
+$ ./compare_builds.py -c1 zenoss_component_artifact52.RC2.log -c2 zenoss_component_artifact53.log
+Component Differences:
+Name                                     c1 (gitRef)                      c2 (gitRef)                      Different
+zenoss-prodbin                           5.2.0 (5.2.0)                    develop (85f5b99d40e35b)         Y
+```
+
+**3. Compare just the zenpacks (using previously downloaded log files)**
+```
+$ ./compare_builds.py -z1 zenpacks_artifact52.RC2.log -z2 zenpacks_artifact53.log
+ZenPack Differences:
+Name                                     z1 (gitRef)                      z2 (gitRef)
+```
