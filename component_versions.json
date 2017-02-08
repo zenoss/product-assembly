@@ -45,8 +45,6 @@
     {
         "name": "zenoss-prodbin",
         "type": "jenkins",
-        "jenkins.server": "http://platform-jenkins.zenoss.eng",
-        "jenkins.job": "zenoss-prodbin-develop",
         "version": "develop"
     },
     {
