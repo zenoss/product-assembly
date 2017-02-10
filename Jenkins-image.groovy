@@ -89,11 +89,19 @@ node ('build-zenoss-product') {
         ]
 
     stage 'Build Appliances'
-        def appliances = ["zsd", "poc"]
         def branches = [:]
 
         if (TARGET_PRODUCT == "resmgr") {
+            def appliances = ["zsd", "poc", "zsd_alderaan", "zsd_alderaan_qemu"]
+
             // After building RM, we build two sets of appliances; one for ZSD and another for POC
+
+            if (applianceTarget == "zsd_alderaan" || applianceTarget == "zsd_alderaan_qemu") {
+                serviced_branch = "develop"
+                serviced_maturity = "unstable"
+                serviced_version = ""
+                serviced_build_nbr = ""
+            }
 
             // We have to use this version of the for-loop and _not_ the for(String s: strings)
             // as per https://jenkins.io/doc/pipeline/examples/#parallel-from-list
