@@ -45,8 +45,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "jenkins",
-        "jenkins.server": "http://jenkins.zendev.org",
-        "jenkins.job": "zenoss-prodbin-merge-support-52x",
+        "jenkins.job": "Components/job/zenoss-prodbin/job/support-5.2.x",
         "version": "support/5.2.x"
     },
     {
