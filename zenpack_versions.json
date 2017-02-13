@@ -269,8 +269,9 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenPackLib",
-        "requirement": "ZenPacks.zenoss.ZenPackLib===2.0.1",
-        "type": "zenpack"
+        "type": "zenpack",
+        "requirement": "ZenPacks.zenoss.ZenPackLib==2.0.*",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.ZenSQLTx",
         "requirement": "ZenPacks.zenoss.ZenSQLTx===2.6.5",
