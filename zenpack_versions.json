@@ -210,6 +210,7 @@
         "name": "ZenPacks.zenoss.ZenPackLib",
         "type": "zenpack",
         "requirement": "ZenPacks.zenoss.ZenPackLib==2.0.*",
+        "git_ref": "hotfix/2.0.2",
         "pre": true
     },{
         "name": "ZenPacks.zenoss.ZenSQLTx",
