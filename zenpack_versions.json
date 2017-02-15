@@ -1,7 +1,7 @@
 [
     {
         "name": "ZenPacks.zenoss.AdvancedSearch",
-        "requirement": "ZenPacks.zenoss.AdvancedSearch===1.2.0",
+        "requirement": "ZenPacks.zenoss.AdvancedSearch===1.2.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.AixMonitor",
