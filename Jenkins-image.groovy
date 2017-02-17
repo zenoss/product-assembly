@@ -89,7 +89,7 @@ node ('build-zenoss-product') {
         ]
 
     stage 'Build Appliances'
-        def appliances = ["zsd", "poc"]
+        def appliances = ["zsd", "zsd_alderaan", "poc"]
         def branches = [:]
 
         if (TARGET_PRODUCT == "resmgr") {
@@ -99,22 +99,48 @@ node ('build-zenoss-product') {
             // as per https://jenkins.io/doc/pipeline/examples/#parallel-from-list
             for(int i=0; i<appliances.size(); i++) {
                 def applianceTarget = appliances.get(i);
-                def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
-                def branch = {
-                    build job: 'appliance-build', parameters: [
-                            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
-                            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
-                            [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                            [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
-                            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
-                            [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
-                            [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
-                    ]
+
+                if (applianceTarget == "zsd_alderaan" && ZENOSS_VERSION.contains("5.2")) {
+
+                    // specific build for zsd alderaan which includes rm5.2 and cc1.3.
+                    // this is only temporary.  See BLD-15 in jira
+                    def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
+                    def branch = {
+                        build job: 'appliance-build', parameters: [
+                                [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+                                [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
+                                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                                [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
+                                [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                                [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                                [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                                [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: "1.3.0"],
+                                [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+                        ]
+                    }
+
+                    branches[applianceTarget] = branch
+
+                } else {
+
+                    def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
+                    def branch = {
+                        build job: 'appliance-build', parameters: [
+                                [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+                                [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
+                                [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                                [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
+                                [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                                [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                                [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                                [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                                [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+                        ]
+                    }
+
+                    branches[applianceTarget] = branch
                 }
 
-                branches[applianceTarget] = branch
             }
         } else {
             branches["core"] = {
