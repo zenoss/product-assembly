@@ -21,6 +21,7 @@
 ##############################################################################
 
 import argparse
+import datetime
 import httplib
 import json
 import logging as log
@@ -429,7 +430,7 @@ def addChildJobTemplates(templates, childTemplateName, parentJob):
         if instance.parentJob and instance.parentJob != parentJob:
             continue
         stageTemplates = getInstanceStages(template, instance.jobPrefix)
-        timeStats = TimeStats("", "")
+        timeStats = TimeStats(0, 0)
         stages = []
         for stage in stageTemplates:
             stageInfo = StageInfo(stage.name, "", timeStats, [])
@@ -445,14 +446,102 @@ def main(options):
     beginJobInfo = getJobInfo(buildBeginJobUrl(options.product_number, options.branch))
     report = buildReport(templates, beginJobInfo, "begin")
 
+    buildJSONReport(report, options.json_output_file)
+    buildHTMLReport(report, options.html_output_file)
+    return
+
+
+def buildJSONReport(report, data_file):
     def dumpit(obj):
         if isinstance(obj, StageInfo):
             return obj.toDict() if obj else {}
         else:
             return obj.__dict__
-    with open(options.output_file, 'w') as outFile:
+    with open(data_file, 'w') as outFile:
         json.dump(report.toDict(), outFile, default=dumpit, indent=4, sort_keys=True, separators=(',', ': '))
-    return
+
+def buildHTMLReport(report, html_file):
+    with open("jobTemplate.html", 'r') as templateFile:
+        template = string.Template(templateFile.read())
+
+    pageHeader = "Build report for %s" % report.jenkinsInfo.label
+    level = 0
+    dataRows = []
+    dataRows.extend(buildJobHTML(report, level))
+
+    s = template.substitute(
+        title='Zenoss Build Report',
+        pageHeader=pageHeader,
+        dataRows='\n'.join(dataRows))
+    with open(html_file, 'w') as outFile:
+        outFile.write(s)
+        outFile.close()
+
+ROW_TEMPLATE = string.Template(
+"<tr>"
+    "<td class='$indentLevel'>$name</td>"
+    "<td>$status</td>"
+    "<td>$duration</td>"
+"</tr>")
+
+def buildJobHTML(job, level):
+    jobRows = []
+    indentLevel = "indent%d" % level
+    if job.jenkinsInfo and job.jenkinsInfo.url:
+        jobLink = "<a href='%s'>%s - %s</a>" % (job.jenkinsInfo.url, job.jenkinsInfo.name, job.jenkinsInfo.label)
+    else:
+        jobLink = job.jenkinsInfo.label
+    duration = print_duration(job.timeStats.duration) if job.timeStats and job.timeStats.duration else ""
+    status = job.jenkinsInfo.status if job.jenkinsInfo and job.jenkinsInfo.status else ""
+    row = ROW_TEMPLATE.substitute(
+        indentLevel=indentLevel,
+        name=jobLink,
+        status=status,
+        duration=duration)
+    jobRows.append(str(row))
+
+    level += 1
+    for stage in job.stages:
+        stageRows = buildStageHTML(stage, level)
+        jobRows.extend(stageRows)
+    return jobRows
+
+
+def buildStageHTML(stage, level):
+    stageRows = []
+    indentLevel = "indent%d" % level
+    duration = print_duration(stage.timeStats.duration) if stage.timeStats and stage.timeStats.duration else ""
+    status = stage.status if stage.status else ""
+    row = ROW_TEMPLATE.substitute(
+        indentLevel=indentLevel,
+        name=stage.name,
+        status=status,
+        duration=duration)
+    stageRows.append(str(row))
+
+    level += 1
+    for job in stage.jobs:
+        stageRows.extend(buildJobHTML(job, level))
+
+    return stageRows
+
+ONE_HOUR = 3600
+ONE_MINUTE = 60
+
+def print_duration(duration):
+  elapsed = datetime.timedelta(0, 0, 0, duration)
+  if elapsed.seconds < 1:
+    return "%dms" % (elapsed.microseconds / 1000)
+  elif elapsed.seconds < ONE_MINUTE:
+    return "%ds" % (elapsed.seconds)
+  elif elapsed.seconds < ONE_HOUR:
+    minutes = elapsed.seconds / ONE_MINUTE
+    seconds = elapsed.seconds % ONE_MINUTE
+    return "%dmin %ds" % (minutes, seconds)
+  else:
+    hours = elapsed.seconds / ONE_HOUR
+    minutes = (elapsed.seconds % ONE_HOUR) / ONE_MINUTE
+    return "%dh %dmin" % (hours, minutes)
 
 
 if __name__ == '__main__':
@@ -462,12 +551,15 @@ if __name__ == '__main__':
     parser.add_argument('-b',  '--branch', type=str, required=True,
                         help='the product branch; e.g. develop or support-5.2.x')
 
-    parser.add_argument('-o',  '--output-file', type=str,
-                        default='reportOutput.json',
-                        help='')
+    parser.add_argument('-j',  '--json-output-file', type=str,
+                        default='buildReport.json',
+                        help='Name of the JSON output file; default is buildReport.json')
+    parser.add_argument('-html',  '--html-output-file', type=str,
+                        default='buildReport.html',
+                        help='Name of the HTML output file; default is buildReport.html')
     parser.add_argument('-t',  '--template', type=file,
-                        default='reportTemplate.json',
-                        help='')
+                        default='jobTemplate.json',
+                        help='The template describing each of the build jobs')
     parser.add_argument('-v', '--verbose', action="store_true",
                         help='verbose mode')
     parser.set_defaults(verbose=False)
