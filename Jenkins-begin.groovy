@@ -61,6 +61,12 @@ node ('build-zenoss-product') {
             parallel branches
     } finally {
         sh("./build_status.py -b ${BRANCH} -p ${PRODUCT_BUILD_NUMBER} -html buildReport.html")
-        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'buildReport.html', reportName: 'Build Summary Report'])
+        publishHTML([allowMissing: true,
+            alwaysLinkToLastBuild: true,
+            keepAll: true,
+            reportDir: './',
+            reportFiles: 'buildReport.html',
+            reportName: 'Build Summary Report'])
         archive includes: 'buildReport.*'
     }
+}
