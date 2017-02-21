@@ -59,14 +59,21 @@ node ('build-zenoss-product') {
             ]
 
             parallel branches
+    } catch (err) {
+        echo "Job failed with the following error: ${err}"
+        if (err.toString().contains("hudson.AbortException:")) {
+            currentBuild.result = 'ABORTED'
+        } else {
+            currentBuild.result = 'FAILED'
+        }
     } finally {
-        sh("./build_status.py -b ${BRANCH} -p ${PRODUCT_BUILD_NUMBER} -html buildReport.html")
+        sh("./build_status.py -b ${BRANCH} -p ${PRODUCT_BUILD_NUMBER} --job-name ${env.JOB_BASE_NAME} --job-status ${currentBuild.result} -html buildReport.html")
+        archive includes: 'buildReport.*'
         publishHTML([allowMissing: true,
             alwaysLinkToLastBuild: true,
             keepAll: true,
             reportDir: './',
             reportFiles: 'buildReport.html',
             reportName: 'Build Summary Report'])
-        archive includes: 'buildReport.*'
     }
 }

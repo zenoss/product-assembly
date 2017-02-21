@@ -444,10 +444,12 @@ def addChildJobTemplates(templates, childTemplateName, parentJob):
 def main(options):
     templates = loadReportTemplates(options.template)
     beginJobInfo = getJobInfo(buildBeginJobUrl(options.product_number, options.branch, options.job_name))
+    if options.job_status:
+        beginJobInfo["status"] = options.job_status
     report = buildReport(templates, beginJobInfo, "begin")
 
     buildJSONReport(report, options.json_output_file)
-    buildHTMLReport(report, options.html_output_file)
+    buildHTMLReport(report, options.branch, options.html_output_file)
     return
 
 
@@ -460,11 +462,11 @@ def buildJSONReport(report, data_file):
     with open(data_file, 'w') as outFile:
         json.dump(report.toDict(), outFile, default=dumpit, indent=4, sort_keys=True, separators=(',', ': '))
 
-def buildHTMLReport(report, html_file):
+def buildHTMLReport(report, branch, html_file):
     with open("jobTemplate.html", 'r') as templateFile:
         template = string.Template(templateFile.read())
 
-    pageHeader = "Build report for %s" % report.jenkinsInfo.label
+    pageHeader = "Build report for %s %s" % (branch, report.jenkinsInfo.label)
     level = 0
     dataRows = []
     dataRows.extend(buildJobHTML(report, level))
@@ -554,6 +556,8 @@ if __name__ == '__main__':
     parser.add_argument('-n',  '--job-name', type=str,
                         default='begin',
                         help='Name of the beginning Jenkins job')
+    parser.add_argument('-s',  '--job-status', type=str,
+                        help='Status of the beginning Jenkins job')
     parser.add_argument('-j',  '--json-output-file', type=str,
                         default='buildReport.json',
                         help='Name of the JSON output file; default is buildReport.json')
