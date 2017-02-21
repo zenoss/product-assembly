@@ -441,18 +441,6 @@ def addChildJobTemplates(templates, childTemplateName, parentJob):
     return jobs
 
 
-def main(options):
-    templates = loadReportTemplates(options.template)
-    beginJobInfo = getJobInfo(buildBeginJobUrl(options.product_number, options.branch, options.job_name))
-    if options.job_status:
-        beginJobInfo["status"] = options.job_status
-    report = buildReport(templates, beginJobInfo, "begin")
-
-    buildJSONReport(report, options.json_output_file)
-    buildHTMLReport(report, options.branch, options.html_output_file)
-    return
-
-
 def buildJSONReport(report, data_file):
     def dumpit(obj):
         if isinstance(obj, StageInfo):
@@ -556,6 +544,18 @@ def print_duration(duration):
     hours = elapsed.seconds / ONE_HOUR
     minutes = (elapsed.seconds % ONE_HOUR) / ONE_MINUTE
     return "%dh %dmin" % (hours, minutes)
+
+
+def main(options):
+    templates = loadReportTemplates(options.template)
+    beginJobInfo = getJobInfo(buildBeginJobUrl(options.product_number, options.branch, options.job_name))
+    if options.job_status:
+        beginJobInfo["status"] = options.job_status
+    report = buildReport(templates, beginJobInfo, "begin")
+
+    buildJSONReport(report, options.json_output_file)
+    buildHTMLReport(report, options.branch, options.html_output_file)
+    return
 
 
 if __name__ == '__main__':
