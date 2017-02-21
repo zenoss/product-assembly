@@ -15,8 +15,6 @@ node ('build-zenoss-product') {
     def pipelineBuildNumber = env.BUILD_NUMBER
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber})"
 
-    def childJobLabel = TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
-
     stage 'Build image'
         // Make sure we start in a clean directory to ensure a fresh git clone
         deleteDir()
@@ -81,15 +79,15 @@ node ('build-zenoss-product') {
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
         def s3Subdirectory = "/yum/zenoss/" + MATURITY + "/centos/el7/os/x86_64"
+        def rpmJobLabel = TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
         build job: 'rpm_repo_push', parameters: [
-            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
+            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: rpmJobLabel],
             [$class: 'StringParameterValue', name: 'UPSTREAM_JOB_NAME', value: pipelineBuildName],
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
             [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: s3Subdirectory]
         ]
 
     stage 'Build Appliances'
-        def appliances = ["zsd", "poc"]
         def branches = [:]
 
         if (TARGET_PRODUCT == "resmgr") {
@@ -97,6 +95,7 @@ node ('build-zenoss-product') {
 
             // We have to use this version of the for-loop and _not_ the for(String s: strings)
             // as per https://jenkins.io/doc/pipeline/examples/#parallel-from-list
+            def appliances = ["zsd", "poc"]
             for(int i=0; i<appliances.size(); i++) {
                 def applianceTarget = appliances.get(i);
                 def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
@@ -117,9 +116,10 @@ node ('build-zenoss-product') {
                 branches[applianceTarget] = branch
             }
         } else {
+            def jobLabel = "core appliance for product build #" + PRODUCT_BUILD_NUMBER
             branches["core"] = {
                 build job: 'appliance-build', parameters: [
-                        [$class: 'StringParameterValue', name: 'JOB_LABEL', value: childJobLabel],
+                        [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
                         [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                         [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
