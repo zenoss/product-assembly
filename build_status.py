@@ -482,7 +482,7 @@ def buildHTMLReport(report, branch, html_file):
 ROW_TEMPLATE = string.Template(
 "<tr>"
     "<td class='$indentLevel'>$name</td>"
-    "<td>$status</td>"
+    "<td class='$statusClass'>$status</td>"
     "<td>$duration</td>"
 "</tr>")
 
@@ -495,10 +495,16 @@ def buildJobHTML(job, level):
         jobLink = job.jenkinsInfo.label
     duration = print_duration(job.timeStats.duration) if job.timeStats and job.timeStats.duration else ""
     status = job.jenkinsInfo.status if job.jenkinsInfo and job.jenkinsInfo.status else ""
-    row = ROW_TEMPLATE.substitute(
+    if status and status != "SUCCESS":
+        statusClass = "failure"
+    else:
+        statusClass = "success"
+
+    row = ROW_TEMPLATE.safe_substitute(
         indentLevel=indentLevel,
         name=jobLink,
         status=status,
+        statusClass=statusClass,
         duration=duration)
     jobRows.append(str(row))
 
@@ -514,10 +520,16 @@ def buildStageHTML(stage, level):
     indentLevel = "indent%d" % level
     duration = print_duration(stage.timeStats.duration) if stage.timeStats and stage.timeStats.duration else ""
     status = stage.status if stage.status else ""
+    if status and status != "SUCCESS":
+        statusClass = "failure"
+    else:
+        statusClass = "success"
+
     row = ROW_TEMPLATE.substitute(
         indentLevel=indentLevel,
         name=stage.name,
         status=status,
+        statusClass=statusClass,
         duration=duration)
     stageRows.append(str(row))
 
