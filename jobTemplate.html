@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>$title</title>
+<style>
+table {
+	background-color: #fbfbfb;
+	border-color: black;
+	border-spacing: 2px;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 15px;
+	padding: 3px 4px 3px 4px;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+}
+tbody {
+	vertical-align: middle;
+}
+td.indent1 {padding-left:15px}
+td.indent2 {padding-left:30px}
+td.indent3 {padding-left:45px}
+td.indent4 {padding-left:60px}
+td.indent5 {padding-left:75px}
+td.indent6 {padding-left:0px}
+td.failure {color: red;}
+</style>
+</head>
+<body>
+<h1>$pageHeader</h1>
+<table>
+<tr>
+<th>Job or Stage</th>
+<th>Status</th>
+<th>Duration</th>
+</tr>
+$dataRows
+</table>
+</body>
+</html>
