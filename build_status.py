@@ -272,9 +272,9 @@ def buildBaseUrl(branchName):
             branchName.replace("/", "-"))
 
 
-def buildBeginJobUrl(productNumber, branchName):
+def buildBeginJobUrl(productNumber, branchName, jobName):
     return os.path.join(buildBaseUrl(branchName),
-            "job/begin",
+            "job/%s" % jobName,
             productNumber)
 
 
@@ -443,7 +443,7 @@ def addChildJobTemplates(templates, childTemplateName, parentJob):
 
 def main(options):
     templates = loadReportTemplates(options.template)
-    beginJobInfo = getJobInfo(buildBeginJobUrl(options.product_number, options.branch))
+    beginJobInfo = getJobInfo(buildBeginJobUrl(options.product_number, options.branch, options.job_name))
     report = buildReport(templates, beginJobInfo, "begin")
 
     buildJSONReport(report, options.json_output_file)
@@ -551,6 +551,9 @@ if __name__ == '__main__':
     parser.add_argument('-b',  '--branch', type=str, required=True,
                         help='the product branch; e.g. develop or support-5.2.x')
 
+    parser.add_argument('-n',  '--job-name', type=str,
+                        default='begin',
+                        help='Name of the beginning Jenkins job')
     parser.add_argument('-j',  '--json-output-file', type=str,
                         default='buildReport.json',
                         help='Name of the JSON output file; default is buildReport.json')
