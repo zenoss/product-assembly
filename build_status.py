@@ -392,7 +392,7 @@ def addChildJobs(templates, stage, jobs):
         #    is included in the stageFlowNodes, so the following excludes it
         #    and any other simple 'sh()' directives that may be added in the
         #   future.
-        if node["name"] == "Shell Script":
+        if not node["name"].startswith("Building "):
             continue
 
         names = node["name"].split()
