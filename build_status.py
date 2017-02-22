@@ -388,6 +388,13 @@ def addChildJobs(templates, stage, jobs):
         (len(stageFlowInfo["stageFlowNodes"]), stage["name"]))
 
     for node in stageFlowInfo["stageFlowNodes"]:
+        # This is a bit of a hack - the finally clause in Jenkins-begin.groovy
+        #    is included in the stageFlowNodes, so the following excludes it
+        #    and any other simple 'sh()' directives that may be added in the
+        #   future.
+        if node["name"] == "Shell Script":
+            continue
+
         names = node["name"].split()
         jobName = names[len(names)-1]
 
