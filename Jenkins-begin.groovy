@@ -61,7 +61,8 @@ node ('build-zenoss-product') {
             parallel branches
     } catch (err) {
         echo "Job failed with the following error: ${err}"
-        if (err.toString().contains("hudson.AbortException:")) {
+        if (err.toString().contains("completed with status ABORTED") ||
+            err.toString().contains("hudson.AbortException: script returned exit code 2")) {
             currentBuild.result = 'ABORTED'
         } else {
             currentBuild.result = 'FAILED'
