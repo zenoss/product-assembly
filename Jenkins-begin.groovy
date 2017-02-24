@@ -59,6 +59,9 @@ node ('build-zenoss-product') {
             ]
 
             parallel branches
+            // Set the status to success because the finally block is about to execute
+            //      and we don't want the final report status to be "IN-PROGRESS"
+            currentBuild.result = 'SUCCESS'
     } catch (err) {
         echo "Job failed with the following error: ${err}"
         if (err.toString().contains("completed with status ABORTED") ||
