@@ -388,6 +388,13 @@ def addChildJobs(templates, stage, jobs):
         (len(stageFlowInfo["stageFlowNodes"]), stage["name"]))
 
     for node in stageFlowInfo["stageFlowNodes"]:
+        # This is a bit of a hack - the finally clause in Jenkins-begin.groovy
+        #    is included in the stageFlowNodes, so the following excludes it
+        #    and any other simple 'sh()' directives that may be added in the
+        #   future.
+        if not node["name"].startswith("Building "):
+            continue
+
         names = node["name"].split()
         jobName = names[len(names)-1]
 
@@ -482,17 +489,13 @@ def buildJobHTML(job, level):
     else:
         jobLink = job.jenkinsInfo.label
     duration = print_duration(job.timeStats.duration) if job.timeStats and job.timeStats.duration else ""
-    status = job.jenkinsInfo.status if job.jenkinsInfo and job.jenkinsInfo.status else ""
-    if status and status != "SUCCESS":
-        statusClass = "failure"
-    else:
-        statusClass = "success"
+    status = job.jenkinsInfo.status if job.jenkinsInfo and validStatus(job.jenkinsInfo.status) else ""
 
     row = ROW_TEMPLATE.safe_substitute(
         indentLevel=indentLevel,
         name=jobLink,
         status=status,
-        statusClass=statusClass,
+        statusClass=setStatusClass(status),
         duration=duration)
     jobRows.append(str(row))
 
@@ -507,17 +510,13 @@ def buildStageHTML(stage, level):
     stageRows = []
     indentLevel = "indent%d" % level
     duration = print_duration(stage.timeStats.duration) if stage.timeStats and stage.timeStats.duration else ""
-    status = stage.status if stage.status else ""
-    if status and status != "SUCCESS":
-        statusClass = "failure"
-    else:
-        statusClass = "success"
+    status = stage.status if validStatus(stage.status) else ""
 
     row = ROW_TEMPLATE.substitute(
         indentLevel=indentLevel,
         name=stage.name,
         status=status,
-        statusClass=statusClass,
+        statusClass=setStatusClass(status),
         duration=duration)
     stageRows.append(str(row))
 
@@ -527,8 +526,28 @@ def buildStageHTML(stage, level):
 
     return stageRows
 
+
+# When this report is called from the finally block of job, some of the
+#   jobs/stages might technically still be IN_PROGRESS because the
+#   parent job is not really done until the finally block finishes.
+#   Reporting "in progress" for the last stage is potentially confusing,
+#   so don't report anything at all in that case.
+#
+# Note that if the report is run after the parent job has completly finished
+#   then we'll never encounter a status of IN_PROGRESS
+def validStatus(status):
+    return status and status != "IN_PROGRESS"
+
+
+def setStatusClass(status):
+    if status and status != "SUCCESS":
+        return "failure"
+    return "success"
+
+
 ONE_HOUR = 3600
 ONE_MINUTE = 60
+
 
 def print_duration(duration):
   elapsed = datetime.timedelta(0, 0, 0, duration)
