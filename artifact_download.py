@@ -241,6 +241,7 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
                 artifactInfo['git_ref_url'] = jenkinsInfo.gitRepo.replace('.git', '/tree/%s' % git_ref)
                 artifactInfo['git_branch'] = git_branch
                 artifactInfo['jenkins.job_nbr'] = number
+                artifactInfo['jenkins.artifact'] = fileName
                 downloadReport.append(artifactInfo)
 
     if nDownloaded == 0:
