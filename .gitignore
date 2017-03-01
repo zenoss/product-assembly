@@ -1,6 +1,7 @@
 *~
 product-base/component_info
 product-base/5.2.x
+product-base/5.3.x
 product-base/Dockerfile
 
 */zenpacks_artifact.log
@@ -19,3 +20,5 @@ resmgr/upgrade-impact.txt
 resmgr/upgrade-impact.sh
 
 svcdefs/build
+
+.idea/

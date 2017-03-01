@@ -8,7 +8,7 @@ TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
 .PHONY: change-from-image build-deps build build-devimg push clean
 
-build-deps: component_versions $(SHORT_VERSION).x/pull-docker-images.sh Dockerfile
+build-deps: component_versions $(SHORT_VERSION).x/pull-docker-images.sh $(SHORT_VERSION).x/check_for_old_servicedef.py Dockerfile
 
 build: build-deps
 	docker build --no-cache=true -t $(TAG) .
@@ -29,6 +29,7 @@ push:
 clean:
 	rm -rf component_info Dockerfile
 	rm -f $(SHORT_VERSION).x/pull-docker-images.sh
+	rm -f $(SHORT_VERSION).x/check_for_old_servicedef.py
 	-docker rmi -f $(TAG)
 
 component_versions: component_info

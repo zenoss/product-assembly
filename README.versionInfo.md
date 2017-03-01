@@ -239,7 +239,7 @@ that also match requirement will be returned.
     {
         "name": "ZenPacks.zenoss.Example",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.Example>=1.0.*"
+        "requirement": "ZenPacks.zenoss.Example==1.0.*"
     }
 ```
 * Newest pre-release version (i.e. latest version built from develop):
@@ -255,7 +255,7 @@ that also match requirement will be returned.
     {
         "name": "ZenPacks.zenoss.Example",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.Example>=1.0.*",
+        "requirement": "ZenPacks.zenoss.Example==1.0.*",
         "pre": true
     }
 ```

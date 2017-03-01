@@ -6,6 +6,7 @@ import fnmatch
 import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -95,14 +96,19 @@ def zenpackDownload(versionInfo, outdir, downloadReport):
         }
 
         downloadReport.append(artifactInfo)
-        raise
+        raise Exception("Error querying for ZP info from %s: %s" % (url, e))
+    except urllib2.URLError as e:
+        artifactInfo["zenpack"] = {
+            "error": str(e),
+        }
+        downloadReport.append(artifactInfo)
+        raise Exception("Error querying for ZP info from %s: %s" % (url, e))
     except Exception as e:
         artifactInfo["zenpack"] = {
             "error": str(e),
         }
-
         downloadReport.append(artifactInfo)
-        raise
+        raise Exception("Error querying for ZP info from %s: %s" % (url, e))
 
     # Include unaltered response under "zenpack" key in download report.
     artifactInfo["zenpack"] = zenpack
@@ -298,6 +304,22 @@ def updateReport(reportFile, downloadReport):
 
 
 def main(options):
+    if options.pinned:
+        #verify all versions are explicitly set to a release
+        versions = json.load(options.versions)
+        unpinned = []
+        for artifact in versions:
+            artifactInfo = artifactClass[artifact['type']](artifact)
+            if not artifactInfo.pinned:
+                if isinstance(artifactInfo, ZenPackInfo):
+                    version = "requirement: %s; pre: %s" %(artifactInfo.requirement, artifactInfo.pre)
+                else:
+                    version = "version: %s" % artifactInfo.version
+                unpinned.append("%s %s" % (artifactInfo.name, version))
+        if unpinned:
+            sys.exit("unpinned versions found:\n%s" % '\n'.join(unpinned))
+        sys.exit(0)
+
     artifacts = options.artifacts
     if options.zp_manifest is not None:
         manifest = json.load(options.zp_manifest)
@@ -367,6 +389,17 @@ class ArtifactInfo(object):
         if 'git_owner' in self.info:
             return self.info['git_owner']
         return 'zenoss'
+
+    @property
+    def pinned(self):
+        if self.infoType != 'download':
+            return False
+        elif not self.version:
+            return False
+        elif re.match('.*(dev).*|.*(snap).*', self.version, re.IGNORECASE):
+            return False
+        return True
+
 
     def toDict(self):
         return {
@@ -462,7 +495,6 @@ class ZenPackInfo(ArtifactInfo):
         :return:
         """
         gitRef = super(ZenPackInfo, self).gitRef
-        # import pdb;pdb.set_trace()
         if not gitRef:
             if self.requirement and '===' in self.requirement and not self.pre:
                 gitRef = self.requirement.split('===')[1]
@@ -477,6 +509,28 @@ class ZenPackInfo(ArtifactInfo):
                         "Please specify desired git_ref field." % self.name)
 
         return gitRef
+
+    @property
+    def pinned(self):
+        """Return True if artifact is a pinned version. False if not."""
+        if self.pre:
+            # Pre-releases can never be considered pinned.
+            return False
+
+        if not self.requirement:
+            # Pinning can't be done without an explicit requirement.
+            return False
+
+        if ',' in self.requirement:
+            # A comma indicates multiple possibilities. Pinning is specific.
+            return False
+
+        if '===' in self.requirement and ',' not in self.requirement:
+            # Triple-equal for a single (no commas) requirement means pinned.
+            return True
+
+        # Anything left is not pinned.
+        return False
 
     def toDict(self):
         result = super(ZenPackInfo, self).toDict()
@@ -519,6 +573,9 @@ if __name__ == '__main__':
 
     parser.add_argument('--append', action="store_true",
                         help='only applicable to --git_output, add to existing git output file')
+
+    parser.add_argument('--pinned', action="store_true",
+                        help='Verify that the versions in the json file are pinned to an explicit release version, i.e. not develop.')
 
     options = parser.parse_args()
     main(options)

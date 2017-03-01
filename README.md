@@ -6,7 +6,8 @@
   - [Adding/Removing a new component or ZenPack](#adding-or-removing-a-new-component-or-zenpack)
     - [Adding or Removing components](#adding-or-removing-components)
     - [Adding or Removing ZenPacks](#adding-or-removing-zenpacks)
-  - [Setting up Builds for a Maintenance Release](#setting-up-builds-for-a-maintenance-release)
+  - [Build like Jenkins](#build-like-jenkins)
+  - [Test like Jenkins](#test-like-jenkins)
 
 ## Overview
 
@@ -61,11 +62,28 @@ ZenPack information is split across two files
 
 To add a ZenPack, first add an entry to `zenpack_versions.json`, then update the `zenpacks.json` file for Core and/or RM as approviate.
 
-## Setting up Builds for a Maintenance Release
-This section assumes that a maintenance release is based on a branch of this repo like `support/5.2.x`.
-The branch name has to be modified in two files in this repo - [Jenkins-begin.groovy](Jenkins-begin.groovy) and
-[versions.mk](versions.mk).
+## Build Like Jenkins
+The nightly build in Jenkins essentially runs these steps:
+```
+cd product-base
+make clean build
+cd ../core
+make clean build
+cd ../resmgr
+make clean build
+```
 
-In `Jenkins-begin.groovy`, change the `git branch:` statement in the first stage ('Checkout product-assembly repo'), to be the name of the support branch (e.g. `support/5.2.x`).
+The first step builds the docker image `zenoss/product-base:5.2.0_DEV_DEV` (or whatever version your branch is on). The next two steps build `zenoss/core_5.2:5.2.0_DEV_DEV` and `zenoss/resmgr_5.2:5.2.0_DEV_DEV` (again with the respective versions for your local branch).
 
-In `verions.mk`, change the value of `SVCDEF_GIT_REF` to be the name of the support branch (e.g. `support/5.2.x`).
+The last 2 makes are performed in parallel for the nightly build. A developer typically only needs to build one of core or resmgr.
+
+# Test Like Jenkins
+The nightly build in Jenkins runs these steps to test an image after it is built:
+```
+cd ../core
+make run-tests
+cd ../resmgr
+make run-tests
+```
+Again, the last 2 makes are performed in parallel for the nightly build. A developer typically only needs to test one of core or resmgr.
+
