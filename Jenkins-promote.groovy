@@ -49,14 +49,14 @@ node ('build-zenoss-product') {
         def SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
         def SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
         def SERVICED_VERSION=versionProps['SERVICED_VERSION']
-        def SERVICED_BUILD_NBR=versionProps['SERVICED_BUILD_NBR']
+        def SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}"
         echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
         echo "SERVICED_MATURITY=${SERVICED_MATURITY}"
         echo "SERVICED_VERSION=${SERVICED_VERSION}"
-        echo "SERVICED_BUILD_NBR=${SERVICED_BUILD_NBR}"
+        echo "SERVICED_BUILD_NUMBER=${SERVICED_BUILD_NUMBER}"
 
         // Promote the docker images
         def promoteArgs = "TARGET_PRODUCT=${TARGET_PRODUCT}\
@@ -132,7 +132,7 @@ node ('build-zenoss-product') {
                             [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
                             [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
                             [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
                     ]
                 }
 
@@ -150,7 +150,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
                         [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
                         [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
-                        [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: SERVICED_BUILD_NBR],
+                        [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
                 ]
             }
         }
