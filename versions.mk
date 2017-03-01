@@ -39,21 +39,21 @@ OPENTSDB_VERSION=24.0.3
 #    up the last successful build for that branch to get the RPM version information necessary
 #    to install the serviced RPM from the unstable yum repo into the appliances.
 #
-#    If SERVICED_BRANCH is specified, both SERVICED_VERSION and SERVICED_BLD_NUMBER must be blank.
+#    If SERVICED_BRANCH is specified, both SERVICED_VERSION and SERVICED_BUILD_NUMBER must be blank.
 #
 # 2. Specify a specific version and build
 #
 #    Specify the 3-digit version of serviced with SERVICED_VERSION and the build number with
-#    SERVICE_BUILD_NBR. The corresponding RPM must be available in the stable yum repo.
+#    SERVICED_BUILD_NUMBER. The corresponding RPM must be available in the stable yum repo.
 #
-#    SERVICED_VERSION and SERVICED_BLD_NUMBER have to be specified together, and
+#    SERVICED_VERSION and SERVICED_BUILD_NUMBER have to be specified together, and
 #    SERVICED_BRANCH must be blank if both are specified.
 #
 #    If SERVICED_BRANCH is specified, then SERVICED_MATURITY must be 'unstable'.
-#    If SERVICED_VERSION and SERVICED_BUILD_NBR are specified, then the
+#    If SERVICED_VERSION and SERVICED_BUILD_NUMBER are specified, then the
 #    SERVICED_BRANCH should be 'testing' or 'stable'
 #
 SERVICED_BRANCH=develop
 SERVICED_MATURITY=unstable
 SERVICED_VERSION=
-SERVICED_BUILD_NBR=
+SERVICED_BUILD_NUMBER=
