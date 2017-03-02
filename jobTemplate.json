@@ -85,10 +85,6 @@
 			"ignoreStages": ["QEMU/QCOWs"],
 			"parentJob": "resmgr-pipeline"
 		}, {
-			"jobPrefix": "zsd_alderaan appliance",
-			"ignoreStages": [],
-			"parentJob": "resmgr-pipeline"
-		}, {
 			"jobPrefix": "poc appliance",
 			"ignoreStages": [
 				"Delegate OVA",

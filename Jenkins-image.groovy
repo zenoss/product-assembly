@@ -95,37 +95,23 @@ node ('build-zenoss-product') {
 
             // We have to use this version of the for-loop and _not_ the for(String s: strings)
             // as per https://jenkins.io/doc/pipeline/examples/#parallel-from-list
-            def appliances = ["zsd", "zsd_alderaan", "poc"]
+            def appliances = ["zsd", "poc"]
             for (int i = 0; i < appliances.size(); i++) {
                 def applianceTarget = appliances.get(i);
 
-                // specific build for zsd alderaan which includes rm5.2 and cc1.3.
-                // this is only temporary.  See BLD-15 in jira
                 def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
-
-                def serviced_branch = SERVICED_BRANCH
-                def serviced_maturity = SERVICED_MATURITY
-                def serviced_version = SERVICED_VERSION
-                def serviced_build_number = SERVICED_BUILD_NUMBER
-                def zenoss_maturity = MATURITY
-                def zenoss_version = ZENOSS_VERSION
-
-                if (applianceTarget == "zsd_alderaan") {
-                    zenoss_maturity = "stable"
-                    zenoss_version = "5.2.2"
-                }
 
                 def branch = {
                     build job: 'appliance-build', parameters: [
                             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
                             [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
                             [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                            [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: zenoss_maturity],
-                            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: zenoss_version],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: serviced_branch],
-                            [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: serviced_maturity],
-                            [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: serviced_version],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: serviced_build_number],
+                            [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
+                            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                            [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                            [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
                     ]
                 }
 
@@ -148,5 +134,5 @@ node ('build-zenoss-product') {
             }
         }
 
-    parallel branches
+        parallel branches
 }
