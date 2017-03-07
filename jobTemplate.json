@@ -72,12 +72,16 @@
 		}, {
 			"name": "Archive and Upload",
 			"childTemplate": ""
-		}],
+		}, {
+			"name": "Start QA Automation",
+			"childTemplate": ""
+        }],
 		"instanceTemplates": [{
 			"jobPrefix": "core product",
 			"ignoreStages": [
 				"Upgrade ISO",
 				"AMIs",
+				"Start QA Automation",
 				"QEMU/QCOWs"],
 			"parentJob": "core-pipeline"
 		}, {
@@ -96,7 +100,8 @@
 				"Delegate ISO",
 				"Upgrade ISO",
 				"AMIs",
-				"QEMU/QCOWs"],
+				"QEMU/QCOWs",
+				"Start QA Automation"],
 			"parentJob": "resmgr-pipeline"
 		}]
 	}]
