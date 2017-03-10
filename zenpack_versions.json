@@ -153,8 +153,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LinuxMonitor",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.HyperV",
         "requirement": "ZenPacks.zenoss.Microsoft.HyperV===1.3.2",
