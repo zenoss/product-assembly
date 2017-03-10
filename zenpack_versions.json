@@ -123,7 +123,6 @@
     },{
         "name": "ZenPacks.zenoss.LinuxMonitor",
         "type": "zenpack",
-        "pre": true
     },{
         "name": "ZenPacks.zenoss.Microsoft.HyperV",
         "type": "zenpack"
