@@ -20,7 +20,7 @@
         "name": "query",
         "type": "jenkins",
         "version": "develop"
-        },
+    },
     {
         "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
         "name": "redis-mon",
