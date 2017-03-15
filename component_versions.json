@@ -11,10 +11,11 @@
         "version": "1.1.3"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
         "name": "pynetsnmp",
-        "type": "download",
-        "version": "0.40.6"
+        "type": "jenkins",
+        "jenkins.server": "http://jenkins.zendev.org",
+        "jenkins.job": "pynetsnmp-develop",
+        "version": "develop"
     },
     {
         "name": "query",
