@@ -92,14 +92,14 @@ node ('build-zenoss-product') {
         def serviced_branch = SERVICED_BRANCH
         def serviced_maturity = SERVICED_MATURITY
         def serviced_version = SERVICED_VERSION
-        def serviced_build_nbr = SERVICED_BUILD_NBR
+        def serviced_build_number = SERVICED_BUILD_NUMBER
 
         // for any appliance for 5.2.3 we want to include cc 1.3.x unstable
         if (zenoss_version == "5.2.3") {
             serviced_branch = "support/1.3.x"
             serviced_maturity = "unstable"
             serviced_version = ""
-            serviced_build_nbr = ""
+            serviced_build_number = ""
         }
 
         if (TARGET_PRODUCT == "resmgr") {
@@ -123,7 +123,7 @@ node ('build-zenoss-product') {
                             [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: serviced_branch],
                             [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: serviced_maturity],
                             [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: serviced_version],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: serviced_build_nbr],
+                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: serviced_build_number],
                     ]
                 }
 
@@ -141,7 +141,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: serviced_branch],
                         [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: serviced_maturity],
                         [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: serviced_version],
-                        [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NBR', value: serviced_build_nbr],
+                        [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: serviced_build_number],
                 ]
             }
         }
