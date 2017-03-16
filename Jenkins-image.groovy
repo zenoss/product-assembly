@@ -95,7 +95,7 @@ node ('build-zenoss-product') {
         def serviced_build_number = SERVICED_BUILD_NUMBER
 
         // for any appliance for 5.2.3 we want to include cc 1.3.x unstable
-        if (zenoss_version == "5.2.3") {
+        if (ZENOSS_VERSION == "5.2.3") {
             serviced_branch = "support/1.3.x"
             serviced_maturity = "unstable"
             serviced_version = ""
