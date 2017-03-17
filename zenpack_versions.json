@@ -67,7 +67,8 @@
         "pre": true
     },{
         "name": "ZenPacks.zenoss.DistributedCollector",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
         "type": "zenpack"
