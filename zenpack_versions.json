@@ -72,6 +72,9 @@
         "name": "ZenPacks.zenoss.DnsMonitor",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.DurationThreshold",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.DynamicView",
         "type": "zenpack"
     },{
