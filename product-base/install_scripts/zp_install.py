@@ -31,13 +31,13 @@ def main(args):
             raise Exception("Found multiple files for zenpack: %s" % zpName)
         else:
             zpFile = os.path.join(args.zpDir, zpFileName[0])
-            sys.stdout.flush()
             cmd = ['zenpack', '--install', zpFile]
             if args.link:
                 print "Installing zenpack in link mode: %s %s" % (zpName, zpFile)
                 cmd.append('--link')
             else:
                 print "Installing zenpack: %s %s" % (zpName, zpFile)
+            sys.stdout.flush()
             subprocess.check_call(cmd)
 
 
