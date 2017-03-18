@@ -235,7 +235,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===3.5.3",
+        "requirement": "ZenPacks.zenoss.vSphere===3.6.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WBEM",
