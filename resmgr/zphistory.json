@@ -18,6 +18,7 @@
   "ZenPacks.zenoss.DigMonitor": "5.0.0",
   "ZenPacks.zenoss.DistributedCollector": "5.0.0",
   "ZenPacks.zenoss.DnsMonitor": "5.0.0",
+  "ZenPacks.zenoss.DurationThreshold": "5.3.0",
   "ZenPacks.zenoss.DynamicView": "5.0.0",
   "ZenPacks.zenoss.EnterpriseCollector": "5.0.0",
   "ZenPacks.zenoss.EnterpriseLinux": "5.0.0",
