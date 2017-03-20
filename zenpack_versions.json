@@ -105,7 +105,7 @@
         "pre": true
     },{
         "name": "ZenPacks.zenoss.EnterpriseReports",
-        "requirement": "ZenPacks.zenoss.EnterpriseReports===2.4.0",
+        "requirement": "ZenPacks.zenoss.EnterpriseReports===2.4.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseSecurity",
