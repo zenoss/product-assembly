@@ -195,7 +195,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
-        "requirement": "ZenPacks.zenoss.PredictiveThreshold===1.2.0",
+        "requirement": "ZenPacks.zenoss.PredictiveThreshold===1.2.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PortalIntegration",
