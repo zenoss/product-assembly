@@ -86,10 +86,6 @@
 			"parentJob": "core-pipeline"
 		}, {
 			"jobPrefix": "zsd appliance",
-			"ignoreStages": ["QEMU/QCOWs"],
-			"parentJob": "resmgr-pipeline"
-		}, {
-			"jobPrefix": "zsd_alderaan appliance",
 			"ignoreStages": [],
 			"parentJob": "resmgr-pipeline"
 		}, {
