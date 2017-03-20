@@ -18,7 +18,7 @@
 		"instanceTemplates": []
 	}, {
 		"name": "product-pipeline",
-		"jobPrefixes": ["core-pipeline","resmgr-pipeline"],
+		"jobPrefixes": ["core-pipeline","resmgr-pipeline","ucspm-pipeline"],
 		"stages": [{
 			"name": "Build image",
 			"childTemplate": ""
@@ -75,7 +75,7 @@
 		}, {
 			"name": "Start QA Automation",
 			"childTemplate": ""
-        }],
+		}],
 		"instanceTemplates": [{
 			"jobPrefix": "core product",
 			"ignoreStages": [
@@ -92,6 +92,12 @@
 			"jobPrefix": "zsd_alderaan appliance",
 			"ignoreStages": [],
 			"parentJob": "resmgr-pipeline"
+		}, {
+			"jobPrefix": "ucspm appliance",
+			"ignoreStages": [
+				"AMIs",
+				"QEMU/QCOWs"],
+			"parentJob": "ucspm-pipeline"
 		}, {
 			"jobPrefix": "poc appliance",
 			"ignoreStages": [

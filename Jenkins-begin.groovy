@@ -56,6 +56,14 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                     ]
                 },
+                'ucspm-pipeline': {
+                    build job: 'ucspm-pipeline', parameters: [
+                        [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
+                        [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
+                        [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
+                        [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                    ]
+                },
             ]
 
             parallel branches
