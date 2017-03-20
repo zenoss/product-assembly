@@ -88,6 +88,10 @@
         "requirement": "ZenPacks.zenoss.DnsMonitor===2.1.0",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.DurationThreshold",
+        "requirement": "ZenPacks.zenoss.DurationThreshold===2.0.2",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.DynamicView",
         "requirement": "ZenPacks.zenoss.DynamicView===1.5.0",
         "type": "zenpack"
