@@ -86,7 +86,8 @@
         "pre": true
     },{
         "name": "ZenPacks.zenoss.EnterpriseReports",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.EnterpriseSecurity",
         "type": "zenpack"
