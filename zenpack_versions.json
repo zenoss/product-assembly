@@ -239,7 +239,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===3.6.1",
+        "requirement": "ZenPacks.zenoss.vSphere===3.6.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WBEM",
