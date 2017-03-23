@@ -31,6 +31,7 @@
     },
     {
         "name": "service-migration",
+	"git_owner": "control-center",
         "type": "jenkins",
         "jenkins.server": "http://jenkins.zendev.org",
         "jenkins.job": "service-migration-develop",
