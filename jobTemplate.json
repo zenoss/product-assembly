@@ -77,12 +77,12 @@
 			"childTemplate": ""
 		}],
 		"instanceTemplates": [{
-			"jobPrefix": "core product",
+			"jobPrefix": "core appliance",
 			"ignoreStages": [
 				"Upgrade ISO",
 				"AMIs",
-				"Start QA Automation",
-				"QEMU/QCOWs"],
+				"QEMU/QCOWs",
+				"Start QA Automation"],
 			"parentJob": "core-pipeline"
 		}, {
 			"jobPrefix": "zsd appliance",
