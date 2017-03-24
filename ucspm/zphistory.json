@@ -24,7 +24,6 @@
   "ZenPacks.zenoss.Microsoft.HyperV": "5.1.0",
   "ZenPacks.zenoss.Microsoft.Windows": "5.1.0",
   "ZenPacks.zenoss.NetAppMonitor": "5.1.0",
-  "ZenPacks.zenoss.PortalIntegration": "5.1.0",
   "ZenPacks.zenoss.PredictiveThreshold": "5.1.0",
   "ZenPacks.zenoss.PropertyMonitor": "5.1.0",
   "ZenPacks.zenoss.PythonCollector": "5.1.0",
