@@ -118,8 +118,8 @@ node ('build-zenoss-product') {
                 branches[applianceTarget] = branch
             }
         } else {
-            def jobLabel = "core appliance for product build #" + PRODUCT_BUILD_NUMBER
-            branches["core"] = {
+            def jobLabel = TARGET_PRODUCT + " appliance for product build #" + PRODUCT_BUILD_NUMBER
+            branches[TARGET_PRODUCT] = {
                 build job: 'appliance-build', parameters: [
                         [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
                         [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
