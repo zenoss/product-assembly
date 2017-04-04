@@ -115,6 +115,11 @@ su - zenoss -c "tar --strip-components=2 -C ${ZENHOME} -xzvf /tmp/zproxy*"
 artifactDownload "service-migration"
 su - zenoss -c "pip install  --use-wheel --no-index  /tmp/servicemigration*"
 
+# Install zenoss-solr
+artifactDownload "zenoss-solr"
+tar -C "/" -xzvf /tmp/zenoss-solr*
+chown -R zenoss:zenoss /var/solr
+
 # Some components have files which are read-only by zenoss, so we need to
 # open up the permissions to allow read/write for the group and read for
 # all others.  We need to make this minimal setting here to facilitate
