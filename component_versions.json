@@ -38,6 +38,12 @@
         "version": "develop"
     },
     {
+	"URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
+	"name": "zenoss-solr",
+        "type": "download",
+        "version": "1.0dev"
+    },
+    {
         "URL": "http://zenpip.zendev.org/packages/zenoss.extjs-{version}.tar.gz",
         "git_ref": "master",
         "name": "zenoss-extjs",
