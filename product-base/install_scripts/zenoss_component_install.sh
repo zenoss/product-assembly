@@ -116,8 +116,11 @@ artifactDownload "service-migration"
 su - zenoss -c "pip install  --use-wheel --no-index  /tmp/servicemigration*"
 
 # Install zenoss-solr
-artifactDownload "zenoss-solr"
-tar -C "/" -xzvf /tmp/zenoss-solr*
+# TODO:  Don't do this.  Either componentize our solr startup scripts, do this in zenoss-centos-base,
+#  move solr to its own image, or some combination of these.
+#  But for now, go ahead and do this.
+wget -q http://zenpip.zendev.org/packages/zenoss-solr-1.0dev.tgz -O /tmp/zenoss-solr.tgz
+tar -C "/" -xzvf /tmp/zenoss-solr.tgz
 chown -R zenoss:zenoss /var/solr
 
 # Some components have files which are read-only by zenoss, so we need to
