@@ -12,6 +12,11 @@
         "version": "develop"
     },
     {
+        "name": "modelindex",
+        "type": "jenkins",
+        "version": "develop"
+    },
+    {
         "name": "pynetsnmp",
         "type": "jenkins",
         "jenkins.server": "http://jenkins.zendev.org",
