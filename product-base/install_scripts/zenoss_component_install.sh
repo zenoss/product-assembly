@@ -123,6 +123,17 @@ wget -q http://zenpip.zendev.org/packages/zenoss-solr-1.0dev.tgz -O /tmp/zenoss-
 tar -C "/" -xzvf /tmp/zenoss-solr.tgz
 chown -R zenoss:zenoss /var/solr
 
+# Install Modelindex
+artifactDownload "modelindex"
+su - zenoss -c "mkdir ${ZENHOME}/modelindex"
+su - zenoss -c "tar -C ${ZENHOME}/modelindex -xzvf /tmp/modelindex*"
+su - zenoss -c "pip install -r ${ZENHOME}/modelindex/requirements.txt"
+su - zenoss -c "pip install -e ${ZENHOME}/modelindex"
+# Copy the modelindex configsets into solr for bootstrapping.
+#  TODO:  when we move to external zookeeper for solr, do something else
+rm -rf /opt/solr/server/solr/configsets
+cp -R ${ZENHOME}/modelindex/zenoss/modelindex/solr/configsets /opt/solr/server/solr/
+
 # Some components have files which are read-only by zenoss, so we need to
 # open up the permissions to allow read/write for the group and read for
 # all others.  We need to make this minimal setting here to facilitate
