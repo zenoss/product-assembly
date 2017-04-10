@@ -26,11 +26,12 @@ su - zenoss -c "ln -s ${SRCROOT}/zenoss-zep/core/src/main/sql ${ZENHOME}/share/z
 echo "Linking in zep webapp..."
 rm -rf ${ZENHOME}/webapps/zeneventserver
 su - zenoss -c "ln -s ${SRCROOT}/zenoss-zep ${ZENHOME}/webapps/zeneventserver"
-# echo "Linking in modelindex..."
-# rm -rf ${ZENHOME}/modelindex
-# su - zenoss -c "ln -s ${SRCROOT}/modelindex ${ZENHOME}/modelindex"
-# rm -rf /opt/solr/server/solr/configsets
-# ln -s ${SRCROOT}/modelindex/zenoss/modelindex/solr/configsets /opt/solr/server/solr/configsets
+echo "Linking in modelindex..."
+su - zenoss -c "pip uninstall -y zenoss.modelindex"
+su - zenoss -c "ln -s ${SRCROOT}/modelindex ${ZENHOME}/modelindex"
+su - zenoss -c "pip install -e ${ZENHOME}/modelindex"
+rm -rf /opt/solr/server/solr/configsets
+ln -s ${SRCROOT}/modelindex/zenoss/modelindex/solr/configsets /opt/solr/server/solr/configsets
 
 #TODO: do we want to do this for prodbin bin files as well?
 if [ -d ${SRCROOT}/zenoss-zep/dist/src/assembly/bin ]
