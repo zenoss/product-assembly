@@ -17,9 +17,10 @@
         "version": "0.40.7"
     },
     {
+        "URL": "http://zenpip.zendev.org/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "0.1.19"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
