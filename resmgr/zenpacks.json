@@ -62,6 +62,7 @@
         "ZenPacks.zenoss.SupportBundle"
     ],
     "included_not_installed": [
+        "ZenPacks.zenoss.DurationThreshold",
         "ZenPacks.zenoss.NetScaler"
     ],
     "version_overrides": {}

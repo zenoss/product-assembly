@@ -25,7 +25,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CalculatedPerformance",
-        "requirement": "ZenPacks.zenoss.CalculatedPerformance===2.3.0",
+        "requirement": "ZenPacks.zenoss.CalculatedPerformance===2.3.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CatalogService",
@@ -49,7 +49,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ComponentGroups",
-        "requirement": "ZenPacks.zenoss.ComponentGroups===1.2.0",
+        "requirement": "ZenPacks.zenoss.ComponentGroups===1.3.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ControlCenter",
@@ -81,11 +81,15 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DistributedCollector",
-        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.2",
+        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.4",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
         "requirement": "ZenPacks.zenoss.DnsMonitor===2.1.0",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.DurationThreshold",
+        "requirement": "ZenPacks.zenoss.DurationThreshold===2.0.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DynamicView",
@@ -97,11 +101,11 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseCollector",
-        "requirement": "ZenPacks.zenoss.EnterpriseCollector===1.7.0",
+        "requirement": "ZenPacks.zenoss.EnterpriseCollector===1.7.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseReports",
-        "requirement": "ZenPacks.zenoss.EnterpriseReports===2.4.0",
+        "requirement": "ZenPacks.zenoss.EnterpriseReports===2.4.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseSecurity",
@@ -153,7 +157,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LinuxMonitor",
-        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.1.0",
+        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.1.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.HyperV",
@@ -189,7 +193,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
-        "requirement": "ZenPacks.zenoss.PredictiveThreshold===1.2.0",
+        "requirement": "ZenPacks.zenoss.PredictiveThreshold===1.2.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PortalIntegration",
@@ -233,7 +237,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===3.5.3",
+        "requirement": "ZenPacks.zenoss.vSphere===3.6.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WBEM",
@@ -270,10 +274,10 @@
     },{
         "name": "ZenPacks.zenoss.ZenPackLib",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.ZenPackLib===2.0.3"
+        "requirement": "ZenPacks.zenoss.ZenPackLib===2.0.4"
     },{
         "name": "ZenPacks.zenoss.ZenSQLTx",
-        "requirement": "ZenPacks.zenoss.ZenSQLTx===2.6.5",
+        "requirement": "ZenPacks.zenoss.ZenSQLTx===2.6.6",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenWebTx",

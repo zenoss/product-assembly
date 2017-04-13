@@ -1,0 +1,110 @@
+{
+	"templates": [{
+		"name": "begin",
+		"jobPrefixes": [],
+		"stages": [{
+			"name": "Checkout product-assembly repo",
+			"childTemplate": ""
+		}, {
+			"name": "Build product-base",
+			"childTemplate": ""
+		}, {
+			"name": "Push product-base",
+			"childTemplate": ""
+		}, {
+			"name": "Run all product pipelines",
+			"childTemplate": "product-pipeline"
+		}],
+		"instanceTemplates": []
+	}, {
+		"name": "product-pipeline",
+		"jobPrefixes": ["core-pipeline","resmgr-pipeline","ucspm-pipeline"],
+		"stages": [{
+			"name": "Build image",
+			"childTemplate": ""
+		}, {
+			"name": "Test image",
+			"childTemplate": ""
+		}, {
+			"name": "Push image",
+			"childTemplate": ""
+		}, {
+			"name": "Compile service definitions and build RPM",
+			"childTemplate": ""
+		}, {
+			"name": "Push RPM",
+			"childTemplate": ""
+		}, {
+			"name": "Build Appliances",
+			"childTemplate": "appliance-build"
+		}],
+		"instanceTemplates": []
+	}, {
+		"name": "appliance-build",
+		"jobPrefixes": [],
+		"stages": [{
+			"name": "Clean and checkout",
+			"childTemplate": ""
+		}, {
+			"name": "Build manifest",
+			"childTemplate": ""
+		}, {
+			"name": "Master OVA",
+			"childTemplate": ""
+		}, {
+			"name": "Master ISO",
+			"childTemplate": ""
+		}, {
+			"name": "Delegate ISO",
+			"childTemplate": ""
+		}, {
+			"name": "Upgrade ISO",
+			"childTemplate": ""
+		}, {
+			"name": "AMIs",
+			"childTemplate": ""
+		}, {
+			"name": "QEMU/QCOWs",
+			"childTemplate": ""
+		}, {
+			"name": "Checksum",
+			"childTemplate": ""
+		}, {
+			"name": "Archive and Upload",
+			"childTemplate": ""
+		}, {
+			"name": "Start QA Automation",
+			"childTemplate": ""
+		}],
+		"instanceTemplates": [{
+			"jobPrefix": "core appliance",
+			"ignoreStages": [
+				"Upgrade ISO",
+				"AMIs",
+				"QEMU/QCOWs",
+				"Start QA Automation"],
+			"parentJob": "core-pipeline"
+		}, {
+			"jobPrefix": "zsd appliance",
+			"ignoreStages": [],
+			"parentJob": "resmgr-pipeline"
+		}, {
+			"jobPrefix": "ucspm appliance",
+			"ignoreStages": [
+				"AMIs",
+				"QEMU/QCOWs"],
+			"parentJob": "ucspm-pipeline"
+		}, {
+			"jobPrefix": "poc appliance",
+			"ignoreStages": [
+				"Delegate OVA",
+				"Master ISO",
+				"Delegate ISO",
+				"Upgrade ISO",
+				"AMIs",
+				"QEMU/QCOWs",
+				"Start QA Automation"],
+			"parentJob": "resmgr-pipeline"
+		}]
+	}]
+}
