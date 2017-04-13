@@ -127,7 +127,6 @@ chown -R zenoss:zenoss /var/solr
 artifactDownload "modelindex"
 su - zenoss -c "mkdir /tmp/modelindex"
 su - zenoss -c "tar -C /tmp/modelindex -xzvf /tmp/modelindex-*"
-su - zenoss -c "pip install --use-wheel --no-index --find-links /tmp/modelindex/dist -r /tmp/modelindex/requirements.txt"
 su - zenoss -c "pip install /tmp/modelindex/dist/zenoss.modelindex*"
 # Copy the modelindex configsets into solr for bootstrapping.
 #  TODO:  when we move to external zookeeper for solr, do something else
