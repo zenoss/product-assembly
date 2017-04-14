@@ -35,6 +35,7 @@ export RABBITMQ_VHOST="`get_var amqpvhost`"
 export RABBITMQ_USER="`get_var amqpuser`"
 export RABBITMQ_PASS="`get_var amqppassword`"
 
+export SOLR_PORT="8983"
 
 fail()
 {
@@ -79,6 +80,18 @@ start_requirements() {
     echo "Waiting for rabbitmq to start..."
     rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
     echo "rabbitmq is running"
+
+    echo "Starting solr..."
+    setuser zenoss /opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model &
+    export SOLR_PID=$!
+    echo "SOLR_PID=$SOLR_PID"
+    echo "SOLR_PORT=$SOLR_PORT"
+    echo "Waiting for Solr to start..."
+    until $(curl -A 'Solr answering healthcheck' -sI http://localhost:$SOLR_PORT/solr/admin/cores | grep -q 200); do
+	sleep 5
+    done
+    echo "Solr is running"
+
 }
 
 configure_amqp() {
@@ -192,6 +205,14 @@ run_zenbuild()
     echo   '(this can take a few minutes)'
     su zenoss -l -c "$ZENHOME/bin/zenbuild $ZENBUILD_ARGS"  || fail "Unable to create the initial Zenoss object database"
 
+}
+
+# initialize the model catalog in solr
+init_modelcatalog()
+{
+    if [ -f $ZENHOME/Products/Zuul/catalog/model_catalog_init.py ]; then
+        su - zenoss -c "python $ZENHOME/Products/Zuul/catalog/model_catalog_init.py"
+    fi
 }
 
 

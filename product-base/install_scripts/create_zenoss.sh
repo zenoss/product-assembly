@@ -37,6 +37,9 @@ pkill redis
 echo "Stopping rabbit..."
 /sbin/rabbitmqctl stop
 
+echo "Stopping solr..."
+kill $SOLR_PID
+
 sleep 10
 echo "Cleaning up mysql data..."
 rm /var/lib/mysql/ib_logfile0
@@ -45,6 +48,7 @@ rm /var/lib/mysql/ib_logfile1
 echo "Cleaning up after install..."
 find ${ZENHOME} -name \*.py[co] -delete
 rm -f ${ZENHOME}/log/\*.log
+rm -rf /opt/solr/logs/*
 /sbin/scrub.sh
 
 echo "Component Artifact Report"
