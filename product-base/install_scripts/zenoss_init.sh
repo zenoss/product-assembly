@@ -71,6 +71,9 @@ fix_etc_permissions
 echo "Run zenbuild..."
 run_zenbuild
 
+echo "Initialize model catalog..."
+init_modelcatalog
+
 echo "Add default system user..."
 ${ZENHOME}/bin/zendmd --script ${ZENHOME}/bin/addSystemUser.py
 
