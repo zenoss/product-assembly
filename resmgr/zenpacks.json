@@ -57,6 +57,7 @@
         "ZenPacks.zenoss.Microsoft.Windows",
         "ZenPacks.zenoss.DistributedCollector",
         "ZenPacks.zenoss.ControlCenter",
+        "ZenPacks.zenoss.DurationThreshold",
         "ZenPacks.zenoss.PredictiveThreshold",
         "ZenPacks.zenoss.ComponentGroups",
         "ZenPacks.zenoss.SupportBundle"
