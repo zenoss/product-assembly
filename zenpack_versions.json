@@ -77,7 +77,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DiscoveryMapping",
-        "requirement": "ZenPacks.zenoss.DiscoveryMapping===1.2.0",
+        "requirement": "ZenPacks.zenoss.DiscoveryMapping===1.2.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DistributedCollector",
