@@ -153,7 +153,10 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
-        "type": "zenpack"
+        "type": "zenpack",
+        "requirement": "ZenPacks.zenoss.PredictiveThreshold==1.2.*",
+        "git_ref": "hotfix/1.2.2",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.PortalIntegration",
         "type": "zenpack"
