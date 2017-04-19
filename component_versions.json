@@ -83,5 +83,11 @@
         "name": "zproxy",
         "type": "download",
         "version": "1.0.1"
+    },
+    {
+        "URL":  "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
+        "name": "zenoss.toolbox",
+        "type": "download",
+        "version": "2.0.0"
     }
 ]
