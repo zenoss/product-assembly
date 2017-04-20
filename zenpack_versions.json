@@ -235,7 +235,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.UCSXSkin",
-        "requirement": "ZenPacks.zenoss.UCSXSkin===2.1.4",
+        "pre": true,
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
