@@ -6,7 +6,6 @@
 #
 ###############################################################################
 set -e
-/root/%SHORT_VERSION%.x/check_for_old_servicedef.py Zenoss.core 5.0.6
 export SERVICE_TENANT_ID="`serviced service list core --format='{{.ID}}'`"
 serviced snapshot untag $SERVICE_TENANT_ID preupgrade-core-%VERSION%
 serviced script run /root/%SHORT_VERSION%.x/upgrade-core.txt --service Zenoss.core

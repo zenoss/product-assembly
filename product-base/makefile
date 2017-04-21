@@ -8,7 +8,7 @@ TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
 .PHONY: change-from-image build-deps build build-devimg push clean
 
-build-deps: component_versions $(SHORT_VERSION).x/pull-docker-images.sh $(SHORT_VERSION).x/check_for_old_servicedef.py Dockerfile
+build-deps: component_versions $(SHORT_VERSION).x/pull-docker-images.sh Dockerfile
 
 build: build-deps
 	docker build --no-cache=true -t $(TAG) .
@@ -29,7 +29,6 @@ push:
 clean:
 	rm -rf component_info Dockerfile
 	rm -f $(SHORT_VERSION).x/pull-docker-images.sh
-	rm -f $(SHORT_VERSION).x/check_for_old_servicedef.py
 	-docker rmi -f $(TAG)
 
 component_versions: component_info
@@ -43,11 +42,6 @@ component_info:
 $(SHORT_VERSION).x/pull-docker-images.sh:
 	@mkdir -p $(SHORT_VERSION).x
 	@sed -e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g; s/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g;'  pull-docker-images.sh.in > $@
-	@chmod +x $@
-
-$(SHORT_VERSION).x/check_for_old_servicedef.py:
-	@mkdir -p $(SHORT_VERSION).x
-	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g;' check_for_old_servicedef.py.in > $@
 	@chmod +x $@
 
 Dockerfile:
