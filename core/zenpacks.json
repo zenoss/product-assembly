@@ -5,7 +5,6 @@
     "ZenPacks.zenoss.PythonCollector",
     "ZenPacks.zenoss.ZenMail",
     "ZenPacks.zenoss.MySqlMonitor",
-    "ZenPacks.zenoss.NtpMonitor",
     "ZenPacks.zenoss.LinuxMonitor",
     "ZenPacks.zenoss.Dashboard",
     "ZenPacks.zenoss.Microsoft.Windows"
