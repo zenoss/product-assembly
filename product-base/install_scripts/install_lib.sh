@@ -47,7 +47,7 @@ shebang() {
    # replace the first line of any python sh-bang script with
    # #!$ZENHOME/bin/python
    find $ZENHOME/bin \( -type f -o -type l \) -exec readlink -e '{}' \; | \
-      egrep -v "zensocket|pyraw" | \
+      egrep -v "zensocket|pyraw|metrics" | \
       xargs sed -i '1,1 s%#!.*python$%#!'"$ZENHOME/bin/python"'%'
 }
 
