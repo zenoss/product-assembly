@@ -33,6 +33,11 @@ su - zenoss -c "pip install -e ${ZENHOME}/modelindex"
 rm -rf /opt/solr/server/solr/configsets
 ln -s ${SRCROOT}/modelindex/zenoss/modelindex/solr/configsets /opt/solr/server/solr/configsets
 
+echo "Linking in metrics dir"
+rm -rf ${ZENHOME}/bin/metrics
+su - zenoss -c "ln -s ${SRCROOT}/zenoss-prodbin/bin/metrics ${ZENHOME}/bin/metrics"
+
+
 #TODO: do we want to do this for prodbin bin files as well?
 if [ -d ${SRCROOT}/zenoss-zep/dist/src/assembly/bin ]
 then
