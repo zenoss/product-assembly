@@ -88,6 +88,11 @@ node ('build-zenoss-product') {
         ]
 
     stage 'Build Appliances'
+        if (BUILD_APPLIANCES != "true") {
+            echo "Skipped Build Appliances"
+            return
+        }
+
         def branches = [:]
 
         if (TARGET_PRODUCT == "resmgr") {
