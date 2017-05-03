@@ -46,6 +46,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES],
                     ]
                 },
                 'resmgr-pipeline': {
@@ -54,6 +55,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES],
                     ]
                 },
                 'ucspm-pipeline': {
@@ -62,6 +64,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES],
                     ]
                 },
             ]
