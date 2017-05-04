@@ -6,7 +6,6 @@
 #
 ###############################################################################
 set -e
-/root/%SHORT_VERSION%.x/check_for_old_servicedef.py Zenoss.resmgr 5.0.6
 export SERVICE_TENANT_ID="`serviced service list resmgr --format='{{.ID}}'`"
 serviced snapshot untag $SERVICE_TENANT_ID preupgrade-resmgr-%VERSION%
 if [ $(serviced service status --show-fields Name  Zenoss.resmgr/Infrastructure/Impact | grep Impact) ]; then

@@ -20,7 +20,7 @@
         "URL": "http://zenpip.zendev.org/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
         "type": "download",
-        "version": "0.1.19"
+        "version": "0.1.20"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
@@ -30,10 +30,9 @@
     },
     {
         "URL": "http://zenpip.zendev.org/packages/servicemigration-{version}-py2-none-any.whl",
-        "git_owner": "control-center",
         "name": "service-migration",
         "type": "download",
-        "version": "1.1.5"
+        "version": "1.1.7"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/zenoss.extjs-{version}.tar.gz",
@@ -46,7 +45,7 @@
         "URL": "http://zenpip.zendev.org/packages/prodbin-{version}-master-5.2.x.tar.gz",
         "name": "zenoss-prodbin",
         "type": "download",
-        "version": "5.2.3"
+        "version": "5.2.4"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/zenoss.protocols-2.1.4.post1-py2-none-any.whl",
@@ -77,5 +76,11 @@
         "name": "zproxy",
         "type": "download",
         "version": "1.0.1"
+    },
+    {
+        "URL":  "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
+        "name": "zenoss.toolbox",
+        "type": "download",
+        "version": "2.1.0"
     }
 ]

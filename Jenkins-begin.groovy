@@ -7,6 +7,7 @@
 //    BRANCH            - the name of the GIT branch to build from.
 //    GIT_CREDENTIAL_ID - the UUID of the Jenkins GIT credentials used to checkout stuff from github
 //    MATURITY          - the image maturity level (e.g. 'unstable', 'testing', 'stable')
+//    BUILD_APPLIANCES  - true/false whether appliances should be built.
 //
 node ('build-zenoss-product') {
     // To avoid naming confusion with downstream jobs that have their own BUILD_NUMBER variables,
@@ -46,6 +47,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: env.BUILD_APPLIANCES],
                     ]
                 },
                 'resmgr-pipeline': {
@@ -54,16 +56,18 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: env.BUILD_APPLIANCES],
                     ]
                 },
-                // 'ucspm-pipeline': {
-                //     build job: 'ucspm-pipeline', parameters: [
-                //         [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
-                //         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
-                //         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
-                //         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                //     ]
-                // },
+                'ucspm-pipeline': {
+                    build job: 'ucspm-pipeline', parameters: [
+                        [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
+                        [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
+                        [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
+                        [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: env.BUILD_APPLIANCES],
+                    ]
+                },
             ]
 
             parallel branches

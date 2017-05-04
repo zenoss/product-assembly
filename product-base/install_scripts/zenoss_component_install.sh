@@ -111,6 +111,10 @@ su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/redis-mon*"
 artifactDownload "zproxy"
 su - zenoss -c "tar --strip-components=2 -C ${ZENHOME} -xzvf /tmp/zproxy*"
 
+# Install zenoss.toolobx
+artifactDownload "zenoss.toolbox"
+su - zenoss -c "pip install  --use-wheel --no-index  /tmp/zenoss.toolbox*.whl"
+
 # Install the service migration SDK
 artifactDownload "service-migration"
 su - zenoss -c "pip install  --use-wheel --no-index  /tmp/servicemigration*"
