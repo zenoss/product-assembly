@@ -37,7 +37,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoMonitor",
-        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.7.3",
+        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.8.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoUCS",
