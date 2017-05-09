@@ -47,7 +47,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: env.BUILD_APPLIANCES],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
                     ]
                 },
                 'resmgr-pipeline': {
@@ -56,7 +56,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: env.BUILD_APPLIANCES],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
                     ]
                 },
                 'ucspm-pipeline': {
@@ -65,7 +65,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: env.BUILD_APPLIANCES],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
                     ]
                 },
             ]
