@@ -167,6 +167,10 @@
         "name": "ZenPacks.zenoss.PythonCollector",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.RMMonitor",
+        "type": "zenpack",
+        "pre": true
+    },{
         "name": "ZenPacks.zenoss.SolarisMonitor",
         "type": "zenpack"
     },{
