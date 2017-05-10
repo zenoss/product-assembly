@@ -50,7 +50,8 @@
         "ZenPacks.zenoss.ControlCenter",
         "ZenPacks.zenoss.PredictiveThreshold",
         "ZenPacks.zenoss.ComponentGroups",
-        "ZenPacks.zenoss.SupportBundle"
+        "ZenPacks.zenoss.SupportBundle",
+        "ZenPacks.zenoss.RMMonitor"
     ],
     "included_not_installed": [
         "ZenPacks.zenoss.DurationThreshold",
