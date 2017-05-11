@@ -97,7 +97,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EMC.base",
-        "ref": "hotfix/1.2.1",
+        "git_ref": "hotfix/1.2.1",
         "pre": true,
         "requirement": "ZenPacks.zenoss.EMC.base==1.2.*",
         "type": "zenpack"
