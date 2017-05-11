@@ -231,7 +231,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.UCSCapacity",
-        "requirement": "ZenPacks.zenoss.UCSCapacity===1.3.0",
+        "pre": true,
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.UCSXSkin",
