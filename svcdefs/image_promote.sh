@@ -49,6 +49,11 @@ elif [ -z "${TO_RELEASEPHASE}" ]
 then
     echo "ERROR: Missing required argument - TO_RELEASEPHASE"
     exit 1
+elif [[ "$TARGET_PRODUCT" == "ucspm" && "$TO_MATURITY" == "stable" && -z "${PRODUCT_BUILD_NUMBER}" ]]
+then
+    echo "ERROR: Missing required argument - PRODUCT_BUILD_NUMBER"
+    echo "       When TARGET_PRODUCT=ucspm and TO_MATURITY=stable, PRODUCT_BUILD_NUMBER is required."
+    exit 1
 elif [[ "$FROM_MATURITY" != "unstable" && "$FROM_MATURITY" != "testing" && "$FROM_MATURITY" != "stable" ]]
 then
     echo "ERROR: FROM_MATURITY=$FROM_MATURITY is invalid; must be one of unstable, testing or stable"
@@ -97,9 +102,15 @@ repo_tag() {
             # e.g., 5.0.0_CR13
             tag="${ZENOSS_VERSION}_${phase}"
             ;;
-        stable )
-            # e.g., 5.0.0_2
-            tag="${ZENOSS_VERSION}_${phase}"
+        stable )            
+            if [ "$TARGET_PRODUCT" == "ucspm" ]
+            then
+                # BLD-127 UCS-PM Released Artifacts contain build number in the file name
+                tag="${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}"
+            else
+                # e.g., 5.0.0_2
+                tag="${ZENOSS_VERSION}_${phase}"
+            fi
             ;;
         * )
             echo "maturity value '$maturity' is invalid"
