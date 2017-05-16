@@ -219,7 +219,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.SupportBundle",
-        "requirement": "ZenPacks.zenoss.SupportBundle===1.1.0",
+        "pre": true,
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.TomcatMonitor",
