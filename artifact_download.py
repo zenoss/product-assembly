@@ -182,6 +182,8 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
     if not parsed.scheme or not parsed.netloc or not parsed.path:
         raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (artifactName, queryURL))
 
+    print("queryUrl: %s" % queryURL)
+
     try:
         response = json.loads(urllib2.urlopen(queryURL).read())
     except urllib2.URLError as e:
@@ -213,12 +215,9 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
         raise Exception("No artifacts available for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (
             artifactName, job, number, server))
 
-    lastBuiltRevision = [item['lastBuiltRevision'] for item in response['actions'] if
-                         len(item) > 0 and 'lastBuiltRevision' in item]
-    git_ref = lastBuiltRevision[0]['SHA1']
-    branchData = lastBuiltRevision[0]['branch'][0]
-    if branchData:
-        git_branch = branchData['name']
+
+    git_ref = ""
+    git_branch = ""
 
     # Secondly, loop through the list of build artifacts and download any that match the specified pattern
     nDownloaded = 0
