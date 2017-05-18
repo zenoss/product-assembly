@@ -26,7 +26,6 @@
         "ZenPacks.zenoss.ComponentGroups",
         "ZenPacks.zenoss.CatalogService",
         "ZenPacks.zenoss.EnterpriseSecurity",
-        "ZenPacks.zenoss.DiscoveryMapping",
         "ZenPacks.zenoss.PortalIntegration",
         "ZenPacks.zenoss.CiscoUCSCentral",
         "ZenPacks.zenoss.EMC.base",
