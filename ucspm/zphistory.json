@@ -9,7 +9,6 @@
   "ZenPacks.zenoss.ComponentGroups": "5.1.0",
   "ZenPacks.zenoss.ControlCenter": "5.1.0",
   "ZenPacks.zenoss.Dashboard": "5.1.0",
-  "ZenPacks.zenoss.DiscoveryMapping": "5.1.0",
   "ZenPacks.zenoss.DistributedCollector": "5.1.0",
   "ZenPacks.zenoss.DynamicView": "5.1.0",
   "ZenPacks.zenoss.EMC.base": "5.1.0",
