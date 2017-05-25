@@ -54,10 +54,11 @@
         "version": "develop"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zenoss.protocols-2.1.4.post1-py2-none-any.whl",
         "name": "zenoss-protocols",
-        "type": "download",
-        "version": "2.1.4-1"
+        "type": "jenkins",
+        "jenkins.server": "http://jenkins.zendev.org",
+        "jenkins.job": "zenoss-protocols-develop",
+        "version": "develop"
     },
     {
         "name": "zenoss-zep",
