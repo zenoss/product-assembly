@@ -175,7 +175,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.SupportBundle",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.TomcatMonitor",
         "type": "zenpack"
