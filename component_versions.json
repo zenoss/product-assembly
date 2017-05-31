@@ -49,11 +49,10 @@
         "version": "support/5.2.x"
     },
     {
+        "URL": "http://zenpip.zendev.org/packages/zenoss.protocols-{version}-py2-none-any.whl",
         "name": "zenoss-protocols",
-        "type": "jenkins",
-        "jenkins.server": "http://jenkins.zendev.org",
-        "jenkins.job": "zenoss-protocols-develop",
-        "version": "develop"
+        "type": "download",
+        "version": "2.1.5"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/zep-dist-{version}.tar.gz",
