@@ -35,7 +35,7 @@
     },
     {
         "name": "service-migration",
-	"git_owner": "control-center",
+        "git_owner": "control-center",
         "type": "jenkins",
         "jenkins.server": "http://jenkins.zendev.org",
         "jenkins.job": "service-migration-develop",
@@ -54,11 +54,10 @@
         "version": "develop"
     },
     {
+        "URL": "http://zenpip.zendev.org/packages/zenoss.protocols-{version}-py2-none-any.whl",
         "name": "zenoss-protocols",
-        "type": "jenkins",
-        "jenkins.server": "http://jenkins.zendev.org",
-        "jenkins.job": "zenoss-protocols-develop",
-        "version": "develop"
+        "type": "download",
+        "version": "2.1.5"
     },
     {
         "name": "zenoss-zep",
