@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # build-status.py - Constructs a report on the status of a product build.
@@ -277,15 +278,14 @@ def buildBeginJobUrl(productNumber, branchName, jobName):
             "job/%s" % jobName,
             productNumber)
 
-
 def getJobInfo(jobUrl):
-    log.debug("Retrieving job info from %s" % jobUrl)
     apiUrl = os.path.join(jobUrl, "wfapi/describe")
+    log.debug("Retrieving job info from %s" % apiUrl)
     return getUrl(apiUrl)
 
 def getJobLog(jobUrl):
-    log.debug("Retrieving job log from %s" % jobUrl)
     logUrl = os.path.join(jobUrl, "wfapi/log")
+    log.debug("Retrieving job log from %s" % logUrl)
     return getUrl(logUrl)
 
 
@@ -308,18 +308,21 @@ def jobStages(templates, jobName, jobLabel):
             for prefix in template.jobPrefixes:
                 if str(jobName).startswith(prefix):
                     found = True
+                    log.debug("found stages: match by prefix")
                     break
             if found:
                break
 
         elif template.name == jobName:
             found = True
+            log.debug("found stages: match by template name")
             break
 
     if not found:
+        log.debug('No stages found for job "%s" - "%s"' % (jobName, jobLabel))
         return []
 
-    log.debug('found stages for job %s - %s in template %s' % (jobName, jobLabel, template.name))
+    log.debug('found stages for job "%s" - "%s" in template %s' % (jobName, jobLabel, template.name))
     return getInstanceStages(template, jobLabel)
 
 
@@ -384,7 +387,7 @@ def addChildJobs(templates, stage, jobs):
     log.debug("URL for child jobs for '%s' = %s " % (stage["name"], stageFlowUrl))
     stageFlowInfo = getUrl(stageFlowUrl)
 
-    log.info("found %d child job(s) for '%s'" %
+    log.info("found %d stage(s) for '%s'" %
         (len(stageFlowInfo["stageFlowNodes"]), stage["name"]))
 
     for node in stageFlowInfo["stageFlowNodes"]:
@@ -402,19 +405,35 @@ def addChildJobs(templates, stage, jobs):
         log.debug("URL for stage log of child job '%s' = %s " % (jobName, logUrl))
         nodeLog = getUrl(logUrl)
 
-        startPattern = "Starting building: <a href='"
+        #
+        # NOTE - the following is subject to breakage as Jenkins updates :-(
+        #
+        # The following is kind of hacky, but haven't found a better technique given
+        # the data returned from Jenkins.
+        #
+        # What we're trying to do is determine the URL for a downstream job started by
+        # the current job.  The info is only available in the 'text' attribute,
+        # which unfortunately is free form (and therefore may break in the future).
+        #
+        # In the latest version of Jenkins the value of 'text' contains strings like:
+        # "Scheduling project: product-assembly » develop » core-pipeline\n"
+        # "Starting building: product-assembly » develop » core-pipeline #219\n"
+        #
+        # The code below parses out the "Starting" line to build a URL
+        startPattern = "Starting building: "
         startIndex = nodeLog["text"].find(startPattern)
-        if startIndex:
+        if startIndex != -1:
             startIndex = startIndex + len(startPattern)
-            endPattern = "'"
+            endPattern = "\n"
             endIndex = nodeLog["text"].find(endPattern, startIndex)
-            url = nodeLog["text"][startIndex:endIndex-1]
-            jobUrl = "%s%s" % (JENKINS_SERVER, url)
+            url = nodeLog["text"][startIndex:endIndex]
+            url = url.replace(u' \xbb ', "/job/").replace(" #", "/").encode("utf-8")
+            jobUrl = "%s/job/%s" % (JENKINS_SERVER, url)
             jobInfo = getJobInfo(jobUrl)
             childJobReport = buildReport(templates, jobInfo, jobName)
             jobs.append(childJobReport)
         else:
-            log.warning("Unable to determine child job for step '%s' of job %s" % (node["name"], jobInfo["name"]))
+            log.warning("Unable to determine child job for step '%s' of job %s" % (node["name"], jobName))
             log.debug( "nodeLog['text']=%s" % nodeLog["text"])
             continue
 
