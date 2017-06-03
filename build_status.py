@@ -308,18 +308,21 @@ def jobStages(templates, jobName, jobLabel):
             for prefix in template.jobPrefixes:
                 if str(jobName).startswith(prefix):
                     found = True
+                    log.debug("found stages: match by prefix")
                     break
             if found:
                break
 
         elif template.name == jobName:
             found = True
+            log.debug("found stages: match by template name")
             break
 
     if not found:
+        log.debug('No stages found for job "%s" - "%s"' % (jobName, jobLabel))
         return []
 
-    log.debug('found stages for job %s - %s in template %s' % (jobName, jobLabel, template.name))
+    log.debug('found stages for job "%s" - "%s" in template %s' % (jobName, jobLabel, template.name))
     return getInstanceStages(template, jobLabel)
 
 
@@ -384,7 +387,7 @@ def addChildJobs(templates, stage, jobs):
     log.debug("URL for child jobs for '%s' = %s " % (stage["name"], stageFlowUrl))
     stageFlowInfo = getUrl(stageFlowUrl)
 
-    log.info("found %d child job(s) for '%s'" %
+    log.info("found %d stage(s) for '%s'" %
         (len(stageFlowInfo["stageFlowNodes"]), stage["name"]))
 
     for node in stageFlowInfo["stageFlowNodes"]:
