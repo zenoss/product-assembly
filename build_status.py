@@ -27,6 +27,7 @@ import httplib
 import json
 import logging as log
 import os
+import re
 import string
 import urlparse
 import urllib2
@@ -82,8 +83,9 @@ Attributes:
         spawns a child job.
 """
 class StageTemplate(object):
-    def __init__(self, name, childTemplate):
+    def __init__(self, name, childInfoUrl, childTemplate):
         self.name = name
+        self.childInfoUrl = childInfoUrl
         self.childTemplate = childTemplate
 
     def __str__(self):
@@ -92,6 +94,7 @@ class StageTemplate(object):
     def toDict(self):
         return {
             "name": self.name,
+            'childInfoUrl': self.childInfoUrl,
             "childTemplate": self.childTemplate,
         }
 
@@ -239,6 +242,7 @@ class StageInfo(object):
 
 CLASS_MAPPING = {
     frozenset(('name',
+        'childInfoUrl',
         'childTemplate')): StageTemplate,
     frozenset(('jobPrefix',
         'ignoreStages',
@@ -255,12 +259,13 @@ def class_mapper(d):
     return CLASS_MAPPING[frozenset(d.keys())](**d)
 
 
-def loadReportTemplates(templateFile):
+def loadReportTemplates(templateFile, branch):
     templates = json.loads(templateFile.read(), object_hook=class_mapper)['templates']
     log.debug("template count = %d" % len(templates))
     for jobTemplate in templates:
         log.debug(jobTemplate)
         for stage in jobTemplate.stages:
+            stage.childInfoUrl = stage.childInfoUrl.replace("%branch%", branch)
             log.debug("\t%s" % stage)
         for instance in jobTemplate.instanceTemplates:
             log.debug("\t%s" % instance)
@@ -365,7 +370,7 @@ def buildReport(templates, jobInfo, jobName):
                 found = True
                 jobs = []
                 if stageTemplate.childTemplate:
-                    addChildJobs(templates, stage, jobs)
+                    addChildJobs(stageTemplate, templates, stage, jobs)
                 stageTime = TimeStats(stage["startTimeMillis"], stage["durationMillis"])
                 stageInfo = StageInfo(stage["name"], stage["status"], stageTime, jobs)
                 break
@@ -373,7 +378,7 @@ def buildReport(templates, jobInfo, jobName):
         if not found:
             jobs = []
             if stageTemplate.childTemplate:
-                jobs = addChildJobTemplates(templates, stageTemplate.childTemplate, jenkinsInfo.name)
+                jobs = addChildJobTemplates(stageTemplate, templates, stageTemplate.childTemplate, jenkinsInfo.name)
             stageInfo = StageInfo(stageTemplate.name, None, None, jobs)
 
         stages.append(stageInfo)
@@ -382,7 +387,7 @@ def buildReport(templates, jobInfo, jobName):
     jobReport = JobReport(jenkinsInfo, timeStats, stages)
     return jobReport
 
-def addChildJobs(templates, stage, jobs):
+def addChildJobs(stageTemplate, templates, stage, jobs):
     stageFlowUrl = "%s%s" % (JENKINS_SERVER, stage["_links"]["self"]["href"])
     log.debug("URL for child jobs for '%s' = %s " % (stage["name"], stageFlowUrl))
     stageFlowInfo = getUrl(stageFlowUrl)
@@ -415,28 +420,20 @@ def addChildJobs(templates, stage, jobs):
         # the current job.  The info is only available in the 'text' attribute,
         # which unfortunately is free form (and therefore may break in the future).
         #
-        # In the latest version of Jenkins the value of 'text' contains strings like:
-        # "Scheduling project: product-assembly » develop » core-pipeline\n"
-        # "Starting building: product-assembly » develop » core-pipeline #219\n"
-        #
-        # The code below parses out the "Starting" line to build a URL
-        startPattern = "Starting building: "
-        startIndex = nodeLog["text"].find(startPattern)
-        if startIndex != -1:
-            startIndex = startIndex + len(startPattern)
-            endPattern = "\n"
-            endIndex = nodeLog["text"].find(endPattern, startIndex)
-            url = nodeLog["text"][startIndex:endIndex]
-            url = url.replace(u' \xbb ', "/job/").replace(" #", "/").encode("utf-8")
-            jobUrl = "%s/job/%s" % (JENKINS_SERVER, url)
-            jobInfo = getJobInfo(jobUrl)
-            childJobReport = buildReport(templates, jobInfo, jobName)
-            jobs.append(childJobReport)
+        matchJobNumber = re.search("(#)(\d+)", nodeLog["text"])
+        if matchJobNumber and len(matchJobNumber.groups()) == 2:
+            jobNumber = matchJobNumber.group(2)
         else:
-            log.warning("Unable to determine child job for step '%s' of job %s" % (node["name"], jobName))
+            log.warning("Unable to determine number for child job for step '%s' of job %s" % (node["name"], jobName))
             log.debug( "nodeLog['text']=%s" % nodeLog["text"])
             continue
 
+        jobUrl = stageTemplate.childInfoUrl.replace("%jobName%", jobName).replace("%jobNumber%", jobNumber)
+        jobUrl = "%s%s" % (JENKINS_SERVER, jobUrl)
+
+        jobInfo = getJobInfo(jobUrl)
+        childJobReport = buildReport(templates, jobInfo, jobName)
+        jobs.append(childJobReport)
 
 def addChildJobTemplates(templates, childTemplateName, parentJob):
     # find childTemplateName in templates
@@ -585,7 +582,7 @@ def print_duration(duration):
 
 
 def main(options):
-    templates = loadReportTemplates(options.template)
+    templates = loadReportTemplates(options.template, options.branch)
     beginJobInfo = getJobInfo(buildBeginJobUrl(options.product_number, options.branch, options.job_name))
     if options.job_status:
         beginJobInfo["status"] = options.job_status
