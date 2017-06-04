@@ -4,15 +4,19 @@
 		"jobPrefixes": [],
 		"stages": [{
 			"name": "Checkout product-assembly repo",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Build product-base",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Push product-base",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Run all product pipelines",
+			"childInfoUrl": "/job/product-assembly/job/%branch%/job/%jobName%/%jobNumber%",
 			"childTemplate": "product-pipeline"
 		}],
 		"instanceTemplates": []
@@ -21,21 +25,27 @@
 		"jobPrefixes": ["core-pipeline","resmgr-pipeline","ucspm-pipeline"],
 		"stages": [{
 			"name": "Build image",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Test image",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Push image",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Compile service definitions and build RPM",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Push RPM",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Build Appliances",
+			"childInfoUrl": "/job/product-assembly/job/%branch%/job/appliance-build/%jobNumber%",
 			"childTemplate": "appliance-build"
 		}],
 		"instanceTemplates": []
@@ -44,18 +54,23 @@
 		"jobPrefixes": [],
 		"stages": [{
 			"name": "Clean and checkout",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Build manifest",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Archive manifest",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Build master and delegate appliances",
+			"childInfoUrl": "/job/product-assembly/job/%branch%/job/do-build-appliances/%jobNumber%",
 			"childTemplate": "do-build-appliances"
 		}, {
 			"name": "Start QA Automation",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}],
 		"instanceTemplates": [{
@@ -82,39 +97,51 @@
 		"jobPrefixes": [],
 		"stages": [{
 			"name": "Clean and checkout",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Download manifest",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "OVA",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Upload OVA",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "ISO",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Upload ISO",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Upgrade ISO",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Upload Upgrade ISO",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "AMIs",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Upload ami",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "QEMU/QCOWs",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Upload QEMU/QCOWs",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}],
 		"instanceTemplates": [{
