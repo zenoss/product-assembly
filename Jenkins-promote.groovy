@@ -32,7 +32,7 @@ node ('build-zenoss-product') {
     currentBuild.displayName = "promote ${TARGET_PRODUCT} from ${FROM_MATURITY} to ${TO_MATURITY}"
     def childJobLabel = TARGET_PRODUCT + " promote to " + TO_MATURITY
 
-    stage 'Promote image'
+    stage ('Promote image') {
         // Make sure we start in a clean directory to ensure a fresh git clone
         deleteDir()
         // NOTE: The 'master' branch name here is only used to clone the github repo.
@@ -68,8 +68,9 @@ node ('build-zenoss-product') {
             TO_MATURITY=${TO_MATURITY}\
             TO_RELEASEPHASE=${TO_RELEASEPHASE}"
         sh("cd svcdefs;${promoteArgs} ./image_promote.sh")
+    }
 
-    stage 'Compile service definitions and build RPM'
+    stage ('Compile service definitions and build RPM') {
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
         dir('svcdefs/build/zenoss-service') {
@@ -90,8 +91,9 @@ node ('build-zenoss-product') {
             TARGET_PRODUCT=${TARGET_PRODUCT}"
         sh("cd svcdefs;make build ${makeArgs}")
         archive includes: 'svcdefs/build/zenoss-service/output/**'
+    }
 
-    stage 'Push RPM'
+    stage ('Push RPM') {
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
         def s3Subdirectory = "/yum/zenoss/" + TO_MATURITY + "/centos/el7/os/x86_64"
@@ -101,8 +103,9 @@ node ('build-zenoss-product') {
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
             [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: s3Subdirectory]
         ]
+    }
 
-    stage 'Build Appliances'
+    stage ('Build Appliances') {
         if (BUILD_APPLIANCES != "true") {
             echo "Skipped Build Appliances"
             return
@@ -156,4 +159,5 @@ node ('build-zenoss-product') {
         }
 
         parallel branches
+    }
 }
