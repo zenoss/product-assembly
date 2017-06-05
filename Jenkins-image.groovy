@@ -13,7 +13,14 @@
 node ('build-zenoss-product') {
     def pipelineBuildName = env.JOB_NAME
     def pipelineBuildNumber = env.BUILD_NUMBER
-    currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber})"
+    currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber} @${env.NODE_NAME})"
+
+    def SVCDEF_GIT_REF=""
+    def ZENOSS_VERSION=""
+    def SERVICED_BRANCH=""
+    def SERVICED_MATURITY=""
+    def SERVICED_VERSION=""
+    def SERVICED_BUILD_NUMBER=""
 
     stage ('Build image') {
         // Make sure we start in a clean directory to ensure a fresh git clone
@@ -25,12 +32,12 @@ node ('build-zenoss-product') {
 
         // Get the values of various versions out of the versions.mk file for use in later stages
         def versionProps = readProperties file: 'versions.mk'
-        def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
-        def ZENOSS_VERSION=versionProps['VERSION']
-        def SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
-        def SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
-        def SERVICED_VERSION=versionProps['SERVICED_VERSION']
-        def SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
+        SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
+        ZENOSS_VERSION=versionProps['VERSION']
+        SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
+        SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
+        SERVICED_VERSION=versionProps['SERVICED_VERSION']
+        SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
