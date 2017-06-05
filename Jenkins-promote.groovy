@@ -32,6 +32,14 @@ node ('build-zenoss-product') {
     currentBuild.displayName = "promote ${TARGET_PRODUCT} from ${FROM_MATURITY} to ${TO_MATURITY}"
     def childJobLabel = TARGET_PRODUCT + " promote to " + TO_MATURITY
 
+    def SVCDEF_GIT_REF=""
+    def ZENOSS_VERSION=""
+    def ZENOSS_SHORT_VERSION=""
+    def SERVICED_BRANCH=""
+    def SERVICED_MATURITY=""
+    def SERVICED_VERSION=""
+    def SERVICED_BUILD_NUMBER=""
+
     stage ('Promote image') {
         // Make sure we start in a clean directory to ensure a fresh git clone
         deleteDir()
@@ -43,13 +51,13 @@ node ('build-zenoss-product') {
 
         // Get the values of various versions out of the versions.mk file for use in later stages
         def versionProps = readProperties file: 'versions.mk'
-        def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
-        def ZENOSS_VERSION=versionProps['VERSION']
-        def ZENOSS_SHORT_VERSION=versionProps['SHORT_VERSION']
-        def SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
-        def SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
-        def SERVICED_VERSION=versionProps['SERVICED_VERSION']
-        def SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
+        SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
+        ZENOSS_VERSION=versionProps['VERSION']
+        ZENOSS_SHORT_VERSION=versionProps['SHORT_VERSION']
+        SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
+        SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
+        SERVICED_VERSION=versionProps['SERVICED_VERSION']
+        SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}"

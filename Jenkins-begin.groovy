@@ -14,7 +14,7 @@ node ('build-zenoss-product') {
     // define 'PRODUCT_BUILD_NUMBER' as the parameter name that will be used by all downstream
     // jobs to identify a particular execution of the build pipeline.
     PRODUCT_BUILD_NUMBER=env.BUILD_NUMBER
-    currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
+    currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} @${env.NODE_NAME}"
 
     try {
         stage ('Checkout product-assembly repo') {
