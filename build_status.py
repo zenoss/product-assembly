@@ -378,7 +378,7 @@ def buildReport(templates, jobInfo, jobName):
         if not found:
             jobs = []
             if stageTemplate.childTemplate:
-                jobs = addChildJobTemplates(stageTemplate, templates, stageTemplate.childTemplate, jenkinsInfo.name)
+                jobs = addChildJobTemplates(templates, stageTemplate.childTemplate, jenkinsInfo.name)
             stageInfo = StageInfo(stageTemplate.name, None, None, jobs)
 
         stages.append(stageInfo)
