@@ -210,8 +210,8 @@ run_zenbuild()
 # initialize the model catalog in solr
 init_modelcatalog()
 {
-    if [ -f $ZENHOME/Products/Zuul/catalog/model_catalog_init.py ]; then
-        su - zenoss -c "python $ZENHOME/Products/Zuul/catalog/model_catalog_init.py"
+    if [ -f $ZENHOME/Products/Zuul/catalog/reindex_solr.py ]; then
+        su - zenoss -c "python $ZENHOME/Products/Zuul/catalog/reindex_solr.py --hard"
     fi
 }
 
