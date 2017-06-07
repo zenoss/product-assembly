@@ -32,7 +32,15 @@ node ('build-zenoss-product') {
     currentBuild.displayName = "promote ${TARGET_PRODUCT} from ${FROM_MATURITY} to ${TO_MATURITY}"
     def childJobLabel = TARGET_PRODUCT + " promote to " + TO_MATURITY
 
-    stage 'Promote image'
+    def SVCDEF_GIT_REF=""
+    def ZENOSS_VERSION=""
+    def ZENOSS_SHORT_VERSION=""
+    def SERVICED_BRANCH=""
+    def SERVICED_MATURITY=""
+    def SERVICED_VERSION=""
+    def SERVICED_BUILD_NUMBER=""
+
+    stage ('Promote image') {
         // Make sure we start in a clean directory to ensure a fresh git clone
         deleteDir()
         // NOTE: The 'master' branch name here is only used to clone the github repo.
@@ -43,13 +51,13 @@ node ('build-zenoss-product') {
 
         // Get the values of various versions out of the versions.mk file for use in later stages
         def versionProps = readProperties file: 'versions.mk'
-        def SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
-        def ZENOSS_VERSION=versionProps['VERSION']
-        def ZENOSS_SHORT_VERSION=versionProps['SHORT_VERSION']
-        def SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
-        def SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
-        def SERVICED_VERSION=versionProps['SERVICED_VERSION']
-        def SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
+        SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
+        ZENOSS_VERSION=versionProps['VERSION']
+        ZENOSS_SHORT_VERSION=versionProps['SHORT_VERSION']
+        SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
+        SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
+        SERVICED_VERSION=versionProps['SERVICED_VERSION']
+        SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}"
@@ -68,8 +76,9 @@ node ('build-zenoss-product') {
             TO_MATURITY=${TO_MATURITY}\
             TO_RELEASEPHASE=${TO_RELEASEPHASE}"
         sh("cd svcdefs;${promoteArgs} ./image_promote.sh")
+    }
 
-    stage 'Compile service definitions and build RPM'
+    stage ('Compile service definitions and build RPM') {
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
         dir('svcdefs/build/zenoss-service') {
@@ -90,8 +99,9 @@ node ('build-zenoss-product') {
             TARGET_PRODUCT=${TARGET_PRODUCT}"
         sh("cd svcdefs;make build ${makeArgs}")
         archive includes: 'svcdefs/build/zenoss-service/output/**'
+    }
 
-    stage 'Push RPM'
+    stage ('Push RPM') {
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
         def s3Subdirectory = "/yum/zenoss/" + TO_MATURITY + "/centos/el7/os/x86_64"
@@ -101,8 +111,9 @@ node ('build-zenoss-product') {
             [$class: 'StringParameterValue', name: 'S3_BUCKET', value: 'get.zenoss.io'],
             [$class: 'StringParameterValue', name: 'S3_SUBDIR', value: s3Subdirectory]
         ]
+    }
 
-    stage 'Build Appliances'
+    stage ('Build Appliances') {
         if (BUILD_APPLIANCES != "true") {
             echo "Skipped Build Appliances"
             return
@@ -156,4 +167,5 @@ node ('build-zenoss-product') {
         }
 
         parallel branches
+    }
 }
