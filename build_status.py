@@ -262,10 +262,11 @@ def class_mapper(d):
 def loadReportTemplates(templateFile, branch):
     templates = json.loads(templateFile.read(), object_hook=class_mapper)['templates']
     log.debug("template count = %d" % len(templates))
+    branchName = branch.replace("/", "-")
     for jobTemplate in templates:
         log.debug(jobTemplate)
         for stage in jobTemplate.stages:
-            stage.childInfoUrl = stage.childInfoUrl.replace("%branch%", branch)
+            stage.childInfoUrl = stage.childInfoUrl.replace("%branch%", branchName)
             log.debug("\t%s" % stage)
         for instance in jobTemplate.instanceTemplates:
             log.debug("\t%s" % instance)
