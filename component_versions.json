@@ -6,7 +6,7 @@
     },
     {
         "jenkins.server": "http://platform-jenkins.zenoss.eng",
-	"jenkins.job": "Components/job/metricshipper/job/develop"
+        "jenkins.job": "Components/job/metricshipper/job/develop",
         "name": "metricshipper",
         "type": "jenkins",
         "version": "develop"
@@ -62,8 +62,8 @@
         "version": "2.3.0"
     },
     {
-	"jenkins.server": "http://platform-jenkins.zenoss.eng",
-	"jenkins.job": "Components/job/zenoss.metric.consumer/job/develop"
+        "jenkins.server": "http://platform-jenkins.zenoss.eng",
+        "jenkins.job": "Components/job/zenoss.metric.consumer/job/develop",
         "name": "zenoss.metric.consumer",
         "type": "jenkins",
         "version": "develop"
