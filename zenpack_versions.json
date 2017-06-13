@@ -57,7 +57,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dashboard",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.Dashboard===1.2.5",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DellMonitor",
