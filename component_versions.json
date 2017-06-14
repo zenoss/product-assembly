@@ -5,11 +5,10 @@
         "version": "1.0.1"
     },
     {
-        "jenkins.server": "http://platform-jenkins.zenoss.eng",
-        "jenkins.job": "Components/job/metricshipper/job/develop",
+        "URL": "http://zenpip.zendev.org/packages/metricshipper-{version}.tgz",
         "name": "metricshipper",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "1.1.4"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
@@ -62,11 +61,10 @@
         "version": "2.3.0"
     },
     {
-        "jenkins.server": "http://platform-jenkins.zenoss.eng",
-        "jenkins.job": "Components/job/zenoss.metric.consumer/job/develop",
+        "URL": "http://zenpip.zendev.org/packages/metric-consumer-app-{version}-zapp.tar.gz",
         "name": "zenoss.metric.consumer",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "0.1.7"
     },
     {
         "URL": "http://zenpip.zendev.org/packages/zminion-{version}.tgz",
