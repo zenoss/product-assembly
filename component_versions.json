@@ -69,11 +69,10 @@
         "version": "develop"
     },
     {
-        "jenkins.server": "http://platform-jenkins.zenoss.eng",
-        "jenkins.job": "Components/job/zminion/job/develop",
+        "URL": "http://zenpip.zendev.org/packages/zminion-{version}.tgz",
         "name": "zminion",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "1.4.0"
     },
     {
         "jenkins.server": "http://platform-jenkins.zenoss.eng",
