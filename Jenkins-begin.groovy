@@ -87,7 +87,7 @@ node ('build-zenoss-product') {
             currentBuild.result = 'FAILED'
         }
     } finally {
-        sh("./build_status.py -b ${BRANCH} -p ${PRODUCT_BUILD_NUMBER} --job-name ${env.JOB_BASE_NAME} --job-status ${currentBuild.result} -html buildReport.html")
+        sh("./build_status.py -b ${BRANCH} -p ${PRODUCT_BUILD_NUMBER} --job-name ${env.JOB_BASE_NAME} --job-status ${currentBuild.result} --build-url ${env.BUILD_URL} -html buildReport.html")
         archive includes: 'buildReport.*'
         publishHTML([allowMissing: true,
             alwaysLinkToLastBuild: true,
