@@ -53,7 +53,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DeviceSearch",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre":  true
     },{
         "name": "ZenPacks.zenoss.Diagram",
         "type": "zenpack"
@@ -156,7 +157,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PortalIntegration",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre":  true
     },{
         "name": "ZenPacks.zenoss.PropertyMonitor",
         "type": "zenpack"
@@ -203,7 +205,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenDeviceACL",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre":  true
     },{
         "name": "ZenPacks.zenoss.ZenJMX",
         "type": "zenpack"
@@ -215,7 +218,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenOperatorRole",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.ZenPackLib",
         "type": "zenpack"
