@@ -35,7 +35,6 @@ import urllib2
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 JENKINS_SERVER = "http://platform-jenkins.zenoss.eng"
-PRODUCT_ASSEMBLY = "job/product-assembly/job"
 
 
 """JobTemplate describes the report template of a job.
@@ -273,21 +272,11 @@ def loadReportTemplates(templateFile, branch):
     return templates
 
 
-def buildBaseUrl(branchName):
-    return os.path.join(JENKINS_SERVER,
-            PRODUCT_ASSEMBLY,
-            branchName.replace("/", "-"))
-
-
-def buildBeginJobUrl(productNumber, branchName, jobName):
-    return os.path.join(buildBaseUrl(branchName),
-            "job/%s" % jobName,
-            productNumber)
-
-def getJobInfo(jobUrl):
-    apiUrl = os.path.join(jobUrl, "wfapi/describe")
+def getInfo(baseUrl):
+    apiUrl = os.path.join(baseUrl, "wfapi/describe")
     log.debug("Retrieving job info from %s" % apiUrl)
     return getUrl(apiUrl)
+
 
 def getJobLog(jobUrl):
     logUrl = os.path.join(jobUrl, "wfapi/log")
@@ -432,7 +421,7 @@ def addChildJobs(stageTemplate, templates, stage, jobs):
         jobUrl = stageTemplate.childInfoUrl.replace("%jobName%", jobName).replace("%jobNumber%", jobNumber)
         jobUrl = "%s%s" % (JENKINS_SERVER, jobUrl)
 
-        jobInfo = getJobInfo(jobUrl)
+        jobInfo = getInfo(jobUrl)
         childJobReport = buildReport(templates, jobInfo, jobName)
         jobs.append(childJobReport)
 
@@ -584,7 +573,7 @@ def print_duration(duration):
 
 def main(options):
     templates = loadReportTemplates(options.template, options.branch)
-    beginJobInfo = getJobInfo(buildBeginJobUrl(options.product_number, options.branch, options.job_name))
+    beginJobInfo = getInfo(options.build_url)
     if options.job_status:
         beginJobInfo["status"] = options.job_status
     report = buildReport(templates, beginJobInfo, "begin")
@@ -606,6 +595,8 @@ if __name__ == '__main__':
                         help='Name of the beginning Jenkins job')
     parser.add_argument('-s',  '--job-status', type=str,
                         help='Status of the beginning Jenkins job')
+    parser.add_argument('-u',  '--build-url', type=str,
+                        help='Jenkins URL to current build')
     parser.add_argument('-j',  '--json-output-file', type=str,
                         default='buildReport.json',
                         help='Name of the JSON output file; default is buildReport.json')
