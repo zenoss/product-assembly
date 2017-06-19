@@ -423,7 +423,7 @@ class URLDownloadInfo(ArtifactInfo):
     def url(self):
         baseURL = self.info.get('URL')
         if not baseURL:
-            baseURL = 'http://zenpip.zendev.org/packages/{name}-{version}.tar.gz'
+            baseURL = 'http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz'
         kwargs = super(URLDownloadInfo, self).toDict()
         return baseURL.format(**kwargs)
 
