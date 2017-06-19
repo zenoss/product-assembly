@@ -3,14 +3,14 @@
     <mirror>
       <id>europa</id>
       <mirrorOf>*</mirrorOf>
-      <url>http://nexus.zendev.org:8081/nexus/content/groups/public</url>
+      <url>http://nexus.zenoss.eng:8081/nexus/content/groups/public</url>
     </mirror>
     <mirror>
       <!--This is used to direct the public repo in the
           profile below over to a different nexus group -->
       <id>nexus-public</id>
       <mirrorOf>public</mirrorOf>
-      <url>http://nexus.zendev.org:8081/nexus/content/groups/public</url>
+      <url>http://nexus.zenoss.eng:8081/nexus/content/groups/public</url>
       </mirror>
   </mirrors>
   <profiles>
