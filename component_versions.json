@@ -7,8 +7,6 @@
     {
         "name": "metricshipper",
         "type": "jenkins",
-        "jenkins.server": "http://jenkins.zenoss.eng",
-        "jenkins.job": "metricshipper-develop",
         "version": "develop"
     },
     {
