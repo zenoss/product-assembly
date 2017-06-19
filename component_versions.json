@@ -5,81 +5,81 @@
         "version": "1.0.1"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/metricshipper-{version}.tgz",
+        "URL": "http://zenpip.zenoss.eng/packages/metricshipper-{version}.tgz",
         "name": "metricshipper",
         "type": "download",
         "version": "1.1.4"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "pynetsnmp",
         "type": "download",
         "version": "0.40.7"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/central-query-{version}-zapp.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
         "type": "download",
         "version": "0.1.20"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
         "name": "redis-mon",
         "type": "download",
         "version": "0.1.2"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/servicemigration-{version}-py2-none-any.whl",
+        "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl",
         "name": "service-migration",
         "type": "download",
         "version": "1.1.7",
         "git_owner": "control-center"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zenoss.extjs-{version}.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/zenoss.extjs-{version}.tar.gz",
         "git_ref": "master",
         "name": "zenoss-extjs",
         "type": "download",
         "version": "4.1.3"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/prodbin-{version}-master-5.2.x.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-5.2.x.tar.gz",
         "name": "zenoss-prodbin",
         "type": "download",
         "version": "5.2.5"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zenoss.protocols-{version}-py2-none-any.whl",
+        "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
         "name": "zenoss-protocols",
         "type": "download",
         "version": "2.1.5"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zep-dist-{version}.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz",
         "name": "zenoss-zep",
         "type": "download",
         "version": "2.3.0"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/metric-consumer-app-{version}-zapp.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz",
         "name": "zenoss.metric.consumer",
         "type": "download",
         "version": "0.1.7"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zminion-{version}.tgz",
+        "URL": "http://zenpip.zenoss.eng/packages/zminion-{version}.tgz",
         "name": "zminion",
         "type": "download",
         "version": "1.4.0"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zproxy-{version}.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/zproxy-{version}.tar.gz",
         "name": "zproxy",
         "type": "download",
         "version": "1.0.2"
     },
     {
-        "URL":  "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
+        "URL":  "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "zenoss.toolbox",
         "type": "download",
         "version": "2.1.0"
