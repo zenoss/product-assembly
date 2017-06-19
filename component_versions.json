@@ -7,7 +7,7 @@
     {
         "name": "metricshipper",
         "type": "jenkins",
-        "jenkins.server": "http://jenkins.zendev.org",
+        "jenkins.server": "http://jenkins.zenoss.eng",
         "jenkins.job": "metricshipper-develop",
         "version": "develop"
     },
@@ -17,7 +17,7 @@
         "version": "develop"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "pynetsnmp",
         "type": "download",
         "version": "0.40.7"
@@ -28,7 +28,7 @@
         "version": "develop"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
         "name": "redis-mon",
         "type": "download",
         "version": "0.1.2"
@@ -37,12 +37,12 @@
         "name": "service-migration",
         "git_owner": "control-center",
         "type": "jenkins",
-        "jenkins.server": "http://jenkins.zendev.org",
+        "jenkins.server": "http://jenkins.zenoss.eng",
         "jenkins.job": "service-migration-develop",
         "version": "develop"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zenoss.extjs-{version}.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/zenoss.extjs-{version}.tar.gz",
         "git_ref": "master",
         "name": "zenoss-extjs",
         "type": "download",
@@ -54,7 +54,7 @@
         "version": "develop"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/zenoss.protocols-{version}-py2-none-any.whl",
+        "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
         "name": "zenoss-protocols",
         "type": "download",
         "version": "2.1.5"
@@ -67,7 +67,7 @@
         "version": "develop"
     },
     {
-        "URL": "http://zenpip.zendev.org/packages/metric-consumer-app-{version}-zapp.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz",
         "name": "zenoss.metric.consumer",
         "type": "download",
         "version": "0.1.6"
@@ -87,7 +87,7 @@
         "version": "develop"
     },
     {
-        "URL":  "http://zenpip.zendev.org/packages/{name}-{version}-py2-none-any.whl",
+        "URL":  "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "zenoss.toolbox",
         "type": "download",
         "version": "2.1.0"
