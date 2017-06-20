@@ -157,7 +157,9 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LinuxMonitor",
-        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.2.2",
+        "requirement": "ZenPacks.zenoss.LinuxMonitor==2.2.*",
+        "git_ref": "hotfix/2.2.5",
+        "pre": true,
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.HyperV",
