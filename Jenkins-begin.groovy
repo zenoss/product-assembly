@@ -14,10 +14,10 @@ node ('build-zenoss-product') {
     // define 'PRODUCT_BUILD_NUMBER' as the parameter name that will be used by all downstream
     // jobs to identify a particular execution of the build pipeline.
     PRODUCT_BUILD_NUMBER=env.BUILD_NUMBER
-    currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER}"
+    currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} @${env.NODE_NAME}"
 
     try {
-        stage 'Checkout product-assembly repo'
+        stage ('Checkout product-assembly repo') {
             // Make sure we start in a clean directory to ensure a fresh git clone
             deleteDir()
             git branch: BRANCH, credentialsId: GIT_CREDENTIAL_ID, url: 'https://github.com/zenoss/product-assembly'
@@ -26,8 +26,9 @@ node ('build-zenoss-product') {
             sh("git rev-parse HEAD >git_sha.id")
             GIT_SHA=readFile('git_sha.id').trim()
             println("Building from git commit='${GIT_SHA}' on branch ${BRANCH} for MATURITY='${MATURITY}'")
+        }
 
-        stage 'Build product-base'
+        stage ('Build product-base') {
             if (PINNED == "true") {
                 // make sure SVCDEF_GIT_REF has is of the form x.x.x, where x is an integer
                 sh("grep '^SVCDEF_GIT_REF=[0-9]\\{1,\\}\\.[0-9]\\{1,\\}\\.[0-9]\\{1,\\}' versions.mk")
@@ -35,11 +36,13 @@ node ('build-zenoss-product') {
                 sh("./artifact_download.py zenpack_versions.json --pinned")
             }
             sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
+        }
 
-        stage 'Push product-base'
+        stage ('Push product-base') {
             sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
+        }
 
-        stage 'Run all product pipelines'
+        stage ('Run all product pipelines') {
             def branches = [
                 'core-pipeline': {
                     build job: 'core-pipeline', parameters: [
@@ -47,7 +50,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: env.BUILD_APPLIANCES],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
                     ]
                 },
                 'resmgr-pipeline': {
@@ -56,7 +59,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: env.BUILD_APPLIANCES],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
                     ]
                 },
                 'ucspm-pipeline': {
@@ -65,7 +68,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: env.BUILD_APPLIANCES],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
                     ]
                 },
             ]
@@ -74,6 +77,7 @@ node ('build-zenoss-product') {
             // Set the status to success because the finally block is about to execute
             //      and we don't want the final report status to be "IN-PROGRESS"
             currentBuild.result = 'SUCCESS'
+        }
     } catch (err) {
         echo "Job failed with the following error: ${err}"
         if (err.toString().contains("completed with status ABORTED") ||
@@ -83,7 +87,7 @@ node ('build-zenoss-product') {
             currentBuild.result = 'FAILED'
         }
     } finally {
-        sh("./build_status.py -b ${BRANCH} -p ${PRODUCT_BUILD_NUMBER} --job-name ${env.JOB_BASE_NAME} --job-status ${currentBuild.result} -html buildReport.html")
+        sh("./build_status.py -b ${BRANCH} -p ${PRODUCT_BUILD_NUMBER} --job-name ${env.JOB_BASE_NAME} --job-status ${currentBuild.result} --build-url ${env.BUILD_URL} -html buildReport.html")
         archive includes: 'buildReport.*'
         publishHTML([allowMissing: true,
             alwaysLinkToLastBuild: true,

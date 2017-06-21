@@ -4,15 +4,19 @@
 		"jobPrefixes": [],
 		"stages": [{
 			"name": "Checkout product-assembly repo",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Build product-base",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Push product-base",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Run all product pipelines",
+			"childInfoUrl": "/job/product-assembly/job/%branch%/job/%jobName%/%jobNumber%",
 			"childTemplate": "product-pipeline"
 		}],
 		"instanceTemplates": []
@@ -21,21 +25,27 @@
 		"jobPrefixes": ["core-pipeline","resmgr-pipeline","ucspm-pipeline"],
 		"stages": [{
 			"name": "Build image",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Test image",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Push image",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Compile service definitions and build RPM",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Push RPM",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Build Appliances",
+			"childInfoUrl": "/job/product-assembly/job/%branch%/job/appliance-build/%jobNumber%",
 			"childTemplate": "appliance-build"
 		}],
 		"instanceTemplates": []
@@ -44,44 +54,28 @@
 		"jobPrefixes": [],
 		"stages": [{
 			"name": "Clean and checkout",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
 			"name": "Build manifest",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
-			"name": "Master OVA",
+			"name": "Archive manifest",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}, {
-			"name": "Master ISO",
-			"childTemplate": ""
-		}, {
-			"name": "Delegate ISO",
-			"childTemplate": ""
-		}, {
-			"name": "Upgrade ISO",
-			"childTemplate": ""
-		}, {
-			"name": "AMIs",
-			"childTemplate": ""
-		}, {
-			"name": "QEMU/QCOWs",
-			"childTemplate": ""
-		}, {
-			"name": "Checksum",
-			"childTemplate": ""
-		}, {
-			"name": "Archive and Upload",
-			"childTemplate": ""
+			"name": "Build master and delegate appliances",
+			"childInfoUrl": "/job/product-assembly/job/%branch%/job/do-build-appliances/%jobNumber%",
+			"childTemplate": "do-build-appliances"
 		}, {
 			"name": "Start QA Automation",
+			"childInfoUrl": "",
 			"childTemplate": ""
 		}],
 		"instanceTemplates": [{
 			"jobPrefix": "core appliance",
 			"ignoreStages": [
-				"Upgrade ISO",
-				"AMIs",
-				"QEMU/QCOWs",
 				"Start QA Automation"],
 			"parentJob": "core-pipeline"
 		}, {
@@ -90,21 +84,99 @@
 			"parentJob": "resmgr-pipeline"
 		}, {
 			"jobPrefix": "ucspm appliance",
-			"ignoreStages": [
-				"AMIs",
-				"QEMU/QCOWs"],
+			"ignoreStages": [],
 			"parentJob": "ucspm-pipeline"
 		}, {
 			"jobPrefix": "poc appliance",
 			"ignoreStages": [
-				"Delegate OVA",
-				"Master ISO",
-				"Delegate ISO",
-				"Upgrade ISO",
-				"AMIs",
-				"QEMU/QCOWs",
 				"Start QA Automation"],
 			"parentJob": "resmgr-pipeline"
+		}]
+	}, {
+		"name": "do-build-appliances",
+		"jobPrefixes": [],
+		"stages": [{
+			"name": "Clean and checkout",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "Download manifest",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "OVA",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "Upload OVA",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "ISO",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "Upload ISO",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "Upgrade ISO",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "Upload Upgrade ISO",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "AMIs",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "Upload ami",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "QEMU/QCOWs",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "Upload QEMU/QCOWs",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}],
+		"instanceTemplates": [{
+			"jobPrefix": "core appliance",
+			"ignoreStages": [
+				"Upgrade ISO",
+				"Upload Upgrade ISO",
+				"AMIs",
+				"Upload ami",
+				"QEMU/QCOWs",
+				"Upload QEMU/QCOWs"
+			],
+			"parentJob": "appliance-build"
+		}, {
+			"jobPrefix": "poc appliance",
+			"ignoreStages": [
+				"ISO",
+				"Upload ISO",
+				"Upgrade ISO",
+				"Upload Upgrade ISO",
+				"AMIs",
+				"Upload ami",
+				"QEMU/QCOWs",
+				"Upload QEMU/QCOWs"
+			],
+			"parentJob": "appliance-build"
+		}, {
+			"jobPrefix": "ucspm appliance",
+			"ignoreStages": [
+				"AMIs",
+				"Upload ami",
+				"QEMU/QCOWs",
+				"Upload QEMU/QCOWs"
+			],
+			"parentJob": "appliance-build"
 		}]
 	}]
 }

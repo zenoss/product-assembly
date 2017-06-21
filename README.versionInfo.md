@@ -31,7 +31,7 @@ For more information see the section on [Jenkins-type artifacts](#jenkins-type-a
 Before (using a pinned release):
 ```
     {
-        "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz",
         "name": "zproxy",
         "type": "download",
         "version": "1.0.0"
@@ -87,7 +87,7 @@ Before (using the last successful build from Jenkins):
 After (using a pinned release):
 ```
     {
-        "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz",
         "name": "zproxy",
         "type": "download",
         "version": "1.0.0"
@@ -126,7 +126,7 @@ The full `versionInfo` JSON syntax:
         "name": "metricshipper",
         "type": "download",
         "version": "1.1.2",
-        "URL": "http://zenpip.zendev.org/packages/{name}-{version}.tgz"
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz"
     }
 ```
 

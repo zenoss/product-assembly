@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # build-status.py - Constructs a report on the status of a product build.
@@ -26,6 +27,7 @@ import httplib
 import json
 import logging as log
 import os
+import re
 import string
 import urlparse
 import urllib2
@@ -33,7 +35,6 @@ import urllib2
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 JENKINS_SERVER = "http://platform-jenkins.zenoss.eng"
-PRODUCT_ASSEMBLY = "job/product-assembly/job"
 
 
 """JobTemplate describes the report template of a job.
@@ -81,8 +82,9 @@ Attributes:
         spawns a child job.
 """
 class StageTemplate(object):
-    def __init__(self, name, childTemplate):
+    def __init__(self, name, childInfoUrl, childTemplate):
         self.name = name
+        self.childInfoUrl = childInfoUrl
         self.childTemplate = childTemplate
 
     def __str__(self):
@@ -91,6 +93,7 @@ class StageTemplate(object):
     def toDict(self):
         return {
             "name": self.name,
+            'childInfoUrl': self.childInfoUrl,
             "childTemplate": self.childTemplate,
         }
 
@@ -238,6 +241,7 @@ class StageInfo(object):
 
 CLASS_MAPPING = {
     frozenset(('name',
+        'childInfoUrl',
         'childTemplate')): StageTemplate,
     frozenset(('jobPrefix',
         'ignoreStages',
@@ -254,38 +258,29 @@ def class_mapper(d):
     return CLASS_MAPPING[frozenset(d.keys())](**d)
 
 
-def loadReportTemplates(templateFile):
+def loadReportTemplates(templateFile, branch):
     templates = json.loads(templateFile.read(), object_hook=class_mapper)['templates']
     log.debug("template count = %d" % len(templates))
+    branchName = branch.replace("/", "-")
     for jobTemplate in templates:
         log.debug(jobTemplate)
         for stage in jobTemplate.stages:
+            stage.childInfoUrl = stage.childInfoUrl.replace("%branch%", branchName)
             log.debug("\t%s" % stage)
         for instance in jobTemplate.instanceTemplates:
             log.debug("\t%s" % instance)
     return templates
 
 
-def buildBaseUrl(branchName):
-    return os.path.join(JENKINS_SERVER,
-            PRODUCT_ASSEMBLY,
-            branchName.replace("/", "-"))
-
-
-def buildBeginJobUrl(productNumber, branchName, jobName):
-    return os.path.join(buildBaseUrl(branchName),
-            "job/%s" % jobName,
-            productNumber)
-
-
-def getJobInfo(jobUrl):
-    log.debug("Retrieving job info from %s" % jobUrl)
-    apiUrl = os.path.join(jobUrl, "wfapi/describe")
+def getInfo(baseUrl):
+    apiUrl = os.path.join(baseUrl, "wfapi/describe")
+    log.debug("Retrieving job info from %s" % apiUrl)
     return getUrl(apiUrl)
 
+
 def getJobLog(jobUrl):
-    log.debug("Retrieving job log from %s" % jobUrl)
     logUrl = os.path.join(jobUrl, "wfapi/log")
+    log.debug("Retrieving job log from %s" % logUrl)
     return getUrl(logUrl)
 
 
@@ -308,18 +303,21 @@ def jobStages(templates, jobName, jobLabel):
             for prefix in template.jobPrefixes:
                 if str(jobName).startswith(prefix):
                     found = True
+                    log.debug("found stages: match by prefix")
                     break
             if found:
                break
 
         elif template.name == jobName:
             found = True
+            log.debug("found stages: match by template name")
             break
 
     if not found:
+        log.debug('No stages found for job "%s" - "%s"' % (jobName, jobLabel))
         return []
 
-    log.debug('found stages for job %s - %s in template %s' % (jobName, jobLabel, template.name))
+    log.debug('found stages for job "%s" - "%s" in template %s' % (jobName, jobLabel, template.name))
     return getInstanceStages(template, jobLabel)
 
 
@@ -362,7 +360,7 @@ def buildReport(templates, jobInfo, jobName):
                 found = True
                 jobs = []
                 if stageTemplate.childTemplate:
-                    addChildJobs(templates, stage, jobs)
+                    addChildJobs(stageTemplate, templates, stage, jobs)
                 stageTime = TimeStats(stage["startTimeMillis"], stage["durationMillis"])
                 stageInfo = StageInfo(stage["name"], stage["status"], stageTime, jobs)
                 break
@@ -379,12 +377,12 @@ def buildReport(templates, jobInfo, jobName):
     jobReport = JobReport(jenkinsInfo, timeStats, stages)
     return jobReport
 
-def addChildJobs(templates, stage, jobs):
+def addChildJobs(stageTemplate, templates, stage, jobs):
     stageFlowUrl = "%s%s" % (JENKINS_SERVER, stage["_links"]["self"]["href"])
     log.debug("URL for child jobs for '%s' = %s " % (stage["name"], stageFlowUrl))
     stageFlowInfo = getUrl(stageFlowUrl)
 
-    log.info("found %d child job(s) for '%s'" %
+    log.info("found %d stage(s) for '%s'" %
         (len(stageFlowInfo["stageFlowNodes"]), stage["name"]))
 
     for node in stageFlowInfo["stageFlowNodes"]:
@@ -402,22 +400,30 @@ def addChildJobs(templates, stage, jobs):
         log.debug("URL for stage log of child job '%s' = %s " % (jobName, logUrl))
         nodeLog = getUrl(logUrl)
 
-        startPattern = "Starting building: <a href='"
-        startIndex = nodeLog["text"].find(startPattern)
-        if startIndex:
-            startIndex = startIndex + len(startPattern)
-            endPattern = "'"
-            endIndex = nodeLog["text"].find(endPattern, startIndex)
-            url = nodeLog["text"][startIndex:endIndex-1]
-            jobUrl = "%s%s" % (JENKINS_SERVER, url)
-            jobInfo = getJobInfo(jobUrl)
-            childJobReport = buildReport(templates, jobInfo, jobName)
-            jobs.append(childJobReport)
+        #
+        # NOTE - the following is subject to breakage as Jenkins updates :-(
+        #
+        # The following is kind of hacky, but haven't found a better technique given
+        # the data returned from Jenkins.
+        #
+        # What we're trying to do is determine the URL for a downstream job started by
+        # the current job.  The info is only available in the 'text' attribute,
+        # which unfortunately is free form (and therefore may break in the future).
+        #
+        matchJobNumber = re.search("(#)(\d+)", nodeLog["text"])
+        if matchJobNumber and len(matchJobNumber.groups()) == 2:
+            jobNumber = matchJobNumber.group(2)
         else:
-            log.warning("Unable to determine child job for step '%s' of job %s" % (node["name"], jobInfo["name"]))
+            log.warning("Unable to determine number for child job for step '%s' of job %s" % (node["name"], jobName))
             log.debug( "nodeLog['text']=%s" % nodeLog["text"])
             continue
 
+        jobUrl = stageTemplate.childInfoUrl.replace("%jobName%", jobName).replace("%jobNumber%", jobNumber)
+        jobUrl = "%s%s" % (JENKINS_SERVER, jobUrl)
+
+        jobInfo = getInfo(jobUrl)
+        childJobReport = buildReport(templates, jobInfo, jobName)
+        jobs.append(childJobReport)
 
 def addChildJobTemplates(templates, childTemplateName, parentJob):
     # find childTemplateName in templates
@@ -566,8 +572,8 @@ def print_duration(duration):
 
 
 def main(options):
-    templates = loadReportTemplates(options.template)
-    beginJobInfo = getJobInfo(buildBeginJobUrl(options.product_number, options.branch, options.job_name))
+    templates = loadReportTemplates(options.template, options.branch)
+    beginJobInfo = getInfo(options.build_url)
     if options.job_status:
         beginJobInfo["status"] = options.job_status
     report = buildReport(templates, beginJobInfo, "begin")
@@ -589,6 +595,8 @@ if __name__ == '__main__':
                         help='Name of the beginning Jenkins job')
     parser.add_argument('-s',  '--job-status', type=str,
                         help='Status of the beginning Jenkins job')
+    parser.add_argument('-u',  '--build-url', type=str,
+                        help='Jenkins URL to current build')
     parser.add_argument('-j',  '--json-output-file', type=str,
                         default='buildReport.json',
                         help='Name of the JSON output file; default is buildReport.json')

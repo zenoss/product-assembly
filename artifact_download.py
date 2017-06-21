@@ -215,10 +215,13 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
 
     lastBuiltRevision = [item['lastBuiltRevision'] for item in response['actions'] if
                          len(item) > 0 and 'lastBuiltRevision' in item]
-    git_ref = lastBuiltRevision[0]['SHA1']
-    branchData = lastBuiltRevision[0]['branch'][0]
-    if branchData:
-        git_branch = branchData['name']
+    if lastBuiltRevision:
+        git_ref = lastBuiltRevision[0]['SHA1']
+        branchData = lastBuiltRevision[0]['branch'][0]
+        if branchData:
+            git_branch = branchData['name']
+    else:
+        git_ref = git_branch = None
 
     # Secondly, loop through the list of build artifacts and download any that match the specified pattern
     nDownloaded = 0
@@ -237,9 +240,10 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
                 # 1. Add changelog info
                 #
                 artifactInfo = jenkinsInfo.toDict()
-                artifactInfo['git_ref'] = git_ref
-                artifactInfo['git_ref_url'] = jenkinsInfo.gitRepo.replace('.git', '/tree/%s' % git_ref)
-                artifactInfo['git_branch'] = git_branch
+                if git_ref:
+                    artifactInfo['git_ref'] = git_ref
+                    artifactInfo['git_ref_url'] = jenkinsInfo.gitRepo.replace('.git', '/tree/%s' % git_ref)
+                    artifactInfo['git_branch'] = git_branch
                 artifactInfo['jenkins.job_nbr'] = number
                 artifactInfo['jenkins.artifact'] = fileName
                 downloadReport.append(artifactInfo)
@@ -419,7 +423,7 @@ class URLDownloadInfo(ArtifactInfo):
     def url(self):
         baseURL = self.info.get('URL')
         if not baseURL:
-            baseURL = 'http://zenpip.zendev.org/packages/{name}-{version}.tar.gz'
+            baseURL = 'http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz'
         kwargs = super(URLDownloadInfo, self).toDict()
         return baseURL.format(**kwargs)
 
