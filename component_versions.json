@@ -43,10 +43,10 @@
         "version": "4.1.3"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-5.2.x.tar.gz",
         "name": "zenoss-prodbin",
-        "type": "download",
-        "version": "5.2.5"
+        "type": "jenkins",
+        "jenkins.job": "Components/job/zenoss-prodbin/job/support-5.2.x",
+        "version": "support/5.2.x"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
