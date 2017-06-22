@@ -40,11 +40,10 @@ SVC_START ucspm/Infrastructure/mariadb-model
 SVC_START ucspm/Infrastructure/mariadb-events
 SVC_START ucspm/Infrastructure/RabbitMQ
 SVC_START ucspm/Zenoss/Events/zeneventserver
-SVC_START ucspm/Infrastructure/zencatalogservice
 SVC_START ucspm/Infrastructure/redis
 
 # Wait for our services to start
-SVC_WAIT ucspm/Infrastructure/mariadb-model ucspm/Infrastructure/mariadb-events ucspm/Infrastructure/RabbitMQ ucspm/Zenoss/Events/zeneventserver ucspm/Infrastructure/zencatalogservice ucspm/Infrastructure/redis started 1800
+SVC_WAIT ucspm/Infrastructure/mariadb-model ucspm/Infrastructure/mariadb-events ucspm/Infrastructure/RabbitMQ ucspm/Zenoss/Events/zeneventserver ucspm/Infrastructure/redis started 1800
 
 # Run the upgrade 'run'
 SVC_RUN "ucspm/Zenoss/User Interface/Zope" upgrade

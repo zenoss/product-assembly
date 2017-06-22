@@ -6,7 +6,6 @@
   "ZenPacks.zenoss.BigIpMonitor": "5.0.0",
   "ZenPacks.zenoss.BrocadeMonitor": "5.0.0",
   "ZenPacks.zenoss.CalculatedPerformance": "5.0.0",
-  "ZenPacks.zenoss.CatalogService": "5.0.0",
   "ZenPacks.zenoss.CheckPointMonitor": "5.0.0",
   "ZenPacks.zenoss.CiscoMonitor": "5.0.0",
   "ZenPacks.zenoss.CiscoUCS": "5.0.0",
