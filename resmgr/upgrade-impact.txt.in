@@ -40,12 +40,11 @@ SVC_START Zenoss.resmgr/Infrastructure/mariadb-model
 SVC_START Zenoss.resmgr/Infrastructure/mariadb-events
 SVC_START Zenoss.resmgr/Infrastructure/RabbitMQ
 SVC_START Zenoss.resmgr/Zenoss/Events/zeneventserver
-SVC_START Zenoss.resmgr/Infrastructure/zencatalogservice
 SVC_START Zenoss.resmgr/Infrastructure/redis
 SVC_START Zenoss.resmgr/Infrastructure/Impact
 
 # Wait for our services to start
-SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-model Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/RabbitMQ Zenoss.resmgr/Zenoss/Events/zeneventserver Zenoss.resmgr/Infrastructure/zencatalogservice Zenoss.resmgr/Infrastructure/redis Zenoss.resmgr/Infrastructure/Impact started 1200
+SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-model Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/RabbitMQ Zenoss.resmgr/Zenoss/Events/zeneventserver Zenoss.resmgr/Infrastructure/redis Zenoss.resmgr/Infrastructure/Impact started 1200
 
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.resmgr/Zenoss/User Interface/Zope" upgrade

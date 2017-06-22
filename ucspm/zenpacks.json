@@ -24,7 +24,6 @@
         "ZenPacks.zenoss.CiscoUCS",
         "ZenPacks.zenoss.ZenOperatorRole",
         "ZenPacks.zenoss.ComponentGroups",
-        "ZenPacks.zenoss.CatalogService",
         "ZenPacks.zenoss.EnterpriseSecurity",
         "ZenPacks.zenoss.PortalIntegration",
         "ZenPacks.zenoss.CiscoUCSCentral",
