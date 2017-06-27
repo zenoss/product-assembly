@@ -11,7 +11,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.AuditLog",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.BigIpMonitor",
         "type": "zenpack"
