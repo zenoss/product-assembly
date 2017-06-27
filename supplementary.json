@@ -16,7 +16,7 @@
         "repo": "git@github.com:zenoss/zenoss.metric.tsdb.git"
     },
     {
-        "ref": "support/1.2.x",
+        "ref": "support/1.3.x",
         "repo": "git@github.com:control-center/serviced.git"
     },
     {
