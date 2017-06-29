@@ -13,8 +13,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.AuditLog",
-        "requirement": "ZenPacks.zenoss.AuditLog===1.4.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.BigIpMonitor",
         "requirement": "ZenPacks.zenoss.BigIpMonitor===2.7.1",
