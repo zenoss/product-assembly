@@ -135,6 +135,14 @@
 			"name": "Upload ami",
 			"childInfoUrl": "",
 			"childTemplate": ""
+		}, {
+			"name": "QEMU/QCOWs",
+			"childInfoUrl": "",
+			"childTemplate": ""
+		}, {
+			"name": "Upload QEMU/QCOWs",
+			"childInfoUrl": "",
+			"childTemplate": ""
 		}],
 		"instanceTemplates": [{
 			"jobPrefix": "core appliance",
@@ -142,7 +150,9 @@
 				"Upgrade ISO",
 				"Upload Upgrade ISO",
 				"AMIs",
-				"Upload ami"
+				"Upload ami",
+				"QEMU/QCOWs",
+				"Upload QEMU/QCOWs"
 			],
 			"parentJob": "appliance-build"
 		}, {
@@ -153,14 +163,18 @@
 				"Upgrade ISO",
 				"Upload Upgrade ISO",
 				"AMIs",
-				"Upload ami"
+				"Upload ami",
+				"QEMU/QCOWs",
+				"Upload QEMU/QCOWs"
 			],
 			"parentJob": "appliance-build"
 		}, {
 			"jobPrefix": "ucspm appliance",
 			"ignoreStages": [
 				"AMIs",
-				"Upload ami"
+				"Upload ami",
+				"QEMU/QCOWs",
+				"Upload QEMU/QCOWs"
 			],
 			"parentJob": "appliance-build"
 		}]
