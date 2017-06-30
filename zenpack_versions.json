@@ -53,8 +53,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ControlCenter",
-        "requirement": "ZenPacks.zenoss.ControlCenter===1.5.1",
         "type": "zenpack"
+	"pre": true
     },{
         "name": "ZenPacks.zenoss.Dashboard",
         "pre": true,	
