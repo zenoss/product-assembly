@@ -46,7 +46,7 @@
         "name": "zenoss-prodbin",
         "type": "jenkins",
         "jenkins.job": "Components/job/zenoss-prodbin/job/hotfix-5.2.6",
-        "version": "hotifx/5.2.6"
+        "version": "hotfix/5.2.6"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
