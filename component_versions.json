@@ -44,7 +44,8 @@
     },
     {
         "name": "zenoss-prodbin",
-        "type": "download",
+        "type": "jenkins",
+        "jenkins.job": "Components/job/zenoss-prodbin/job/hotfix-5.2.6",
         "version": "hotifx/5.2.6"
     },
     {
