@@ -113,13 +113,14 @@ node ('build-zenoss-product') {
             // We have to use this version of the for-loop and _not_ the for(String s: strings)
             // as per https://jenkins.io/doc/pipeline/examples/#parallel-from-list
             def appliances = ["zsd", "poc"]
-            for(int i=0; i<appliances.size(); i++) {
+            for (int i = 0; i < appliances.size(); i++) {
                 def applianceTarget = appliances.get(i);
                 def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
                 def branch = {
                     build job: 'appliance-build', parameters: [
                             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
                             [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
+                            [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
                             [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                             [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
                             [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
@@ -138,6 +139,7 @@ node ('build-zenoss-product') {
                 build job: 'appliance-build', parameters: [
                         [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
                         [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
+                        [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                         [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
