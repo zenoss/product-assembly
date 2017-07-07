@@ -14,10 +14,10 @@
 # VERSION           the full Zenoss product version; e.g. 5.2.0
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
 #
-SHORT_VERSION=5.2
-SVCDEF_GIT_REF=support/5.2.x
-VERSION=5.2.7
-UCSPM_VERSION=2.5.0
+SHORT_VERSION=5.3
+SVCDEF_GIT_REF=support/5.3.x
+VERSION=5.3.0
+UCSPM_VERSION=2.5.1
 VERSION_TAG=1
 
 #
@@ -53,7 +53,7 @@ OPENTSDB_VERSION=24.0.3
 #    If SERVICED_VERSION and SERVICED_BUILD_NUMBER are specified, then the
 #    SERVICED_BRANCH should be 'testing' or 'stable'
 #
-SERVICED_BRANCH=support/1.3.x
+SERVICED_BRANCH=develop
 SERVICED_MATURITY=unstable
 SERVICED_VERSION=
 SERVICED_BUILD_NUMBER=
