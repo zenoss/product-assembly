@@ -122,6 +122,7 @@ node ('build-zenoss-product') {
                     build job: 'appliance-build', parameters: [
                             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
                             [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
+                            [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
                             [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                             [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
                             [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
@@ -140,6 +141,7 @@ node ('build-zenoss-product') {
                 build job: 'appliance-build', parameters: [
                         [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
                         [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
+                        [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                         [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
