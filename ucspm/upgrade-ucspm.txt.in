@@ -48,6 +48,9 @@ SVC_WAIT ucspm/Infrastructure/mariadb-model ucspm/Infrastructure/mariadb-events 
 # Run the upgrade 'run'
 SVC_RUN "ucspm/Zenoss/User Interface/Zope" upgrade
 
+# Uninstall the now-unnecessary CatalogService ZenPack
+SVC_RUN "Zenoss.resmgr/Zenoss/User Interface/Zope" zenpack-manager uninstall ZenPacks.zenoss.CatalogService
+
 # Uncomment this to restart the entire application afterwards
 # SVC_RESTART ucspm auto
 
