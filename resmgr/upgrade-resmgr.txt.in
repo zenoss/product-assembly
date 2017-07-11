@@ -48,6 +48,9 @@ SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-model Zenoss.resmgr/Infrastructure
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.resmgr/Zenoss/User Interface/Zope" upgrade
 
+# Uninstall the now-unnecessary CatalogService ZenPack
+SVC_RUN "Zenoss.resmgr/Zenoss/User Interface/Zope" zenpack-manager uninstall ZenPacks.zenoss.CatalogService
+
 # Uncomment this to restart the entire application afterwards
 # SVC_RESTART Zenoss.resmgr auto
 
