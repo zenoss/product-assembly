@@ -44,6 +44,12 @@ SVC_START Zenoss.core/Infrastructure/redis
 # Wait for our services to start
 SVC_WAIT Zenoss.core/Infrastructure/mariadb Zenoss.core/Infrastructure/RabbitMQ Zenoss.core/Zenoss/Events/zeneventserver Zenoss.core/Infrastructure/redis started 1200
 
+# Add the Solr service if we don't have it, so migrations can use modelindex
+SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump
+SVC_START Zenoss.core/Infrastructure/solr
+SVC_RESTART Zenoss.core/Zenoss/Events/zeneventserver
+SVC_WAIT Zenoss.core/Infrastructure/solr Zenoss.core/Zenoss/Events/zeneventserver started 600
+
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.core/Zenoss/User Interface/Zope" upgrade
 
