@@ -85,9 +85,8 @@
         "version": "develop"
     },
     {
-        "URL":  "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "zenoss.toolbox",
-        "type": "download",
-        "version": "2.1.0"
+        "type": "jenkins",
+        "version": "develop"
     }
 ]
