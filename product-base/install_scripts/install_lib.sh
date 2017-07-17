@@ -82,7 +82,7 @@ start_requirements() {
     echo "rabbitmq is running"
 
     echo "Starting solr..."
-    setuser zenoss /opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model &
+    setuser zenoss /opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model -Dsolr.jetty.request.header.size=1000000 &
     export SOLR_PID=$!
     echo "SOLR_PID=$SOLR_PID"
     echo "SOLR_PORT=$SOLR_PORT"
