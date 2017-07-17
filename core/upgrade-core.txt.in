@@ -50,6 +50,9 @@ SVC_START Zenoss.core/Infrastructure/solr
 SVC_RESTART Zenoss.core/Zenoss/Events/zeneventserver
 SVC_WAIT Zenoss.core/Infrastructure/solr Zenoss.core/Zenoss/Events/zeneventserver started 600
 
+# Remove this before upgrade
+SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump
+
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.core/Zenoss/User Interface/Zope" upgrade
 
