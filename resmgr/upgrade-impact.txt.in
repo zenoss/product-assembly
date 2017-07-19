@@ -56,7 +56,7 @@ SVC_WAIT Zenoss.resmgr/Infrastructure/solr Zenoss.resmgr/Zenoss/Events/zenevents
 SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump
 
 # Run script to completely remove Catalog Service ZenPack
-SVC_EXEC COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenrun /opt/zenoss/bin/remove_CatalogServiceZenPack.sh
+SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/remove_CatalogServiceZenPack.sh"
 
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.resmgr/Zenoss/User Interface/Zope" upgrade
