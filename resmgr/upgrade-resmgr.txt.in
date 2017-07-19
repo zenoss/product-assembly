@@ -45,20 +45,20 @@ SVC_START Zenoss.resmgr/Infrastructure/redis
 # Wait for our services to start
 SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-model Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/RabbitMQ Zenoss.resmgr/Zenoss/Events/zeneventserver Zenoss.resmgr/Infrastructure/redis started 1200
 
-# Add the Solr service if we don't have it, so migrations can use modelindex
+# Run migration to add solr first
 SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump
 SVC_START Zenoss.resmgr/Infrastructure/solr
 SVC_RESTART Zenoss.resmgr/Zenoss/Events/zeneventserver
 SVC_WAIT Zenoss.resmgr/Infrastructure/solr Zenoss.resmgr/Zenoss/Events/zeneventserver started 600
 
-# Remove this before upgrade
+# Run migration to remove product class instance relationships
 SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump
+
+# Run script to completely remove Catalog Service ZenPack
+SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenrun /opt/zenoss/bin/remove_CatalogServiceZenPack.sh
 
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.resmgr/Zenoss/User Interface/Zope" upgrade
-
-# Uninstall the now-unnecessary CatalogService ZenPack
-SVC_RUN "Zenoss.resmgr/Zenoss/User Interface/Zope" zenpack-manager uninstall ZenPacks.zenoss.CatalogService
 
 # Uncomment this to restart the entire application afterwards
 # SVC_RESTART Zenoss.resmgr auto
