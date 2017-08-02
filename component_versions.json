@@ -58,7 +58,7 @@
         "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz",
         "name": "zenoss-zep",
         "type": "download",
-        "version": "2.3.0"
+        "version": "2.4.0"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz",
