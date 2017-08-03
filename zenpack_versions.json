@@ -89,7 +89,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DurationThreshold",
-        "requirement": "ZenPacks.zenoss.DurationThreshold===2.0.2",
+        "requirement": "ZenPacks.zenoss.DurationThreshold===2.0.4",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DynamicView",
