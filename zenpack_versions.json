@@ -169,7 +169,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.MySqlMonitor",
-        "requirement": "ZenPacks.zenoss.MySqlMonitor===3.0.7",
+        "requirement": "ZenPacks.zenoss.MySqlMonitor===3.0.9",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetAppMonitor",
