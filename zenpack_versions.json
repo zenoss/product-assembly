@@ -281,7 +281,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenWebTx",
-        "requirement": "ZenPacks.zenoss.ZenWebTx===3.0.0",
+        "requirement": "ZenPacks.zenoss.ZenWebTx===3.0.1",
         "type": "zenpack"
     }
 ]
