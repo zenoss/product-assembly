@@ -201,7 +201,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PropertyMonitor",
-        "requirement": "ZenPacks.zenoss.PropertyMonitor===1.1.0",
+        "requirement": "ZenPacks.zenoss.PropertyMonitor===1.1.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PythonCollector",
