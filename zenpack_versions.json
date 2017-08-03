@@ -5,7 +5,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.AixMonitor",
-        "requirement": "ZenPacks.zenoss.AixMonitor===2.2.2",
+        "requirement": "ZenPacks.zenoss.AixMonitor===2.2.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ApacheMonitor",
