@@ -161,7 +161,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.HyperV",
-        "requirement": "ZenPacks.zenoss.Microsoft.HyperV===1.3.2",
+        "requirement": "ZenPacks.zenoss.Microsoft.HyperV===1.3.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Windows",
