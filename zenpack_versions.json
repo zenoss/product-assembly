@@ -125,7 +125,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HpuxMonitor",
-        "requirement": "ZenPacks.zenoss.HpuxMonitor===2.0.1",
+        "requirement": "ZenPacks.zenoss.HpuxMonitor===2.0.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
