@@ -81,8 +81,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DistributedCollector",
-        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.4",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
         "requirement": "ZenPacks.zenoss.DnsMonitor===2.1.0",
