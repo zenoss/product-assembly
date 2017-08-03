@@ -181,7 +181,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetScreenMonitor",
-        "requirement": "ZenPacks.zenoss.NetScreenMonitor===2.2.2",
+        "requirement": "ZenPacks.zenoss.NetScreenMonitor===2.2.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NortelMonitor",
