@@ -213,7 +213,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.StorageBase",
-        "requirement": "ZenPacks.zenoss.StorageBase===1.4.1",
+        "requirement": "ZenPacks.zenoss.StorageBase===1.4.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.SupportBundle",
