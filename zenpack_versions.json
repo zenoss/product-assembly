@@ -245,7 +245,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WebLogicMonitor",
-        "requirement": "ZenPacks.zenoss.WebLogicMonitor===2.2.3",
+        "requirement": "ZenPacks.zenoss.WebLogicMonitor===2.3.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WebsphereMonitor",
