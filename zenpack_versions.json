@@ -12,9 +12,8 @@
         "requirement": "ZenPacks.zenoss.ApacheMonitor===2.1.4",
         "type": "zenpack"
     },{
-        "name": "ZenPacks.zenoss.AuditLog",
-        "type": "zenpack",
-        "pre": true
+        "name": "ZenPacks.zenoss.AuditLog===1.4.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.BigIpMonitor",
         "requirement": "ZenPacks.zenoss.BigIpMonitor===2.7.1",
@@ -28,9 +27,8 @@
         "requirement": "ZenPacks.zenoss.CalculatedPerformance===2.4.1",
         "type": "zenpack"
     },{
-        "name": "ZenPacks.zenoss.CatalogService",
-        "type": "zenpack",
-        "pre": true
+        "name": "ZenPacks.zenoss.CatalogService===3.1.2",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CheckPointMonitor",
         "requirement": "ZenPacks.zenoss.CheckPointMonitor===2.0.2",
@@ -52,13 +50,11 @@
         "requirement": "ZenPacks.zenoss.ComponentGroups===1.4.0",
         "type": "zenpack"
     },{
-        "name": "ZenPacks.zenoss.ControlCenter",
-        "type": "zenpack",
-        "pre": true
+        "name": "ZenPacks.zenoss.ControlCenter===1.5.2",
+        "type": "zenpack"
     },{
-        "name": "ZenPacks.zenoss.Dashboard",
-        "type": "zenpack",
-        "pre": true
+        "name": "ZenPacks.zenoss.Dashboard===1.2.6",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DellMonitor",
         "requirement": "ZenPacks.zenoss.DellMonitor===2.2.0",
@@ -80,9 +76,8 @@
         "requirement": "ZenPacks.zenoss.DiscoveryMapping===1.2.1",
         "type": "zenpack"
     },{
-        "name": "ZenPacks.zenoss.DistributedCollector",
-        "type": "zenpack",
-        "pre": true
+        "name": "ZenPacks.zenoss.DistributedCollector===3.1.5",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
         "requirement": "ZenPacks.zenoss.DnsMonitor===2.1.0",
