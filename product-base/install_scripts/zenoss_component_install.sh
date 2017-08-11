@@ -151,6 +151,9 @@ chmod -R g+rw,o+r,+X ${ZENHOME}/*
 echo "TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT MIGRATE TESTS"
 rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
 
+echo "TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT ZenUITests-based TESTS"
+rm -rf ${ZENHOME}/Products/ZenUITests
+
 echo "Cleaning up after install..."
 find ${ZENHOME} -name \*.py[co] -delete
 /sbin/scrub.sh
