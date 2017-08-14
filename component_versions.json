@@ -33,6 +33,7 @@
     },
     {
         "name": "service-migration",
+        "git_owner": "control-center",
         "type": "jenkins",
         "jenkins.job": "ControlCenter/job/service-migration/job/develop",
         "version": "develop"
