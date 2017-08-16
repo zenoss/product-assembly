@@ -71,11 +71,10 @@
         "version": "1.4.0"
     },
     {
+        "URL":  "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz",
         "name": "zproxy",
-        "type": "jenkins",
-        "jenkins.server": "http://platform-jenkins.zenoss.eng",
-        "jenkins.job": "Components/job/zproxy/job/develop",
-        "version": "develop"
+        "type": "download",
+        "version": "1.0.3"
     },
     {
         "URL":  "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
