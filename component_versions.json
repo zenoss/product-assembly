@@ -77,10 +77,11 @@
         "version": "develop"
     },
     {
-        "URL":  "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz",
         "name": "zproxy",
-        "type": "download",
-        "version": "1.0.4"
+        "type": "jenkins",
+        "jenkins.server": "http://platform-jenkins.zenoss.eng",
+        "jenkins.job": "Components/job/zproxy/job/develop",
+        "version": "develop"
     },
     {
         "name": "zenoss.toolbox",
