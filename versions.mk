@@ -24,9 +24,9 @@ VERSION_TAG=1
 # Currently, HDFS and OpenTSDB use the same image as HBASE
 # So these versions should always be the same.
 #
-HBASE_VERSION=24.0.6
-HDFS_VERSION=24.0.6
-OPENTSDB_VERSION=24.0.6
+HBASE_VERSION=24.0.7
+HDFS_VERSION=24.0.7
+OPENTSDB_VERSION=24.0.7
 
 
 #
