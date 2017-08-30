@@ -21,7 +21,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CalculatedPerformance",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.CheckPointMonitor",
         "type": "zenpack"
