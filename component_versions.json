@@ -45,7 +45,7 @@
         "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-5.3.x.tar.gz",
         "name": "zenoss-prodbin",
         "type": "download",
-        "version": "5.3.0"
+        "version": "5.3.1"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
