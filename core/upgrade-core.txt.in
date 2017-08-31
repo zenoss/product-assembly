@@ -53,6 +53,9 @@ SVC_WAIT Zenoss.core/Infrastructure/solr Zenoss.core/Zenoss/Events/zeneventserve
 # Remove this before upgrade
 SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump
 
+# Do a model catalog hard reindex. This is only needed when upgrading to 6.X from 5.X
+SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zencatalog run --createcatalog --forceindex
+
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.core/Zenoss/User Interface/Zope" upgrade
 
