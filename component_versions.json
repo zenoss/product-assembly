@@ -44,9 +44,8 @@
     {
         "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-5.3.x.tar.gz",
         "name": "zenoss-prodbin",
-        "type": "jenkins",
-        "jenkins.job": "Components/job/zenoss-prodbin/job/hotfix-5.3.1",
-        "version": "hotfix/5.3.1"
+        "type": "download",
+        "version": "5.3.1"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
