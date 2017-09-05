@@ -45,11 +45,26 @@ SVC_START ucspm/Infrastructure/redis
 # Wait for our services to start
 SVC_WAIT ucspm/Infrastructure/mariadb-model ucspm/Infrastructure/mariadb-events ucspm/Infrastructure/RabbitMQ ucspm/Zenoss/Events/zeneventserver ucspm/Infrastructure/redis started 1800
 
+# Run migration to add solr first
+SVC_EXEC NO_COMMIT "ucspm/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump
+SVC_START ucspm/Infrastructure/solr
+SVC_RESTART ucspm/Zenoss/Events/zeneventserver
+SVC_WAIT ucspm/Infrastructure/solr Zenoss.core/Zenoss/Events/zeneventserver started 600
+
+# Run migration to remove product class instance relationships
+SVC_EXEC NO_COMMIT "ucspm/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump
+
+# Run script to completely remove Catalog Service ZenPack
+SVC_EXEC NO_COMMIT "ucspm/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/remove_CatalogServiceZenPack.sh"
+
 # Run the upgrade 'run'
 SVC_RUN "ucspm/Zenoss/User Interface/Zope" upgrade
 
-# Uninstall the now-unnecessary CatalogService ZenPack
-SVC_RUN "Zenoss.resmgr/Zenoss/User Interface/Zope" zenpack-manager uninstall ZenPacks.zenoss.CatalogService
+# Do a model catalog hard reindex. This is only needed when upgrading to 6.X from 5.X
+SVC_EXEC NO_COMMIT "ucspm/Zenoss/User Interface/Zope" /opt/zenoss/bin/zencatalog run --createcatalog --forceindex
+
+# Re-run the migration to Remove Empty Product Class Relationships, since it uses the model catalog. This is only needed when upgrading to 6.X from 5.X
+SVC_EXEC NO_COMMIT "ucspm/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump
 
 # Uncomment this to restart the entire application afterwards
 # SVC_RESTART ucspm auto
