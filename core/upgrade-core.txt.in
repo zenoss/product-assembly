@@ -50,14 +50,17 @@ SVC_START Zenoss.core/Infrastructure/solr
 SVC_RESTART Zenoss.core/Zenoss/Events/zeneventserver
 SVC_WAIT Zenoss.core/Infrastructure/solr Zenoss.core/Zenoss/Events/zeneventserver started 600
 
-# Remove this before upgrade
+# Run migration to remove product class instance relationships
 SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump
+
+# Run the upgrade 'run'
+SVC_RUN "Zenoss.core/Zenoss/User Interface/Zope" upgrade
 
 # Do a model catalog hard reindex. This is only needed when upgrading to 6.X from 5.X
 SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zencatalog run --createcatalog --forceindex
 
-# Run the upgrade 'run'
-SVC_RUN "Zenoss.core/Zenoss/User Interface/Zope" upgrade
+# Re-run the migration to Remove Empty Product Class Relationships, since it uses the model catalog. This is only needed when upgrading to 6.X from 5.X
+SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump
 
 # Uncomment this to restart the entire application afterwards
 # SVC_RESTART Zenoss.core auto
