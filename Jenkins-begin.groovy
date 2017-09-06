@@ -44,26 +44,6 @@ node ('build-zenoss-product') {
 
         stage ('Run all product pipelines') {
             def branches = [
-                'core-pipeline': {
-                    build job: 'core-pipeline', parameters: [
-                        [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
-                        [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
-                        [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
-                        [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
-                        [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
-                    ]
-                },
-                'resmgr-pipeline': {
-                    build job: 'resmgr-pipeline', parameters: [
-                        [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
-                        [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
-                        [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
-                        [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
-                        [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
-                    ]
-                },
                 'ucspm-pipeline': {
                     build job: 'ucspm-pipeline', parameters: [
                         [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
@@ -73,7 +53,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                         [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
                     ]
-                },
+                }
             ]
 
             parallel branches
