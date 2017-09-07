@@ -4,7 +4,6 @@
         "ZenPacks.zenoss.ApacheMonitor",
         "ZenPacks.zenoss.PythonCollector",
         "ZenPacks.zenoss.CalculatedPerformance",
-        "ZenPacks.zenoss.DiscoveryMapping",
         "ZenPacks.zenoss.ZenMail",
         "ZenPacks.zenoss.MySqlMonitor",
         "ZenPacks.zenoss.ZenJMX",
