@@ -57,8 +57,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dashboard",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.Dashboard===1.2.7",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DellMonitor",
         "requirement": "ZenPacks.zenoss.DellMonitor===2.2.0",
@@ -81,8 +81,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DistributedCollector",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.6",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
         "requirement": "ZenPacks.zenoss.DnsMonitor===2.1.0",
@@ -145,8 +145,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LDAPAuthenticator",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.LDAPAuthenticator===3.3.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LDAPMonitor",
         "requirement": "ZenPacks.zenoss.LDAPMonitor===1.4.1",
@@ -217,8 +217,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.SupportBundle",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.SupportBundle===1.1.2",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.TomcatMonitor",
         "requirement": "ZenPacks.zenoss.TomcatMonitor===2.3.0",
