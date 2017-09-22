@@ -20,7 +20,7 @@
         "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
         "type": "download",
-        "version": "0.1.24"
+        "version": "0.1.25"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
