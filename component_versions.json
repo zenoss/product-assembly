@@ -18,10 +18,9 @@
     },
     {
         "name": "query",
-        "type": "jenkins",
-        "jenkins.server": "http://platform-jenkins.zenoss.eng",
-        "jenkins.job": "Components/job/query/job/develop",
-        "version": "develop"
+        "type": "download",
+        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz",
+        "version": "0.1.25"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
