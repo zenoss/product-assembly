@@ -42,6 +42,7 @@
   "ZenPacks.zenoss.PropertyMonitor": "5.0.0",
   "ZenPacks.zenoss.PredictiveThreshold": "5.1.2",
   "ZenPacks.zenoss.PythonCollector": "5.0.0",
+  "ZenPacks.zenoss.RMMonitor": "6.0.0",
   "ZenPacks.zenoss.SolarisMonitor": "5.0.0",
   "ZenPacks.zenoss.StorageBase": "5.0.0",
   "ZenPacks.zenoss.SupportBundle": "5.1.2",
