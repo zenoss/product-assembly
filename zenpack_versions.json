@@ -65,7 +65,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DeviceSearch",
-        "requirement": "ZenPacks.zenoss.DeviceSearch===1.2.2",
+        "requirement": "ZenPacks.zenoss.DeviceSearch===1.2.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Diagram",
@@ -197,7 +197,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PortalIntegration",
-        "requirement": "ZenPacks.zenoss.PortalIntegration===1.2.0",
+        "requirement": "ZenPacks.zenoss.PortalIntegration===1.2.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PropertyMonitor",
