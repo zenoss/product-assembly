@@ -197,7 +197,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PortalIntegration",
-        "requirement": "ZenPacks.zenoss.PortalIntegration===1.2.0",
+        "requirement": "ZenPacks.zenoss.PortalIntegration===1.2.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PropertyMonitor",
