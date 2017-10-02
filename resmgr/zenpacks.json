@@ -18,11 +18,9 @@
         "ZenPacks.zenoss.Dashboard",
         "ZenPacks.zenoss.TomcatMonitor",
         "ZenPacks.zenoss.JBossMonitor",
-        "ZenPacks.zenoss.WebLogicMonitor",
         "ZenPacks.zenoss.LDAPAuthenticator",
         "ZenPacks.zenoss.EnterpriseCollector",
         "ZenPacks.zenoss.ZenDeviceACL",
-        "ZenPacks.zenoss.ZenMailTx",
         "ZenPacks.zenoss.ZenSQLTx",
         "ZenPacks.zenoss.ZenWebTx",
         "ZenPacks.zenoss.NetAppMonitor",
@@ -32,9 +30,7 @@
         "ZenPacks.zenoss.vSphere",
         "ZenPacks.zenoss.JuniperMonitor",
         "ZenPacks.zenoss.NetScreenMonitor",
-        "ZenPacks.zenoss.NortelMonitor",
         "ZenPacks.zenoss.BrocadeMonitor",
-        "ZenPacks.zenoss.WebsphereMonitor",
         "ZenPacks.zenoss.AixMonitor",
         "ZenPacks.zenoss.CheckPointMonitor",
         "ZenPacks.zenoss.AdvancedSearch",
@@ -52,18 +48,12 @@
         "ZenPacks.zenoss.RMMonitor"
     ],
     "included_not_installed": [
-        "ZenPacks.zenoss.DellMonitor",
-        "ZenPacks.zenoss.DigMonitor",
         "ZenPacks.zenoss.DnsMonitor",
         "ZenPacks.zenoss.DurationThreshold",
         "ZenPacks.zenoss.FtpMonitor",
-        "ZenPacks.zenoss.HPMonitor",
-        "ZenPacks.zenoss.HpuxMonitor",
         "ZenPacks.zenoss.HttpMonitor",
-        "ZenPacks.zenoss.LDAPMonitor",
         "ZenPacks.zenoss.NetScaler",
-        "ZenPacks.zenoss.NtpMonitor",
-        "ZenPacks.zenoss.vCloud",
+        "ZenPacks.zenoss.NtpMonitor"
     ],
     "version_overrides": {}
 }
