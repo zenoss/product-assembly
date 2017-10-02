@@ -52,8 +52,18 @@
         "ZenPacks.zenoss.RMMonitor"
     ],
     "included_not_installed": [
+        "ZenPacks.zenoss.DellMonitor",
+        "ZenPacks.zenoss.DigMonitor",
+        "ZenPacks.zenoss.DnsMonitor",
         "ZenPacks.zenoss.DurationThreshold",
-        "ZenPacks.zenoss.NetScaler"
+        "ZenPacks.zenoss.FtpMonitor",
+        "ZenPacks.zenoss.HPMonitor",
+        "ZenPacks.zenoss.HpuxMonitor",
+        "ZenPacks.zenoss.HttpMonitor",
+        "ZenPacks.zenoss.LDAPMonitor",
+        "ZenPacks.zenoss.NetScaler",
+        "ZenPacks.zenoss.NtpMonitor",
+        "ZenPacks.zenoss.vCloud",
     ],
     "version_overrides": {}
 }

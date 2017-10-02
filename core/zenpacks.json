@@ -10,6 +10,15 @@
     "ZenPacks.zenoss.Microsoft.Windows"
   ],
   "included_not_installed": [
+    "ZenPacks.zenoss.DeviceSearch",
+    "ZenPacks.zenoss.DellMonitor",
+    "ZenPacks.zenoss.DigMonitor",
+    "ZenPacks.zenoss.DnsMonitor",
+    "ZenPacks.zenoss.FtpMonitor",
+    "ZenPacks.zenoss.HttpMonitor",
+    "ZenPacks.zenoss.HPMonitor",
+    "ZenPacks.zenoss.LDAPMonitor",
+    "ZenPacks.zenoss.NtpMonitor",
     "ZenPacks.zenoss.WBEM",
     "ZenPacks.zenoss.ZenJMX"
   ],
