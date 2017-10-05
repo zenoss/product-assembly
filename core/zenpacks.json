@@ -6,12 +6,12 @@
     "ZenPacks.zenoss.ZenMail",
     "ZenPacks.zenoss.MySqlMonitor",
     "ZenPacks.zenoss.LinuxMonitor",
+    "ZenPacks.zenoss.DeviceSearch",
     "ZenPacks.zenoss.Dashboard",
-    "ZenPacks.zenoss.Microsoft.Windows"
-  ],
-  "included_not_installed": [
+    "ZenPacks.zenoss.Microsoft.Windows",
     "ZenPacks.zenoss.WBEM",
     "ZenPacks.zenoss.ZenJMX"
   ],
+  "included_not_installed": [],
   "version_overrides": {}
 }
