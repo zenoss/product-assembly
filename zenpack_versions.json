@@ -15,8 +15,7 @@
         "pre": true
     },{
         "name": "ZenPacks.zenoss.AWS",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.BigIpMonitor",
         "type": "zenpack"
@@ -30,15 +29,13 @@
 
     },{
         "name": "ZenPacks.zenoss.Ceph",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CheckPointMonitor",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoAPIC",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoMonitor",
         "type": "zenpack"
@@ -62,19 +59,16 @@
         "pre": true
     },{
         "name": "ZenPacks.zenoss.DatabaseMonitor",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DB2",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DellMonitor",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dell.PowerEdge",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DeviceSearch",
         "type": "zenpack",
@@ -98,8 +92,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Docker",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DurationThreshold",
         "type": "zenpack"
@@ -125,15 +118,13 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Exchange",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.FtpMonitor",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HP.Proliant",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HPMonitor",
         "type": "zenpack"
@@ -145,8 +136,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.IBM.Power",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.InstalledTemplatesReport",
         "type": "zenpack"
@@ -158,8 +148,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Layer2",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LDAPAuthenticator",
         "type": "zenpack",
@@ -175,23 +164,19 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Memcached",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Azure",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Lync",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.HyperV",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.MSMQ",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Windows",
         "type": "zenpack"
@@ -212,27 +197,22 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NSX",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NtpMonitor",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.OpenStack",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.OpenStackInfrastructure",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.OpenvSwitch",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PostgreSQL",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
         "type": "zenpack"
@@ -248,8 +228,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RabbitMQ",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RMMonitor",
         "type": "zenpack",
@@ -285,8 +264,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WSMAN",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WebLogicMonitor",
         "type": "zenpack"
@@ -295,8 +273,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.XenServer",
-        "type": "zenpack",
-        "pre": true
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenDeviceACL",
         "type": "zenpack",
