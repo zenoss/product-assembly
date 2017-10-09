@@ -14,6 +14,9 @@
         "type": "zenpack",
         "pre": true
     },{
+        "name": "ZenPacks.zenoss.AWS",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.BigIpMonitor",
         "type": "zenpack"
     },{
@@ -23,8 +26,15 @@
         "name": "ZenPacks.zenoss.CalculatedPerformance",
         "type": "zenpack",
         "pre": true
+
+    },{
+        "name": "ZenPacks.zenoss.Ceph",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CheckPointMonitor",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.CiscoAPIC",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoMonitor",
@@ -48,7 +58,16 @@
         "type": "zenpack",
         "pre": true
     },{
+        "name": "ZenPacks.zenoss.DatabaseMonitor",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.DB2",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.DellMonitor",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.Dell.PowerEdge",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DeviceSearch",
@@ -70,6 +89,9 @@
         "pre": true
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.Docker",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DurationThreshold",
@@ -95,7 +117,13 @@
         "name": "ZenPacks.zenoss.EnterpriseSkin",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.Microsoft.Exchange",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.FtpMonitor",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.HP.Proliant",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HPMonitor",
@@ -107,6 +135,9 @@
         "name": "ZenPacks.zenoss.HttpMonitor",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.IBM.Power",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.InstalledTemplatesReport",
         "type": "zenpack"
     },{
@@ -114,6 +145,9 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.JuniperMonitor",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.Layer2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LDAPAuthenticator",
@@ -129,7 +163,19 @@
         "name": "ZenPacks.zenoss.LinuxMonitor",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.Memcached",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.Microsoft.Azure",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.Microsoft.Lync",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.Microsoft.HyperV",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.Microsoft.MSMQ",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Windows",
@@ -150,7 +196,22 @@
         "name": "ZenPacks.zenoss.NortelMonitor",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.NSX",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.NtpMonitor",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.OpenStack",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.OpenStackInfrastructure",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.OpenvSwitch",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.PostgreSQL",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
@@ -164,6 +225,9 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PythonCollector",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.RabbitMQ",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RMMonitor",
@@ -199,10 +263,16 @@
         "name": "ZenPacks.zenoss.WBEM",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.WSMAN",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.WebLogicMonitor",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WebsphereMonitor",
+        "type": "zenpack"
+    },{
+        "name": "ZenPacks.zenoss.XenServer",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenDeviceACL",
