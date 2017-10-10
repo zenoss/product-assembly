@@ -3,7 +3,6 @@
         "ZenPacks.zenoss.ZenPackLib",
         "ZenPacks.zenoss.ApacheMonitor",
         "ZenPacks.zenoss.PythonCollector",
-        "ZenPacks.zenoss.AWS",
         "ZenPacks.zenoss.CalculatedPerformance",
         "ZenPacks.zenoss.Docker",
         "ZenPacks.zenoss.DurationThreshold",
