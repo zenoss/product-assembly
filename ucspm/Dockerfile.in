@@ -16,4 +16,4 @@ COPY zenpacks /opt/zenoss/packs/
 # Initializes zenoss, creates DB and installs zenpacks...
 RUN /opt/zenoss/install_scripts/create_zenoss.sh
 
-ADD upgrade-ucspm.txt upgrade-ucspm.sh /root/%SHORT_VERSION%.x/
+ADD upgrade-ucspm.txt upgrade-ucspm.sh current_version.txt /root/%SHORT_VERSION%.x/
