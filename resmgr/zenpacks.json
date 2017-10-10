@@ -37,7 +37,6 @@
         "ZenPacks.zenoss.ZenSQLTx",
         "ZenPacks.zenoss.ZenWebTx",
         "ZenPacks.zenoss.NetAppMonitor",
-        "ZenPacks.zenoss.BigIpMonitor",
         "ZenPacks.zenoss.CiscoMonitor",
         "ZenPacks.zenoss.PropertyMonitor",
         "ZenPacks.zenoss.vSphere",
