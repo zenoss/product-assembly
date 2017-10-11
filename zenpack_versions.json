@@ -173,7 +173,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetAppMonitor",
-        "requirement": "ZenPacks.zenoss.NetAppMonitor===3.5.0",
+        "requirement": "ZenPacks.zenoss.NetAppMonitor===3.6.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetScaler",
