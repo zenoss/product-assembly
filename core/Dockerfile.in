@@ -16,6 +16,6 @@ COPY zenpacks /opt/zenoss/packs/
 # Initializes zenoss, creates DB and installs zenpacks...
 RUN /opt/zenoss/install_scripts/create_zenoss.sh
 
-ADD upgrade-core.txt upgrade-core.sh  /root/%SHORT_VERSION%.x/
+ADD upgrade-core.txt upgrade-core.sh current_version.txt /root/%SHORT_VERSION%.x/
 
 

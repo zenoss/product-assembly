@@ -1,0 +1,17 @@
+DESCRIPTION  Persist current version number of Zenoss Core
+REQUIRE_SVC
+
+# Choose image to work on
+SVC_USE zenoss/core_REPLACE_1
+
+# Start all dependent services
+SVC_START Zenoss.core/Infrastructure/mariadb
+SVC_START Zenoss.core/Infrastructure/RabbitMQ
+SVC_START Zenoss.core/Zenoss/Events/zeneventserver
+SVC_START Zenoss.core/Infrastructure/redis
+
+# Wait for services to start
+SVC_WAIT Zenoss.core/Infrastructure/mariadb Zenoss.core/Infrastructure/RabbitMQ Zenoss.core/Zenoss/Events/zeneventserver Zenoss.core/Infrastructure/redis started 1200
+
+# Write current version to file
+SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" sh -c "(grep \"^VERSION=\" /opt/zenoss/Products/ZenModel/ZVersion.py | cut -d'=' -f2 | tr -d '\"') > /var/zenoss/upgrade_from_version.txt && chown zenoss:zenoss /var/zenoss/upgrade_from_version.txt"

@@ -1,0 +1,18 @@
+DESCRIPTION  Persist current version number of UCSPM
+REQUIRE_SVC
+
+# Choose image to work on
+SVC_USE zenoss/ucspm_REPLACE_1
+
+# Start all our dependent services
+SVC_START ucspm/Infrastructure/mariadb-model
+SVC_START ucspm/Infrastructure/mariadb-events
+SVC_START ucspm/Infrastructure/RabbitMQ
+SVC_START ucspm/Zenoss/Events/zeneventserver
+SVC_START ucspm/Infrastructure/redis
+
+# Wait for our services to start
+SVC_WAIT ucspm/Infrastructure/mariadb-model ucspm/Infrastructure/mariadb-events ucspm/Infrastructure/RabbitMQ ucspm/Zenoss/Events/zeneventserver ucspm/Infrastructure/redis started 1800
+
+# Write current version to file
+SVC_EXEC NO_COMMIT "ucspm/Zenoss/User Interface/Zope" sh -c "(grep \"^VERSION=\" /opt/zenoss/Products/ZenModel/ZVersion.py | cut -d'=' -f2 | tr -d '\"') > /var/zenoss/upgrade_from_version.txt && chown zenoss:zenoss /var/zenoss/upgrade_from_version.txt"
