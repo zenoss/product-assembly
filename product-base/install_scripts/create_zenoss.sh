@@ -7,6 +7,8 @@
 set -e
 set -x
 
+# ZEN-28791: Set mysqld.log initial permissions
+fix_mysqld_log
 
 start_requirements
 

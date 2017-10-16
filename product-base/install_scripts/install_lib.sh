@@ -274,6 +274,14 @@ fix_etc_permissions()
     chmod 750 /etc/sudoers.d
 }
 
+# Setup /var/log/mysqld.log and give permissions to mysqld to write to it.
+fix_mysqld_log()
+{
+    echo "Initializing /var/log/mysqld.log and setting default permissions."
+    touch /var/log/mysqld.log
+    chown mysql:mysql /var/log/mysqld.log
+}
+
 DESIRED_OWNERSHIP=${DESIRED_OWNERSHIP:-"zenoss:zenoss"}
 
 function die { echo "ERROR: ${*}" >&2; exit 1; }
