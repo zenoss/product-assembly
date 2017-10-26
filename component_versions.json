@@ -56,10 +56,11 @@
         "version": "2.1.5"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz",
         "name": "zenoss-zep",
-        "type": "download",
-        "version": "2.4.0"
+        "type": "jenkins",
+        "jenkins.server": "http://platform-jenkins.zenoss.eng",
+        "jenkins.job": "Components/job/zenoss-zep/job/develop",
+        "version": "develop"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz",
