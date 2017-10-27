@@ -5,13 +5,15 @@
         "version": "1.0.1"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
         "name": "metricshipper",
-        "type": "jenkins",
+        "type": "download",
         "version": "1.1.4"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
         "name": "modelindex",
-        "type": "jenkins",
+        "type": "download",
         "version": "1.0.0"
     },
     {
