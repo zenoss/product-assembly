@@ -7,12 +7,12 @@
     {
         "name": "metricshipper",
         "type": "jenkins",
-        "version": "develop"
+        "version": "1.1.4"
     },
     {
         "name": "modelindex",
         "type": "jenkins",
-        "version": "develop"
+        "version": "1.0.0"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
@@ -23,7 +23,7 @@
     {
         "name": "query",
         "type": "jenkins",
-        "version": "develop"
+        "version": "0.1.26"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
@@ -36,7 +36,7 @@
         "git_owner": "control-center",
         "type": "jenkins",
         "jenkins.job": "ControlCenter/job/service-migration/job/develop",
-        "version": "develop"
+        "version": "1.1.10"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.extjs-{version}.tar.gz",
@@ -61,7 +61,7 @@
         "type": "jenkins",
         "jenkins.server": "http://platform-jenkins.zenoss.eng",
         "jenkins.job": "Components/job/zenoss-zep/job/develop",
-        "version": "develop"
+        "version": "2.5.0"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz",
@@ -74,18 +74,18 @@
         "jenkins.job": "Components/job/zminion/job/develop",
         "name": "zminion",
         "type": "jenkins",
-        "version": "develop"
+        "version": "1.5.0"
     },
     {
         "name": "zproxy",
         "type": "jenkins",
         "jenkins.server": "http://platform-jenkins.zenoss.eng",
         "jenkins.job": "Components/job/zproxy/job/develop",
-        "version": "develop"
+        "version": "1.0.5"
     },
     {
         "name": "zenoss.toolbox",
         "type": "jenkins",
-        "version": "develop"
+        "version": "2.2.0"
     }
 ]
