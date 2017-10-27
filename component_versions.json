@@ -60,10 +60,9 @@
         "version": "2.1.5"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz",
         "name": "zenoss-zep",
-        "type": "jenkins",
-        "jenkins.server": "http://platform-jenkins.zenoss.eng",
-        "jenkins.job": "Components/job/zenoss-zep/job/develop",
+        "type": "download",
         "version": "2.5.0"
     },
     {
@@ -73,22 +72,21 @@
         "version": "0.1.7"
     },
     {
-        "jenkins.server": "http://platform-jenkins.zenoss.eng",
-        "jenkins.job": "Components/job/zminion/job/develop",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
         "name": "zminion",
-        "type": "jenkins",
+        "type": "download",
         "version": "1.5.0"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz",
         "name": "zproxy",
-        "type": "jenkins",
-        "jenkins.server": "http://platform-jenkins.zenoss.eng",
-        "jenkins.job": "Components/job/zproxy/job/develop",
+        "type": "download",
         "version": "1.0.5"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "zenoss.toolbox",
-        "type": "jenkins",
+        "type": "download",
         "version": "2.2.0"
     }
 ]
