@@ -29,8 +29,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CalculatedPerformance",
-        "type": "zenpack",
-		"pre": true
+        "requirement": "ZenPacks.zenoss.CalculatedPerformance===2.5.0",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Ceph",
         "requirement": "ZenPacks.zenoss.Ceph===2.0.1",
