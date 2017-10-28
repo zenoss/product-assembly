@@ -51,7 +51,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "jenkins",
-        "version": "develop"
+        "version": "support/6.0.x"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
