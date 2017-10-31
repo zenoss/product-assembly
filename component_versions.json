@@ -35,10 +35,9 @@
         "version": "0.1.2"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl",
         "name": "service-migration",
-        "git_owner": "control-center",
-        "type": "jenkins",
-        "jenkins.job": "ControlCenter/job/service-migration/job/develop",
+        "type": "download",
         "version": "1.1.10"
     },
     {
@@ -49,10 +48,10 @@
         "version": "4.1.3"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.0.x.tar.gz",
         "name": "zenoss-prodbin",
-        "type": "jenkins",
-        "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.0.x",
-        "version": "support/6.0.x"
+        "type": "download",
+        "version": "6.0.0"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
