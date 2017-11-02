@@ -16,13 +16,13 @@
 			"childTemplate": ""
 		}, {
 			"name": "Run all product pipelines",
-			"childInfoUrl": "/job/product-assembly/job/%branch%/job/%jobName%/%jobNumber%",
+			"childInfoUrl": "/%parentPath%/job/%jobName%/%jobNumber%",
 			"childTemplate": "product-pipeline"
 		}],
 		"instanceTemplates": []
 	}, {
 		"name": "product-pipeline",
-		"jobPrefixes": ["core-pipeline","resmgr-pipeline","ucspm-pipeline"],
+		"jobPrefixes": ["core-pipeline", "resmgr-pipeline", "ucspm-pipeline"],
 		"stages": [{
 			"name": "Build image",
 			"childInfoUrl": "",
@@ -45,7 +45,7 @@
 			"childTemplate": ""
 		}, {
 			"name": "Build Appliances",
-			"childInfoUrl": "/job/product-assembly/job/%branch%/job/appliance-build/%jobNumber%",
+			"childInfoUrl": "/%parentPath%/job/appliance-build/%jobNumber%",
 			"childTemplate": "appliance-build"
 		}],
 		"instanceTemplates": []
@@ -66,7 +66,7 @@
 			"childTemplate": ""
 		}, {
 			"name": "Build master and delegate appliances",
-			"childInfoUrl": "/job/product-assembly/job/%branch%/job/do-build-appliances/%jobNumber%",
+			"childInfoUrl": "/%parentPath%/job/do-build-appliances/%jobNumber%",
 			"childTemplate": "do-build-appliances"
 		}, {
 			"name": "Start QA Automation",
