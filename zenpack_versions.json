@@ -277,7 +277,7 @@
         "requirement": "ZenPacks.zenoss.ZenPackLib===2.0.6"
     },{
         "name": "ZenPacks.zenoss.ZenSQLTx",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.ZenSQLTx===2.7.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenWebTx",
