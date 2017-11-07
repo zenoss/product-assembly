@@ -26,7 +26,7 @@
         "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
         "type": "download",
-        "version": "0.1.26"
+        "version": "0.1.27"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
@@ -35,10 +35,9 @@
         "version": "0.1.2"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl",
         "name": "service-migration",
-        "git_owner": "control-center",
-        "type": "jenkins",
-        "jenkins.job": "ControlCenter/job/service-migration/job/develop",
+        "type": "download",
         "version": "1.1.10"
     },
     {
@@ -50,14 +49,15 @@
     },
     {
         "name": "zenoss-prodbin",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.0.x.tar.gz",
+        "version": "6.0.0"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
         "name": "zenoss-protocols",
         "type": "download",
-        "version": "2.1.5"
+        "version": "2.1.6"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz",
