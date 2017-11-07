@@ -13,8 +13,12 @@ node ('build-zenoss-product') {
     // To avoid naming confusion with downstream jobs that have their own BUILD_NUMBER variables,
     // define 'PRODUCT_BUILD_NUMBER' as the parameter name that will be used by all downstream
     // jobs to identify a particular execution of the build pipeline.
-    PRODUCT_BUILD_NUMBER=env.BUILD_NUMBER
-    currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} @${env.NODE_NAME}"
+    def PRODUCT_BUILD_NUMBER = env.BUILD_NUMBER
+    def JENKINS_URL = env.JENKINS_URL  // e.g. http://<server>/
+    def JOB_NAME = env.JOB_NAME        // e.g. product-assembly/support-6.0.x/begin
+    def JOB_URL = env.JOB_URL          // e.g. ${JENKINS_URL}job/${JOB_NAME}/
+    def BUILD_URL = env.BUILD_URL      // e.g. ${JOB_URL}${PRODUCT_BUILD_NUMBER}
+    currentBuild.displayName="product build #${PRODUCT_BUILD_NUMBER} @${env.NODE_NAME}"
 
     try {
         stage ('Checkout product-assembly repo') {
@@ -90,7 +94,7 @@ node ('build-zenoss-product') {
             currentBuild.result = 'FAILED'
         }
     } finally {
-        sh("./build_status.py -b ${BRANCH} -p ${PRODUCT_BUILD_NUMBER} --job-name ${env.JOB_BASE_NAME} --job-status ${currentBuild.result} -html buildReport.html")
+        sh("./build_status.py --server \"${JENKINS_URL}\" --job-name ${JOB_NAME} --build ${PRODUCT_BUILD_NUMBER} -b ${BRANCH} --job-status ${currentBuild.result} -html buildReport.html")
         archive includes: 'buildReport.*'
         publishHTML([allowMissing: true,
             alwaysLinkToLastBuild: true,
