@@ -49,9 +49,9 @@
     },
     {
         "name": "zenoss-prodbin",
-        "type": "download",
-        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.0.x.tar.gz",
-        "version": "6.0.0"
+        "type": "jenkins",
+        "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.0.x",
+        "version": "support/6.0.x"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
