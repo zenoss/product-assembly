@@ -697,7 +697,6 @@ def main(options):
 
     buildJSONReport(report, options.json_output_file)
     buildHTMLReport(report, options.branch, options.html_output_file)
-    return
 
 
 if __name__ == '__main__':
@@ -715,22 +714,10 @@ if __name__ == '__main__':
         '--build', type=str, required=True,
         help='The build number of the job'
     )
-    # parser.add_argument(
-    #     '-w', '--build-url', type=str, required=True,
-    #     help='The Jenkins URL to the build'
-    # )
-    # parser.add_argument(
-    #     '-p', '--product-number', type=str, required=True,
-    #     help='the product build number'
-    # )
     parser.add_argument(
         '-b',  '--branch', type=str, required=True,
         help='the product branch; e.g. develop or support-5.2.x'
     )
-    # parser.add_argument(
-    #     '-n',  '--job-name', type=str, default='begin',
-    #     help='Name of the beginning Jenkins job'
-    # )
     parser.add_argument(
         '-s',  '--job-status', type=str,
         help='Status of the beginning Jenkins job'
