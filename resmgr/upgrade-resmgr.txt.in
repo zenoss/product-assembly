@@ -41,9 +41,10 @@ SVC_START Zenoss.resmgr/Infrastructure/mariadb-events
 SVC_START Zenoss.resmgr/Infrastructure/RabbitMQ
 SVC_START Zenoss.resmgr/Zenoss/Events/zeneventserver
 SVC_START Zenoss.resmgr/Infrastructure/redis
+SVC_START Zenoss.resmgr/Infrastructure/memcached
 
 # Wait for our services to start
-SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-model Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/RabbitMQ Zenoss.resmgr/Zenoss/Events/zeneventserver Zenoss.resmgr/Infrastructure/redis started 1200
+SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-model Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/RabbitMQ Zenoss.resmgr/Zenoss/Events/zeneventserver Zenoss.resmgr/Infrastructure/redis Zenoss.resmgr/Infrastructure/memcached started 1200
 
 # Run migration to add solr first
 SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump
