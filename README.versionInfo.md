@@ -259,6 +259,16 @@ that also match requirement will be returned.
         "pre": true
     }
 ```
+* Newest hotfix within a minor release series:
+```
+    {
+        "name": "ZenPacks.zenoss.Example",
+        "type": "zenpack",
+        "requirement": "ZenPacks.zenoss.Example==1.0.*",
+        "git_ref": "hotfix/1.0.5",
+        "pre": true
+    }
+```
 * Specific feature by name regardless of version.
 ```
     {
