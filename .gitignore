@@ -2,6 +2,8 @@
 product-base/component_info
 product-base/5.2.x
 product-base/5.3.x
+product-base/6.0.x
+product-base/6.1.x
 product-base/Dockerfile
 
 */zenpacks_artifact.log
