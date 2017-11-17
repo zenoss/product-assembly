@@ -51,13 +51,13 @@
         "name": "zenoss-prodbin",
         "type": "download",
         "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.0.x.tar.gz",
-        "version": "6.0.0"
+        "version": "6.0.1"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
         "name": "zenoss-protocols",
         "type": "download",
-        "version": "2.1.6"
+        "version": "2.1.7"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz",

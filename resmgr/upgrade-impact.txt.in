@@ -42,9 +42,10 @@ SVC_START Zenoss.resmgr/Infrastructure/RabbitMQ
 SVC_START Zenoss.resmgr/Zenoss/Events/zeneventserver
 SVC_START Zenoss.resmgr/Infrastructure/redis
 SVC_START Zenoss.resmgr/Infrastructure/Impact
+SVC_START Zenoss.resmgr/Infrastructure/memcached
 
 # Wait for our services to start
-SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-model Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/RabbitMQ Zenoss.resmgr/Zenoss/Events/zeneventserver Zenoss.resmgr/Infrastructure/redis Zenoss.resmgr/Infrastructure/Impact started 1200
+SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-model Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/RabbitMQ Zenoss.resmgr/Zenoss/Events/zeneventserver Zenoss.resmgr/Infrastructure/redis Zenoss.resmgr/Infrastructure/Impact Zenoss.resmgr/Infrastructure/memcached started 1200
 
 # Run migration to add solr first
 SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump
@@ -62,7 +63,7 @@ SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" su - zenoss -c "/o
 SVC_RUN "Zenoss.resmgr/Zenoss/User Interface/Zope" upgrade
 
 # Do a model catalog hard reindex. This is only needed when upgrading to 6.X from 5.X
-SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zencatalog run --createcatalog --forceindex
+SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/upgrade_reindex.sh Zenoss.resmgr"
 
 # Re-run the migration to Remove Empty Product Class Relationships, since it uses the model catalog. This is only needed when upgrading to 6.X from 5.X
 SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump

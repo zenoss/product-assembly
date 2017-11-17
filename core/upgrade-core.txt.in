@@ -57,7 +57,7 @@ SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenm
 SVC_RUN "Zenoss.core/Zenoss/User Interface/Zope" upgrade
 
 # Do a model catalog hard reindex. This is only needed when upgrading to 6.X from 5.X
-SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zencatalog run --createcatalog --forceindex
+SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/upgrade_reindex.sh Zenoss.core"
 
 # Re-run the migration to Remove Empty Product Class Relationships, since it uses the model catalog. This is only needed when upgrading to 6.X from 5.X
 SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump
