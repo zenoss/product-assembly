@@ -203,8 +203,11 @@ run_zenbuild()
 {
     echo Loading initial Zenoss objects into the Zeo database
     echo   '(this can take a few minutes)'
-    su zenoss -l -c "$ZENHOME/bin/zenbuild $ZENBUILD_ARGS"  || fail "Unable to create the initial Zenoss object database"
-
+    if [ ! -f "$ZENHOME/Products/ZenModel/data/zodb.sql.gz" ] ; then
+       ZENBUILD_ARGS="--xml $ZENBUILD_ARGS"
+    fi
+    echo su zenoss -l -c "$ZENHOME/bin/zenbuild $ZENBUILD_ARGS"
+    su zenoss -l -c "$ZENHOME/bin/zenbuild $ZENBUILD_ARGS" || fail "Unable to create the initial Zenoss object database"
 }
 
 # initialize the model catalog in solr
