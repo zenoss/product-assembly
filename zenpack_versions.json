@@ -81,7 +81,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dell.PowerEdge",
-        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===2.0.3",
+        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===2.0.4",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DeviceSearch",
