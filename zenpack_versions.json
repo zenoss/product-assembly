@@ -65,8 +65,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dashboard",
-        "type": "zenpack",
-        "pre": "true"
+        "requirement": "ZenPacks.zenoss.Dashboard===1.2.8",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DatabaseMonitor",
         "requirement": "ZenPacks.zenoss.DatabaseMonitor===3.0.10",
