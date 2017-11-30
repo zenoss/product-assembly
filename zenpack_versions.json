@@ -101,8 +101,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
-        "requirement": "ZenPacks.zenoss.DnsMonitor===2.1.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": "true"
     },{
         "name": "ZenPacks.zenoss.Docker",
         "requirement": "ZenPacks.zenoss.Docker===2.0.2",
