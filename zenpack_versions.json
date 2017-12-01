@@ -93,8 +93,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DigMonitor",
-        "requirement": "ZenPacks.zenoss.DigMonitor===1.1.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.DistributedCollector",
         "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.6",
@@ -137,8 +137,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.FtpMonitor",
-        "requirement": "ZenPacks.zenoss.FtpMonitor===1.1.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.HPMonitor",
         "requirement": "ZenPacks.zenoss.HPMonitor===2.1.0",
@@ -155,8 +155,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "requirement": "ZenPacks.zenoss.HttpMonitor===2.1.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.IBM.Power",
         "requirement": "ZenPacks.zenoss.IBM.Power===1.1.2",
@@ -183,8 +183,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LDAPMonitor",
-        "requirement": "ZenPacks.zenoss.LDAPMonitor===1.4.1",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.Licensing",
         "requirement": "ZenPacks.zenoss.Licensing===0.2.0",
@@ -249,8 +249,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NtpMonitor",
-        "requirement": "ZenPacks.zenoss.NtpMonitor===2.2.2",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": "true"
     },{
         "name": "ZenPacks.zenoss.OpenStack",
         "requirement": "ZenPacks.zenoss.OpenStack===1.2.4",
@@ -369,11 +369,11 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenSQLTx",
-        "requirement": "ZenPacks.zenoss.ZenSQLTx===2.7.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.ZenWebTx",
-        "requirement": "ZenPacks.zenoss.ZenWebTx===3.0.1",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     }
 ]
