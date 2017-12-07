@@ -93,16 +93,16 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DigMonitor",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.DigMonitor===1.1.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DistributedCollector",
         "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.6",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
-        "type": "zenpack",
-        "pre": "true"
+        "requirement": "ZenPacks.zenoss.DnsMonitor===3.0.0",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Docker",
         "requirement": "ZenPacks.zenoss.Docker===2.0.2",
@@ -137,8 +137,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.FtpMonitor",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.FtpMonitor===1.1.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HPMonitor",
         "requirement": "ZenPacks.zenoss.HPMonitor===2.1.0",
@@ -153,8 +153,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.HttpMonitor===2.1.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.IBM.Power",
         "requirement": "ZenPacks.zenoss.IBM.Power===1.1.2",
@@ -181,8 +181,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LDAPMonitor",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.LDAPMonitor===1.4.2",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Licensing",
         "requirement": "ZenPacks.zenoss.Licensing===0.2.0",
@@ -245,8 +245,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NtpMonitor",
-        "type": "zenpack",
-        "pre": "true"
+        "requirement": "ZenPacks.zenoss.NtpMonitor===2.2.3",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.OpenStack",
         "requirement": "ZenPacks.zenoss.OpenStack===1.2.4",
@@ -365,11 +365,11 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenSQLTx",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.ZenSQLTx===2.7.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenWebTx",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.ZenWebTx===3.0.2",
+        "type": "zenpack"
     }
 ]
