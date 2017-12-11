@@ -11,9 +11,10 @@
         "version": "1.1.4"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz",
         "name": "modelindex",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "1.0.1"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
@@ -24,8 +25,8 @@
     {
         "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "0.1.28"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
