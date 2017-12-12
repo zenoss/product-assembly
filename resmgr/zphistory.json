@@ -39,7 +39,6 @@
   "ZenPacks.zenoss.JuniperMonitor": "5.0.0",
   "ZenPacks.zenoss.LDAPAuthenticator": "5.0.0",
   "ZenPacks.zenoss.LDAPMonitor": "5.0.0",
-  "ZenPacks.zenoss.Layer2": "6.0.0",
   "ZenPacks.zenoss.Licensing": "5.0.0",
   "ZenPacks.zenoss.LinuxMonitor": "5.0.0",
   "ZenPacks.zenoss.Microsoft.Azure": "6.0.0",
