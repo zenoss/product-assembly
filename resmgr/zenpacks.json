@@ -20,6 +20,7 @@
         "ZenPacks.zenoss.AuditLog",
         "ZenPacks.zenoss.DynamicView",
         "ZenPacks.zenoss.StorageBase",
+        "ZenPacks.zenoss.PredictiveThreshold",
         "ZenPacks.zenoss.EMC.base",
         "ZenPacks.zenoss.SolarisMonitor",
         "ZenPacks.zenoss.EnterpriseReports",
@@ -52,7 +53,6 @@
         "ZenPacks.zenoss.Microsoft.Windows",
         "ZenPacks.zenoss.DistributedCollector",
         "ZenPacks.zenoss.ControlCenter",
-        "ZenPacks.zenoss.PredictiveThreshold",
         "ZenPacks.zenoss.ComponentGroups",
         "ZenPacks.zenoss.SupportBundle",
         "ZenPacks.zenoss.RMMonitor"
