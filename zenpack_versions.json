@@ -185,8 +185,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Licensing",
-        "requirement": "ZenPacks.zenoss.Licensing===0.2.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.LinuxMonitor",
         "requirement": "ZenPacks.zenoss.LinuxMonitor===2.2.7",
