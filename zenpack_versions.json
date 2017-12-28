@@ -285,8 +285,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RMMonitor",
-        "requirement": "ZenPacks.zenoss.RMMonitor===1.0.2",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.SolarisMonitor",
         "requirement": "ZenPacks.zenoss.SolarisMonitor===2.5.0",
