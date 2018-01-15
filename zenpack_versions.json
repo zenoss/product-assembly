@@ -287,6 +287,7 @@
         "name": "ZenPacks.zenoss.RMMonitor",
         "type": "zenpack",
         "requirement": "ZenPacks.zenoss.RMMonitor==1.0.*",
+        "git_ref": "develop",
         "pre": true
     },{
         "name": "ZenPacks.zenoss.SolarisMonitor",
