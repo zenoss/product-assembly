@@ -68,6 +68,15 @@ node ('build-zenoss-product') {
                         [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
                     ]
                 },
+                'cse-pipeline': {
+                    build job: 'cse-pipeline', parameters: [
+                            [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
+                            [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
+                            [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
+                            [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
+                            [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                    ]
+                },
                 'ucspm-pipeline': {
                     build job: 'ucspm-pipeline', parameters: [
                         [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
