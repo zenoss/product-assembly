@@ -100,8 +100,14 @@ node ('build-zenoss-product') {
     }
 
     stage ('Build Appliances') {
-        if (BUILD_APPLIANCES != "true") {
-            echo "Skipped Build Appliances"
+        try {
+            if (BUILD_APPLIANCES != "true") {
+                echo "Skipped Build Appliances"
+                return
+            }
+        }
+        catch (MissingPropertyException e) {
+            echo "Skipped Build Appliances; BUILD_APPLIANCES undefined"
             return
         }
 

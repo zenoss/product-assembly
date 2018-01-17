@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+###############################################################################
+#
+# Upgrade Zenoss Resource Manager
+#
+###############################################################################
+set -e
+export SERVICE_TENANT_ID="`serviced service list cse --format='{{.ID}}'`"
+serviced snapshot untag $SERVICE_TENANT_ID preupgrade-cse-%VERSION%
+
+FROM_VERSION=$(serviced service list cse --format='{{.Version}}')
+
+if [ -z "$FROM_VERSION" ];
+then
+    FROM_VERSION=$(serviced service list cse --format '{{.ImageID}}' | awk '{ print "localhost:5000/"$0" cat /opt/zenoss/Products/ZenModel/ZVersion.py" }' | xargs docker run --rm | grep VERSION | cut -d'"' -f2)
+fi
+
+if [ -z "$FROM_VERSION" ];
+then
+    FROM_VERSION=$(grep 'SVC_USE zenoss/cse_[^:_]*:.*' /root/%SHORT_VERSION%.x/current_version.txt | cut -d':' -f2 | cut -d'_' -f1)
+    if [ -z "$FROM_VERSION" ];
+    then
+        echo "Could not get the previous RM version number from serviced, please edit current_version.txt to set it."
+        echo "Change this line 'SVC_USE zenoss/cse_REPLACE_1' to reflect the pre-upgrade version, for example:"
+        echo "SVC_USE zenoss/cse_5.2:5.2.6_1"
+        exit 1
+    else
+        echo "Using FROM_VERSION provided by change to current_version.txt"
+    fi
+fi
+
+FROM_VERSION_SHORT=$(cut -d'.' -f1,2 <<< $FROM_VERSION)
+sed -i 's/REPLACE/'"$FROM_VERSION_SHORT:$FROM_VERSION"'/g' /root/%SHORT_VERSION%.x/current_version.txt
+serviced script run /root/%SHORT_VERSION%.x/current_version.txt --service Zenoss.cse
+
+serviced script run /root/%SHORT_VERSION%.x/upgrade-cse.txt --service Zenoss.cse
+
+/opt/serviced/bin/serviced-set-version Zenoss.cse %VERSION%
+
