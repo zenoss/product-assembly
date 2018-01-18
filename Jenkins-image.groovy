@@ -100,16 +100,6 @@ node ('build-zenoss-product') {
     }
 
     stage ('Build Appliances') {
-        try {
-            if (BUILD_APPLIANCES != "true") {
-                echo "Skipped Build Appliances"
-                return
-            }
-        }
-        catch (MissingPropertyException e) {
-            echo "Skipped Build Appliances; BUILD_APPLIANCES undefined"
-            return
-        }
 
         def branches = [:]
 
@@ -134,6 +124,8 @@ node ('build-zenoss-product') {
                             [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
                             [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
                             [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
+                            [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
+
                     ]
                 }
 
@@ -153,6 +145,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
                         [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
                         [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
                 ]
             }
         }
