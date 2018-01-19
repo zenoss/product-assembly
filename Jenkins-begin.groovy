@@ -75,6 +75,8 @@ node ('build-zenoss-product') {
                             [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
                             [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
                             [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: "cse"],
+                            [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: false],
                     ]
                 },
                 'ucspm-pipeline': {
