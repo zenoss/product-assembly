@@ -342,6 +342,10 @@
         "requirement": "ZenPacks.zenoss.XenServer===1.0.7",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.ZaaS.UI",
+        "requirement": "ZenPacks.zenoss.ZaaS.UI===1.0.4",
+        "type": "zenpack"
+    },{
         "name": "ZenPacks.zenoss.ZenDeviceACL",
         "requirement": "ZenPacks.zenoss.ZenDeviceACL===2.3.0",
         "type": "zenpack"
