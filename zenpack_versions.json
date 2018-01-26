@@ -363,10 +363,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenPackLib",
-        "requirement": "ZenPacks.zenoss.ZenPackLib==2.0.*",
-        "type": "zenpack",
-        "git_ref": "hotfix/2.0.9",
-        "pre": "true"
+        "requirement": "ZenPacks.zenoss.ZenPackLib===2.0.9",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenSQLTx",
         "requirement": "ZenPacks.zenoss.ZenSQLTx===2.7.1",
