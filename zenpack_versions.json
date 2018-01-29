@@ -69,7 +69,7 @@
         "pre": true
     },{
         "name": "ZenPacks.zenoss.DatabaseMonitor",
-        "requirement": "ZenPacks.zenoss.DatabaseMonitor===3.0.10",
+        "requirement": "ZenPacks.zenoss.DatabaseMonitor===3.0.12",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DB2",
@@ -201,7 +201,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Exchange",
-        "requirement": "ZenPacks.zenoss.Microsoft.Exchange===1.1.0",
+        "requirement": "ZenPacks.zenoss.Microsoft.Exchange===1.1.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.HyperV",
@@ -265,7 +265,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PostgreSQL",
-        "requirement": "ZenPacks.zenoss.PostgreSQL===1.0.9",
+        "requirement": "ZenPacks.zenoss.PostgreSQL===1.0.10",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
@@ -285,10 +285,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RMMonitor",
-        "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.RMMonitor==1.0.*",
-        "git_ref": "develop",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.RMMonitor===1.0.3",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.SolarisMonitor",
         "requirement": "ZenPacks.zenoss.SolarisMonitor===2.5.0",
