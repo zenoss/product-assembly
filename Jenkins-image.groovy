@@ -38,6 +38,7 @@ node ('build-zenoss-product') {
         SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
         SERVICED_VERSION=versionProps['SERVICED_VERSION']
         SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
+	DEPLOY_BRANCH=versionProps['DEPLOY_BRANCH']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
@@ -45,7 +46,12 @@ node ('build-zenoss-product') {
         echo "SERVICED_VERSION=${SERVICED_VERSION}"
         echo "SERVICED_BUILD_NUMBER=${SERVICED_BUILD_NUMBER}"
 
-        // Make the target product
+	if (DEPLOY_BRANCH == null || DEPLOY_BRANCH = ""){
+	   DEPLOY_BRANCH = BRANCH
+	}
+	echo "DEPLOY_BRANCH=${DEPLOY_BRANCH}"
+
+	// Make the target product
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
 
         def includePattern = TARGET_PRODUCT + '/*artifact.log'
@@ -102,7 +108,6 @@ node ('build-zenoss-product') {
     stage ('Build Appliances') {
 
         def branches = [:]
-
         if (TARGET_PRODUCT == "resmgr") {
             // After building RM, we build two sets of appliances; one for ZSD and another for POC
 
@@ -116,7 +121,7 @@ node ('build-zenoss-product') {
                     build job: 'appliance-build', parameters: [
                             [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
                             [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
-                            [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
+                            [$class: 'StringParameterValue', name: 'BRANCH', value: DEPLOY_BRANCH],
                             [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                             [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
                             [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
@@ -137,7 +142,7 @@ node ('build-zenoss-product') {
                 build job: 'appliance-build', parameters: [
                         [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
                         [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
-                        [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
+                        [$class: 'StringParameterValue', name: 'BRANCH', value: DEPLOY_BRANCH],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                         [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
                         [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
