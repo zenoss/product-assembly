@@ -46,7 +46,7 @@ node ('build-zenoss-product') {
         echo "SERVICED_VERSION=${SERVICED_VERSION}"
         echo "SERVICED_BUILD_NUMBER=${SERVICED_BUILD_NUMBER}"
 
-	if (DEPLOY_BRANCH == null || DEPLOY_BRANCH = ""){
+	if (DEPLOY_BRANCH == null || DEPLOY_BRANCH == ""){
 	   DEPLOY_BRANCH = BRANCH
 	}
 	echo "DEPLOY_BRANCH=${DEPLOY_BRANCH}"
