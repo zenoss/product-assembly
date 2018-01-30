@@ -59,6 +59,7 @@ node ('build-zenoss-product') {
     }
 
     stage ('Test image') {
+	    echo "skipping tests..."
     #sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
     }
 
