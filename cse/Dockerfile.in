@@ -14,6 +14,6 @@ ADD zenpacks_artifact.log /opt/zenoss/log/
 COPY zenpacks /opt/zenoss/packs/
 
 # Initializes zenoss, creates DB and installs zenpacks...
-RUN /opt/zenoss/install_scripts/create_zenoss.sh
+RUN /opt/zenoss/install_scripts/create_zenoss.sh --no-quickstart
 
 ADD upgrade-cse.txt upgrade-cse.sh current_version.txt /root/%SHORT_VERSION%.x/
