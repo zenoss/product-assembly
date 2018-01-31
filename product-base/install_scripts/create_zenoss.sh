@@ -24,6 +24,9 @@ ${ZENHOME}/install_scripts/zenoss_init.sh
 
 echo "Cleaning up dmd.uuid"
 echo "dmd.uuid = None" > /tmp/cleanuuid.zendmd
+if [  "$1" == '--no-quickstart' ]; then
+    echo "dmd._rq = True " >> /tmp/cleanuuid.zendmd
+fi
 su - zenoss -c "zendmd --commit --script=/tmp/cleanuuid.zendmd"
 
 echo "Truncating heartbeats"
