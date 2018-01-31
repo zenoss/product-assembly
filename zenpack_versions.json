@@ -66,6 +66,7 @@
     },{
         "name": "ZenPacks.zenoss.Dashboard",
         "type": "zenpack",
+	"feature": "cse",
         "pre": true
     },{
         "name": "ZenPacks.zenoss.DatabaseMonitor",
