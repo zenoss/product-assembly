@@ -17,8 +17,10 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.AWS",
-        "requirement": "ZenPacks.zenoss.AWS===4.0.0",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.AWS==4.0.*",
+        "git_ref": "hotfox/4.0.1",
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.BigIpMonitor",
         "requirement": "ZenPacks.zenoss.BigIpMonitor===2.7.1",
