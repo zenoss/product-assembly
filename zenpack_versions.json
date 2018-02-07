@@ -18,7 +18,7 @@
     },{
         "name": "ZenPacks.zenoss.AWS",
         "requirement": "ZenPacks.zenoss.AWS==4.0.*",
-        "git_ref": "hotfox/4.0.1",
+        "git_ref": "hotfix/4.0.1",
         "type": "zenpack",
         "pre": true
     },{
