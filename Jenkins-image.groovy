@@ -98,7 +98,7 @@ node ('build-zenoss-product') {
         def archiveEnv = "SHORT_VERSION=${SHORT_VERSION}\
             ZENOSS_VERSION=${ZENOSS_VERSION}\
             TARGET_PRODUCT=${TARGET_PRODUCT} \
-            MATURITY=${MATURITY}
+            MATURITY=${MATURITY}\
             BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"
         sh("${archiveEnv} python archive.py --service-def")
     }

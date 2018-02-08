@@ -39,11 +39,11 @@ node ('build-zenoss-product') {
                 sh("./artifact_download.py component_versions.json --pinned")
                 sh("./artifact_download.py zenpack_versions.json --pinned")
             }
-            sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
+//            sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
         }
 
         stage ('Push product-base') {
-            sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
+//            sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
         }
 
         stage ('Run all product pipelines') {
