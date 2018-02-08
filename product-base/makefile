@@ -4,7 +4,7 @@ MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
 FROM_IMAGE ?= zenoss-centos-base:1.2.14
 
-TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
+TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)_CSE
 
 .PHONY: change-from-image build-deps build build-devimg push clean
 

@@ -39,6 +39,7 @@ node ('build-zenoss-product') {
         SERVICED_VERSION=versionProps['SERVICED_VERSION']
         SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
         SHORT_VERSION=versionProps['SHORT_VERSION']
+    	DEPLOY_BRANCH=versionProps['DEPLOY_BRANCH']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
@@ -46,7 +47,12 @@ node ('build-zenoss-product') {
         echo "SERVICED_VERSION=${SERVICED_VERSION}"
         echo "SERVICED_BUILD_NUMBER=${SERVICED_BUILD_NUMBER}"
 
-        // Make the target product
+	if (DEPLOY_BRANCH == null || DEPLOY_BRANCH == ""){
+	   DEPLOY_BRANCH = BRANCH
+	}
+	echo "DEPLOY_BRANCH=${DEPLOY_BRANCH}"
+
+	// Make the target product
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
 
         def includePattern = TARGET_PRODUCT + '/*artifact.log'
@@ -54,7 +60,8 @@ node ('build-zenoss-product') {
     }
 
     stage ('Test image') {
-//        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+	 echo "skipping tests..."
+        //sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
     }
 
     stage ('Push image') {
@@ -96,7 +103,6 @@ node ('build-zenoss-product') {
         sh("${archiveEnv} python archive.py --service-def")
     }
     stage ('Build offline images') {
-
     }
     stage ('Upload offline image') {
         sh("python archive.py --offline-images")
