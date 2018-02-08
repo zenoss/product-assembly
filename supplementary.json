@@ -17,6 +17,10 @@
     },
     {
         "ref": "develop",
+        "repo": "git@github.com:zenoss/zing-connector.git"
+    },
+    {
+        "ref": "develop",
         "repo": "git@github.com:control-center/serviced.git"
     },
     {
