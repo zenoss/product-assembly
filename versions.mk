@@ -63,6 +63,6 @@ SERVICED_BUILD_NUMBER=1
 #name product-assembly is set to.
 DEPLOY_BRANCH=develop
 
-#Image project or organization used for images eg.  zing-registry-1882222/cse_7.0:[TAG]
-IMAGE_PROJECT=zing-registry-1882222
+#Image project or organization used for images eg.  zing-registry-188222/cse_7.0:[TAG]
+IMAGE_PROJECT=zing-registry-188222
 
