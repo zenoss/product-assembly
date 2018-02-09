@@ -1,4 +1,4 @@
-!groovy
+#!groovy
 //
 // Jenkins-image.groovy - Jenkins script for building a single Zenoss product image.
 //

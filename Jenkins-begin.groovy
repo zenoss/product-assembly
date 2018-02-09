@@ -1,4 +1,4 @@
-!groovy
+#!groovy
 //
 // Jenkins-begin.groovy - Jenkins script for initiating the Zenoss product build process.
 //
