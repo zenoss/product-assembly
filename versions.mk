@@ -8,6 +8,7 @@
 # HBASE_VERSION     the HBase image version
 # HDFS_VERSION      the HDFS image version
 # OPENTSDB_VERSION  the opentsdb image version
+# ZING_CONNECTOR_VERSION the version tag for the zing-connector image
 # SHORT_VERSION     the two-digit Zenoss product version; e.g. 5.2
 # SVCDEF_GIT_REF    the git branch name, tag name or SHA for the version of the
 #                   github.com:zenoss/zenoss-service repo to checkout and build
@@ -27,6 +28,7 @@ HBASE_VERSION=24.0.8
 HDFS_VERSION=24.0.8
 OPENTSDB_VERSION=24.0.8
 
+ZING_CONNECTOR_VERSION=latest
+
 #Image project or organization used for images eg.  zing-registry-188222/cse_7.0:[TAG]
 IMAGE_PROJECT=zing-registry-188222
-
