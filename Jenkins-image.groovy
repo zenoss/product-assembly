@@ -1,4 +1,4 @@
-#!groovy
+!groovy
 //
 // Jenkins-image.groovy - Jenkins script for building a single Zenoss product image.
 //
@@ -41,7 +41,6 @@ node('build-zenoss-product') {
         SERVICED_VERSION = versionProps['SERVICED_VERSION']
         SERVICED_BUILD_NUMBER = versionProps['SERVICED_BUILD_NUMBER']
         SHORT_VERSION = versionProps['SHORT_VERSION']
-        DEPLOY_BRANCH = versionProps['DEPLOY_BRANCH']
         IMAGE_PROJECT = versionProps['IMAGE_PROJECT']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
@@ -49,11 +48,6 @@ node('build-zenoss-product') {
         echo "SERVICED_MATURITY=${SERVICED_MATURITY}"
         echo "SERVICED_VERSION=${SERVICED_VERSION}"
         echo "SERVICED_BUILD_NUMBER=${SERVICED_BUILD_NUMBER}"
-
-        if (DEPLOY_BRANCH == null || DEPLOY_BRANCH == "") {
-            DEPLOY_BRANCH = BRANCH
-        }
-        echo "DEPLOY_BRANCH=${DEPLOY_BRANCH}"
 
         // Make the target product
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build-deps")
@@ -70,8 +64,7 @@ node('build-zenoss-product') {
     }
 
     stage('Test image') {
-        echo "skipping tests..."
-        //sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
     }
 
     stage('Push image') {
@@ -113,5 +106,4 @@ node('build-zenoss-product') {
         googleStorageUpload bucket: "gs://cse_artifacts/${TARGET_PRODUCT}/${MATURITY}/${ZENOSS_VERSION}/${PRODUCT_BUILD_NUMBER}",\
         credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
     }
-
 }
