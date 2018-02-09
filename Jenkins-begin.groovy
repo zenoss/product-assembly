@@ -44,10 +44,6 @@ node('build-zenoss-product') {
 
         def SVCDEF_GIT_REF = ""
         def ZENOSS_VERSION = ""
-        def SERVICED_BRANCH = ""
-        def SERVICED_MATURITY = ""
-        def SERVICED_VERSION = ""
-        def SERVICED_BUILD_NUMBER = ""
         def IMAGE_PROJECT = ""
         def customImage = ""
         stage('Download zenpacks') {
@@ -55,18 +51,10 @@ node('build-zenoss-product') {
             def versionProps = readProperties file: 'versions.mk'
             SVCDEF_GIT_REF = versionProps['SVCDEF_GIT_REF']
             ZENOSS_VERSION = versionProps['VERSION']
-            SERVICED_BRANCH = versionProps['SERVICED_BRANCH']
-            SERVICED_MATURITY = versionProps['SERVICED_MATURITY']
-            SERVICED_VERSION = versionProps['SERVICED_VERSION']
-            SERVICED_BUILD_NUMBER = versionProps['SERVICED_BUILD_NUMBER']
             SHORT_VERSION = versionProps['SHORT_VERSION']
             IMAGE_PROJECT = versionProps['IMAGE_PROJECT']
             echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
             echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
-            echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
-            echo "SERVICED_MATURITY=${SERVICED_MATURITY}"
-            echo "SERVICED_VERSION=${SERVICED_VERSION}"
-            echo "SERVICED_BUILD_NUMBER=${SERVICED_BUILD_NUMBER}"
 
             // Make the target product
             sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build-deps")
@@ -133,6 +121,11 @@ node('build-zenoss-product') {
         } else {
             currentBuild.result = 'FAILED'
         }
+
+        slackSend color: 'warning',
+                channel: '#zing-dev',
+                message: "CSE Build Failed: ${env.JOB_NAME} Build #${env.BUILD_NUMBER} ${env.BUILD_URL}"
+        error "Job failed with the following error: ${err}"
     } finally {
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean")
         sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean")
