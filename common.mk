@@ -4,16 +4,18 @@ BUILD_NUMBER  ?= DEV
 
 IMAGENAME  = $(TARGET_PRODUCT)_$(SHORT_VERSION)
 
-FROM_IMAGE = product-base:$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
+FROM_IMAGE = product-base:$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)_CSE
 
-TAG = zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
+TAG = ${IMAGE_PROJECT}/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
 .PHONY: build push clean getDownloadLogs
 
 UPGRADE_SCRIPTS = upgrade-$(TARGET_PRODUCT).txt upgrade-$(TARGET_PRODUCT).sh $(ADDITIONAL_UPGRADE_SCRIPTS)
 
-build: $(UPGRADE_SCRIPTS) Dockerfile zenpack_download
+build: build-deps
 	docker build  -t $(TAG) .
+
+build-deps: $(UPGRADE_SCRIPTS) Dockerfile zenpack_download
 
 Dockerfile:
 	echo $(FROM_IMAGE)
