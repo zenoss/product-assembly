@@ -16,6 +16,10 @@
         "repo": "git@github.com:zenoss/zenoss.metric.tsdb.git"
     },
     {
+        "ref": "master",
+        "repo": "git@github.com:zenoss/zing-connector.git"
+    },
+    {
         "ref": "develop",
         "repo": "git@github.com:control-center/serviced.git"
     },
