@@ -9,6 +9,7 @@
 # HBASE_VERSION     the HBase image version
 # HDFS_VERSION      the HDFS image version
 # OPENTSDB_VERSION  the opentsdb image version
+# ZING_CONNECTOR_VERSION the version tag for the zing-connector image
 # SHORT_VERSION     the two-digit Zenoss product version; e.g. 5.2
 # TARGET_PRODUCT    the target product name (e.g. 'core', 'resmgr', 'ucspm', etc)
 # VERSION           the full Zenoss product version; e.g. 5.2.0
@@ -42,6 +43,9 @@ ifndef HBASE_VERSION
 endif
 ifndef HDFS_VERSION
 	$(error HDFS_VERSION is not set)
+endif
+ifndef ZING_CONNECTOR_VERSION
+	$(error ZING_CONNECTOR_VERSION is not set)
 endif
 ifndef IMAGE_NUMBER
 	$(error IMAGE_NUMBER is not set)
@@ -82,6 +86,7 @@ endif
 		BUILD_NUMBER=$(BUILD_NUMBER) \
 		hbase_VERSION=$(HBASE_VERSION) \
 		hdfs_VERSION=$(HDFS_VERSION) \
+		zing_connector_VERSION=$(ZING_CONNECTOR_VERSION) \
 		IMAGE_NUMBER=$(IMAGE_NUMBER) \
 		MILESTONE=$(MATURITY) \
 		RELEASE_PHASE=$(RELEASE_PHASE) \
