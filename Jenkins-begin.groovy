@@ -7,32 +7,32 @@
 //    BRANCH            - the name of the GIT branch to build from.
 //    GIT_CREDENTIAL_ID - the UUID of the Jenkins GIT credentials used to checkout stuff from github
 //    MATURITY          - the image maturity level (e.g. 'unstable', 'testing', 'stable')
-//    BUILD_APPLIANCES  - true/false whether appliances should be built.
 //
-node ('build-zenoss-product') {
+node('build-zenoss-product') {
     // To avoid naming confusion with downstream jobs that have their own BUILD_NUMBER variables,
     // define 'PRODUCT_BUILD_NUMBER' as the parameter name that will be used by all downstream
     // jobs to identify a particular execution of the build pipeline.
+    def TARGET_PRODUCT = "cse"
     def PRODUCT_BUILD_NUMBER = env.BUILD_NUMBER
     def JENKINS_URL = env.JENKINS_URL  // e.g. http://<server>/
     def JOB_NAME = env.JOB_NAME        // e.g. product-assembly/support-6.0.x/begin
     def JOB_URL = env.JOB_URL          // e.g. ${JENKINS_URL}job/${JOB_NAME}/
     def BUILD_URL = env.BUILD_URL      // e.g. ${JOB_URL}${PRODUCT_BUILD_NUMBER}
-    currentBuild.displayName="product build #${PRODUCT_BUILD_NUMBER} @${env.NODE_NAME}"
+    currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} @${env.NODE_NAME}"
 
     try {
-        stage ('Checkout product-assembly repo') {
+        stage('Checkout product-assembly repo') {
             // Make sure we start in a clean directory to ensure a fresh git clone
             deleteDir()
             git branch: BRANCH, credentialsId: GIT_CREDENTIAL_ID, url: 'https://github.com/zenoss/product-assembly'
 
             // Record the current git commit sha in the variable 'GIT_SHA'
             sh("git rev-parse HEAD >git_sha.id")
-            GIT_SHA=readFile('git_sha.id').trim()
+            GIT_SHA = readFile('git_sha.id').trim()
             println("Building from git commit='${GIT_SHA}' on branch ${BRANCH} for MATURITY='${MATURITY}'")
         }
 
-        stage ('Build product-base') {
+        stage('Build product-base') {
             if (PINNED == "true") {
                 // make sure SVCDEF_GIT_REF has is of the form x.x.x, where x is an integer
                 sh("grep '^SVCDEF_GIT_REF=[0-9]\\{1,\\}\\.[0-9]\\{1,\\}\\.[0-9]\\{1,\\}' versions.mk")
@@ -42,46 +42,92 @@ node ('build-zenoss-product') {
             sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
         }
 
-        stage ('Push product-base') {
-            sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
+        def SVCDEF_GIT_REF = ""
+        def ZENOSS_VERSION = ""
+        def IMAGE_PROJECT = ""
+        def customImage = ""
+        stage('Download zenpacks') {
+            // Get the values of various versions out of the versions.mk file for use in later stages
+            def versionProps = readProperties file: 'versions.mk'
+            SVCDEF_GIT_REF = versionProps['SVCDEF_GIT_REF']
+            ZENOSS_VERSION = versionProps['VERSION']
+            SHORT_VERSION = versionProps['SHORT_VERSION']
+            IMAGE_PROJECT = versionProps['IMAGE_PROJECT']
+            echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
+            echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
+
+            // Make the target product
+            sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build-deps")
         }
 
-        stage ('Run all product pipelines') {
-            def branches = [
-                'cse-pipeline': {
-                    build job: 'cse-pipeline', parameters: [
-                            [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
-                            [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
-                            [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
-                            [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
-                            [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: "cse"],
-                            [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: false],
-                    ]
-                },
-            ]
+        stage('Build image') {
+            imageName = "${IMAGE_PROJECT}/${TARGET_PRODUCT}_${SHORT_VERSION}:${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_${MATURITY}"
+            echo "imageName=${imageName}"
+            customImage = docker.build(imageName, "-f ${TARGET_PRODUCT}/Dockerfile ${TARGET_PRODUCT}")
 
-            parallel branches
-            // Set the status to success because the finally block is about to execute
-            //      and we don't want the final report status to be "IN-PROGRESS"
-            currentBuild.result = 'SUCCESS'
+            sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make getDownloadLogs")
+            def includePattern = TARGET_PRODUCT + '/*artifact.log'
+            archive includes: includePattern
         }
+
+        stage('Test image') {
+            sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+        }
+
+        stage('Push image') {
+            docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
+                customImage.push()
+            }
+        }
+        stage('Compile service definitions and build RPM') {
+            // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
+            sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
+            dir('svcdefs/build/zenoss-service') {
+                // NOTE: The 'master' branch name here is only used to clone the github repo.
+                //       The next checkout command will align the build with the correct target revision.
+                echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
+                git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
+                sh("git checkout ${SVCDEF_GIT_REF}")
+
+                // Log the current SHA of zenoss-service so, when building from a branch,
+                // we know exactly which commit went into a particular build
+                sh("echo zenoss/zenoss-service git SHA = \$(git rev-parse HEAD)")
+            }
+
+            // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
+            //     Jenkins credentials instead
+            def makeArgs = "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
+            IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER} \
+             MATURITY=${MATURITY} \
+             SVCDEF_GIT_READY=true \
+             TARGET_PRODUCT=${TARGET_PRODUCT} "
+            sh("cd svcdefs;make build ${makeArgs}")
+            sh("mkdir -p artifacts")
+            sh("cp svcdefs/build/zenoss-service/output/*.json artifacts/.")
+            sh("cd artifacts; for file in *json; do tar -cvzf \$file.tgz \$file; done")
+            archive includes: 'artifacts/*.json*'
+        }
+
+        stage('Upload service definitions') {
+            googleStorageUpload bucket: "gs://cse_artifacts/${TARGET_PRODUCT}/${MATURITY}/${ZENOSS_VERSION}/${PRODUCT_BUILD_NUMBER}", \
+         credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
+        }
+
     } catch (err) {
         echo "Job failed with the following error: ${err}"
         if (err.toString().contains("completed with status ABORTED") ||
-            err.toString().contains("hudson.AbortException: script returned exit code 2")) {
+                err.toString().contains("hudson.AbortException: script returned exit code 2")) {
             currentBuild.result = 'ABORTED'
         } else {
             currentBuild.result = 'FAILED'
         }
+
+        slackSend color: 'warning',
+                channel: '#zing-dev',
+                message: "CSE Build Failed: ${env.JOB_NAME} Build #${env.BUILD_NUMBER} ${env.BUILD_URL}"
+        error "Job failed with the following error: ${err}"
     } finally {
-        sh("./build_status.py --server \"${JENKINS_URL}\" --job-name ${JOB_NAME} --build ${PRODUCT_BUILD_NUMBER} -b ${BRANCH} --job-status ${currentBuild.result} -html buildReport.html")
-        archive includes: 'buildReport.*'
-        publishHTML([allowMissing: true,
-            alwaysLinkToLastBuild: true,
-            keepAll: true,
-            reportDir: './',
-            reportFiles: 'buildReport.html',
-            reportName: 'Build Summary Report'])
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean")
+        sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean")
     }
 }

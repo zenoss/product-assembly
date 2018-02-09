@@ -65,7 +65,7 @@ EOF
 cat /home/zenoss/.bashrc
 echo "Starting create_devimg ..."
 export BUILD_DEVIMG=1
-${ZENHOME}/install_scripts/create_zenoss.sh
+${ZENHOME}/install_scripts/create_zenoss.sh --no-quickstart
 echo "Finished create_zenoss.sh"
 
 echo "Link in Java apps"

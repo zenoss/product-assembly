@@ -17,7 +17,6 @@
 SHORT_VERSION=7.0
 SVCDEF_GIT_REF=develop
 VERSION=7.0.0
-UCSPM_VERSION=3.0.0
 VERSION_TAG=1
 
 #
@@ -28,32 +27,6 @@ HBASE_VERSION=24.0.8
 HDFS_VERSION=24.0.8
 OPENTSDB_VERSION=24.0.8
 
+#Image project or organization used for images eg.  zing-registry-188222/cse_7.0:[TAG]
+IMAGE_PROJECT=zing-registry-188222
 
-#
-# The serviced information is used to create the appliance artifacts for a given RM release.
-# There are two ways to identify which version of serviced to use in the appliances:
-#
-# 1. Use the last successful build
-#
-#    Specify SERVICED_BRANCH with the name of the branch, and the appliance build will look
-#    up the last successful build for that branch to get the RPM version information necessary
-#    to install the serviced RPM from the unstable yum repo into the appliances.
-#
-#    If SERVICED_BRANCH is specified, both SERVICED_VERSION and SERVICED_BUILD_NUMBER must be blank.
-#
-# 2. Specify a specific version and build
-#
-#    Specify the 3-digit version of serviced with SERVICED_VERSION and the build number with
-#    SERVICED_BUILD_NUMBER. The corresponding RPM must be available in the stable yum repo.
-#
-#    SERVICED_VERSION and SERVICED_BUILD_NUMBER have to be specified together, and
-#    SERVICED_BRANCH must be blank if both are specified.
-#
-#    If SERVICED_BRANCH is specified, then SERVICED_MATURITY must be 'unstable'.
-#    If SERVICED_VERSION and SERVICED_BUILD_NUMBER are specified, then the
-#    SERVICED_BRANCH should be 'testing' or 'stable'
-#
-SERVICED_BRANCH=
-SERVICED_MATURITY=stable
-SERVICED_VERSION=1.5.0
-SERVICED_BUILD_NUMBER=1
