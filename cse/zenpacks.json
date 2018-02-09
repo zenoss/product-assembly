@@ -1,5 +1,6 @@
 {
     "install_order": [
+        "ZenPacks.zenoss.PythonCollector"
     ],
     "included_not_installed": [
     ],
