@@ -110,12 +110,8 @@ node('build-zenoss-product') {
     }
 
     stage('Upload service definitions') {
-//        def archiveEnv = "SHORT_VERSION=${SHORT_VERSION}\
-//            ZENOSS_VERSION=${ZENOSS_VERSION}\
-//            TARGET_PRODUCT=${TARGET_PRODUCT} \
-//            MATURITY=${MATURITY}\
-//            BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"
-//        sh("${archiveEnv} python archive.py --service-def")
+        googleStorageUpload bucket: "gs://cse_artifacts/${TARGET_PRODUCT}/${MATURITY}/${ZENOSS_VERSION}/${BUILD_NUMBER}",\
+        credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
     }
 
 }
