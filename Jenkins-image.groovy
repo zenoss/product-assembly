@@ -75,7 +75,7 @@ node('build-zenoss-product') {
     }
 
     stage('Push image') {
-        docker.withRegistry('https://gcr.io', 'gcp:zing-registry-188222') {
+        docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
             customImage.push()
         }
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean")
