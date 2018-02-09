@@ -12,7 +12,7 @@ node('build-zenoss-product') {
     // To avoid naming confusion with downstream jobs that have their own BUILD_NUMBER variables,
     // define 'PRODUCT_BUILD_NUMBER' as the parameter name that will be used by all downstream
     // jobs to identify a particular execution of the build pipeline.
-    def TARGETARGET_PRODUCTT_PRODUCT = "cse"
+    def TARGET_PRODUCT = "cse"
     def PRODUCT_BUILD_NUMBER = env.BUILD_NUMBER
     def JENKINS_URL = env.JENKINS_URL  // e.g. http://<server>/
     def JOB_NAME = env.JOB_NAME        // e.g. product-assembly/support-6.0.x/begin
@@ -87,7 +87,7 @@ node('build-zenoss-product') {
         }
 
         stage('Test image') {
-//            sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+            sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
         }
 
         stage('Push image') {
