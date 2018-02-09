@@ -62,3 +62,7 @@ SERVICED_BUILD_NUMBER=1
 #Override the branch used to checkout zenoss-deploy. If not set here it will use the same branch
 #name product-assembly is set to.
 DEPLOY_BRANCH=develop
+
+#Image project or organization used for images eg.  zing-registry-1882222/cse_7.0:[TAG]
+IMAGE_PROJECT ?= zing-registry-1882222
+

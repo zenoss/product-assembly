@@ -1,4 +1,4 @@
-#!groovy
+!groovy
 //
 // Jenkins-image.groovy - Jenkins script for building a single Zenoss product image.
 //
@@ -21,6 +21,7 @@ node ('build-zenoss-product') {
     def SERVICED_MATURITY=""
     def SERVICED_VERSION=""
     def SERVICED_BUILD_NUMBER=""
+    def customImage = ""
 
     stage ('Build image') {
         // Make sure we start in a clean directory to ensure a fresh git clone
@@ -40,6 +41,7 @@ node ('build-zenoss-product') {
         SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
         SHORT_VERSION=versionProps['SHORT_VERSION']
     	DEPLOY_BRANCH=versionProps['DEPLOY_BRANCH']
+        IMAGE_PROJECT=versionProps['IMAGE_PROJECT']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
@@ -53,8 +55,12 @@ node ('build-zenoss-product') {
 	echo "DEPLOY_BRANCH=${DEPLOY_BRANCH}"
 
 	// Make the target product
-        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build getDownloadLogs")
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build-deps")
 
+        imageName = "${IMAGE_PROJECT}/${TARGET_PRODUCT}_${SHORT_VERSION}:${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_${MATURITY}"
+        customImage = docker.build(imageName, "-f ${TARGET_PRODUCT}/Dockerfile ${TARGET_PRODUCT}")
+
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make getDownloadLogs")
         def includePattern = TARGET_PRODUCT + '/*artifact.log'
         archive includes: includePattern
     }
@@ -65,9 +71,11 @@ node ('build-zenoss-product') {
     }
 
     stage ('Push image') {
-//        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
+        docker.withRegistry('https://gcr.io', 'gcp:zing-registry-188222') {
+            customImage.push()
+        }
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean")
     }
-
     stage ('Compile service definitions and build RPM') {
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
@@ -91,21 +99,19 @@ node ('build-zenoss-product') {
             SVCDEF_GIT_READY=true\
             TARGET_PRODUCT=${TARGET_PRODUCT}"
         sh("cd svcdefs;make build ${makeArgs}")
-        archive includes: 'svcdefs/build/zenoss-service/output/**'
+        sh("mkdir -p artifacts")
+        sh("cp svcdefs/build/zenoss-service/output/*.json artifacts/.")
+        sh("cd artifacts; for file in *json; do tar -cvzf \$file.tgz \$file; done")
+        archive includes: 'artifacts/*.json*'
     }
 
     stage ('Upload service definitions') {
-        def archiveEnv = "SHORT_VERSION=${SHORT_VERSION}\
-            ZENOSS_VERSION=${ZENOSS_VERSION}\
-            TARGET_PRODUCT=${TARGET_PRODUCT} \
-            MATURITY=${MATURITY}\
-            BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"
-        sh("${archiveEnv} python archive.py --service-def")
-    }
-    stage ('Build offline images') {
-    }
-    stage ('Upload offline image') {
-        sh("python archive.py --offline-images")
+//        def archiveEnv = "SHORT_VERSION=${SHORT_VERSION}\
+//            ZENOSS_VERSION=${ZENOSS_VERSION}\
+//            TARGET_PRODUCT=${TARGET_PRODUCT} \
+//            MATURITY=${MATURITY}\
+//            BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"
+//        sh("${archiveEnv} python archive.py --service-def")
     }
 
 }
