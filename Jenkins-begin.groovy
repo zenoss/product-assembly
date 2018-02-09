@@ -42,10 +42,6 @@ node('build-zenoss-product') {
             sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
         }
 
-        stage('Push product-base') {
-            sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push")
-        }
-
         def SVCDEF_GIT_REF = ""
         def ZENOSS_VERSION = ""
         def SERVICED_BRANCH = ""
