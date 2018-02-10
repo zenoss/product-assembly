@@ -93,7 +93,7 @@ endif
 		opentsdb_VERSION=$(OPENTSDB_VERSION) \
 		SHORT_VERSION=$(SHORT_VERSION) \
 		VERSION=$(VERSION) \
-		make docker_svcdefpkg-$(TARGET_PRODUCT)
+		make docker_svcdef-$(TARGET_PRODUCT)
 
 clean:
 	-rm -rf $(TEMP_DIR)
