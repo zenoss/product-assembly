@@ -32,14 +32,14 @@ def md5Hash(filePath):
 def zenpackDownload(versionInfo, outdir, downloadReport):
     """Download ZenPack based on requirements in versionInfo.
 
-    Uses http://zenpacks.zenosslabs.com/requirement/ API endpoint to
+    Uses http://zenpacks.zenoss.eng/requirement/ API endpoint to
     download the best ZenPack given the following versionInfo dict.
 
     For information on the syntax for type=zenpack, see
     README.versionInfo.md
 
     """
-    endpoint = "http://zenpacks.zenosslabs.com/requirement"
+    endpoint = "http://zenpacks.zenoss.eng/requirement"
 
     # artifactInfo gets published to downloadReport. Copy versionInfo
     # into it, and specify any defaults. This ensures that all
@@ -83,7 +83,7 @@ def zenpackDownload(versionInfo, outdir, downloadReport):
     #           "ZenPacks.zenoss.ThirdExample>=1.5"
     #       ],
     #       "shasum": "b0d69c0e175b45bdf3ecf1c455232bdcd66e3f43",
-    #       "url": "http://zenpacks.zenosslabs.com/download/ZenPacks.zenoss.Example-1.0.0.dev2+g0abcdef-py2.7.egg",
+    #       "url": "http://zenpacks.zenoss.eng/download/ZenPacks.zenoss.Example-1.0.0.dev2+g0abcdef-py2.7.egg",
     #       "version": "1.0.0.dev2+g0abcdef"
     #   }
     try:
