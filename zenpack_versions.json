@@ -17,10 +17,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.AWS",
-        "requirement": "ZenPacks.zenoss.AWS==4.0.*",
-        "git_ref": "hotfix/4.0.1",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.AWS===4.0.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.BigIpMonitor",
         "requirement": "ZenPacks.zenoss.BigIpMonitor===2.7.1",
