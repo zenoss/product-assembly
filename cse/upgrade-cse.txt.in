@@ -67,6 +67,9 @@ SVC_RUN "Zenoss.cse/Zenoss/User Interface/Zope" upgrade
 # Re-run the migration to Remove Empty Product Class Relationships, since it uses the model catalog. This is only needed when upgrading to 6.X from 5.X
 %REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%
 
+# Fix ZEN-29548 for ZenPacks.zenoss.MultiRealmIP v. < 2.2.4
+SVC_EXEC COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/fix_MultiRealmIPZenPack.sh"
+
 # Uncomment this to restart the entire application afterwards
 # SVC_RESTART Zenoss.cse auto
 
