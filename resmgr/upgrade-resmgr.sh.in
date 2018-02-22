@@ -7,9 +7,12 @@
 ###############################################################################
 set -e
 export SERVICE_TENANT_ID="`serviced service list resmgr --format='{{.ID}}'`"
+export UPGRADE_REINDEX
+export REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS
 serviced snapshot untag $SERVICE_TENANT_ID preupgrade-resmgr-%VERSION%
 
 FROM_VERSION=$(serviced service list resmgr --format='{{.Version}}')
+TO_VERSION=%VERSION%
 
 if [ -z "$FROM_VERSION" ];
 then
@@ -33,6 +36,15 @@ fi
 FROM_VERSION_SHORT=$(cut -d'.' -f1,2 <<< $FROM_VERSION)
 sed -i 's/REPLACE/'"$FROM_VERSION_SHORT:$FROM_VERSION"'/g' /root/%SHORT_VERSION%.x/current_version.txt
 serviced script run /root/%SHORT_VERSION%.x/current_version.txt --service Zenoss.resmgr
+
+if [ $(echo "${FROM_VERSION}" | cut -c1) -eq 5 ] && [ $(echo "${TO_VERSION}" | cut -c1) -eq 6 ];
+then
+    UPGRADE_REINDEX='SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/upgrade_reindex.sh Zenoss.resmgr"'
+    REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS='SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump'
+fi
+
+sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g;" /root/%SHORT_VERSION%.x/upgrade-resmgr.txt
+sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g;" /root/%SHORT_VERSION%.x/upgrade-impact.txt
 
 if [ $(serviced service status --show-fields Name  Zenoss.resmgr/Infrastructure/Impact | grep Impact) ]; then
     serviced script run /root/%SHORT_VERSION%.x/upgrade-impact.txt --service Zenoss.resmgr
