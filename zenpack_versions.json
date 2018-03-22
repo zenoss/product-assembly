@@ -53,12 +53,12 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ControlCenter",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.ControlCenter===1.6.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dashboard",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.Dashboard===1.2.9",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DatabaseMonitor",
         "requirement": "ZenPacks.zenoss.DatabaseMonitor===3.0.12",
@@ -97,16 +97,16 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DynamicView",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.DynamicView===1.6.0",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EMC.base",
         "requirement": "ZenPacks.zenoss.EMC.base===2.0.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseCollector",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.EnterpriseCollector===1.8.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseReports",
         "requirement": "ZenPacks.zenoss.EnterpriseReports===2.5.0",
@@ -161,8 +161,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Licensing",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.Licensing===0.2.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LinuxMonitor",
         "requirement": "ZenPacks.zenoss.LinuxMonitor===2.2.7",
