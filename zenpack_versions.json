@@ -85,8 +85,10 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
-        "requirement": "ZenPacks.zenoss.DnsMonitor===3.0.0",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.DnsMonitor==3.0.*",
+        "type": "zenpack",
+        "git_ref": "hotfix/3.0.1",
+        "pre": true	
     },{
         "name": "ZenPacks.zenoss.Docker",
         "requirement": "ZenPacks.zenoss.Docker===2.0.3",
