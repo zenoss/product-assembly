@@ -55,7 +55,8 @@ su - zenoss -c "pip install --no-index  ${ZENHOME}/dist/*.whl"
 su - zenoss -c "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
 su - zenoss -c "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
 source ${ZENHOME}/install_scripts/versions.sh 
-su - zenoss -c "sed -e 's/%VERSION_STRING%/${VERSION}/g; s/%BUILD_NUMBER%/${BUILD_NUMBER}/g' ${ZENHOME}/Products/ZenModel/ZVersion.py.in > ${ZENHOME}/Products/ZenModel/ZVersion.py"
+su - zenoss -c "sed -i -e 's/BUILD_NUMBER=\".*\"/BUILD_NUMBER=\"${BUILD_NUMBER}\"/g' ${ZENHOME}/Products/ZenModel/ZVersion.py"
+#su - zenoss -c "sed -e 's/%VERSION_STRING%/${VERSION}/g; s/%BUILD_NUMBER%/${BUILD_NUMBER}/g' ${ZENHOME}/Products/ZenModel/ZVersion.py.in > ${ZENHOME}/Products/ZenModel/ZVersion.py"
 
 # Install MetricConsumer
 artifactDownload "zenoss.metric.consumer"
