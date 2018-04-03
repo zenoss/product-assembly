@@ -125,10 +125,10 @@ node('build-zenoss-product') {
             archive includes: 'artifacts/*.json*'
         }
 
-        stage('Upload service definitions') {
-            googleStorageUpload bucket: "gs://cse_artifacts/${TARGET_PRODUCT}/${MATURITY}/${ZENOSS_VERSION}/${PRODUCT_BUILD_NUMBER}", \
-         credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
-        }
+        //stage('Upload service definitions') {
+        //    googleStorageUpload bucket: "gs://cse_artifacts/${TARGET_PRODUCT}/${MATURITY}/${ZENOSS_VERSION}/${PRODUCT_BUILD_NUMBER}", \
+        // credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
+        //}
 
     } catch (err) {
         echo "Job failed with the following error: ${err}"
@@ -140,7 +140,7 @@ node('build-zenoss-product') {
         }
 
         slackSend color: 'warning',
-                channel: '#zing-dev',
+                channel: '#extjs-653-upgrade',
                 message: "CSE Build Failed: ${env.JOB_NAME} Build #${env.BUILD_NUMBER} ${env.BUILD_URL}"
         error "Job failed with the following error: ${err}"
     } finally {
