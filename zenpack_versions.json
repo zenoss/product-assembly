@@ -133,7 +133,6 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "requirement": "ZenPacks.zenoss.HttpMonitor==3.0.*",
         "type": "zenpack",
         "pre": true
     },{
