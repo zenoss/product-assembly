@@ -51,7 +51,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "jenkins",
-        "version": "develop",
+        "version": "feature/extjsUpgrade",
         "jenkins.job": "Components/job/zenoss-prodbin/job/extjs-upgrade"
     },
     {
