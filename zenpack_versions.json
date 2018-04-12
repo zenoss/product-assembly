@@ -311,7 +311,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZaaS.UI",
-        "feature": "localhost-collector",
+        "feature": "localhost_collector",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenDeviceACL",
