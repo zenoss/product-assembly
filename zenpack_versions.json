@@ -91,8 +91,10 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Docker",
-        "requirement": "ZenPacks.zenoss.Docker===2.0.2",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.Docker==2.0.*",
+        "git_ref": "hotfix/2.0.4",
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.DurationThreshold",
         "requirement": "ZenPacks.zenoss.DurationThreshold===2.0.4",
