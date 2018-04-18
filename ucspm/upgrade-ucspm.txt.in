@@ -67,7 +67,7 @@ SVC_RUN "ucspm/Zenoss/User Interface/Zope" upgrade
 %REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%
 
 # Fix ZEN-29563 for ZenPacks.zenoss.MultiRealmIP v. < 2.2.4
-SVC_EXEC COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/fix_MultiRealmIPZenPack.sh"
+SVC_EXEC COMMIT "ucspm/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/fix_MultiRealmIPZenPack.sh"
 
 # Uncomment this to restart the entire application afterwards
 # SVC_RESTART ucspm auto
