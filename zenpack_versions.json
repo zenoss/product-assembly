@@ -293,8 +293,10 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===3.6.3",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.vSphere===3.7.*",
+        "git_ref": "hotfix/3.7.1",
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.WBEM",
         "requirement": "ZenPacks.zenoss.WBEM===2.0.0",
