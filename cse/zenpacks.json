@@ -53,7 +53,9 @@
         "ZenPacks.zenoss.ControlCenter",
         "ZenPacks.zenoss.ComponentGroups",
         "ZenPacks.zenoss.SupportBundle",
-        "ZenPacks.zenoss.RMMonitor"
+        "ZenPacks.zenoss.RMMonitor",
+        "ZenPacks.zenoss.ImpactServer",
+        "ZenPacks.zenoss.Impact"
     ],
     "included_not_installed": [
         "ZenPacks.zenoss.BigIpMonitor",
