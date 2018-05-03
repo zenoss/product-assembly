@@ -29,6 +29,7 @@ HDFS_VERSION=24.0.8
 OPENTSDB_VERSION=24.0.8
 
 ZING_CONNECTOR_VERSION=latest
+OTSDB_BIGTABLE_VERSION=v1
 
 #Image project or organization used for images eg.  zing-registry-188222/cse_7.0:[TAG]
 IMAGE_PROJECT=zing-registry-188222

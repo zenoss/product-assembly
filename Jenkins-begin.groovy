@@ -96,8 +96,8 @@ node('build-zenoss-product') {
 
             // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
             //     Jenkins credentials instead
-            def makeArgs = "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
-            IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER} \
+            def makeArgs = "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} \
+             IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER} \
              MATURITY=${MATURITY} \
              SVCDEF_GIT_READY=true \
              TARGET_PRODUCT=${TARGET_PRODUCT} "
