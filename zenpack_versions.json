@@ -157,8 +157,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LDAPAuthenticator",
-        "requirement": "ZenPacks.zenoss.LDAPAuthenticator===3.3.1",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.LDAPMonitor",
         "requirement": "ZenPacks.zenoss.LDAPMonitor===1.4.2",
@@ -273,8 +273,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.SupportBundle",
-        "requirement": "ZenPacks.zenoss.SupportBundle===1.1.2",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.TomcatMonitor",
         "requirement": "ZenPacks.zenoss.TomcatMonitor===2.3.0",
