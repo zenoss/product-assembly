@@ -47,6 +47,9 @@ endif
 ifndef ZING_CONNECTOR_VERSION
 	$(error ZING_CONNECTOR_VERSION is not set)
 endif
+ifndef OTSDB_BIGTABLE_VERSION
+	$(error OTSDB_BIGTABLE_VERSION is not set)
+endif
 ifndef IMAGE_NUMBER
 	$(error IMAGE_NUMBER is not set)
 endif
@@ -82,11 +85,17 @@ ifndef SVCDEF_GIT_READY
 	cd $(TEMP_DIR) && git clone git@github.com:zenoss/zenoss-service.git
 	cd $(TEMP_DIR)/zenoss-service && git checkout $(SVCDEF_GIT_REF)
 endif
+    #delete infrastructure services not used in GCP
+    rm -rf $(TEMP_DIR)/zenoss-service/services/Zenoss.cse/Infrastructure/HBase
+    rm -rf $(TEMP_DIR)/zenoss-service/services/Zenoss.cse/Infrastructure/HDFS
+    rm -rf $(TEMP_DIR)/zenoss-service/services/Zenoss.cse/Infrastructure/opentsdb/writer
+    rm -rf $(TEMP_DIR)/zenoss-service/services/Zenoss.cse/Infrastructure/opentsdb/reader
 	cd $(TEMP_DIR)/zenoss-service && \
 		BUILD_NUMBER=$(BUILD_NUMBER) \
 		hbase_VERSION=$(HBASE_VERSION) \
 		hdfs_VERSION=$(HDFS_VERSION) \
 		zing_connector_VERSION=$(ZING_CONNECTOR_VERSION) \
+		otsdb_bigtable_VERSION=$(OTSDB_BIGTABLE_VERSION) \
 		impact_VERSION=$(IMPACT_VERSION) \
 		IMAGE_NUMBER=$(IMAGE_NUMBER) \
 		MILESTONE=$(MATURITY) \
