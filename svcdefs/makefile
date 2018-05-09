@@ -86,11 +86,11 @@ ifndef SVCDEF_GIT_READY
 	cd $(TEMP_DIR)/zenoss-service && git checkout $(SVCDEF_GIT_REF)
 endif
     #delete infrastructure services not used in GCP
-    rm -rf $(TEMP_DIR)/zenoss-service/services/Zenoss.cse/Infrastructure/HBase
-    rm -rf $(TEMP_DIR)/zenoss-service/services/Zenoss.cse/Infrastructure/HDFS
-    rm -rf $(TEMP_DIR)/zenoss-service/services/Zenoss.cse/Infrastructure/opentsdb/writer
-    rm -rf $(TEMP_DIR)/zenoss-service/services/Zenoss.cse/Infrastructure/opentsdb/reader
 	cd $(TEMP_DIR)/zenoss-service && \
+        rm -rf services/Zenoss.cse/Infrastructure/HBase && \
+        rm -rf services/Zenoss.cse/Infrastructure/HDFS && \
+        rm -rf services/Zenoss.cse/Infrastructure/opentsdb/writer && \
+        rm -rf services/Zenoss.cse/Infrastructure/opentsdb/reader && \
 		BUILD_NUMBER=$(BUILD_NUMBER) \
 		hbase_VERSION=$(HBASE_VERSION) \
 		hdfs_VERSION=$(HDFS_VERSION) \
