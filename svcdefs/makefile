@@ -50,6 +50,9 @@ endif
 ifndef OTSDB_BIGTABLE_VERSION
 	$(error OTSDB_BIGTABLE_VERSION is not set)
 endif
+ifndef IMPACT_VERSION
+	$(error IMPACT_VERSION is not set)
+endif
 ifndef IMAGE_NUMBER
 	$(error IMAGE_NUMBER is not set)
 endif
@@ -96,6 +99,7 @@ endif
 		hdfs_VERSION=$(HDFS_VERSION) \
 		zing_connector_VERSION=$(ZING_CONNECTOR_VERSION) \
 		otsdb_bigtable_VERSION=$(OTSDB_BIGTABLE_VERSION) \
+		impact_VERSION=$(IMPACT_VERSION) \
 		IMAGE_NUMBER=$(IMAGE_NUMBER) \
 		MILESTONE=$(MATURITY) \
 		RELEASE_PHASE=$(RELEASE_PHASE) \

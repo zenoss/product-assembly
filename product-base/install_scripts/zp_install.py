@@ -7,6 +7,7 @@ import subprocess
 import sys
 
 def main(args):
+    os.environ["PRODUCT_ASSEMBLY"] = "1"
     manifest = json.load(args.zp_manifest)
     blacklist = []
     if args.zp_blacklist:
@@ -38,7 +39,7 @@ def main(args):
             else:
                 print "Installing zenpack: %s %s" % (zpName, zpFile)
             sys.stdout.flush()
-            subprocess.check_call(cmd)
+            subprocess.check_call(cmd, env=os.environ)
 
 
 if __name__ == '__main__':

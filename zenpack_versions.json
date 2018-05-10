@@ -140,6 +140,16 @@
         "requirement": "ZenPacks.zenoss.IBM.Power===1.1.2",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.Impact",
+        "URL": "http://artifacts.zenoss.eng/builds/impact/5.3.x/testing/Impact/5/ZenPacks.zenoss.Impact-{version}-py2.7.egg",
+        "version": "5.3.2.0.0.dev0-testing-5",
+        "type": "download"
+    },{
+        "name": "ZenPacks.zenoss.ImpactServer",
+        "URL": "http://artifacts.zenoss.eng/builds/impact/5.3.x/testing/ImpactServer/6/ZenPacks.zenoss.ImpactServer-{version}-rm5.0.x-py2.7.egg",
+        "version": "5.3.2.0.0dev-testing-5",
+        "type": "download"
+    },{
         "name": "ZenPacks.zenoss.InstalledTemplatesReport",
         "requirement": "ZenPacks.zenoss.InstalledTemplatesReport===1.1.1",
         "type": "zenpack"
