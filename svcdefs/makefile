@@ -50,6 +50,9 @@ endif
 ifndef OTSDB_BIGTABLE_VERSION
 	$(error OTSDB_BIGTABLE_VERSION is not set)
 endif
+ifndef IMPACT_VERSION
+	$(error IMPACT_VERSION is not set)
+endif
 ifndef IMAGE_NUMBER
 	$(error IMAGE_NUMBER is not set)
 endif
