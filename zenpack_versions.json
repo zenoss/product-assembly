@@ -109,7 +109,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseCollector",
-        "requirement": "ZenPacks.zenoss.EnterpriseCollector===1.8.2",
+        "requirement": "ZenPacks.zenoss.EnterpriseCollector===1.8.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseReports",
