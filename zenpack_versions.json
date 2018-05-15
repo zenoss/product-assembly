@@ -261,6 +261,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RMMonitor",
+        "requirement": "ZenPacks.zenoss.RMMonitor==1.0.5.*",
         "type": "zenpack",
         "pre": true
     },{
