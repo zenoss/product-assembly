@@ -37,7 +37,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoMonitor",
-        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.8.1",
+        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.9.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoUCS",
@@ -87,17 +87,15 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
-        "requirement": "ZenPacks.zenoss.DnsMonitor==3.0.*",
-        "type": "zenpack",
-        "git_ref": "hotfix/3.0.1",
-        "pre": true	
+        "requirement": "ZenPacks.zenoss.DnsMonitor===3.0.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Docker",
         "requirement": "ZenPacks.zenoss.Docker===2.0.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DurationThreshold",
-        "requirement": "ZenPacks.zenoss.DurationThreshold===2.0.4",
+        "requirement": "ZenPacks.zenoss.DurationThreshold===2.0.5",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DynamicView",
@@ -133,8 +131,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.HttpMonitor===3.0.0",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.IBM.Power",
         "requirement": "ZenPacks.zenoss.IBM.Power===1.1.2",
@@ -333,7 +331,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenPackLib",
-        "requirement": "ZenPacks.zenoss.ZenPackLib===2.0.9",        
+        "requirement": "ZenPacks.zenoss.ZenPackLib===2.0.9",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenSQLTx",
@@ -341,7 +339,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenWebTx",
-        "requirement": "ZenPacks.zenoss.ZenWebTx===3.0.2",
+        "requirement": "ZenPacks.zenoss.ZenWebTx===3.0.3",
         "type": "zenpack"
     }
 ]
