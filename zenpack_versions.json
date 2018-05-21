@@ -219,8 +219,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NtpMonitor",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.NtpMonitor===3.0.0",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.OpenStack",
         "requirement": "ZenPacks.zenoss.OpenStack===1.2.4",
