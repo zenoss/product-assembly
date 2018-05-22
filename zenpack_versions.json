@@ -53,10 +53,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ControlCenter",
-        "requirement": "ZenPacks.zenoss.ControlCenter==1.6.*",
-        "type": "zenpack",
-        "git_ref": "hotfix/1.6.2",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.ControlCenter===1.6.2",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dashboard",
         "requirement": "ZenPacks.zenoss.Dashboard===1.2.9",
