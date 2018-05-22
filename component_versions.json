@@ -12,21 +12,21 @@
     },
     {
         "name": "modelindex",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "1.0.3",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz"
     },
     {
         "name": "pynetsnmp",
-        "type": "jenkins",
-        "version": "develop",
-        "jenkins.server": "http://jenkins.zenoss.eng",
-        "jenkins.job": "pynetsnmp-develop"
+        "type": "download",
+        "version": "0.41.0",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "0.1.30",
+        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
@@ -35,11 +35,10 @@
         "version": "0.1.2"
     },
     {
-	"name": "service-migration",
-        "git_owner": "control-center",
-	"type": "download",
-        "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl",
-        "version": "1.1.11"
+        "name": "service-migration",
+        "type": "download",
+        "version": "1.1.11",
+        "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.extjs-{version}.tar.gz",
