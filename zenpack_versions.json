@@ -129,7 +129,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "requirement": "ZenPacks.zenoss.HttpMonitor===3.0.1",
+        "requirement": "ZenPacks.zenoss.HttpMonitor===3.0.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.IBM.Power",
