@@ -1,0 +1,14 @@
+[
+    {
+        "name": "docs-core",
+        "type": "docs",
+		"product": "core",
+		"version": "6.2.0"
+    },
+    {
+        "name": "docs-enterprise",
+        "type": "docs",
+		"product": "resource-manager",
+		"version": "6.2.0"
+    }
+]

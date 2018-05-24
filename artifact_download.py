@@ -4,16 +4,77 @@ import argparse
 import copy
 import fnmatch
 import hashlib
+import httplib
 import json
 import os
 import re
 import shutil
 import sys
 import tempfile
+import urllib
 import urllib2
 import urlparse
 
+from HTMLParser import HTMLParser
 from itertools import chain
+
+
+class DocListParser(HTMLParser):
+    """Parses the HTML content that the listing of a directory on
+    http://artifacts.zenoss.eng.
+    """
+
+    def __init__(self, path, ext=None):
+        """
+        @param path {sequence[str]} A sequence of path segments
+        @param ext {str} Filename extension to parse for
+        """
+        HTMLParser.__init__(self)
+        abspath = ["", "docs"]
+        abspath.extend(path)
+        if ext:
+            abspath.append(".+\.%s" % ext)
+        expr = '/'.join(abspath)
+        self.matcher = re.compile(expr)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.close()
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "a":
+            href = next((value for key, value in attrs if key == "href"), None)
+            if href:
+                match = self.matcher.match(href)
+                if match:
+                    self.docs.append(href)
+
+    def parse(self, html):
+        """Returns a list containing the path of all the pdf files
+        in the HTML string.
+        """
+        self.reset()
+        self.docs = []
+        self.feed(html)
+        return self.docs
+
+
+class TempDir(object):
+
+    def __init__(self):
+        self._path = tempfile.mkdtemp()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *kw):
+        shutil.rmtree(self._path)
+
+    @property
+    def path(self):
+        return self._path
 
 
 def md5Hash(filePath):
@@ -120,11 +181,65 @@ def zenpackDownload(versionInfo, outdir, downloadReport):
 
         downloadReport.append(artifactInfo)
         raise Exception(
-            "No 'url' in zenpack data for artifact {}."
-                .format(versionInfo["name"]))
+            "No 'url' in zenpack data for artifact %s."
+            % versionInfo["name"]
+        )
 
     downloadReport.append(artifactInfo)
     downloadArtifact(zenpack["url"], outdir)
+
+
+def docsDownload(versionInfo, outdir, downloadReport):
+    info = DocsInfo(versionInfo)
+    print info.toDict()
+    url = info.url
+    print url
+    parsed = urlparse.urlparse(url)
+    if not parsed.scheme or not parsed.netloc or not parsed.path:
+        raise Exception(
+            "Unable to download file(s) for aritfact %s: invalid URL: %s"
+            % (info.name, url)
+        )
+
+    if info.pinned:
+        with TempDir() as td:
+            downloadArtifact(url, td.path)
+            with open(os.path.join(td.path, info.build)) as index:
+                listing = index.read()
+        path = [info.product, info.version, info.build]
+    else:
+        with TempDir() as td:
+            downloadArtifact(url, td.path)
+            with open(os.path.join(td.path, info.version)) as index:
+                listing = index.read()
+            path = [info.product, info.version]
+            with DocListParser(path) as dlp:
+                dirlist = dlp.parse(listing)
+            cooked = sorted([
+                (item.strip('/').split('/')[-1], item) for item in dirlist
+            ], reverse=True)
+            buildpath = next(iter(cooked))[1]
+            build = buildpath.strip('/').split('/')[-1]
+            url = url + "/" + build
+            downloadArtifact(url, td.path)
+            with open(os.path.join(td.path, build)) as index:
+                listing = index.read()
+        path = [info.product, info.version, build]
+
+    with DocListParser(path, ext="pdf") as dlp:
+        doclist = dlp.parse(listing)
+
+    for doc in doclist:
+        unquoted_doc = urllib.unquote_plus(doc)
+        docparse = urlparse.ParseResult(
+            parsed.scheme, parsed.netloc, unquoted_doc, '', '', ''
+        )
+        downloadArtifact(urlparse.urlunparse(docparse), outdir)
+
+    artifactInfo = info.toDict()
+    artifactInfo['type'] = 'releasedArtifact'
+    print artifactInfo
+    downloadReport.append(artifactInfo)
 
 
 def urlDownload(versionInfo, outdir, downloadReport):
@@ -133,7 +248,10 @@ def urlDownload(versionInfo, outdir, downloadReport):
     print url
     parsed = urlparse.urlparse(url)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
-        raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (info.name, url))
+        raise Exception(
+            "Unable to download file(s) for aritfact %s: invalid URL: %s"
+            % (info.name, url)
+        )
 
     downloadArtifact(url, outdir)
 
@@ -177,10 +295,17 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
     job = jenkinsInfo.job
     server = jenkinsInfo.server
     baseURL = "%s/lastSuccessfulBuild" % jenkinsInfo.jobURL
-    queryURL = "%s/api/json?tree=artifacts[*],number,actions[lastBuiltRevision[*,branch[*]]]" % baseURL
+    queryURL = (
+        "%s/api/json?tree=artifacts[*],"
+        "number,"
+        "actions[lastBuiltRevision[*,branch[*]]]"
+    ) % baseURL
     parsed = urlparse.urlparse(queryURL)
     if not parsed.scheme or not parsed.netloc or not parsed.path:
-        raise Exception("Unable to download file(s) for aritfact %s: invalid URL: %s" % (artifactName, queryURL))
+        raise Exception(
+            "Unable to download file(s) for aritfact %s: invalid URL: %s"
+            % (artifactName, queryURL)
+        )
 
     try:
         response = json.loads(urllib2.urlopen(queryURL).read())
@@ -188,12 +313,12 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
         raise Exception("Error downloading %s: %s" % (queryURL, e))
     except urllib2.HTTPError as e:
         raise Exception("Error downloading %s: %s" % (queryURL, e))
-    except httplib.HTTPException, e:
+    except httplib.HTTPException as e:
         raise Exception("Error downloading %s: %s" % (queryURL, e))
 
-
     #
-    # If the artifact has a subModule in Jenkins, then we need to query a different URL to get the subModule's artifacts
+    # If the artifact has a subModule in Jenkins, then we need to query a
+    # different URL to get the subModule's artifacts
     #
     if jenkinsInfo.subModule:
         baseURL = "%s/%s" % (baseURL, jenkinsInfo.subModule)
@@ -201,7 +326,9 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
         parsed = urlparse.urlparse(artifactsURL)
         if not parsed.scheme or not parsed.netloc or not parsed.path:
             raise Exception(
-                "Unable to download file(s) for aritfact %s: invalid URL: %s" % (artifactName, artifactsURL))
+                "Unable to download file(s) for aritfact %s: invalid URL: %s"
+                % (artifactName, artifactsURL)
+            )
 
         artifactsResponse = json.loads(urllib2.urlopen(artifactsURL).read())
         artifacts = artifactsResponse['artifacts']
@@ -210,11 +337,18 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
 
     number = response['number']
     if len(artifacts) == 0:
-        raise Exception("No artifacts available for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (
-            artifactName, job, number, server))
+        raise Exception(
+            "No artifacts available for lastSuccessfulBuild of %s "
+            "(see job %s #%d on Jenkins server %s)" % (
+                artifactName, job, number, server
+            )
+        )
 
-    lastBuiltRevision = [item['lastBuiltRevision'] for item in response['actions'] if
-                         len(item) > 0 and 'lastBuiltRevision' in item]
+    lastBuiltRevision = [
+        item['lastBuiltRevision']
+        for item in response['actions']
+        if len(item) > 0 and 'lastBuiltRevision' in item
+    ]
     if lastBuiltRevision:
         git_ref = lastBuiltRevision[0]['SHA1']
         branchData = lastBuiltRevision[0]['branch'][0]
@@ -223,14 +357,19 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
     else:
         git_ref = git_branch = None
 
-    # Secondly, loop through the list of build artifacts and download any that match the specified pattern
+    # Secondly, loop through the list of build artifacts and download any
+    # that match the specified pattern
     nDownloaded = 0
     for artifact in artifacts:
         fileName = artifact['fileName']
         for pattern in jenkinsInfo.patterns:
             if fnmatch.fnmatch(fileName, pattern):
-                print ("Found artifact %s for lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (
-                    fileName, artifactName, job, number, server))
+                print (
+                    "Found artifact %s for lastSuccessfulBuild of %s "
+                    "(see job %s #%d on Jenkins server %s)"
+                ) % (
+                    fileName, artifactName, job, number, server
+                )
                 relativePath = artifact['relativePath']
                 downloadURL = "%s/artifact/%s" % (baseURL, relativePath)
                 downloadArtifact(downloadURL, outdir)
@@ -242,7 +381,10 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
                 artifactInfo = jenkinsInfo.toDict()
                 if git_ref:
                     artifactInfo['git_ref'] = git_ref
-                    artifactInfo['git_ref_url'] = jenkinsInfo.gitRepo.replace('.git', '/tree/%s' % git_ref)
+                    artifactInfo['git_ref_url'] = \
+                        jenkinsInfo.gitRepo.replace(
+                            '.git', '/tree/%s' % git_ref
+                        )
                     artifactInfo['git_branch'] = git_branch
                 artifactInfo['jenkins.job_nbr'] = number
                 artifactInfo['jenkins.artifact'] = fileName
@@ -250,14 +392,20 @@ def jenkinsDownload(versionInfo, outdir, downloadReport):
 
     if nDownloaded == 0:
         raise Exception(
-            "No artifacts downloaded from lastSuccessfulBuild of %s (see job %s #%d on Jenkins server %s)" % (
-                artifactName, job, number, server))
+            "No artifacts downloaded from lastSuccessfulBuild of %s "
+            "(see job %s #%d on Jenkins server %s)" % (
+                artifactName, job, number, server
+            )
+        )
     if nDownloaded > 1:
-        raise Exception("Download pattern is ambiguous, more than one artifact matched")
+        raise Exception(
+            "Download pattern is ambiguous, more than one artifact matched"
+        )
 
 
 # downloaders is a dictionary of "type" to function that can
 downloaders = {
+    "docs": docsDownload,
     "download": urlDownload,
     "jenkins": jenkinsDownload,
     "zenpack": zenpackDownload,
@@ -275,16 +423,23 @@ def downloadArtifacts(versionsFile, artifacts, downloadDir, downloadReport):
 
     for artifactName in artifacts:
         if artifactName not in versionsMap:
-            raise Exception("Artifact version information not found: %s" % artifactName)
+            raise Exception(
+                "Artifact version information not found: %s" % artifactName
+            )
         versionInfo = versionsMap[artifactName]
         if versionInfo['type'] not in downloaders:
             raise Exception(
-                "Cannot not download artifact, unknown download type: %s %s" % (artifactName, versionInfo['type']))
-        downloaders[versionInfo['type']](versionInfo, downloadDir, downloadReport)
+                "Cannot not download artifact, unknown download type: %s %s"
+                % (artifactName, versionInfo['type'])
+            )
+        downloaders[versionInfo['type']](
+            versionInfo, downloadDir, downloadReport
+        )
 
 
 #
-# Update the report file - updates the report file with one or more artifacts from downloadReport
+# Update the report file - updates the report file with one or more
+# artifacts from downloadReport
 #
 def updateReport(reportFile, downloadReport):
     lastReport = []
@@ -292,7 +447,8 @@ def updateReport(reportFile, downloadReport):
         with open(reportFile, 'r') as inFile:
             lastReport = json.load(inFile)
 
-    # First remove any items from lastReport that match something we've just downloaded
+    # First remove any items from lastReport that match something we've
+    # just downloaded
     for item in downloadReport:
         lastReport = [rpt for rpt in lastReport if rpt['name'] != item['name']]
 
@@ -305,19 +461,24 @@ def updateReport(reportFile, downloadReport):
     sortedReport = sorted(lastReport, key=artifactName)
 
     with open(reportFile, 'w') as outFile:
-        json.dump(sortedReport, outFile, indent=4, sort_keys=True, separators=(',', ': '))
+        json.dump(
+            sortedReport, outFile,
+            indent=4, sort_keys=True, separators=(',', ': ')
+        )
 
 
 def main(options):
     if options.pinned:
-        #verify all versions are explicitly set to a release
+        # verify all versions are explicitly set to a release
         versions = json.load(options.versions)
         unpinned = []
         for artifact in versions:
             artifactInfo = artifactClass[artifact['type']](artifact)
             if not artifactInfo.pinned:
                 if isinstance(artifactInfo, ZenPackInfo):
-                    version = "requirement: %s; pre: %s" %(artifactInfo.requirement, artifactInfo.pre)
+                    version = "requirement: %s; pre: %s" % (
+                        artifactInfo.requirement, artifactInfo.pre
+                    )
                 else:
                     version = "version: %s" % artifactInfo.version
                 unpinned.append("%s %s" % (artifactInfo.name, version))
@@ -328,14 +489,18 @@ def main(options):
     artifacts = options.artifacts
     if options.zp_manifest is not None:
         manifest = json.load(options.zp_manifest)
-        artifacts = list(chain(manifest['install_order'], manifest['included_not_installed']))
+        artifacts = list(chain(
+            manifest['install_order'], manifest['included_not_installed']
+        ))
 
     if not options.git_output:
         if not artifacts or len(artifacts) == 0:
             sys.exit("No artifacts to download")
 
         downloadReport = []
-        downloadArtifacts(options.versions, artifacts, options.out_dir, downloadReport)
+        downloadArtifacts(
+            options.versions, artifacts, options.out_dir, downloadReport
+        )
 
         if options.reportFile:
             updateReport(options.reportFile, downloadReport)
@@ -355,7 +520,10 @@ def main(options):
                 gitInfo = existing
 
         with open(options.git_output, 'w') as outFile:
-            json.dump(gitInfo, outFile, indent=4, sort_keys=True, separators=(',', ': '))
+            json.dump(
+                gitInfo, outFile,
+                indent=4, sort_keys=True, separators=(',', ': ')
+            )
 
 
 class ArtifactInfo(object):
@@ -377,7 +545,8 @@ class ArtifactInfo(object):
     @property
     def gitRepo(self):
         """
-        git hub repo url for artifact. Use value if present or generate url base on artifact name.
+        git hub repo url for artifact.
+        Use value if present or generate url base on artifact name.
         """
         if 'git_repo' in self.info:
             return self.info['git_repo']
@@ -405,7 +574,6 @@ class ArtifactInfo(object):
             return False
         return True
 
-
     def toDict(self):
         return {
             "git_repo": self.gitRepo,
@@ -413,6 +581,62 @@ class ArtifactInfo(object):
             "name": self.name,
             "type": self.infoType
         }
+
+
+class DocsInfo(ArtifactInfo):
+
+    def __init__(self, versionInfo):
+        super(DocsInfo, self).__init__(versionInfo)
+        product = self.info.get("product")
+        if not product:
+            raise ValueError("'product' field must be specified")
+        version = self.info.get("version")
+        if not version:
+            raise ValueError("'version' field must be specified")
+
+    def _fields(self):
+        result = super(DocsInfo, self).toDict()
+        if "git_repo" in result:
+            del result["git_repo"]  # not enough data to determine this
+        result.update({
+            "product": self.product,
+            "version": self.version
+        })
+        build = self.info.get("build")
+        if build:
+            result["build"] = build
+        return result
+
+    @property
+    def url(self):
+        fields = self._fields()
+        baseURL = self.info.get('URL')
+        if not baseURL:
+            baseURL = "http://artifacts.zenoss.eng/docs/{product}/{version}"
+            if "build" in fields:
+                baseURL += "/{build}"
+        return baseURL.format(**fields)
+
+    @property
+    def product(self):
+        return self.info["product"]
+
+    @property
+    def version(self):
+        return self.info["version"]
+
+    @property
+    def build(self):
+        return self.info["build"]
+
+    @property
+    def pinned(self):
+        return "build" in self.info
+
+    def toDict(self):
+        result = self._fields()
+        result["url"] = self.url
+        return result
 
 
 class URLDownloadInfo(ArtifactInfo):
@@ -423,7 +647,8 @@ class URLDownloadInfo(ArtifactInfo):
     def url(self):
         baseURL = self.info.get('URL')
         if not baseURL:
-            baseURL = 'http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz'
+            baseURL = \
+                'http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz'
         kwargs = super(URLDownloadInfo, self).toDict()
         return baseURL.format(**kwargs)
 
@@ -501,17 +726,22 @@ class ZenPackInfo(ArtifactInfo):
         """
         gitRef = super(ZenPackInfo, self).gitRef
         if not gitRef:
-            if self.requirement and '===' in self.requirement and not self.pre:
+            if self.requirement \
+                    and '===' in self.requirement \
+                    and not self.pre:
                 gitRef = self.requirement.split('===')[1]
             elif self.feature:
-                gitRef =  'feature/%s' % self.feature
+                gitRef = 'feature/%s' % self.feature
             elif self.pre and not self.requirement:
                 gitRef = 'develop'
             elif not self.pre and not self.requirement:
                 gitRef = 'master'
             else:
-                raise Exception("Could not determine git_ref for %s from provided fields. "\
-                        "Please specify desired git_ref field." % self.name)
+                raise Exception(
+                    "Could not determine git_ref for %s from provided "
+                    "fields. Please specify desired git_ref field."
+                    % self.name
+                )
 
         return gitRef
 
@@ -550,6 +780,7 @@ class ZenPackInfo(ArtifactInfo):
 
 #
 artifactClass = {
+    "docs": DocsInfo,
     "download": URLDownloadInfo,
     "jenkins": JenkinsInfo,
     "zenpack": ZenPackInfo,
@@ -558,29 +789,37 @@ artifactClass = {
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Download artifacts')
 
-    parser.add_argument('versions', type=file,
-                        help='json file with versions and locations')
-
-    parser.add_argument('--out_dir', type=str, default=".",
-                        help='directory to download files')
-
-    parser.add_argument('--zp_manifest', type=file,
-                        help='json file with list of zenpacks to be packaged or installed')
-
-    parser.add_argument('artifacts', nargs='*',
-                        help='artifacts to download')
-
-    parser.add_argument('--reportFile', type=str, default="",
-                        help='json report of downloaded artifacts')
-
-    parser.add_argument('--git_output', type=str, default="",
-                        help='output git repo information for artifacts instead of downloading, value is name of file')
-
-    parser.add_argument('--append', action="store_true",
-                        help='only applicable to --git_output, add to existing git output file')
-
-    parser.add_argument('--pinned', action="store_true",
-                        help='Verify that the versions in the json file are pinned to an explicit release version, i.e. not develop.')
+    parser.add_argument(
+        'versions', type=file, help='json file with versions and locations'
+    )
+    parser.add_argument(
+        '--out_dir', type=str, default=".", help='directory to download files'
+    )
+    parser.add_argument(
+        '--zp_manifest', type=file,
+        help='json file with list of zenpacks to be packaged or installed'
+    )
+    parser.add_argument(
+        'artifacts', nargs='*', help='artifacts to download'
+    )
+    parser.add_argument(
+        '--reportFile', type=str, default="",
+        help='json report of downloaded artifacts'
+    )
+    parser.add_argument(
+        '--git_output', type=str, default="",
+        help='output git repo information for artifacts instead of '
+        'downloading, value is name of file'
+    )
+    parser.add_argument(
+        '--append', action="store_true",
+        help='only applicable to --git_output, add to existing git output file'
+    )
+    parser.add_argument(
+        '--pinned', action="store_true",
+        help='Verify that the versions in the json file are pinned to an '
+        'explicit release version, i.e. not develop.'
+    )
 
     options = parser.parse_args()
     main(options)
