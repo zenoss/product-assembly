@@ -17,3 +17,6 @@ COPY zenpacks /opt/zenoss/packs/
 RUN /opt/zenoss/install_scripts/create_zenoss.sh
 
 ADD upgrade-resmgr.txt upgrade-resmgr.sh upgrade-impact.txt current_version.txt /root/%SHORT_VERSION%.x/
+
+# Add docs
+RUN /opt/zenoss/install_scripts/zenoss_docs_install.sh enterprise
