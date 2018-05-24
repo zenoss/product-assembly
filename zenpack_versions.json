@@ -41,7 +41,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoUCS",
-        "requirement": "ZenPacks.zenoss.CiscoUCS===2.6.2",
+        "requirement": "ZenPacks.zenoss.CiscoUCS===2.7.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoUCSCentral",
@@ -101,7 +101,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EMC.base",
-        "requirement": "ZenPacks.zenoss.EMC.base===2.0.0",
+        "requirement": "ZenPacks.zenoss.EMC.base===2.1.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseCollector",
@@ -290,11 +290,11 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===3.6.3",
+        "requirement": "ZenPacks.zenoss.vSphere===3.7.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WBEM",
-        "requirement": "ZenPacks.zenoss.WBEM===2.0.0",
+        "requirement": "ZenPacks.zenoss.WBEM===2.0.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WebsphereMonitor",
