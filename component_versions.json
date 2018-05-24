@@ -50,8 +50,8 @@
     {
         "name": "zenoss-prodbin",
         "type": "jenkins",
-        "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.x",
-        "version": "support/6.x"
+        "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.2.x",
+        "version": "support/6.2.x"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
