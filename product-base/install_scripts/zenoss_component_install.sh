@@ -51,7 +51,7 @@ su - zenoss -c "mkdir -p ${ZENHOME}/var/zauth"
 su - zenoss -c "mkdir -p ${ZENHOME}/libexec"
 su - zenoss -c "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
 
-su - zenoss -c "pip install  --use-wheel --no-index  ${ZENHOME}/dist/*.whl"
+su - zenoss -c "pip install --no-index  ${ZENHOME}/dist/*.whl"
 su - zenoss -c "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
 su - zenoss -c "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
 source ${ZENHOME}/install_scripts/versions.sh 
@@ -77,15 +77,15 @@ su - zenoss -c "ln -s ${ZENHOME}/etc/central-query/central-query_supervisor.conf
 artifactDownload "icmpecho"
 su - zenoss -c "tar -C /tmp -xzvf /tmp/icmpecho*"
 su - zenoss -c "mv /tmp/pyraw ${ZENHOME}/bin"
-su - zenoss -c "pip install  --use-wheel --no-index  /tmp/icmpecho*.whl"
+su - zenoss -c "pip install --no-index  /tmp/icmpecho*.whl"
 
 # Install zenoss-protocols
 artifactDownload "zenoss-protocols"
-su - zenoss -c "pip install  --use-wheel --no-index  /tmp/zenoss.protocols*.whl"
+su - zenoss -c "pip install --no-index  /tmp/zenoss.protocols*.whl"
 
 # Install pynetsnmp
 artifactDownload "pynetsnmp"
-su - zenoss -c "pip install  --use-wheel --no-index  /tmp/pynetsnmp*.whl"
+su - zenoss -c "pip install --no-index  /tmp/pynetsnmp*.whl"
 
 # Install zenoss-extjs
 artifactDownload "zenoss-extjs"
@@ -113,11 +113,11 @@ su - zenoss -c "tar --strip-components=2 -C ${ZENHOME} -xzvf /tmp/zproxy*"
 
 # Install zenoss.toolobx
 artifactDownload "zenoss.toolbox"
-su - zenoss -c "pip install  --use-wheel --no-index  /tmp/zenoss.toolbox*.whl"
+su - zenoss -c "pip install --no-index  /tmp/zenoss.toolbox*.whl"
 
 # Install the service migration SDK
 artifactDownload "service-migration"
-su - zenoss -c "pip install  --use-wheel --no-index  /tmp/servicemigration*"
+su - zenoss -c "pip install --no-index  /tmp/servicemigration*"
 
 # Install zenoss-solr
 # TODO:  Don't do this.  Either componentize our solr startup scripts, do this in zenoss-centos-base,
