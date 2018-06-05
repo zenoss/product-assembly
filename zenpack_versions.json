@@ -50,6 +50,10 @@
         "requirement": "ZenPacks.zenoss.CiscoUCSCentral===1.3.1",
         "type": "zenpack"
     },{
+        "name": "ZenPacks.zenoss.GoogleCloudPlatform",
+        "type": "zenpack",
+        "pre": true
+    },{
         "name": "ZenPacks.zenoss.ComponentGroups",
         "requirement": "ZenPacks.zenoss.ComponentGroups===1.6.0",
         "type": "zenpack"
@@ -145,12 +149,14 @@
         "name": "ZenPacks.zenoss.Impact",
         "URL": "http://artifacts.zenoss.eng/builds/impact/5.3.x/testing/Impact/7/ZenPacks.zenoss.Impact-{version}-py2.7.egg",
         "version": "5.3.2.0.0.dev0-testing-7",
+        "git_ref": "develop",
         "type": "download"
     },{
         "name": "ZenPacks.zenoss.ImpactServer",
         "URL": "http://artifacts.zenoss.eng/builds/impact/5.3.x/testing/ImpactServer/10/ZenPacks.zenoss.ImpactServer-{version}-py2.7.egg",
         "version": "5.3.2.0.0dev-testing-9",
-        "type": "download" 
+        "git_ref": "develop",
+        "type": "download"
     },{
         "name": "ZenPacks.zenoss.InstalledTemplatesReport",
         "requirement": "ZenPacks.zenoss.InstalledTemplatesReport===1.1.1",
