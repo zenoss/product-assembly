@@ -28,9 +28,7 @@
         "ZenPacks.zenoss.Dashboard",
         "ZenPacks.zenoss.DnsMonitor",
         "ZenPacks.zenoss.HttpMonitor",
-        "ZenPacks.zenoss.LDAPMonitor",
         "ZenPacks.zenoss.NtpMonitor",
-        "ZenPacks.zenoss.LDAPAuthenticator",
         "ZenPacks.zenoss.EnterpriseCollector",
         "ZenPacks.zenoss.ZenDeviceACL",
         "ZenPacks.zenoss.ZenSQLTx",
@@ -54,6 +52,7 @@
         "ZenPacks.zenoss.ComponentGroups",
         "ZenPacks.zenoss.SupportBundle",
         "ZenPacks.zenoss.RMMonitor",
+        "ZenPacks.zenoss.GoogleCloudPlatform",
         "ZenPacks.zenoss.ImpactServer",
         "ZenPacks.zenoss.Impact"
     ],
