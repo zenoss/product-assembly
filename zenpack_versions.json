@@ -117,7 +117,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseSkin",
-        "requirement": "ZenPacks.zenoss.EnterpriseSkin===3.3.4",
+        "requirement": "ZenPacks.zenoss.EnterpriseSkin===3.3.5",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HP.Proliant",
@@ -129,7 +129,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "requirement": "ZenPacks.zenoss.HttpMonitor===3.0.2",
+        "requirement": "ZenPacks.zenoss.HttpMonitor===3.0.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.IBM.Power",
@@ -289,7 +289,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===3.7.0",
+        "requirement": "ZenPacks.zenoss.vSphere===3.6.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WBEM",
