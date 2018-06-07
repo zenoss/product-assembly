@@ -27,7 +27,7 @@ REQUIRE_SVC
 SNAPSHOT preupgrade-core-%VERSION%
 
 # Choose image to upgrade to
-SVC_USE zenoss/core_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/core_5.0 zenoss/core_5.1 zenoss/core_5.2 zenoss/core_5.3 zenoss/resmgr_6.0
+SVC_USE zenoss/core_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/core_5.0 zenoss/core_5.1 zenoss/core_5.2 zenoss/core_5.3 zenoss/core_6.0 zenoss/core_6.1
 SVC_USE zenoss/hbase:%HBASE_VERSION%
 SVC_USE zenoss/opentsdb:%OPENTSDB_VERSION%
 
@@ -61,6 +61,9 @@ SVC_RUN "Zenoss.core/Zenoss/User Interface/Zope" upgrade
 
 # Re-run the migration to Remove Empty Product Class Relationships, since it uses the model catalog. This is only needed when upgrading to 6.X from 5.X
 %REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%
+
+# Fix ZEN-29563 for ZenPacks.zenoss.MultiRealmIP v. < 2.2.4
+SVC_EXEC COMMIT "Zenoss.core/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/fix_MultiRealmIPZenPack.sh"
 
 # Uncomment this to restart the entire application afterwards
 # SVC_RESTART Zenoss.core auto

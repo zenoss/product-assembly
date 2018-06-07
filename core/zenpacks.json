@@ -15,9 +15,7 @@
     "ZenPacks.zenoss.ZenJMX"
   ],
   "included_not_installed": [
-    "ZenPacks.zenoss.DigMonitor",
     "ZenPacks.zenoss.DnsMonitor",
-    "ZenPacks.zenoss.FtpMonitor",
     "ZenPacks.zenoss.LDAPMonitor"
   ],
   "version_overrides": {}

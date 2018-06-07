@@ -1,6 +1,6 @@
 [
     {
-        "ref": "support/6.1.x",
+        "ref": "support/6.2.x",
         "repo": "git@github.com:zenoss/zenoss-deploy.git"
     },
     {
@@ -36,7 +36,7 @@
         "repo": "git@github.com:zenoss/QuickVis.git"
     },
     {
-        "ref": "support/6.1.x",
+        "ref": "support/6.2.x",
         "repo": "git@github.com:zenoss/zenoss-service.git"
     },
     {

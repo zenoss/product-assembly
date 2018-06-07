@@ -11,22 +11,22 @@
         "version": "1.1.4"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz",
         "name": "modelindex",
         "type": "download",
-        "version": "1.0.1"
+        "version": "1.0.3",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "pynetsnmp",
         "type": "download",
-        "version": "0.40.7"
+        "version": "0.41.0",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
         "type": "download",
-        "version": "0.1.29"
+        "version": "0.1.30",
+        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
@@ -36,10 +36,9 @@
     },
     {
         "name": "service-migration",
-        "git_owner": "control-center",
         "type": "download",
-        "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl",
-        "version": "1.1.11"
+        "version": "1.1.11",
+        "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.extjs-{version}.tar.gz",
@@ -51,14 +50,14 @@
     {
         "name": "zenoss-prodbin",
         "type": "download",
-        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.1.x.tar.gz",
-        "version": "6.1.2"
+        "version": "6.2.0",
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.2.x.tar.gz"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
         "name": "zenoss-protocols",
         "type": "download",
-        "version": "2.1.7"
+        "version": "2.1.8"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz",
