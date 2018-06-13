@@ -147,8 +147,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Impact",
-        "URL": "http://artifacts.zenoss.eng/builds/impact/5.3.x/testing/Impact/7/ZenPacks.zenoss.Impact-{version}-py2.7.egg",
-        "version": "5.3.2.0.0.dev0-testing-7",
+        "URL": "http://artifacts.zenoss.eng/builds/impact/5.3.x/testing/Impact/8/ZenPacks.zenoss.Impact-{version}-py2.7.egg",
+        "version": "5.3.2.0.0.dev0-testing-8",
         "git_ref": "develop",
         "type": "download"
     },{
