@@ -9,7 +9,7 @@
 #       sudo docker pull gcr.io/zing-registry-188222/zing-connector:%ZING_CONNECTOR_VERSION%      # about  7-15 minutes
 #       serviced docker sync                      # about 10m:cse 5m:hbase 8m:opentsdb
 #
-# Run via 'serviced script run upgrade-cse.txt --service Zenoss.cse' and restart
+# Run via 'serviced script run upgrade-impact.txt --service Zenoss.cse' and restart
 # the deployment
 
 ###################################################################################
@@ -21,7 +21,7 @@
 #
 ###################################################################################
 
-DESCRIPTION  Zenoss RM %VERSION% upgrade
+DESCRIPTION  Zenoss RM %VERSION% with Impact upgrade
 VERSION   cse-%VERSION%
 REQUIRE_SVC
 SNAPSHOT preupgrade-cse-%VERSION%
@@ -41,10 +41,11 @@ SVC_START Zenoss.cse/Infrastructure/mariadb-events
 SVC_START Zenoss.cse/Infrastructure/RabbitMQ
 SVC_START Zenoss.cse/Zenoss/Events/zeneventserver
 SVC_START Zenoss.cse/Infrastructure/redis
+SVC_START Zenoss.cse/Infrastructure/Impact
 SVC_START Zenoss.cse/Infrastructure/memcached
 
 # Wait for our services to start
-SVC_WAIT Zenoss.cse/Infrastructure/mariadb-model Zenoss.cse/Infrastructure/mariadb-events Zenoss.cse/Infrastructure/RabbitMQ Zenoss.cse/Zenoss/Events/zeneventserver Zenoss.cse/Infrastructure/redis Zenoss.cse/Infrastructure/memcached started 1200
+SVC_WAIT Zenoss.cse/Infrastructure/mariadb-model Zenoss.cse/Infrastructure/mariadb-events Zenoss.cse/Infrastructure/RabbitMQ Zenoss.cse/Zenoss/Events/zeneventserver Zenoss.cse/Infrastructure/redis Zenoss.cse/Infrastructure/Impact Zenoss.cse/Infrastructure/memcached started 1200
 
 # Run migration to add solr first
 SVC_EXEC NO_COMMIT "Zenoss.cse/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump
