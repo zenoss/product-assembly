@@ -53,12 +53,6 @@ SVC_START Zenoss.cse/Infrastructure/solr
 SVC_RESTART Zenoss.cse/Zenoss/Events/zeneventserver
 SVC_WAIT Zenoss.cse/Infrastructure/solr Zenoss.cse/Zenoss/Events/zeneventserver started 600
 
-# Run migration to remove product class instance relationships
-SVC_EXEC NO_COMMIT "Zenoss.cse/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump
-
-# Run script to completely remove Catalog Service ZenPack
-SVC_EXEC NO_COMMIT "Zenoss.cse/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/remove_CatalogServiceZenPack.sh"
-
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.cse/Zenoss/User Interface/Zope" upgrade
 
