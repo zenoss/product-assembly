@@ -1,8 +1,6 @@
 DESCRIPTION  Persist current version number of RM
 REQUIRE_SVC
 
-# Choose image to work on
-SVC_USE zenoss/cse_REPLACE_1
 
 # Start all dependent services
 SVC_START Zenoss.cse/Infrastructure/mariadb-model
