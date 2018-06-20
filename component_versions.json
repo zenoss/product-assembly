@@ -18,9 +18,10 @@
     },
     {
         "name": "pynetsnmp",
-        "type": "download",
-        "version": "0.41.0",
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
+        "type": "jenkins",
+        "version": "develop",
+		"jenkins.server": "http://jenkins.zenoss.eng",
+		"jenkins.job": "pynetsnmp-develop"
     },
     {
         "name": "query",
