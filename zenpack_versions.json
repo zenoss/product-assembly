@@ -55,8 +55,8 @@
         "pre": true
     },{
         "name": "ZenPacks.zenoss.ComponentGroups",
-        "requirement": "ZenPacks.zenoss.ComponentGroups===1.6.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },{
         "name": "ZenPacks.zenoss.ControlCenter",
         "type": "zenpack",
