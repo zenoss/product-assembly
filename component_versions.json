@@ -79,8 +79,8 @@
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz",
         "name": "zproxy",
-        "type": "download",
-        "version": "1.0.5"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
