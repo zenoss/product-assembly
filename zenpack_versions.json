@@ -105,6 +105,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DynamicView",
+        "requirement": "ZenPacks.zenoss.DynamicView==1.6.*",
         "type": "zenpack",
         "pre": true
     },{
