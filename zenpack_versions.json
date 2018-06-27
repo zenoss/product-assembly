@@ -130,6 +130,7 @@
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
         "requirement": "ZenPacks.zenoss.HttpMonitor==3.0.*",
+        "git_ref": "hotfix/3.0.4",
         "type": "zenpack",
         "pre": true
     },{
