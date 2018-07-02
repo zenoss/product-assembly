@@ -16,10 +16,10 @@
         "version": "develop"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "pynetsnmp",
         "type": "download",
-        "version": "0.40.7"
+        "version": "0.41.0",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz",
