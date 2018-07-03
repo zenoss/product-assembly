@@ -49,8 +49,9 @@ def compare_artifacts(logfile1, logfile2):
 
 def compare_components(logfile1, logfile2):
     componentDiffs = compare_artifacts(logfile1, logfile2)
-    print "Component Differences:"
-    print "%-40.40s %-32.32s %-32.32s Different" % ("Name", "c1 (gitRef)", "c2 (gitRef)")
+    if not options.quiet:
+        print "Component Differences:"
+        print "%-40.40s %-32.32s %-32.32s Different" % ("Name", "c1 (gitRef)", "c2 (gitRef)")
     for name, item in componentDiffs.iteritems():
         if not options.verbose and not item.different:
             continue
@@ -58,12 +59,17 @@ def compare_components(logfile1, logfile2):
             diffIndicator = " Y"
         else:
             diffIndicator = ""
-        print "%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
+        if not options.quiet:
+            print "%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
+        else:
+            print "%s %s %s %s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
 
 def compare_zenpacks(logfile1, logfile2):
     zenPackDiffs = compare_artifacts(logfile1, logfile2)
-    print "ZenPack Differences:"
-    print "%-40.40s %-32.32s %-32.32s" % ("Name", "z1 (gitRef)", "z2 (gitRef)")
+    if not options.quiet:
+        print "ZenPack Differences:"
+        print "%-40.40s %-32.32s %-32.32s" % ("Name", "z1 (gitRef)", "z2 (gitRef)")
+    
     for name, item in zenPackDiffs.iteritems():
         if not options.verbose and not item.different:
             continue
@@ -71,7 +77,10 @@ def compare_zenpacks(logfile1, logfile2):
             diffIndicator = " *"
         else:
             diffIndicator = ""
-        print "%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
+        if not options.quiet:
+            print "%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
+        else:
+            print "%s %s %s %s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
 
 def buildJobUrl(jobArg):
     # Break jobArg into an array of words
@@ -394,6 +403,9 @@ if __name__ == '__main__':
 
     parser.add_argument('-v', '--verbose', action="store_true",
                         help='show all items compared, not just the ones that are different')
+
+    parser.add_argument('-q', '--quiet', action="store_true",
+                        help='quiet output, suitable for further results processing')
 
     options = parser.parse_args()
     main(options)
