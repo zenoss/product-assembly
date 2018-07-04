@@ -292,10 +292,6 @@
         "requirement": "ZenPacks.zenoss.StorageBase===1.4.3",
         "type": "zenpack"
     },{
-        "name": "ZenPacks.zenoss.SupportBundle",
-        "type": "zenpack",
-        "pre": true
-    },{
         "name": "ZenPacks.zenoss.TomcatMonitor",
         "requirement": "ZenPacks.zenoss.TomcatMonitor===2.3.0",
         "type": "zenpack"

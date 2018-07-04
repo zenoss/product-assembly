@@ -50,7 +50,6 @@
         "ZenPacks.zenoss.DistributedCollector",
         "ZenPacks.zenoss.ControlCenter",
         "ZenPacks.zenoss.ComponentGroups",
-        "ZenPacks.zenoss.SupportBundle",
         "ZenPacks.zenoss.RMMonitor",
         "ZenPacks.zenoss.GoogleCloudPlatform",
         "ZenPacks.zenoss.ImpactServer",
