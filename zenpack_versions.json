@@ -6,8 +6,8 @@
     },
     {
         "name": "ZenPacks.zenoss.AdvancedSearch",
-        "requirement": "ZenPacks.zenoss.AdvancedSearch===2.0.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.AixMonitor",
@@ -61,8 +61,8 @@
     },
     {
         "name": "ZenPacks.zenoss.ComponentGroups",
-        "requirement": "ZenPacks.zenoss.ComponentGroups===1.6.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.ControlCenter",
@@ -76,8 +76,8 @@
     },
     {
         "name": "ZenPacks.zenoss.Dashboard",
-        "requirement": "ZenPacks.zenoss.Dashboard===1.2.9",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.DatabaseMonitor",
@@ -121,8 +121,8 @@
     },
     {
         "name": "ZenPacks.zenoss.DynamicView",
-        "requirement": "ZenPacks.zenoss.DynamicView===1.6.1",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.EMC.base",
@@ -166,7 +166,7 @@
     },
     {
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "requirement": "ZenPacks.zenoss.HttpMonitor==3.0.3",
+        "requirement": "ZenPacks.zenoss.HttpMonitor==2.1.1",
         "type": "zenpack"
     },
     {
@@ -210,8 +210,8 @@
     },
     {
         "name": "ZenPacks.zenoss.Licensing",
-        "requirement": "ZenPacks.zenoss.Licensing===0.2.1",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.LinuxMonitor",
@@ -325,8 +325,8 @@
     },
     {
         "name": "ZenPacks.zenoss.RMMonitor",
-        "requirement": "ZenPacks.zenoss.RMMonitor===1.1.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.RabbitMQ",
