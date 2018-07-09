@@ -111,8 +111,10 @@
     },
     {
         "name": "ZenPacks.zenoss.Docker",
-        "requirement": "ZenPacks.zenoss.Docker===2.0.3",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.Docker==2.0.*",
+        "git_ref": "hotfix/2.0.4",
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.DurationThreshold",
@@ -156,8 +158,10 @@
     },
     {
         "name": "ZenPacks.zenoss.HP.Proliant",
-        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.1",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.HP.Proliant==3.3.*",
+        "git_ref": "hotfix/3.3.2",
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.HpuxMonitor",
@@ -405,8 +409,8 @@
     },
     {
         "name": "ZenPacks.zenoss.ZenPackLib",
-        "requirement": "ZenPacks.zenoss.ZenPackLib===2.0.9",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.ZenSQLTx",
