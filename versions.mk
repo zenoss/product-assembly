@@ -31,7 +31,7 @@ OPENTSDB_VERSION=24.0.8
 
 ZING_CONNECTOR_VERSION=latest
 OTSDB_BIGTABLE_VERSION=v1
-IMPACT_VERSION=5.3.2.0.0_8_testing
+IMPACT_VERSION=5.3.2.0.0_12_testing
 
 #Image project or organization used for images eg.  zing-registry-188222/cse_7.0:[TAG]
 IMAGE_PROJECT=zing-registry-188222
