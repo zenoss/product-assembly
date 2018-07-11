@@ -41,7 +41,7 @@ node ('build-zenoss-product') {
     def SERVICED_VERSION=""
     def SERVICED_BUILD_NUMBER=""
 
-    stage ('Promote image') {
+    stage ('Pull image') {
         // Make sure we start in a clean directory to ensure a fresh git clone
         deleteDir()
         // NOTE: The 'master' branch name here is only used to clone the github repo.
@@ -52,13 +52,13 @@ node ('build-zenoss-product') {
 
         // Get the values of various versions out of the versions.mk file for use in later stages
         def versionProps = readProperties file: 'versions.mk'
-        SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
-        ZENOSS_VERSION=versionProps['VERSION']
-        ZENOSS_SHORT_VERSION=versionProps['SHORT_VERSION']
-        SERVICED_BRANCH=versionProps['SERVICED_BRANCH']
-        SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
-        SERVICED_VERSION=versionProps['SERVICED_VERSION']
-        SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
+        SVCDEF_GIT_REF = versionProps['SVCDEF_GIT_REF']
+        ZENOSS_VERSION = versionProps['VERSION']
+        ZENOSS_SHORT_VERSION = versionProps['SHORT_VERSION']
+        SERVICED_BRANCH = versionProps['SERVICED_BRANCH']
+        SERVICED_MATURITY = versionProps['SERVICED_MATURITY']
+        SERVICED_VERSION = versionProps['SERVICED_VERSION']
+        SERVICED_BUILD_NUMBER = versionProps['SERVICED_BUILD_NUMBER']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}"
@@ -67,71 +67,65 @@ node ('build-zenoss-product') {
         echo "SERVICED_VERSION=${SERVICED_VERSION}"
         echo "SERVICED_BUILD_NUMBER=${SERVICED_BUILD_NUMBER}"
 
-        if ( ! TARGET_PRODUCT.trim() )
-        {
-        error "ERROR: Missing required argument - TARGET_PRODUCT"
+        if (!TARGET_PRODUCT.trim()) {
+            error "ERROR: Missing required argument - TARGET_PRODUCT"
         }
-        if ( ! ZENOSS_VERSION.trim() )
-        {
-        error "ERROR: Missing required argument - ZENOSS_VERSION"
+        if (!ZENOSS_VERSION.trim()) {
+            error "ERROR: Missing required argument - ZENOSS_VERSION"
         }
-        if ( ! ZENOSS_SHORT_VERSION.trim() )
-        {
-        error "ERROR: Missing required argument - ZENOSS_SHORT_VERSION"
+        if (!ZENOSS_SHORT_VERSION.trim()) {
+            error "ERROR: Missing required argument - ZENOSS_SHORT_VERSION"
         }
-        if ( ! FROM_MATURITY.trim() )
-        {
-        error "ERROR: Missing required argument - FROM_MATURITY"
+        if (!FROM_MATURITY.trim()) {
+            error "ERROR: Missing required argument - FROM_MATURITY"
         }
-        if ( ! TO_MATURITY.trim() )
-        {
-        error "ERROR: Missing required argument - TO_MATURITY"
+        if (!TO_MATURITY.trim()) {
+            error "ERROR: Missing required argument - TO_MATURITY"
         }
-        if ( ! TO_RELEASEPHASE.trim() )
-        {
-        error "ERROR: Missing required argument - TO_RELEASEPHASE"
+        if (!TO_RELEASEPHASE.trim()) {
+            error "ERROR: Missing required argument - TO_RELEASEPHASE"
         }
-        if (FROM_MATURITY != "unstable" && FROM_MATURITY != "testing" && FROM_MATURITY != "stable" )
-        {
-        error "ERROR: FROM_MATURITY=$FROM_MATURITY is invalid; must be one of unstable, testing or stable"
+        if (FROM_MATURITY != "unstable" && FROM_MATURITY != "testing" && FROM_MATURITY != "stable") {
+            error "ERROR: FROM_MATURITY=$FROM_MATURITY is invalid; must be one of unstable, testing or stable"
         }
-        if ( FROM_MATURITY == "unstable" && ! PRODUCT_BUILD_NUMBER.trim() )
-        {
-        error "ERROR: Missing required argument - PRODUCT_BUILD_NUMBER\n When FROM_MATURITY=unstable, PRODUCT_BUILD_NUMBER is required."
+        if (FROM_MATURITY == "unstable" && !PRODUCT_BUILD_NUMBER.trim()) {
+            error "ERROR: Missing required argument - PRODUCT_BUILD_NUMBER\n When FROM_MATURITY=unstable, PRODUCT_BUILD_NUMBER is required."
         }
-        if ( FROM_MATURITY == testing && ! FROM_RELEASEPHASE.trim() )
-        {
-        error "ERROR: Missing required argument - FROM_RELEASEPHASE\n When FROM_MATURITY=testing, FROM_RELEASEPHASE is required."
+        if (FROM_MATURITY == "testing" && !FROM_RELEASEPHASE.trim()) {
+            error "ERROR: Missing required argument - FROM_RELEASEPHASE\n When FROM_MATURITY=testing, FROM_RELEASEPHASE is required."
         }
-        if ( TO_MATURITY != "testing" && TO_MATURITY != "stable" )
-        {
-        error "ERROR: TO_MATURITY=${TO_MATURITY} is invalid; must be one of testing or stable"
+        if (TO_MATURITY != "testing" && TO_MATURITY != "stable") {
+            error "ERROR: TO_MATURITY=${TO_MATURITY} is invalid; must be one of testing or stable"
         }
 
-        repo="gcr.io/zing-registry-188222/${TARGET_PRODUCT}_${ZENOSS_SHORT_VERSION}"
-        tag=""
-        if (MATURITY == "unstable"){
-            tag="${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_unstable"
+        repo = "gcr.io/zing-registry-188222/${TARGET_PRODUCT}_${ZENOSS_SHORT_VERSION}"
+        tag = ""
+        if (FROM_MATURITY == "unstable") {
+            tag = "${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_unstable"
+        } else if (FROM_MATURITY == "stable" || FROM_MATURITY == "testing") {
+            tag = "${ZENOSS_VERSION}_${FROM_RELEASEPHASE}"
+        } else {
+            error "Inavlid maturity value ${FROM_MATURITY}"
         }
-        else if  (MATURITY == "stable" || MATURITY == "testing"){
-            tag="${ZENOSS_VERSION}_${phase}"
+        from_image = "${repo}:${tag}"
+        echo "pulling ${from_image}"
+        CZ_IMAGE=null
+        docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
+            CZ_IMAGE=docker.image("${from_image}")
+            CZ_IMAGE.pull()
+        }
+
+    }
+    stage ('Promote image') {
+        if  (TO_MATURITY == "stable" || TO_MATURITY == "testing"){
+            promote_tag="${ZENOSS_VERSION}_${TO_RELEASEPHASE}"
         }else{
-            error "Inavlid maturity value ${MATURITY}"
+            error "Inavlid maturity value ${TO_MATURITY}"
         }
-
-        //TODO pull the image, tag and push
-
-
-//        // Promote the docker images
-//        def promoteArgs = "target_product=${TARGET_PRODUCT}\
-//        PRODUCT_BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
-//            ZENOSS_VERSION=${ZENOSS_VERSION}\
-//            ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}\
-//            FROM_MATURITY=${FROM_MATURITY}\
-//            FROM_RELEASEPHASE=${FROM_RELEASEPHASE}\
-//            TO_MATURITY=${TO_MATURITY}\
-//            TO_RELEASEPHASE=${TO_RELEASEPHASE}"
-//        sh("cd svcdefs;${promoteArgs} ./image_promote.sh")
+        docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
+            CZ_IMAGE.tag("${promote_tag}")
+            CZ_IMAGE.push()
+        }
     }
 
     stage ('Compile service definitions') {
@@ -157,12 +151,12 @@ node ('build-zenoss-product') {
         sh("mkdir -p artifacts")
         sh("cp svcdefs/build/zenoss-service/output/*.json artifacts/.")
         sh("cd artifacts; for file in *json; do tar -cvzf \$file.tgz \$file; done")
-//        archive includes: 'artifacts/*.json*'
+        archive includes: 'artifacts/*.json*'
     }
 
     stage('Upload service definitions') {
         echo "upload..."
-//        googleStorageUpload bucket: "gs://cz-${MATURITY}/${TARGET_PRODUCT}/${ZENOSS_VERSION}/${PRODUCT_BUILD_NUMBER}", \
-//         credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
+        googleStorageUpload bucket: "gs://cz-${MATURITY}/${TARGET_PRODUCT}/${ZENOSS_VERSION}/${PRODUCT_BUILD_NUMBER}", \
+         credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
     }
 }
