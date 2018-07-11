@@ -156,7 +156,7 @@ node ('build-zenoss-product') {
 
     stage('Upload service definitions') {
         echo "upload..."
-        googleStorageUpload bucket: "gs://cz-${TO_MATURITY}/${TARGET_PRODUCT}/${ZENOSS_VERSION}/${PRODUCT_BUILD_NUMBER}", \
+        googleStorageUpload bucket: "gs://cz-${TO_MATURITY}/${TARGET_PRODUCT}/${ZENOSS_VERSION}", \
          credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
     }
 }
