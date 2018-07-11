@@ -105,7 +105,7 @@ node ('build-zenoss-product') {
         } else if (FROM_MATURITY == "stable" || FROM_MATURITY == "testing") {
             tag = "${ZENOSS_VERSION}_${FROM_RELEASEPHASE}"
         } else {
-            error "Inavlid maturity value ${FROM_MATURITY}"
+            error "Invalid maturity value ${FROM_MATURITY}"
         }
         from_image = "${repo}:${tag}"
         echo "pulling ${from_image}"
@@ -120,7 +120,7 @@ node ('build-zenoss-product') {
         if  (TO_MATURITY == "stable" || TO_MATURITY == "testing"){
             promote_tag="${ZENOSS_VERSION}_${TO_RELEASEPHASE}"
         }else{
-            error "Inavlid maturity value ${TO_MATURITY}"
+            error "Invalid maturity value ${TO_MATURITY}"
         }
         docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
             CZ_IMAGE.tag("${promote_tag}")
