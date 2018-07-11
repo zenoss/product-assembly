@@ -1,4 +1,3 @@
-project blam
 #!groovy
 //
 // Jenkins-promote.groovy - Jenkins script for promoting a single Zenoss product image.
