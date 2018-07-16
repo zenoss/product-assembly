@@ -9,6 +9,12 @@ set -e
 export UCSPM_TENANT_ID="`serviced service list ucspm --format='{{.ID}}'`"
 export UPGRADE_REINDEX
 export REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS
+BACKUP_DIR="/tmp/upgrade-backup"
+echo "Creating backup: the backup process may take a while."
+mkdir $BACKUP_DIR
+serviced backup $BACKUP_DIR
+BACKUP_FILE=$(ls $BACKUP_DIR | sort -n | head -1)
+
 serviced snapshot untag $UCSPM_TENANT_ID preupgrade-ucspm-%VERSION%
 
 FROM_VERSION=$(serviced service list ucspm --format='{{.Version}}')
@@ -45,5 +51,6 @@ fi
 
 sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g;" /root/%SHORT_VERSION%.x/upgrade-ucspm.txt
 
-serviced script run /root/%SHORT_VERSION%.x/upgrade-ucspm.txt --service ucspm
-/opt/serviced/bin/serviced-set-version UCSPM %UCSPM_VERSION%
+serviced script run /root/%SHORT_VERSION%.x/upgrade-ucspm.txt --service ucspm && /opt/serviced/bin/serviced-set-version UCSPM %UCSPM_VERSION% || echo "Upgrade failed - performing restore backup." && serviced service stop ucspm && sleep 10 && serviced restore $BACKUP_DIR/$BACKUP_FILE
+
+rm -rf $BACKUP_DIR

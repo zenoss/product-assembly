@@ -9,6 +9,12 @@ set -e
 export SERVICE_TENANT_ID="`serviced service list core --format='{{.ID}}'`"
 export UPGRADE_REINDEX
 export REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS
+BACKUP_DIR="/tmp/upgrade-backup"
+echo "Creating backup: the backup process may take a while."
+mkdir $BACKUP_DIR
+serviced backup $BACKUP_DIR
+BACKUP_FILE=$(ls $BACKUP_DIR | sort -n | head -1)
+
 serviced snapshot untag $SERVICE_TENANT_ID preupgrade-core-%VERSION%
 
 FROM_VERSION=$(serviced service list core --format='{{.Version}}')
@@ -45,5 +51,6 @@ fi
 
 sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g;" /root/%SHORT_VERSION%.x/upgrade-core.txt
 
-serviced script run /root/%SHORT_VERSION%.x/upgrade-core.txt --service Zenoss.core
-/opt/serviced/bin/serviced-set-version Zenoss.core %VERSION%
+serviced script run /root/%SHORT_VERSION%.x/upgrade-core.txt --service Zenoss.core && /opt/serviced/bin/serviced-set-version Zenoss.core %VERSION% || echo "Upgrade failed - performing restore backup." && serviced service stop Zenoss.core && sleep 10 && serviced restore $BACKUP_DIR/$BACKUP_FILE
+
+rm -rf $BACKUP_DIR
