@@ -61,7 +61,9 @@ node('build-zenoss-product') {
         }
 
         stage('Build image') {
-            imageName = "${IMAGE_PROJECT}/${TARGET_PRODUCT}_${SHORT_VERSION}:${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_${MATURITY}"
+
+            imageTag = "${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_${MATURITY}"
+            imageName = "${IMAGE_PROJECT}/${TARGET_PRODUCT}_${SHORT_VERSION}:${imageTag}"
             echo "imageName=${imageName}"
             customImage = docker.build(imageName, "-f ${TARGET_PRODUCT}/Dockerfile ${TARGET_PRODUCT}")
 
@@ -77,6 +79,10 @@ node('build-zenoss-product') {
         stage('Push image') {
             docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
                 customImage.push()
+                if (PINNED == "true") {
+                    //add a pinned tag so we know if this image is viable for promotion
+                    customImage.push("${imageTag}-pinned")
+                }
             }
         }
         stage('Compile service definitions and build RPM') {
