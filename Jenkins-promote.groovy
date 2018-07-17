@@ -124,7 +124,7 @@ node ('build-zenoss-product') {
         }
         docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
             CZ_IMAGE.tag("${promote_tag}")
-            CZ_IMAGE.push()
+            CZ_IMAGE.push("${promote_tag}")
         }
     }
 
