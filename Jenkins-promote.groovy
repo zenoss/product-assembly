@@ -21,7 +21,6 @@
 //                        Only applies when FROM_MATURITY is testing
 // TO_MATURITY          - required; the maturity level of the build that will
 //                        be created. Must be one of testing, or stable
-// TO_RELEASEPHASE      - The release phase of the promoted build.
 //                        If TO_MATURITY is testing, then this value is typically something "BETA" or "RC1".
 //                        If TO_MATURITY is stable, then this value must be a single digit such as 1.
 //
@@ -82,9 +81,6 @@ node ('build-zenoss-product') {
         if (!TO_MATURITY.trim()) {
             error "ERROR: Missing required argument - TO_MATURITY"
         }
-        if (!TO_RELEASEPHASE.trim()) {
-            error "ERROR: Missing required argument - TO_RELEASEPHASE"
-        }
         if (FROM_MATURITY != "unstable" && FROM_MATURITY != "testing" && FROM_MATURITY != "stable") {
             error "ERROR: FROM_MATURITY=$FROM_MATURITY is invalid; must be one of unstable, testing or stable"
         }
@@ -101,7 +97,8 @@ node ('build-zenoss-product') {
         repo = "gcr.io/zing-registry-188222/${TARGET_PRODUCT}_${ZENOSS_SHORT_VERSION}"
         tag = ""
         if (FROM_MATURITY == "unstable") {
-            tag = "${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_unstable"
+            // only accept images where all sub-components were pinned at build time
+            tag = "${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_unstable-pinned"
         } else if (FROM_MATURITY == "stable" || FROM_MATURITY == "testing") {
             tag = "${ZENOSS_VERSION}_${FROM_RELEASEPHASE}"
         } else {
@@ -118,7 +115,7 @@ node ('build-zenoss-product') {
     }
     stage ('Promote image') {
         if  (TO_MATURITY == "stable" || TO_MATURITY == "testing"){
-            promote_tag="${ZENOSS_VERSION}_${TO_RELEASEPHASE}"
+            promote_tag="${ZENOSS_VERSION}_${BUILD_NUMBER}"
         }else{
             error "Invalid maturity value ${TO_MATURITY}"
         }
@@ -145,7 +142,7 @@ node ('build-zenoss-product') {
         IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
             MATURITY=${TO_MATURITY}\
             SVCDEF_GIT_READY=true\
-            RELEASE_PHASE=${TO_RELEASEPHASE}\
+            RELEASE_PHASE=${BUILD_NUMBER}\
             TARGET_PRODUCT=${TARGET_PRODUCT}"
         sh("cd svcdefs;make build ${makeArgs}")
         sh("mkdir -p artifacts")
