@@ -271,8 +271,10 @@
     },
     {
         "name": "ZenPacks.zenoss.NetAppMonitor",
-        "requirement": "ZenPacks.zenoss.NetAppMonitor===3.6.0",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.NetAppMonitor==3.6.*",
+        "git_ref": "hotfix/3.6.1",
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.NetScaler",
