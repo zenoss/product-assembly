@@ -126,6 +126,7 @@ su - zenoss -c "pip install --no-index  /tmp/servicemigration*"
 wget -q http://zenpip.zenoss.eng/packages/zenoss-solr-1.0dev.tgz -O /tmp/zenoss-solr.tgz
 tar -C "/" -xzvf /tmp/zenoss-solr.tgz
 chown -R zenoss:zenoss /var/solr
+su - zenoss -c "echo 'log4j.logger.org.apache.solr=WARN' >> /var/solr/log4j.properties"
 
 # Install Modelindex
 artifactDownload "modelindex"
