@@ -31,7 +31,7 @@
     },
     {
         "name": "ZenPacks.zenoss.CalculatedPerformance",
-        "requirement": "ZenPacks.zenoss.CalculatedPerformance===2.5.0",
+        "requirement": "ZenPacks.zenoss.CalculatedPerformance===2.5.1",
         "type": "zenpack"
     },
     {
@@ -157,7 +157,9 @@
     {
         "name": "ZenPacks.zenoss.HP.Proliant",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.1"
+        "requirement": "ZenPacks.zenoss.HP.Proliant==3.3.*",
+        "git_ref": "hotfix/3.3.2",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.HpuxMonitor",
@@ -217,7 +219,7 @@
     },
     {
         "name": "ZenPacks.zenoss.LinuxMonitor",
-        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.2.7",
+        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.3.1",
         "type": "zenpack"
     },
     {
@@ -372,7 +374,7 @@
     },
     {
         "name": "ZenPacks.zenoss.WSMAN",
-        "requirement": "ZenPacks.zenoss.WSMAN===1.0.1",
+        "requirement": "ZenPacks.zenoss.WSMAN===1.0.2",
         "type": "zenpack"
     },
     {
@@ -427,7 +429,7 @@
     },
     {
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===3.7.1",
+        "requirement": "ZenPacks.zenoss.vSphere===3.7.2",
         "type": "zenpack"
     }
 ]
