@@ -35,6 +35,7 @@ fi
 
 FROM_VERSION_SHORT=$(cut -d'.' -f1,2 <<< $FROM_VERSION)
 sed -i 's/REPLACE/'"$FROM_VERSION_SHORT:$FROM_VERSION"'/g' /root/%SHORT_VERSION%.x/current_version.txt
+sed -i "s/%FROM_VERSION%/$FROM_VERSION/g" /root/%SHORT_VERSION%.x/current_version.txt
 serviced script run /root/%SHORT_VERSION%.x/current_version.txt --service ucspm
 
 if [ $(echo "${FROM_VERSION}" | cut -c1) -eq 5 ] && [ $(echo "${TO_VERSION}" | cut -c1) -eq 6 ];

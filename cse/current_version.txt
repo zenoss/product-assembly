@@ -15,4 +15,5 @@ SVC_START Zenoss.cse/Infrastructure/redis
 SVC_WAIT Zenoss.cse/Infrastructure/mariadb-model Zenoss.cse/Infrastructure/mariadb-events Zenoss.cse/Infrastructure/RabbitMQ Zenoss.cse/Zenoss/Events/zeneventserver Zenoss.cse/Infrastructure/redis started 1200
 
 # Write current version to file
-SVC_EXEC NO_COMMIT "Zenoss.cse/Zenoss/User Interface/Zope" sh -c "(grep \"^VERSION=\" /opt/zenoss/Products/ZenModel/ZVersion.py | cut -d'=' -f2 | tr -d '\"') > /var/zenoss/upgrade_from_version.txt && chown zenoss:zenoss /var/zenoss/upgrade_from_version.txt"
+SVC_EXEC NO_COMMIT "Zenoss.cse/Zenoss/User Interface/Zope" sh -c "echo %FROM_VERSION% > /var/zenoss/upgrade_from_version.txt && chown zenoss:zenoss /var/zenoss/upgrade_from_version.txt"
+
