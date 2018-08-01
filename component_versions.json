@@ -18,16 +18,15 @@
     },
     {
         "name": "pynetsnmp",
-        "type": "jenkins",
-        "version": "0.41.0",
-        "jenkins.server": "http://jenkins.zenoss.eng",
-        "jenkins.job": "pynetsnmp-develop"
+        "type": "download",
+        "version": "0.41.1",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz",
         "name": "query",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "0.1.31"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
@@ -61,15 +60,16 @@
         "version": "2.1.8"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz",
         "name": "zenoss-zep",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "2.6.0"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz",
         "name": "zenoss.metric.consumer",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "0.1.8"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
