@@ -177,20 +177,16 @@
         "type": "zenpack"
     },
     {
+        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/ZenPacks.zenoss.Impact-{version}-py2.7.egg",
         "name": "ZenPacks.zenoss.Impact",
-        "type": "jenkins",
-        "git_ref": "support/5.3.x",
-        "jenkins.job": "Impact/job/branch/job/impact_branch_ZenPacks.zenoss.Impact",
-        "jenkins.pattern": "*.egg",
-        "pre": true
+        "version": "5.3.2.0.0",
+        "type": "download"
     },
     {
+        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/ZenPacks.zenoss.ImpactServer-{version}-py2.7.egg",
         "name": "ZenPacks.zenoss.ImpactServer",
-        "type": "jenkins",
-        "git_ref": "support/5.3.x",
-        "jenkins.job": "Impact/job/branch/job/impact_branch_ZenPacks.zenoss.ImpactServer",
-        "jenkins.pattern": "*[!x]-py2.7.egg",
-        "pre": true
+        "version": "5.3.2.0.0",
+        "type": "download"
     },
     {
         "name": "ZenPacks.zenoss.InstalledTemplatesReport",
