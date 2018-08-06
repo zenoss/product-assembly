@@ -119,6 +119,9 @@ su - zenoss -c "pip install --no-index  /tmp/zenoss.toolbox*.whl"
 artifactDownload "service-migration"
 su - zenoss -c "pip install --no-index  /tmp/servicemigration*"
 
+# Change memory allocator for MySQL
+echo -e "\n[mysqld_safe]\nmalloc-lib = /usr/lib64/libjemalloc.so.1" >> /etc/my.cnf
+
 # Install zenoss-solr
 # TODO:  Don't do this.  Either componentize our solr startup scripts, do this in zenoss-centos-base,
 #  move solr to its own image, or some combination of these.
