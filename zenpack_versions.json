@@ -157,7 +157,7 @@
     {
         "name": "ZenPacks.zenoss.HP.Proliant",
         "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.2",
-        "type": "zenpack",
+        "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.HpuxMonitor",
