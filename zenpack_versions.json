@@ -66,8 +66,8 @@
     },
     {
         "name": "ZenPacks.zenoss.ControlCenter",
-        "requirement": "ZenPacks.zenoss.ControlCenter===1.6.2",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.DB2",
