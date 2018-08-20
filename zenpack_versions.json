@@ -308,8 +308,8 @@
     },
     {
         "name": "ZenPacks.zenoss.PredictiveThreshold",
-        "requirement": "ZenPacks.zenoss.PredictiveThreshold===1.2.2",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.PropertyMonitor",
