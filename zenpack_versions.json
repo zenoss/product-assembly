@@ -155,8 +155,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LDAPAuthenticator",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.LDAPAuthenticator===3.3.1",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LDAPMonitor",
         "requirement": "ZenPacks.zenoss.LDAPMonitor===1.4.2",
