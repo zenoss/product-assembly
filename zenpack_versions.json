@@ -2,7 +2,7 @@
     {
         "name": "ZenPacks.zenoss.AWS",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.AWS===4.0.1"
+        "requirement": "ZenPacks.zenoss.AWS===4.0.2"
     },
     {
         "name": "ZenPacks.zenoss.AdvancedSearch",
@@ -51,7 +51,7 @@
     },
     {
         "name": "ZenPacks.zenoss.CiscoUCS",
-        "requirement": "ZenPacks.zenoss.CiscoUCS===2.7.0",
+        "requirement": "ZenPacks.zenoss.CiscoUCS===2.8.0",
         "type": "zenpack"
     },
     {
@@ -166,7 +166,7 @@
     },
     {
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "requirement": "ZenPacks.zenoss.HttpMonitor===2.1.1",
+        "requirement": "ZenPacks.zenoss.HttpMonitor===3.0.4",
         "type": "zenpack"
     },
     {
@@ -288,7 +288,7 @@
     },
     {
         "name": "ZenPacks.zenoss.OpenStackInfrastructure",
-        "requirement": "ZenPacks.zenoss.OpenStackInfrastructure===2.4.1",
+        "requirement": "ZenPacks.zenoss.OpenStackInfrastructure===2.4.2",
         "type": "zenpack"
     },
     {
