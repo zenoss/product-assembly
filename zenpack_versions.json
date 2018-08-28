@@ -67,7 +67,7 @@
     {
         "name": "ZenPacks.zenoss.ControlCenter",
         "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.ControlCenter===1.6.2"
     },
     {
         "name": "ZenPacks.zenoss.DB2",
@@ -324,7 +324,7 @@
     {
         "name": "ZenPacks.zenoss.RMMonitor",
         "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.RMMonitor===1.1.1"
     },
     {
         "name": "ZenPacks.zenoss.RabbitMQ",
