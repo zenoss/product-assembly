@@ -52,6 +52,7 @@
         "ZenPacks.zenoss.ComponentGroups",
         "ZenPacks.zenoss.RMMonitor",
         "ZenPacks.zenoss.GoogleCloudPlatform",
+        "ZenPacks.zenoss.DiscoveryMapping",
         "ZenPacks.zenoss.ImpactServer",
         "ZenPacks.zenoss.Impact"
     ],
