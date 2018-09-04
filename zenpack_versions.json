@@ -17,7 +17,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.AWS",
-        "requirement": "ZenPacks.zenoss.AWS===4.0.1",
+        "requirement": "ZenPacks.zenoss.AWS===4.0.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.BigIpMonitor",
