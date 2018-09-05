@@ -129,10 +129,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "requirement": "ZenPacks.zenoss.HttpMonitor==3.0.*",
-        "git_ref": "hotfix/3.0.4",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.HttpMonitor==3.0.4",
+        "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.IBM.Power",
         "requirement": "ZenPacks.zenoss.IBM.Power===1.1.2",
