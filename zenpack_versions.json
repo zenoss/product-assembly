@@ -121,7 +121,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HP.Proliant",
-        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.1",
+        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HpuxMonitor",
@@ -129,7 +129,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "requirement": "ZenPacks.zenoss.HttpMonitor===3.0.3",
+        "requirement": "ZenPacks.zenoss.HttpMonitor===3.0.4",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.IBM.Power",
@@ -289,7 +289,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===3.6.3",
+        "requirement": "ZenPacks.zenoss.vSphere===3.7.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WBEM",
@@ -329,7 +329,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenPackLib",
-        "requirement": "ZenPacks.zenoss.ZenPackLib===2.0.9",
+        "requirement": "ZenPacks.zenoss.ZenPackLib===2.1.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenSQLTx",

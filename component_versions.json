@@ -19,7 +19,7 @@
     {
         "name": "pynetsnmp",
         "type": "download",
-        "version": "0.41.0",
+        "version": "0.41.1",
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
     },
     {
@@ -50,7 +50,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "download",
-        "version": "6.2.0",
+        "version": "6.2.1",
         "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.2.x.tar.gz"
     },
     {
