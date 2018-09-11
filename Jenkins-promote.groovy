@@ -33,8 +33,6 @@ node ('build-zenoss-product') {
     def childJobLabel = TARGET_PRODUCT + " promote to " + TO_MATURITY
 
     def SVCDEF_GIT_REF=""
-    def ZENOSS_VERSION=""
-    def ZENOSS_SHORT_VERSION=""
     def SERVICED_BRANCH=""
     def SERVICED_MATURITY=""
     def SERVICED_VERSION=""
@@ -52,15 +50,11 @@ node ('build-zenoss-product') {
         // Get the values of various versions out of the versions.mk file for use in later stages
         def versionProps = readProperties file: 'versions.mk'
         SVCDEF_GIT_REF = versionProps['SVCDEF_GIT_REF']
-        ZENOSS_VERSION = versionProps['VERSION']
-        ZENOSS_SHORT_VERSION = versionProps['SHORT_VERSION']
         SERVICED_BRANCH = versionProps['SERVICED_BRANCH']
         SERVICED_MATURITY = versionProps['SERVICED_MATURITY']
         SERVICED_VERSION = versionProps['SERVICED_VERSION']
         SERVICED_BUILD_NUMBER = versionProps['SERVICED_BUILD_NUMBER']
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
-        echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
-        echo "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}"
         echo "SERVICED_BRANCH=${SERVICED_BRANCH}"
         echo "SERVICED_MATURITY=${SERVICED_MATURITY}"
         echo "SERVICED_VERSION=${SERVICED_VERSION}"
@@ -68,12 +62,6 @@ node ('build-zenoss-product') {
 
         if (!TARGET_PRODUCT.trim()) {
             error "ERROR: Missing required argument - TARGET_PRODUCT"
-        }
-        if (!ZENOSS_VERSION.trim()) {
-            error "ERROR: Missing required argument - ZENOSS_VERSION"
-        }
-        if (!ZENOSS_SHORT_VERSION.trim()) {
-            error "ERROR: Missing required argument - ZENOSS_SHORT_VERSION"
         }
         if (!FROM_MATURITY.trim()) {
             error "ERROR: Missing required argument - FROM_MATURITY"
@@ -94,13 +82,13 @@ node ('build-zenoss-product') {
             error "ERROR: TO_MATURITY=${TO_MATURITY} is invalid; must be one of testing or stable"
         }
 
-        repo = "gcr.io/zing-registry-188222/${TARGET_PRODUCT}_${ZENOSS_SHORT_VERSION}"
+        repo = "gcr.io/zing-registry-188222/${TARGET_PRODUCT}_${PRODUCT_BUILD_NUMBER}"
         tag = ""
         if (FROM_MATURITY == "unstable") {
             // only accept images where all sub-components were pinned at build time
-            tag = "${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_unstable-pinned"
+            tag = "${PRODUCT_BUILD_NUMBER}_unstable-pinned"
         } else if (FROM_MATURITY == "stable" || FROM_MATURITY == "testing") {
-            tag = "${ZENOSS_VERSION}_${FROM_RELEASEPHASE}"
+            tag = "${PRODUCT_BUILD_NUMBER}_${FROM_RELEASEPHASE}"
         } else {
             error "Invalid maturity value ${FROM_MATURITY}"
         }
@@ -115,7 +103,7 @@ node ('build-zenoss-product') {
     }
     stage ('Promote image') {
         if  (TO_MATURITY == "stable" || TO_MATURITY == "testing"){
-            promote_tag="${ZENOSS_VERSION}_${BUILD_NUMBER}"
+            promote_tag="${PRODUCT_BUILD_NUMBER}_${BUILD_NUMBER}"
         }else{
             error "Invalid maturity value ${TO_MATURITY}"
         }
@@ -153,7 +141,7 @@ node ('build-zenoss-product') {
 
     stage('Upload service definitions') {
         echo "upload..."
-        googleStorageUpload bucket: "gs://cz-${TO_MATURITY}/${TARGET_PRODUCT}/${ZENOSS_VERSION}", \
+        googleStorageUpload bucket: "gs://cz-${TO_MATURITY}/${TARGET_PRODUCT}/${PRODUCT_BUILD_NUMBER}", \
          credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
     }
 }
