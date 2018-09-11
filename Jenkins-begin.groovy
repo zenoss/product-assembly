@@ -61,7 +61,7 @@ node('build-zenoss-product') {
             // Get the values of various versions out of the versions.mk file for use in later stages
             def versionProps = readProperties file: 'versions.mk'
             SVCDEF_GIT_REF = versionProps['SVCDEF_GIT_REF']
-            ZENOSS_VERSION = versionProps['VERSION']
+            ZENOSS_VERSION = PRODUCT_BUILD_NUMBER //versionProps['VERSION']
             SHORT_VERSION = versionProps['SHORT_VERSION']
             IMAGE_PROJECT = versionProps['IMAGE_PROJECT']
             echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
