@@ -72,7 +72,7 @@ node('build-zenoss-product') {
         stage('Build image') {
 
             imageTag = "${PRODUCT_BUILD_NUMBER}_${MATURITY}"
-            imageName = "${IMAGE_PROJECT}/${TARGET_PRODUCT}_${PRODUCT_BUILD_NUMBER}:${imageTag}"
+            imageName = "${IMAGE_PROJECT}/${TARGET_PRODUCT}:${imageTag}"
             echo "imageName=${imageName}"
             customImage = docker.build(imageName, "-f ${TARGET_PRODUCT}/Dockerfile ${TARGET_PRODUCT}")
 
