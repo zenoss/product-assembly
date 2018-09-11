@@ -73,7 +73,6 @@ node('build-zenoss-product') {
 
             imageTag = "${PRODUCT_BUILD_NUMBER}_${MATURITY}"
             imageName = "${IMAGE_PROJECT}/${TARGET_PRODUCT}_${PRODUCT_BUILD_NUMBER}:${imageTag}"
-            echo "TARGET_PRODUCT=${TARGET_PRODUCT}"
             echo "imageName=${imageName}"
             customImage = docker.build(imageName, "-f ${TARGET_PRODUCT}/Dockerfile ${TARGET_PRODUCT}")
 
@@ -139,7 +138,7 @@ node('build-zenoss-product') {
         }
 
         slackSend color: 'warning',
-                channel: '#zing-dev',
+                channel: '#cz-dev',
                 message: "CSE Build Failed: ${env.JOB_NAME} Build #${env.BUILD_NUMBER} ${env.BUILD_URL}"
         error "Job failed with the following error: ${err}"
     } finally {
