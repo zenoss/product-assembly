@@ -5,7 +5,7 @@ FROM zenoss/%FROM_IMAGE%
 
 ENV ZENHOME=/opt/zenoss
 
-ADD %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
+ADD %SHORT_VERSION% /root/%SHORT_VERSION%
 
 # TODO: fix this. The hubpasswd file should be in the service definition
 ADD hubpasswd /opt/zenoss/etc/

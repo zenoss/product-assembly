@@ -2,11 +2,11 @@
 MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
 
-IMAGENAME  = $(TARGET_PRODUCT)_$(SHORT_VERSION)
+IMAGENAME  = $(TARGET_PRODUCT)
 
-FROM_IMAGE = product-base:$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)_CSE
+FROM_IMAGE = product-base:$(BUILD_NUMBER)_$(MATURITY)_CSE
 
-TAG = ${IMAGE_PROJECT}/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
+TAG = ${IMAGE_PROJECT}/$(IMAGENAME):$(BUILD_NUMBER)_$(MATURITY)
 
 .PHONY: build push clean getDownloadLogs
 
@@ -19,7 +19,7 @@ build-deps: $(UPGRADE_SCRIPTS) Dockerfile zenpack_download
 
 Dockerfile:
 	echo $(FROM_IMAGE)
-	@sed -e  's/%FROM_IMAGE%/$(FROM_IMAGE)/g; s/%SHORT_VERSION%/$(SHORT_VERSION)/g' Dockerfile.in > $@
+	@sed -e  's/%FROM_IMAGE%/$(FROM_IMAGE)/g; s/%SHORT_VERSION%/$(BUILD_NUMBER)/g' Dockerfile.in > $@
 
 zenpacks:
 	@mkdir $@
@@ -39,7 +39,7 @@ getDownloadLogs:
 	docker run --rm -v $(PWD):/mnt/export -t $(TAG) rsync -a /opt/zenoss/log/zenoss_component_artifact.log /opt/zenoss/log/zenpacks_artifact.log /mnt/export
 
 upgrade-%.txt:
-	@sed -e 's/%ZING_CONNECTOR_VERSION%/$(ZING_CONNECTOR_VERSION)/g; s/%OTSDB_BIGTABLE_VERSION%/$(OTSDB_BIGTABLE_VERSION)/g; s/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%VERSION%/$(VERSION)/g; s/%UCSPM_VERSION%/$(UCSPM_VERSION)/g; s/%RELEASE_PHASE%/$(MATURITY)/g; s/%VERSION_TAG%/$(VERSION_TAG)/g;' upgrade-$*.txt.in > $@
+	@sed -e 's/%ZING_CONNECTOR_VERSION%/$(ZING_CONNECTOR_VERSION)/g; s/%OTSDB_BIGTABLE_VERSION%/$(OTSDB_BIGTABLE_VERSION)/g; s/%SHORT_VERSION%/$(BUILD_NUMBER)/g; s/%VERSION%/$(BUILD_NUMBER)/g; s/%UCSPM_VERSION%/$(UCSPM_VERSION)/g; s/%RELEASE_PHASE%/$(MATURITY)/g; s/%VERSION_TAG%/$(VERSION_TAG)/g;' upgrade-$*.txt.in > $@
 
 upgrade-%.sh:
 	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%VERSION%/$(VERSION)/g; s/%UCSPM_VERSION%/$(UCSPM_VERSION)/g;' upgrade-$*.sh.in > $@
