@@ -54,18 +54,14 @@ node('build-zenoss-product') {
         }
 
         def SVCDEF_GIT_REF = ""
-        def ZENOSS_VERSION = ""
         def IMAGE_PROJECT = ""
         def customImage = ""
         stage('Download zenpacks') {
             // Get the values of various versions out of the versions.mk file for use in later stages
             def versionProps = readProperties file: 'versions.mk'
             SVCDEF_GIT_REF = versionProps['SVCDEF_GIT_REF']
-            ZENOSS_VERSION = PRODUCT_BUILD_NUMBER //versionProps['VERSION']
-            SHORT_VERSION = versionProps['SHORT_VERSION']
             IMAGE_PROJECT = versionProps['IMAGE_PROJECT']
             echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
-            echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
 
             // Make the target product
             sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build-deps")
@@ -73,8 +69,8 @@ node('build-zenoss-product') {
 
         stage('Build image') {
 
-            imageTag = "${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_${MATURITY}"
-            imageName = "${IMAGE_PROJECT}/${TARGET_PRODUCT}_${SHORT_VERSION}:${imageTag}"
+            imageTag = "${PRODUCT_BUILD_NUMBER}_${MATURITY}"
+            imageName = "${IMAGE_PROJECT}/${TARGET_PRODUCT}_${PRODUCT_BUILD_NUMBER}:${imageTag}"
             echo "imageName=${imageName}"
             customImage = docker.build(imageName, "-f ${TARGET_PRODUCT}/Dockerfile ${TARGET_PRODUCT}")
 
@@ -126,7 +122,7 @@ node('build-zenoss-product') {
         }
 
         stage('Upload service definitions') {
-            googleStorageUpload bucket: "gs://cse_artifacts/${TARGET_PRODUCT}/${MATURITY}/${ZENOSS_VERSION}/${PRODUCT_BUILD_NUMBER}", \
+            googleStorageUpload bucket: "gs://cse_artifacts/${TARGET_PRODUCT}/${MATURITY}/${PRODUCT_BUILD_NUMBER}", \
          credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
         }
 
