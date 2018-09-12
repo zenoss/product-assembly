@@ -107,6 +107,7 @@ endif
 		opentsdb_VERSION=$(OPENTSDB_VERSION) \
 		SHORT_VERSION=$(BUILD_NUMBER) \
 		VERSION=$(BUILD_NUMBER) \
+        BUILD_NAME=$(BUILD_NUMBER) \
 		make docker_svcdef-$(TARGET_PRODUCT)
 
 clean:
