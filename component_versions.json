@@ -12,9 +12,8 @@
     },
     {
         "name": "modelindex",
-        "type": "download",
-        "version": "1.0.3",
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "name": "pynetsnmp",
@@ -84,9 +83,8 @@
         "version": "1.0.5"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "zenoss.toolbox",
-        "type": "download",
-        "version": "2.2.0"
+        "type": "jenkins",
+        "version": "develop"
     }
 ]
