@@ -48,9 +48,10 @@
         "version": "4.1.3"
     },
     {
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master.tar.gz",
         "name": "zenoss-prodbin",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "7.0.4"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
