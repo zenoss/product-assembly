@@ -13,7 +13,7 @@
     {
         "name": "modelindex",
         "type": "download",
-        "version": "1.0.3",
+        "version": "1.0.4",
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz"
     },
     {
