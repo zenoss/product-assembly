@@ -82,7 +82,7 @@
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz",
         "name": "zproxy",
         "type": "download",
-        "version": "1.0.5"
+        "version": "1.0.6"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
