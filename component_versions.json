@@ -51,8 +51,8 @@
     {
         "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master.tar.gz",
         "name": "zenoss-prodbin",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "7.0.5"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
@@ -88,6 +88,6 @@
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "zenoss.toolbox",
         "type": "download",
-        "version": "2.2.0"
+        "version": "2.3.0"
     }
 ]
