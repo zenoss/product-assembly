@@ -337,10 +337,8 @@ def main(options):
             errors.append("unpinned versions found:\n%s" % '\n'.join(unpinned))
         if notLatest:
             msg = "not using latest versions :\n%s" % '\n'.join(notLatest)
-            if options.check_latest:
-                errors.append(msg)
-            else:
-                print "Warning: %s" % msg
+            errors.append(msg)
+
         if errors:
             sys.exit("\n".join(errors))
         sys.exit(0)
