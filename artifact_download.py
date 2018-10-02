@@ -313,6 +313,7 @@ def main(options):
         #verify all versions are explicitly set to a release
         versions = json.load(options.versions)
         unpinned = []
+        notLatest = []
         for artifact in versions:
             artifactInfo = artifactClass[artifact['type']](artifact)
             if not artifactInfo.pinned:
@@ -321,8 +322,27 @@ def main(options):
                 else:
                     version = "version: %s" % artifactInfo.version
                 unpinned.append("%s %s" % (artifactInfo.name, version))
+            elif options.check_latest:
+                latest = artifactInfo.getLatestVersion()
+                if latest != "UNSUPPORTED":
+                    if isinstance(artifactInfo, ZenPackInfo):
+                        #pinned zenpack versions always have '==='
+                        _, pinnedVersion = artifactInfo.requirement.split('===')
+                    else:
+                        pinnedVersion = artifactInfo.version
+                    if pinnedVersion != latest:
+                        notLatest.append("%s pinned version %s, does not match latest: %s" % (artifactInfo.name, pinnedVersion, latest))
+        errors = []
         if unpinned:
-            sys.exit("unpinned versions found:\n%s" % '\n'.join(unpinned))
+            errors.append("unpinned versions found:\n%s" % '\n'.join(unpinned))
+        if notLatest:
+            msg = "not using latest versions :\n%s" % '\n'.join(notLatest)
+            if options.check_latest:
+                errors.append(msg)
+            else:
+                print "Warning: %s" % msg
+        if errors:
+            sys.exit("\n".join(errors))
         sys.exit(0)
 
     artifacts = options.artifacts
@@ -413,6 +433,9 @@ class ArtifactInfo(object):
             "name": self.name,
             "type": self.infoType
         }
+
+    def getLatestVersion(self):
+        return "UNSUPPORTED"
 
 
 class URLDownloadInfo(ArtifactInfo):
@@ -515,6 +538,12 @@ class ZenPackInfo(ArtifactInfo):
 
         return gitRef
 
+    def getLatestVersion(self):
+        url = "http://zenpacks.zenoss.eng/requirement/%s" % self.name
+        info = json.loads(urllib2.urlopen(url).read())
+        return info['version']
+
+
     @property
     def pinned(self):
         """Return True if artifact is a pinned version. False if not."""
@@ -581,6 +610,9 @@ if __name__ == '__main__':
 
     parser.add_argument('--pinned', action="store_true",
                         help='Verify that the versions in the json file are pinned to an explicit release version, i.e. not develop.')
+
+    parser.add_argument('--check-latest', action="store_true",
+                        help='Used in conjunction with pinned. Check if pinned version is latest available, currently only works for zenpack versions')
 
     options = parser.parse_args()
     main(options)
