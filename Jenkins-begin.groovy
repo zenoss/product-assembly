@@ -34,6 +34,10 @@ node('build-zenoss-product') {
 
         stage('Build product-base') {
             if (PINNED == "true") {
+                checkLatest = ""
+                if (CHECK_LATEST == 'true') {
+                    checkLatest = " --check-latest"
+                }
                 // make sure SVCDEF_GIT_REF and IMPACT_VERSION have the form x.x.x, where x is an integer
                 println "Checking for pinned versions in versions.mk"
                 sh("grep '^SVCDEF_GIT_REF=[0-9]\\{1,\\}\\.[0-9]\\{1,\\}\\.[0-9]\\{1,\\}' versions.mk")
@@ -45,10 +49,10 @@ node('build-zenoss-product') {
 
                 // Verify that everything in the component and ZP manifests are pinned
                 println "Checking for pinned versions in component_versions.json"
-                sh("./artifact_download.py component_versions.json --pinned")
+                sh("./artifact_download.py component_versions.json --pinned" + checkLatest)
 
                 println "Checking for pinned versions in zenpack_versions.json"
-                sh("./artifact_download.py zenpack_versions.json --pinned")
+                sh("./artifact_download.py zenpack_versions.json --pinned" + checkLatest)
             }
             sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
         }
