@@ -165,7 +165,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LinuxMonitor",
-        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.2.7",
+        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.3.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Memcached",
