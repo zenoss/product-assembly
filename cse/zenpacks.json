@@ -53,6 +53,7 @@
         "ZenPacks.zenoss.RMMonitor",
         "ZenPacks.zenoss.GoogleCloudPlatform",
         "ZenPacks.zenoss.DiscoveryMapping",
+        "ZenPacks.zenoss.Kubernetes",
         "ZenPacks.zenoss.ImpactServer",
         "ZenPacks.zenoss.Impact"
     ],
