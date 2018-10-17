@@ -207,6 +207,11 @@
         "type": "zenpack"
     },
     {
+        "name": "ZenPacks.zenoss.Kubernetes",
+        "requirement": "ZenPacks.zenoss.Kubernetes===1.0.0",
+        "type": "zenpack"
+    },
+    {
         "name": "ZenPacks.zenoss.Layer2",
         "requirement": "ZenPacks.zenoss.Layer2===1.4.1",
         "type": "zenpack"
@@ -428,7 +433,7 @@
     },
     {
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===3.7.2",
+        "requirement": "ZenPacks.zenoss.vSphere===4.0.0",
         "type": "zenpack"
     }
 ]
