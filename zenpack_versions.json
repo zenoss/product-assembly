@@ -208,7 +208,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Layer2",
-        "requirement": "ZenPacks.zenoss.Layer2===1.4.0",
+        "requirement": "ZenPacks.zenoss.Layer2===1.4.1",
         "type": "zenpack"
     },
     {
@@ -218,7 +218,7 @@
     },
     {
         "name": "ZenPacks.zenoss.LinuxMonitor",
-        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.3.1",
+        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.3.2",
         "type": "zenpack"
     },
     {
@@ -368,12 +368,12 @@
     },
     {
         "name": "ZenPacks.zenoss.WBEM",
-        "requirement": "ZenPacks.zenoss.WBEM===2.0.1",
+        "requirement": "ZenPacks.zenoss.WBEM===2.1.0",
         "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.WSMAN",
-        "requirement": "ZenPacks.zenoss.WSMAN===1.0.2",
+        "requirement": "ZenPacks.zenoss.WSMAN===1.0.3",
         "type": "zenpack"
     },
     {
