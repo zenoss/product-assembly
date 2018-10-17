@@ -233,7 +233,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Microsoft.Azure",
-        "requirement": "ZenPacks.zenoss.Microsoft.Azure===1.3.0",
+        "requirement": "ZenPacks.zenoss.Microsoft.Azure===1.3.2",
         "type": "zenpack"
     },
     {
@@ -258,7 +258,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Microsoft.Windows",
-        "requirement": "ZenPacks.zenoss.Microsoft.Windows===2.9.0",
+        "requirement": "ZenPacks.zenoss.Microsoft.Windows===2.9.2",
         "type": "zenpack"
     },
     {
