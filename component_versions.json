@@ -69,8 +69,8 @@
     {
         "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz",
         "name": "zenoss.metric.consumer",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "0.1.10"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
