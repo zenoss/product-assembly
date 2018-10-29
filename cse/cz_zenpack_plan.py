@@ -9,7 +9,7 @@ import urllib2
 from pprint import pprint
 import os
 
-github = Github("a28b57f2b683fadc73d4e8419a3e7b925d4fbc1a")
+github = Github("my_token"))
 org = github.get_organization("zenoss")
 call(["git", "clone", "git@github.com:zenoss/product-assembly"]) 
 os.chdir("product-assembly")
