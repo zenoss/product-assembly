@@ -1,0 +1,16 @@
+[
+    {
+        "name": "docs-core",
+        "type": "docs",
+        "product": "core",
+        "version": "6.2.0",
+        "build": "32"
+    },
+    {
+        "name": "docs-enterprise",
+        "type": "docs",
+        "product": "resource-manager",
+        "version": "6.2.0",
+        "build": "48"
+    }
+]

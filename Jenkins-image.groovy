@@ -9,6 +9,7 @@
 //    MATURITY             - the image maturity level (e.g. 'unstable', 'testing', 'stable')
 //    PRODUCT_BUIlD_NUMBER - the build number for any given execution of this build pipeline; set by the begin job.
 //    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
+//    DEPLOY_BRANCH        - The zenoss-deploy branch to forward to the appliance build job.
 //
 node ('build-zenoss-product') {
     def pipelineBuildName = env.JOB_NAME
@@ -100,10 +101,6 @@ node ('build-zenoss-product') {
     }
 
     stage ('Build Appliances') {
-        if (BUILD_APPLIANCES != "true") {
-            echo "Skipped Build Appliances"
-            return
-        }
 
         def branches = [:]
 
@@ -118,16 +115,18 @@ node ('build-zenoss-product') {
                 def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
                 def branch = {
                     build job: 'appliance-build', parameters: [
-                            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
-                            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
-                            [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
-                            [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                            [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
-                            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
-                            [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
-                            [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
+                        [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+                        [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
+                        [$class: 'StringParameterValue', name: 'BRANCH', value: DEPLOY_BRANCH],
+                        [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                        [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
+                        [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                        [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                        [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                        [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                        [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
+                        [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
+
                     ]
                 }
 
@@ -137,16 +136,17 @@ node ('build-zenoss-product') {
             def jobLabel = TARGET_PRODUCT + " appliance for product build #" + PRODUCT_BUILD_NUMBER
             branches[TARGET_PRODUCT] = {
                 build job: 'appliance-build', parameters: [
-                        [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
-                        [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
-                        [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
-                        [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
-                        [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
-                        [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
-                        [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
-                        [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
-                        [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
-                        [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
+                    [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+                    [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: TARGET_PRODUCT],
+                    [$class: 'StringParameterValue', name: 'BRANCH', value: DEPLOY_BRANCH],
+                    [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
+                    [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: MATURITY],
+                    [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                    [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                    [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                    [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                    [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
+                    [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
                 ]
             }
         }

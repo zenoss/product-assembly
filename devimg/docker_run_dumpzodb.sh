@@ -58,23 +58,13 @@ set -x
 # be sure the container gets cleaned up on exit
 #
 PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo "docker run \
-	--rm \
-	--cidfile ${CONTAINER_ID_FILE} \
-	-v ${ZENDEV_ROOT}/zenhome:/opt/zenoss \
-	-v ${ZENDEV_ROOT}/var_zenoss:/var/zenoss \
-	-v ${SRCROOT}:/mnt/src \
-	-v ${PWD}:/mnt/devimg \
-        -v ${HOME}/.m2:/home/zenoss/.m2 \
-        -t ${TAG} \
-	/mnt/devimg/dump_zodb.sh ${ZENWIPE_ARGS}
-"
+
 docker run \
 	--rm \
 	--cidfile ${CONTAINER_ID_FILE} \
 	-v ${ZENDEV_ROOT}/zenhome:/opt/zenoss \
 	-v ${ZENDEV_ROOT}/var_zenoss:/var/zenoss \
-	-v ${SRCROOT}:/mnt/src \
+	-v ${SRCROOT}/github.com/zenoss:/mnt/src \
 	-v ${PWD}:/mnt/devimg \
         -v ${HOME}/.m2:/home/zenoss/.m2 \
         -t ${TAG} \

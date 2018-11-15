@@ -15,4 +15,5 @@ SVC_START ucspm/Infrastructure/redis
 SVC_WAIT ucspm/Infrastructure/mariadb-model ucspm/Infrastructure/mariadb-events ucspm/Infrastructure/RabbitMQ ucspm/Zenoss/Events/zeneventserver ucspm/Infrastructure/redis started 1800
 
 # Write current version to file
-SVC_EXEC NO_COMMIT "ucspm/Zenoss/User Interface/Zope" sh -c "(grep \"^VERSION=\" /opt/zenoss/Products/ZenModel/ZVersion.py | cut -d'=' -f2 | tr -d '\"') > /var/zenoss/upgrade_from_version.txt && chown zenoss:zenoss /var/zenoss/upgrade_from_version.txt"
+SVC_EXEC NO_COMMIT "ucspm/Zenoss/User Interface/Zope" sh -c "echo %FROM_VERSION% > /var/zenoss/upgrade_from_version.txt && chown zenoss:zenoss /var/zenoss/upgrade_from_version.txt"
+

@@ -7,9 +7,12 @@
 ###############################################################################
 set -e
 export UCSPM_TENANT_ID="`serviced service list ucspm --format='{{.ID}}'`"
+export UPGRADE_REINDEX
+export REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS
 serviced snapshot untag $UCSPM_TENANT_ID preupgrade-ucspm-%VERSION%
 
 FROM_VERSION=$(serviced service list ucspm --format='{{.Version}}')
+TO_VERSION=%VERSION%
 
 if [ -z "$FROM_VERSION" ];
 then
@@ -32,7 +35,16 @@ fi
 
 FROM_VERSION_SHORT=$(cut -d'.' -f1,2 <<< $FROM_VERSION)
 sed -i 's/REPLACE/'"$FROM_VERSION_SHORT:$FROM_VERSION"'/g' /root/%SHORT_VERSION%.x/current_version.txt
+sed -i "s/%FROM_VERSION%/$FROM_VERSION/g" /root/%SHORT_VERSION%.x/current_version.txt
 serviced script run /root/%SHORT_VERSION%.x/current_version.txt --service ucspm
+
+if [ $(echo "${FROM_VERSION}" | cut -c1) -eq 5 ] && [ $(echo "${TO_VERSION}" | cut -c1) -eq 6 ];
+then
+    UPGRADE_REINDEX='SVC_EXEC NO_COMMIT "ucspm/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/upgrade_reindex.sh ucspm"'
+    REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS='SVC_EXEC NO_COMMIT "ucspm/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump'
+fi
+
+sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g;" /root/%SHORT_VERSION%.x/upgrade-ucspm.txt
 
 serviced script run /root/%SHORT_VERSION%.x/upgrade-ucspm.txt --service ucspm
 /opt/serviced/bin/serviced-set-version UCSPM %UCSPM_VERSION%

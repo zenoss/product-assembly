@@ -53,7 +53,8 @@
         "ZenPacks.zenoss.ControlCenter",
         "ZenPacks.zenoss.ComponentGroups",
         "ZenPacks.zenoss.SupportBundle",
-        "ZenPacks.zenoss.RMMonitor"
+        "ZenPacks.zenoss.RMMonitor",
+	"ZenPacks.zenoss.ZaaS.UI"
     ],
     "included_not_installed": [
         "ZenPacks.zenoss.BigIpMonitor",
@@ -61,10 +62,8 @@
         "ZenPacks.zenoss.CiscoAPIC",
         "ZenPacks.zenoss.DatabaseMonitor",
         "ZenPacks.zenoss.DB2",
-        "ZenPacks.zenoss.GoogleCloudPlatform",
         "ZenPacks.zenoss.HpuxMonitor",
         "ZenPacks.zenoss.JBossMonitor",
-        "ZenPacks.zenoss.Kubernetes",
         "ZenPacks.zenoss.Layer2",
         "ZenPacks.zenoss.Memcached",
         "ZenPacks.zenoss.Microsoft.Exchange",

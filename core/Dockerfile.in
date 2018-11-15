@@ -18,4 +18,5 @@ RUN /opt/zenoss/install_scripts/create_zenoss.sh
 
 ADD upgrade-core.txt upgrade-core.sh current_version.txt /root/%SHORT_VERSION%.x/
 
-
+# Add docs
+RUN /opt/zenoss/install_scripts/zenoss_docs_install.sh core

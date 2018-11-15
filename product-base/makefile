@@ -2,7 +2,7 @@ include ../versions.mk
 IMAGENAME  = product-base
 MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
-FROM_IMAGE ?= zenoss-centos-base:1.2.12
+FROM_IMAGE ?= zenoss-centos-base:1.2.19
 
 TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
@@ -32,7 +32,7 @@ clean:
 	-docker rmi -f $(TAG)
 
 component_versions: component_info
-	@cp ../artifact_download.py ../component_versions.json component_info/.
+	@cp ../artifact_download.py ../component_versions.json ../doc_versions.json component_info/.
 	@echo "export BUILD_NUMBER=$(BUILD_NUMBER)" > component_info/versions.sh
 	@echo "export VERSION=$(VERSION)" >> component_info/versions.sh
 
