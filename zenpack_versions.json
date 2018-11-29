@@ -86,7 +86,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Dell.PowerEdge",
-        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===2.0.4",
+        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===3.0.0",
         "type": "zenpack"
     },
     {
@@ -208,7 +208,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Kubernetes",
-        "requirement": "ZenPacks.zenoss.Kubernetes===1.0.0",
+        "requirement": "ZenPacks.zenoss.Kubernetes===1.0.1",
         "type": "zenpack"
     },
     {
@@ -273,7 +273,7 @@
     },
     {
         "name": "ZenPacks.zenoss.NetAppMonitor",
-        "requirement": "ZenPacks.zenoss.NetAppMonitor===3.6.0",
+        "requirement": "ZenPacks.zenoss.NetAppMonitor===3.7.0",
         "type": "zenpack"
     },
     {
@@ -343,7 +343,7 @@
     },
     {
         "name": "ZenPacks.zenoss.SolarisMonitor",
-        "requirement": "ZenPacks.zenoss.SolarisMonitor===2.5.1",
+        "requirement": "ZenPacks.zenoss.SolarisMonitor===2.5.2",
         "type": "zenpack"
     },
     {
@@ -378,7 +378,7 @@
     },
     {
         "name": "ZenPacks.zenoss.WSMAN",
-        "requirement": "ZenPacks.zenoss.WSMAN===1.0.3",
+        "requirement": "ZenPacks.zenoss.WSMAN===1.0.4",
         "type": "zenpack"
     },
     {
