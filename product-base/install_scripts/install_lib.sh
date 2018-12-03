@@ -237,7 +237,7 @@ copy_missing_etc_files()
 {
     echo "Copying missing files from $ZENHOME/etc to /etc"
     set -e
-    sudoersd_files=("zenoss_dmidecode" "zenoss_nmap" "zenoss_ping" "zenoss_rabbitmq_stats" "zenoss_var_chown")
+    sudoersd_files=("zenoss_dmidecode" "zenoss_nmap" "zenoss_ping" "zenoss_rabbitmq_stats")
     for f in "${sudoersd_files[@]}"
     do
         if [ -f /etc/sudoers.d/"$f" ]
@@ -260,7 +260,7 @@ fix_etc_permissions()
 {
     echo "Setting correct permissions on files under /etc/"
     set -e
-    sudoersd_files=("zenoss_dmidecode" "zenoss_nmap" "zenoss_ping" "zenoss_rabbitmq_stats" "zenoss_var_chown")
+    sudoersd_files=("zenoss_dmidecode" "zenoss_nmap" "zenoss_ping" "zenoss_rabbitmq_stats")
     for f in "${sudoersd_files[@]}"
     do
         if [ -f /etc/sudoers.d/"$f" ]
