@@ -54,7 +54,7 @@ def main(options):
 
     regex = re.compile("^.*===")
     print "<table>"
-    print "<tr><th>ZenPack</th><th>%s</th><th>Next CZ</th><th>Latest Release</th></tr>" \
+    print "<tr><th>ZenPack</th><th>%s</th><th>Planned Next CZ</th><th>Latest ZP Release</th></tr>" \
                                                                                 % (last_release_title)
     unchanged_zps = dict()
     for zenpack in sorted(develop_cz_zps):
