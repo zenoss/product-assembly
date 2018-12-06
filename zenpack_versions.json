@@ -433,7 +433,7 @@
     },
     {
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===4.0.0",
+        "pre": true,
         "type": "zenpack"
     }
 ]
