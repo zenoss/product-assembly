@@ -86,7 +86,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Dell.PowerEdge",
-        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===3.0.0",
+        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===2.0.4",
         "type": "zenpack"
     },
     {
@@ -433,7 +433,7 @@
     },
     {
         "name": "ZenPacks.zenoss.vSphere",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.vSphere===4.0.0",
         "type": "zenpack"
     }
 ]
