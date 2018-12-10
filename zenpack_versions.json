@@ -193,7 +193,7 @@
     },
     {
         "name": "ZenPacks.zenoss.InstalledTemplatesReport",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.InstalledTemplatesReport===1.1.2",
         "type": "zenpack"
     },
     {
