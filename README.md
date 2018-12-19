@@ -125,3 +125,50 @@ $ ./compare_builds.py -z1 zenpacks_artifact52.RC2.log -z2 zenpacks_artifact53.lo
 ZenPack Differences:
 Name                                     z1 (gitRef)                      z2 (gitRef)
 ```
+
+**4. Generate manifest for changelog utility**
+```
+$ ./compare_builds.py -c1 zenoss_component_artifact52.RC2.log -c2 zenoss_component_artifact53.log -f json > repos.json
+$ cat repos.json
+{
+    "services": [
+        {
+            "repo": "git@github.com:zenoss/query.git", 
+            "start": "0.1.33", 
+            "end": "f4270f7edd3b326f5e372489ac1bba9666f0d322", 
+            "service": "query"
+        }, 
+        {
+            "repo": "git@github.com:zenoss/zenoss-prodbin.git", 
+            "start": "7.0.7", 
+            "end": "d9859ee97ffa17615ac73ca2a8da0825150b5f8c", 
+            "service": "zenoss-prodbin"
+        }, 
+        {
+            "repo": "git@github.com:zenoss/zenoss-zep.git", 
+            "start": "2.7.0", 
+            "end": "2.7.1", 
+            "service": "zenoss-zep"
+        }
+    ]
+}
+```
+The same is for zenpacks:
+```
+$ ./compare_builds.py -z1 zenpacks_artifact52.RC2.log -z2 zenpacks_artifact53.log -f json > repos.json
+$ cat repos.json
+{
+    "services": [
+        {
+            "repo": "git@github.com:zenoss/ZenPacks.zenoss.Dashboard.git", 
+            "start": "1.3.3", 
+            "end": "1.3.4", 
+            "service": "ZenPacks.zenoss.Dashboard"
+        }, 
+        {
+            "repo": "git@github.com:zenoss/ZenPacks.zenoss.Dell.PowerEdge.git", 
+            "start": "2.0.4", 
+            "end": "3.0.0", 
+            "service": "ZenPacks.zenoss.Dell.PowerEdge"
+        }
+```

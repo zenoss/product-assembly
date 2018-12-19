@@ -1,17 +1,11 @@
 #!/usr/bin/env python
 
 import argparse
-import copy
 import collections
-import fnmatch
-import hashlib
 import json
 import os
-import re
-import shutil
 import string
 import sys
-import tempfile
 import urllib2
 import urlparse
 
@@ -49,38 +43,48 @@ def compare_artifacts(logfile1, logfile2):
 
 def compare_components(logfile1, logfile2):
     componentDiffs = compare_artifacts(logfile1, logfile2)
-    if not options.quiet:
-        print "Component Differences:"
-        print "%-40.40s %-32.32s %-32.32s Different" % ("Name", "c1 (gitRef)", "c2 (gitRef)")
+    if not options.quiet and options.output_format == "plain":
+        Output.println("Component Differences:")
+        Output.println("%-40.40s %-32.32s %-32.32s Different" % ("Name", "c1 (gitRef)", "c2 (gitRef)"))
     for name, item in componentDiffs.iteritems():
         if not options.verbose and not item.different:
             continue
-        if item.different:
-            diffIndicator = " Y"
+        if options.output_format == "plain":
+            if item.different:
+                diffIndicator = " Y"
+            else:
+                diffIndicator = ""
+            if not options.quiet:
+                Output.println("%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator))
+            else:
+                Output.println("%s %s %s %s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator))
         else:
-            diffIndicator = ""
-        if not options.quiet:
-            print "%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
-        else:
-            print "%s %s %s %s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
+            # Sort component versions
+            start, end = sorted([item.artifact1.gitRef, item.artifact2.gitRef])
+            Output.println({"service": item.name, "repo": item.artifact1.gitRepo, "start": start, "end": end})
 
 def compare_zenpacks(logfile1, logfile2):
     zenPackDiffs = compare_artifacts(logfile1, logfile2)
-    if not options.quiet:
-        print "ZenPack Differences:"
-        print "%-40.40s %-32.32s %-32.32s" % ("Name", "z1 (gitRef)", "z2 (gitRef)")
+    if not options.quiet and options.output_format == "plain":
+        Output.println("ZenPack Differences:")
+        Output.println("%-40.40s %-32.32s %-32.32s" % ("Name", "z1 (gitRef)", "z2 (gitRef)"))
     
     for name, item in zenPackDiffs.iteritems():
         if not options.verbose and not item.different:
             continue
-        if item.different:
-            diffIndicator = " *"
+        if options.output_format == "plain":
+            if item.different:
+                diffIndicator = " *"
+            else:
+                diffIndicator = ""
+            if not options.quiet:
+                Output.println("%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator))
+            else:
+                Output.println("%s %s %s %s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator))
         else:
-            diffIndicator = ""
-        if not options.quiet:
-            print "%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
-        else:
-            print "%s %s %s %s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator)
+            # Sort ZenPack versions
+            start, end = sorted([item.artifact1.versionInfo, item.artifact2.versionInfo])
+            Output.println({"service": item.name, "repo": item.artifact1.gitRepo, "start": start, "end": end})
 
 def buildJobUrl(jobArg):
     # Break jobArg into an array of words
@@ -151,8 +155,10 @@ def main(options):
         zenpacks_log_2 = downloadLogFromJenkins(jobUrl, "zenpacks_artifact.log")
 
         compare_components(component_log_1, component_log_2)
-        print ""
+        Output.println("")
         compare_zenpacks(zenpacks_log_1, zenpacks_log_2)
+
+        Output.flush()
         return
 
     if options.component_log_1 is None and options.component_log_2 is not None \
@@ -174,8 +180,10 @@ def main(options):
     if options.zenpacks_log_1:
         # if we already reported on component differences, add a blank link before reporting ZP diffs
         if options.component_log_1:
-            print ""
+            Output.println("")
         compare_zenpacks(options.zenpacks_log_1, options.zenpacks_log_2)
+
+    Output.flush()
 
 class DiffInfo(object):
     def __init__(self, name, artifact1, artifact2):
@@ -384,6 +392,33 @@ artifactClass = {
     "zenpack": ZenPackInfo,
 }
 
+class Output(object):
+    """Results buffer"""
+
+    # Buffer data
+    data = []   
+
+    @classmethod
+    def println(cls, line):
+        """Print line to output buffer"""
+        cls.data.append(line)
+
+    @classmethod
+    def plain(cls):
+        """Print buffer to stdout"""
+        return os.linesep.join(cls.data)
+
+    @classmethod
+    def json(cls):
+        """Format and print buffer as JSON"""
+        return json.dumps({"services": cls.data}, indent=4)
+
+    @classmethod
+    def flush(cls):
+        """Display buffer"""
+        print getattr(cls, options.output_format)()
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compare build logs')
     parser.add_argument('-b1', '--build_job_1', type=str,
@@ -406,6 +441,9 @@ if __name__ == '__main__':
 
     parser.add_argument('-q', '--quiet', action="store_true",
                         help='quiet output, suitable for further results processing')
+
+    parser.add_argument('-f', '--output-format', type=str, choices=['plain', 'json'], default='plain',
+                        help='format of output: json, plain(default)')
 
     options = parser.parse_args()
     main(options)
