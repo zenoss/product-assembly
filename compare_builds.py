@@ -155,7 +155,11 @@ def main(options):
         zenpacks_log_2 = downloadLogFromJenkins(jobUrl, "zenpacks_artifact.log")
 
         compare_components(component_log_1, component_log_2)
-        Output.println("")
+
+        # Add a blank link before reporting ZP diffs
+        if options.output_format == "plain":
+            Output.println("")
+
         compare_zenpacks(zenpacks_log_1, zenpacks_log_2)
 
         Output.flush()
@@ -179,7 +183,7 @@ def main(options):
 
     if options.zenpacks_log_1:
         # if we already reported on component differences, add a blank link before reporting ZP diffs
-        if options.component_log_1:
+        if options.component_log_1 and options.output_format == "plain":
             Output.println("")
         compare_zenpacks(options.zenpacks_log_1, options.zenpacks_log_2)
 
