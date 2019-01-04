@@ -10,14 +10,14 @@ pipeline {
 
     parameters {
         choice(name: 'BUILD1_NAME',
-            choices: ['core-pipeline', 'resmgr-pipeline', 'ucspm-pipeline', 'begin'],
+            choices: 'core-pipeline\nresmgr-pipeline\nucspm-pipeline\nbegin',
             description: '')
         string(name: 'BUILD1_JOB_NBR',
             defaultValue: '',
             description: '<p>The jenkins job number of the job selected for BUILD1_NAME.</p>\n'
                        + '<p>Note that you can use <b>lastSuccessfulBuild</b> for this field.</p>')
         choice(name: 'BUILD2_NAME',
-            choices: ['core-pipeline', 'resmgr-pipeline', 'ucspm-pipeline', 'begin'],
+            choices: 'core-pipeline\nresmgr-pipeline\nucspm-pipeline\nbegin',
             description: '')
         string(name: 'BUILD2_JOB_NBR',
             defaultValue: '',
