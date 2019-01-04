@@ -69,6 +69,7 @@ pipeline {
                         docker.withRegistry('https://gcr.io', "gcr:${env.GLOBAL_GCR_CREDS_ID}") {
                             docker.image(env.GLOBAL_CHANGELOG_IMAGE).inside("-v ${WORKSPACE}/output:/mnt/pwd -w /mnt/pwd") {
                                 sh "ls -l"
+                                sh "pwd"
                                 sh """
                                     changelog \
                                         --manifest zingChanges.json \
