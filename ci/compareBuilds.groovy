@@ -67,18 +67,16 @@ pipeline {
                         usernamePassword(credentialsId: env.GLOBAL_JIRA_CREDS_ID, usernameVariable: 'JIRA_USER', passwordVariable: 'JIRA_PASSWD'),
                     ]) {
                         docker.withRegistry('https://gcr.io', "gcr:${env.GLOBAL_GCR_CREDS_ID}") {
-                            docker.image(env.GLOBAL_CHANGELOG_IMAGE).inside("-v ${WORKSPACE}/output:/mnt/pwd -w /mnt/pwd") {
-                                sh "ls -l"
-                                sh "pwd"
+                            docker.image(env.GLOBAL_CHANGELOG_IMAGE).inside {
                                 sh """
                                     changelog \
-                                        --manifest zingChanges.json \
+                                        --manifest output/zingChanges.json \
                                         --github-token ${env.GITHUB_TOKEN} \
                                         --jira-user ${env.JIRA_USER} \
                                         --jira-passwd ${env.JIRA_PASSWD} \
                                         --format html \
-                                        --output changelog.html \
-                                        --json-report changelog.json
+                                        --output output/changelog.html \
+                                        --json-report output/changelog.json
                                 """
                             }
                         }
