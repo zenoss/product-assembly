@@ -28,7 +28,7 @@ pipeline {
             description: 'The name of the GIT branch to build from. This value is used for both product-assembly and zenoss-deploy.')
         booleanParam(name: 'CHANGELOG_REPORT',
             defaultValue: false,
-            description: 'Generate <code>changelog</code> report\n')
+            description: '<p>Generate <code>changelog</code> report.</p>')
     }
 
     stages {
@@ -68,6 +68,7 @@ pipeline {
                     ]) {
                         docker.withRegistry('https://gcr.io', "gcr:${env.GLOBAL_GCR_CREDS_ID}") {
                             docker.image(env.GLOBAL_CHANGELOG_IMAGE).inside("-v ${WORKSPACE}/output:/mnt/pwd -w /mnt/pwd") {
+                                sh "ls -l"
                                 sh """
                                     changelog \
                                         --manifest zingChanges.json \
