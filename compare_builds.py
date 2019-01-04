@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import re
 import argparse
 import collections
 import json
@@ -59,9 +60,14 @@ def compare_components(logfile1, logfile2):
             else:
                 Output.println("%s %s %s %s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator))
         else:
+            # Build HTTPS link to repository
+            repo = re.sub(r'^git\@([^:]+)\:([^\/]+)\/(.+?)\.git$', r'\1/\2/\3', item.artifact1.gitRepo)
+
             # Sort component versions
             start, end = sorted([item.artifact1.gitRef, item.artifact2.gitRef])
-            Output.println({"service": item.name, "repo": item.artifact1.gitRepo, "start": start, "end": end})
+
+            # Send data to output
+            Output.println({"service": item.name, "repo": repo, "start": start, "end": end})
 
 def compare_zenpacks(logfile1, logfile2):
     zenPackDiffs = compare_artifacts(logfile1, logfile2)
@@ -82,9 +88,18 @@ def compare_zenpacks(logfile1, logfile2):
             else:
                 Output.println("%s %s %s %s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator))
         else:
-            # Sort ZenPack versions
-            start, end = sorted([item.artifact1.versionInfo, item.artifact2.versionInfo])
-            Output.println({"service": item.name, "repo": item.artifact1.gitRepo, "start": start, "end": end})
+            # Build HTTPS link to repository
+            repo = re.sub(r'^git\@([^:]+)\:([^\/]+)\/(.+?)\.git$', r'\1/\2/\3', item.artifact1.gitRepo)
+
+            # Get ZenPacks versions
+            start = item.artifact1.info['zenpack']['parsed_version']['local'][1:] if item.artifact1.pre else item.artifact1.versionInfo
+            end = item.artifact2.info['zenpack']['parsed_version']['local'][1:] if item.artifact2.pre else item.artifact2.versionInfo
+
+            # Sort ZenPacks versions
+            start, end = sorted([start, end])
+
+            # Send data to output
+            Output.println({"service": item.name, "repo": repo, "start": start, "end": end})
 
 def buildJobUrl(jobArg):
     # Break jobArg into an array of words
