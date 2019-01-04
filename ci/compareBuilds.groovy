@@ -53,9 +53,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh "mkdir -p ${WORKSPACE}/output"
-
                     sh """
+                        mkdir -p ${WORKSPACE}/output && \
                         python compare_builds.py \
                             -b1 ${params.BRANCH}/${params.BUILD1_NAME}/${params.BUILD1_JOB_NBR} \
                             -b2 ${params.BRANCH}/${params.BUILD2_NAME}/${params.BUILD2_JOB_NBR} \
