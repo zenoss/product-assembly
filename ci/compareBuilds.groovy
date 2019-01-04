@@ -53,6 +53,8 @@ pipeline {
             }
             steps {
                 script {
+                    sh "mkdir -p ${WORKSPACE}/output"
+
                     sh """
                         python compare_builds.py \
                             -b1 ${params.BRANCH}/${params.BUILD1_NAME}/${params.BUILD1_JOB_NBR} \
@@ -65,21 +67,21 @@ pipeline {
                         usernamePassword(credentialsId: env.GLOBAL_JIRA_CREDS_ID, usernameVariable: 'JIRA_USER', passwordVariable: 'JIRA_PASSWD'),
                     ]) {
                         docker.withRegistry('https://gcr.io', "gcr:${env.GLOBAL_GCR_CREDS_ID}") {
-                            docker.image(env.GLOBAL_CHANGELOG_IMAGE).inside("-v ${WORKSPACE}:/mnt/pwd -w /mnt/pwd") {
+                            docker.image(env.GLOBAL_CHANGELOG_IMAGE).inside("-v ${WORKSPACE}/output:/mnt/pwd -w /mnt/pwd") {
                                 sh """
                                     changelog \
-                                        --manifest output/zingChanges.json \
+                                        --manifest zingChanges.json \
                                         --github-token ${env.GITHUB_TOKEN} \
                                         --jira-user ${env.JIRA_USER} \
                                         --jira-passwd ${env.JIRA_PASSWD} \
                                         --format html \
-                                        --output output/changelog.html \
-                                        --json-report output/changelog.json
+                                        --output changelog.html \
+                                        --json-report changelog.json
                                 """
                             }
                         }
 
-                        archiveArtifacts artifacts: 'output/changelog.*'
+                        archiveArtifacts artifacts: 'output/*'
 
                         publishHTML([
                             allowMissing: true,
