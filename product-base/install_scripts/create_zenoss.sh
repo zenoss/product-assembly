@@ -26,6 +26,7 @@ echo "Cleaning up dmd.uuid"
 echo "dmd.uuid = None" > /tmp/cleanuuid.zendmd
 if [  "$1" == '--no-quickstart' ]; then
     echo "dmd._rq = True " >> /tmp/cleanuuid.zendmd
+    echo "dmd.ZenUsers.getUserSettings('admin') " >> /tmp/cleanuuid.zendmd
 fi
 su - zenoss -c "zendmd --commit --script=/tmp/cleanuuid.zendmd"
 
