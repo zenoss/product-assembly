@@ -334,7 +334,7 @@
     {
         "name": "ZenPacks.zenoss.RMMonitor",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.RMMonitor===1.1.1"
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.RabbitMQ",
