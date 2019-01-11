@@ -51,6 +51,12 @@ su - zenoss -c "mkdir -p ${ZENHOME}/var/zauth"
 su - zenoss -c "mkdir -p ${ZENHOME}/libexec"
 su - zenoss -c "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
 
+# Fix JIRA BLD-215
+mkdir -p /home/zenoss/.cache/pip/wheels
+chown -R zenoss:zenoss /home/zenoss/.cache/pip/wheels
+chown -R zenoss:zenoss /home/zenoss/
+# End BLD-215
+
 su - zenoss -c "pip install --no-index  ${ZENHOME}/dist/*.whl"
 su - zenoss -c "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
 su - zenoss -c "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
