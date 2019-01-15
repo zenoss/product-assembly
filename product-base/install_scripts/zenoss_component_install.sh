@@ -24,12 +24,37 @@ then
 	groupmod --gid ${NEW_GID} zenoss
 	usermod --uid ${NEW_UID} --gid ${NEW_GID} zenoss
 
+	# Fix BLD-215
+	mkdir -p /home/zenoss/.cache/pip/wheels
+        # End BLD-215
+
 	# Fix up ownership for zenoss-owned files outside of ZENHOME
 	chown zenoss:zenoss /var/spool/mail/zenoss
-	# Fix JIRA BLD-215
-	mkdir -p /home/zenoss/.cache/pip/wheels
-	chown -R zenoss:zenoss /home/zenoss/.cache/pip/wheels
-	# End BLD-215
+	# Fix up ownership in ZENHOME
+	chown -Rf zenoss:zenoss /home/zenoss
+fi
+
+mkdir -p ${ZENHOME}/log/
+
+# Files added via docker will be owned by root, set to zenoss to start to avoid conflicts
+# as we unpack components into ZENHOME
+chown -Rf zenoss:zenoss ${ZENHOME}
+
+
+function artifactDownload
+{
+    local artifact="$@"
+    su - zenoss -c "${ZENHOME}/install_scripts/artifact_download.py --out_dir /tmp ${ZENHOME}/install_scripts/component_versions.json ${artifact} --reportFile ${ZENHOME}/log/zenoss_component_artifact.log"
+}
+
+# Install Prodbin
+artifactDownload "zenoss-prodbin"
+su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/prodbin*"
+# TODO: remove this and make sure the tar file contains the proper links
+su - zenoss -c "mkdir -p ${ZENHOME}/etc/supervisor"
+su - zenoss -c "mkdir -p ${ZENHOME}/var/zauth"
+su - zenoss -c "mkdir -p ${ZENHOME}/libexec"
+su - zenoss -c "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
 
 su - zenoss -c "pip install --no-index  ${ZENHOME}/dist/*.whl"
 su - zenoss -c "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
@@ -70,31 +95,6 @@ su - zenoss -c "pip install --no-index  /tmp/pynetsnmp*.whl"
 # Install zenoss-extjs
 artifactDownload "zenoss-extjs"
 su - zenoss -c "pip install  --no-index  /tmp/zenoss.extjs*"
-
-	chown -Rf zenoss:zenoss /home/zenoss
-fi
-
-mkdir -p ${ZENHOME}/log/
-
-# Files added via docker will be owned by root, set to zenoss to start to avoid conflicts
-# as we unpack components into ZENHOME
-chown -Rf zenoss:zenoss ${ZENHOME}
-
-
-function artifactDownload
-{
-    local artifact="$@"
-    su - zenoss -c "${ZENHOME}/install_scripts/artifact_download.py --out_dir /tmp ${ZENHOME}/install_scripts/component_versions.json ${artifact} --reportFile ${ZENHOME}/log/zenoss_component_artifact.log"
-}
-
-# Install Prodbin
-artifactDownload "zenoss-prodbin"
-su - zenoss -c "tar -C ${ZENHOME} -xzvf /tmp/prodbin*"
-# TODO: remove this and make sure the tar file contains the proper links
-su - zenoss -c "mkdir -p ${ZENHOME}/etc/supervisor"
-su - zenoss -c "mkdir -p ${ZENHOME}/var/zauth"
-su - zenoss -c "mkdir -p ${ZENHOME}/libexec"
-su - zenoss -c "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
 
 # Install zep
 artifactDownload "zenoss-zep"
