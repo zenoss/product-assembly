@@ -51,7 +51,7 @@
     {
         "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master.tar.gz",
         "name": "zenoss-prodbin",
-        "type": "download",
+        "type": "jenkins",
         "version": "develop"
     },
     {
