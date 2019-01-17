@@ -24,8 +24,13 @@ then
 	groupmod --gid ${NEW_GID} zenoss
 	usermod --uid ${NEW_UID} --gid ${NEW_GID} zenoss
 
+	# Fix BLD-215
+	mkdir -p /home/zenoss/.cache/pip/wheels
+        # End BLD-215
+
 	# Fix up ownership for zenoss-owned files outside of ZENHOME
 	chown zenoss:zenoss /var/spool/mail/zenoss
+	# Fix up ownership in ZENHOME
 	chown -Rf zenoss:zenoss /home/zenoss
 fi
 
