@@ -134,6 +134,13 @@ node('build-zenoss-product') {
          credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
         }
 
+        stage('3rd-party Python packages check') {
+            customImage.inside {
+                sh 'pip list --format json > 3rd-party.json'
+            }
+            archive includes: '3rd-party.json'
+        }
+
     } catch (err) {
         echo "Job failed with the following error: ${err}"
         if (err.toString().contains("completed with status ABORTED") ||
