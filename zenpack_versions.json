@@ -333,7 +333,7 @@
     },
     {
         "name": "ZenPacks.zenoss.RMMonitor",
-        "requirement": "ZenPacks.zenoss.RMMonitor===1.1.1",
+        "pre": true,
         "type": "zenpack"
     },
     {
