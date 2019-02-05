@@ -135,10 +135,25 @@ node('build-zenoss-product') {
         }
 
         stage('3rd-party Python packages check') {
+            // Generate snapshot of Python packages
             customImage.inside {
                 sh 'pip list --format json > 3rd-party.json'
             }
+
+            // Archive Python packages list
             archive includes: '3rd-party.json'
+
+            try {
+                // Copy 3rd-party dependencies from last successful build
+                copyArtifacts projectName: "${JOB_NAME}", filter: '3rd-party.json', target: 'lastSuccessful', flatten: true, selector: lastSuccessful()
+
+                // Generate differences report
+                sh 'python compare_pip.py -o 3rd-party-difference.log lastSuccessful/3rd-party.json 3rd-party.json'
+
+                // Archive report
+                archive includes: '3rd-party-difference.log'
+
+            } catch (err) {}
         }
 
     } catch (err) {
