@@ -81,7 +81,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Dashboard",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.Dashboard===1.3.4",
         "type": "zenpack"
     },
     {
