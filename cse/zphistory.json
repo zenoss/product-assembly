@@ -1,1 +1,4 @@
-{}
+{
+  "ZenPacks.zenoss.Capacity": "7.0.9",
+  "ZenPacks.zenoss.Kubernetes": "7.0.9"
+}
