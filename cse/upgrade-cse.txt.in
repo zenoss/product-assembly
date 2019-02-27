@@ -35,6 +35,12 @@ SVC_USE gcr.io/zing-registry-188222/zing-connector:%ZING_CONNECTOR_VERSION%
 # SVC_STOP Zenoss.cse auto
 # SVC_WAIT Zenoss.cse stopped 600
 
+# Start solr and Impact first
+SVC_START Zenoss.cse/Infrastructure/Impact
+SVC_START Zenoss.cse/Infrastructure/solr
+
+SVC_WAIT Zenoss.cse/Infrastructure/solr Zenoss.cse/Infrastructure/Impact started 1200
+
 # Start all our dependent services
 SVC_START Zenoss.cse/Infrastructure/mariadb-model
 SVC_START Zenoss.cse/Infrastructure/mariadb-events
@@ -45,12 +51,6 @@ SVC_START Zenoss.cse/Infrastructure/memcached
 
 # Wait for our services to start
 SVC_WAIT Zenoss.cse/Infrastructure/mariadb-model Zenoss.cse/Infrastructure/mariadb-events Zenoss.cse/Infrastructure/RabbitMQ Zenoss.cse/Zenoss/Events/zeneventserver Zenoss.cse/Infrastructure/redis Zenoss.cse/Infrastructure/memcached started 1200
-
-# Run migration to add solr first
-SVC_EXEC NO_COMMIT "Zenoss.cse/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump
-SVC_START Zenoss.cse/Infrastructure/solr
-SVC_RESTART Zenoss.cse/Zenoss/Events/zeneventserver
-SVC_WAIT Zenoss.cse/Infrastructure/solr Zenoss.cse/Zenoss/Events/zeneventserver started 600
 
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.cse/Zenoss/User Interface/Zope" upgrade
