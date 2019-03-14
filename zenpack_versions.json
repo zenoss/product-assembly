@@ -70,11 +70,6 @@
         "requirement": "ZenPacks.zenoss.ComponentGroups===1.7.0"
     },
     {
-        "name": "ZenPacks.zenoss.ControlCenter",
-        "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.ControlCenter===1.6.2"
-    },
-    {
         "name": "ZenPacks.zenoss.DB2",
         "requirement": "ZenPacks.zenoss.DB2===1.0.7",
         "type": "zenpack"
@@ -329,11 +324,6 @@
     {
         "name": "ZenPacks.zenoss.PythonCollector",
         "requirement": "ZenPacks.zenoss.PythonCollector===1.10.1",
-        "type": "zenpack"
-    },
-    {
-        "name": "ZenPacks.zenoss.RMMonitor",
-        "requirement": "ZenPacks.zenoss.RMMonitor===1.1.1",
         "type": "zenpack"
     },
     {
