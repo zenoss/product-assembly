@@ -2,7 +2,8 @@
     {
         "name": "ZenPacks.zenoss.AWS",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.AWS===4.1.0"
+        "requirement": "ZenPacks.zenoss.AWS==4.1.*",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.AdvancedSearch",
@@ -171,8 +172,8 @@
     },
     {
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "requirement": "ZenPacks.zenoss.HttpMonitor===3.0.4",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.IBM.Power",
