@@ -150,6 +150,11 @@
         "type": "zenpack"
     },
     {
+        "name": "ZenPacks.zenoss.FtpMonitor",
+        "requirement": "ZenPacks.zenoss.FtpMonitor===1.1.1",
+        "type": "zenpack"
+    },
+    {
         "name": "ZenPacks.zenoss.GoogleCloudPlatform",
         "requirement": "ZenPacks.zenoss.GoogleCloudPlatform===1.0.1",
         "type": "zenpack"
