@@ -51,7 +51,7 @@
     },
     {
         "name": "ZenPacks.zenoss.CiscoMonitor",
-        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.9.0",
+        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.10.0",
         "type": "zenpack"
     },
     {
@@ -258,7 +258,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Microsoft.Windows",
-        "requirement": "ZenPacks.zenoss.Microsoft.Windows===2.9.2",
+        "requirement": "ZenPacks.zenoss.Microsoft.Windows===2.9.3",
         "type": "zenpack"
     },
     {
