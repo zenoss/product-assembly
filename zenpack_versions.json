@@ -51,7 +51,7 @@
     },
     {
         "name": "ZenPacks.zenoss.CiscoMonitor",
-        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.10.0",
+        "pre": true,
         "type": "zenpack"
     },
     {
@@ -67,7 +67,7 @@
     {
         "name": "ZenPacks.zenoss.ComponentGroups",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.ComponentGroups===1.7.0"
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.DB2",
@@ -122,7 +122,7 @@
     {
         "name": "ZenPacks.zenoss.DynamicView",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.DynamicView===1.6.2"
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.EMC.base",
@@ -156,7 +156,7 @@
     },
     {
         "name": "ZenPacks.zenoss.GoogleCloudPlatform",
-        "requirement": "ZenPacks.zenoss.GoogleCloudPlatform===1.0.1",
+        "pre": true,
         "type": "zenpack"
     },
     {
@@ -180,15 +180,13 @@
         "type": "zenpack"
     },
     {
-        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/ZenPacks.zenoss.Impact-{version}-py2.7.egg",
+        "URL": "http://artifacts.zenoss.eng/builds/impact/latest/ZenPacks.zenoss.Impact-latest-py2.7.egg",
         "name": "ZenPacks.zenoss.Impact",
-        "version": "5.3.4.0.0",
         "type": "download"
     },
     {
-        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/ZenPacks.zenoss.ImpactServer-{version}-py2.7.egg",
+        "URL": "http://artifacts.zenoss.eng/builds/impact/latest/ZenPacks.zenoss.ImpactServer-latest-py2.7.egg",
         "name": "ZenPacks.zenoss.ImpactServer",
-        "version": "5.3.4.0.0",
         "type": "download"
     },
     {
@@ -223,7 +221,7 @@
     },
     {
         "name": "ZenPacks.zenoss.LinuxMonitor",
-        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.3.2",
+        "pre": true,
         "type": "zenpack"
     },
     {
