@@ -180,13 +180,15 @@
         "type": "zenpack"
     },
     {
-        "URL": "http://artifacts.zenoss.eng/builds/impact/latest/ZenPacks.zenoss.Impact-latest-py2.7.egg",
+        "URL": "http://artifacts.zenoss.eng/builds/impact/latest/ZenPacks.zenoss.Impact-{version}-dev-py2.7.egg",
         "name": "ZenPacks.zenoss.Impact",
+        "version": "5.4.9.0.0",
         "type": "download"
     },
     {
-        "URL": "http://artifacts.zenoss.eng/builds/impact/latest/ZenPacks.zenoss.ImpactServer-latest-py2.7.egg",
+        "URL": "http://artifacts.zenoss.eng/builds/impact/latest/ZenPacks.zenoss.ImpactServer-{version}-dev-py2.7.egg",
         "name": "ZenPacks.zenoss.ImpactServer",
+        "version": "5.4.9.0.0",
         "type": "download"
     },
     {
