@@ -44,7 +44,6 @@
         "ZenPacks.zenoss.IBM.Power",
         "ZenPacks.zenoss.AdvancedSearch",
         "ZenPacks.zenoss.Diagram",
-        "ZenPacks.zenoss.CiscoUCS",
         "ZenPacks.zenoss.ZenOperatorRole",
         "ZenPacks.zenoss.EnterpriseSecurity",
         "ZenPacks.zenoss.Licensing",
@@ -52,9 +51,11 @@
         "ZenPacks.zenoss.DistributedCollector",
         "ZenPacks.zenoss.ControlCenter",
         "ZenPacks.zenoss.ComponentGroups",
+        "ZenPacks.zenoss.UCSCapacity",
+        "ZenPacks.zenoss.CiscoUCS",
         "ZenPacks.zenoss.SupportBundle",
         "ZenPacks.zenoss.RMMonitor",
-	"ZenPacks.zenoss.ZaaS.UI"
+        "ZenPacks.zenoss.ZaaS.UI"
     ],
     "included_not_installed": [
         "ZenPacks.zenoss.BigIpMonitor",
