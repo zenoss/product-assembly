@@ -51,7 +51,6 @@
         "ZenPacks.zenoss.DistributedCollector",
         "ZenPacks.zenoss.ControlCenter",
         "ZenPacks.zenoss.ComponentGroups",
-        "ZenPacks.zenoss.UCSCapacity",
         "ZenPacks.zenoss.CiscoUCS",
         "ZenPacks.zenoss.SupportBundle",
         "ZenPacks.zenoss.RMMonitor",
@@ -79,6 +78,7 @@
         "ZenPacks.zenoss.PostgreSQL",
         "ZenPacks.zenoss.RabbitMQ",
         "ZenPacks.zenoss.TomcatMonitor",
+        "ZenPacks.zenoss.UCSCapacity",
         "ZenPacks.zenoss.XenServer"
     ],
     "version_overrides": {}
