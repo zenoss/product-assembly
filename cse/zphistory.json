@@ -2,5 +2,6 @@
   "ZenPacks.zenoss.Capacity": "7.0.9",
   "ZenPacks.zenoss.Kubernetes": "7.0.9",
   "ZenPacks.zenoss.RMMonitor": "1.1.1",
-  "ZenPacks.zenoss.ControlCenter": "1.6.2"
+  "ZenPacks.zenoss.ControlCenter": "1.6.2",
+  "ZenPacks.zenoss.UCSCapacity": "0.0.0"
 }
