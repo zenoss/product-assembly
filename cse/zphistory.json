@@ -49,7 +49,6 @@
   "ZenPacks.zenoss.StorageBase": "5.0.0",
   "ZenPacks.zenoss.SupportBundle": "5.1.2",
   "ZenPacks.zenoss.TomcatMonitor": "5.0.0",
-  "ZenPacks.zenoss.UCSCapacity": "0.0.0",
   "ZenPacks.zenoss.WBEM": "5.0.0",
   "ZenPacks.zenoss.WSMAN": "6.0.0",
   "ZenPacks.zenoss.WebsphereMonitor": "5.0.0",
