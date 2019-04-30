@@ -143,7 +143,7 @@
     },
     {
         "name": "ZenPacks.zenoss.EnterpriseCollector",
-        "requirement": "ZenPacks.zenoss.EnterpriseCollector===1.8.3",
+        "pre": true,
         "type": "zenpack"
     },
     {
