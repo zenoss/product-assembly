@@ -23,7 +23,7 @@ Dockerfile:
 
 build-mariadb: ./mariadb/Dockerfile
 	docker build -t $(MARIADB_TAG) ./mariadb
-	rm -f ./mariadb/Dockerfile
+	-rm -f ./mariadb/Dockerfile
 
 ../mariadb/Dockerfile:
 	@sed -e 's#%FROM_IMAGE%#$(TAG)#' ./mariadb/Dockerfile.in > $@
