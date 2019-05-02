@@ -61,11 +61,11 @@ node ('build-zenoss-product') {
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
     }
 
-    stage('Build mariadb image') {
+    stage ('Build mariadb image') {
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build-mariadb")
     }
 
-    stage('Push mariadb image') {
+    stage ('Push mariadb image') {
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push-mariadb")
     }
 
