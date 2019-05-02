@@ -5,6 +5,7 @@ product-base/5.3.x
 product-base/6.0.x
 product-base/6.1.x
 product-base/6.2.x
+product-base/6.4.x
 product-base/Dockerfile
 
 */zenpacks_artifact.log
@@ -21,5 +22,7 @@ resmgr/upgrade-resmgr.txt
 resmgr/upgrade-resmgr.sh
 resmgr/upgrade-impact.txt
 resmgr/upgrade-impact.sh
+
+mariadb/Dockerfile
 
 svcdefs/build
