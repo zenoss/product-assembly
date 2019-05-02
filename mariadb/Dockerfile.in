@@ -44,7 +44,7 @@ RUN ln -s /usr/bin/vi /usr/bin/vim; ln -s /usr/bin/python2.7 /usr/bin/python; \
     rm -rf /var/lib/mysql/*
 
 RUN wget -qO- https://bootstrap.pypa.io/get-pip.py | python; \
-    pip install --no-cache-dir supervisor && \
+    pip install --no-cache-dir supervisor requests && \
     ln -s /usr/local/bin/supervisord /bin/supervisord
 
 ADD my.cnf /etc/my.cnf
