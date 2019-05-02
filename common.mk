@@ -22,8 +22,8 @@ Dockerfile:
 	@sed -e  's/%FROM_IMAGE%/$(FROM_IMAGE)/g; s/%SHORT_VERSION%/$(SHORT_VERSION)/g' Dockerfile.in > $@
 
 build-mariadb: ./mariadb/Dockerfile
-    docker build -t $(MARIADB_TAG) ./mariadb
-    rm -f ./mariadb/Dockerfile
+	docker build -t $(MARIADB_TAG) ./mariadb
+	rm -f ./mariadb/Dockerfile
 
 ../mariadb/Dockerfile:
 	@sed -e 's#%FROM_IMAGE%#$(TAG)#' ./mariadb/Dockerfile.in > $@
