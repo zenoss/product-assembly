@@ -53,8 +53,8 @@ node ('build-zenoss-product') {
         archive includes: includePattern
     }
 
-    stage ('Test image') {
-        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+//    stage ('Test image') {
+//        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
     }
 
     stage ('Push image') {
