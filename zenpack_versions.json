@@ -174,8 +174,10 @@
         "type": "zenpack"
     },
     {
+        "git_ref": "hotfix/3.3.3",
         "name": "ZenPacks.zenoss.HP.Proliant",
-        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.2",
+        "pre": true,
+        "requirement": "ZenPacks.zenoss.HP.Proliant==3.3.*",
         "type": "zenpack"
     },
     {
