@@ -11,7 +11,7 @@
 //    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
 //    DEPLOY_BRANCH        - The zenoss-deploy branch to forward to the appliance build job.
 //
-node ('build-zenoss-product') {
+node ('build-zenoss-product-mariadb') {
     def pipelineBuildName = env.JOB_NAME
     def pipelineBuildNumber = env.BUILD_NUMBER
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber} @${env.NODE_NAME})"
