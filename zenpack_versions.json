@@ -109,7 +109,7 @@
     },
     {
         "name": "ZenPacks.zenoss.DistributedCollector",
-        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.7",
+        "pre": true,
         "type": "zenpack"
     },
     {
