@@ -57,8 +57,8 @@
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
         "name": "zenoss-protocols",
-        "type": "download",
-        "version": "2.1.8"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz",
