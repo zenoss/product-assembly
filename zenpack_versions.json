@@ -288,8 +288,10 @@
         "type": "zenpack"
     },
     {
+        "git_ref": "hotfix/3.1.1",
         "name": "ZenPacks.zenoss.MySqlMonitor",
-        "requirement": "ZenPacks.zenoss.MySqlMonitor===3.1.0",
+        "pre": true,
+        "requirement": "ZenPacks.zenoss.MySqlMonitor==3.1.*",
         "type": "zenpack"
     },
     {
