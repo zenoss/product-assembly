@@ -104,7 +104,7 @@
     },
     {
         "name": "ZenPacks.zenoss.DiscoveryMapping",
-        "requirement": "ZenPacks.zenoss.DiscoveryMapping===1.2.2",
+        "pre": true,
         "type": "zenpack"
     },
     {
