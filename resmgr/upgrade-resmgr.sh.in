@@ -9,6 +9,7 @@ set -e
 export SERVICE_TENANT_ID="`serviced service list resmgr --format='{{.ID}}'`"
 export UPGRADE_REINDEX
 export REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS
+export MIGRATE_MARIADB_SERVICES
 serviced snapshot untag $SERVICE_TENANT_ID preupgrade-resmgr-%VERSION%
 
 echo "Getting FROM_VERSION from the 'Version' setting."
@@ -49,8 +50,21 @@ then
     REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS='SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump'
 fi
 
-sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g;" /root/%SHORT_VERSION%.x/upgrade-resmgr.txt
-sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g;" /root/%SHORT_VERSION%.x/upgrade-impact.txt
+MARIADB_MIGRATION="6.4.0"
+if [ $(echo -e "$FROM_VERSION\n$MARIADB_MIGRATION" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $MARIADB_MIGRATION ];
+then
+    MIGRATE_MARIADB_SERVICES="SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Zenoss/User Interface/Zope' su - zenoss -c 'python /opt/zenoss/bin/addBindAdress.py'\\
+    SVC_USE %MARIADB_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 service Zenoss.resmgr/Infrastructure/mariadb-model\\
+    SVC_USE %MARIADB_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 service Zenoss.resmgr/Infrastructure/mariadb-event\\
+    SVC_START Zenoss.resmgr/Infrastructure/mariadb-model\\
+    SVC_START Zenoss.resmgr/Infrastructure/mariadb-events\\
+    SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-model Zenoss.resmgr/Infrastructure/mariadb-events started 600\\
+    SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-model' 'mysql_upgrade'\\
+    SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-events' 'mysql_upgrade'"
+fi
+
+sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g; s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHORT_VERSION%.x/upgrade-resmgr.txt
+sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g; s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHORT_VERSION%.x/upgrade-impact.txt
 
 if [ $(serviced service status --show-fields Name  Zenoss.resmgr/Infrastructure/Impact | grep Impact) ]; then
     echo "Starting Impact upgrade."

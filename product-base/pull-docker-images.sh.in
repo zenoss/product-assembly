@@ -11,3 +11,6 @@ sudo docker pull zenoss/hbase:%HBASE_VERSION%
 
 echo "Pulling the image for OpenTSDB ..."
 sudo docker pull zenoss/opentsdb:%OPENTSDB_VERSION%
+
+echo "Pulling the image for mariadb services"
+sudo docker pull zenoss/mariadb:%MARIADB_VERSION%

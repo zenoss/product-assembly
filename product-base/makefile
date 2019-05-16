@@ -5,6 +5,7 @@ BUILD_NUMBER  ?= DEV
 FROM_IMAGE ?= zenoss-centos-base:1.2.19
 
 TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
+MARIADB_VERSION= 10.1-$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
 .PHONY: change-from-image build-deps build build-devimg push clean
 
@@ -41,7 +42,7 @@ component_info:
 
 $(SHORT_VERSION).x/pull-docker-images.sh:
 	@mkdir -p $(SHORT_VERSION).x
-	@sed -e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g; s/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g;'  pull-docker-images.sh.in > $@
+	@sed -e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g; s/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g; s/%MARIADB_VERSION%/$(MARIADB_VERSION)/g;'  pull-docker-images.sh.in > $@
 	@chmod +x $@
 
 Dockerfile:

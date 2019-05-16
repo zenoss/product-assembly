@@ -9,6 +9,7 @@ set -e
 export SERVICE_TENANT_ID="`serviced service list core --format='{{.ID}}'`"
 export UPGRADE_REINDEX
 export REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS
+export MIGRATE_MARIADB_SERVICES
 serviced snapshot untag $SERVICE_TENANT_ID preupgrade-core-%VERSION%
 
 FROM_VERSION=$(serviced service list core --format='{{.Version}}')
@@ -44,7 +45,17 @@ then
     REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS='SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump'
 fi
 
-sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g;" /root/%SHORT_VERSION%.x/upgrade-core.txt
+MARIADB_MIGRATION="6.4.0"
+if [ $(echo -e "$FROM_VERSION\n$MARIADB_MIGRATION" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $MARIADB_MIGRATION ];
+then
+    MIGRATE_MARIADB_SERVICES="SVC_EXEC NO_COMMIT 'Zenoss.core/Zenoss/User Interface/Zope' su - zenoss -c 'python /opt/zenoss/bin/addBindAdress.py'\\
+    SVC_USE %MARIADB_TAG% zenoss/core_6.0 zenoss/core_6.1 zenoss/core_6.2 zenoss/core_6.3 service Zenoss.core/Infrastructure/mariadb\\
+    SVC_START Zenoss.core/Infrastructure/mariadb\\
+    SVC_WAIT Zenoss.core/Infrastructure/mariadb started 600\\
+    SVC_EXEC NO_COMMIT 'Zenoss.core/Infrastructure/mariadb' 'mysql_upgrade'\\
+fi
+
+sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g; s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHORT_VERSION%.x/upgrade-core.txt
 
 serviced script run /root/%SHORT_VERSION%.x/upgrade-core.txt --service Zenoss.core
 /opt/serviced/bin/serviced-set-version Zenoss.core %VERSION%
