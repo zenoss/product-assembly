@@ -51,7 +51,7 @@
         "name": "zenoss-prodbin",
         "type": "jenkins",
         "version": "ZEN-31701",
-        "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.x"
+        "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.x-test"
     },
     {
         "name": "zenoss-protocols",
