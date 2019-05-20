@@ -50,7 +50,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "jenkins",
-        "version": "support/6.x",
+        "version": "ZEN-31701",
         "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.x"
     },
     {
