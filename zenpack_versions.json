@@ -56,7 +56,7 @@
     },
     {
         "name": "ZenPacks.zenoss.CiscoUCS",
-        "requirement": "ZenPacks.zenoss.CiscoUCS===2.8.0",
+        "requirement": "ZenPacks.zenoss.CiscoUCS===3.0.0",
         "type": "zenpack"
     },
     {
@@ -273,7 +273,7 @@
     },
     {
         "name": "ZenPacks.zenoss.NetAppMonitor",
-        "requirement": "ZenPacks.zenoss.NetAppMonitor===3.7.0",
+        "requirement": "ZenPacks.zenoss.NetAppMonitor===4.0.0",
         "type": "zenpack"
     },
     {
