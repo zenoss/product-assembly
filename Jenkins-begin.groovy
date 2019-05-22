@@ -7,6 +7,7 @@
 //    BRANCH            - the name of the GIT branch to build from.
 //    GIT_CREDENTIAL_ID - the UUID of the Jenkins GIT credentials used to checkout stuff from github
 //    MATURITY          - the image maturity level (e.g. 'unstable', 'testing', 'stable')
+//    RUN_TESTS         - whether to run the Test image pipeline stage
 //
 node('build-zenoss-product') {
     // To avoid naming confusion with downstream jobs that have their own BUILD_NUMBER variables,
@@ -18,6 +19,7 @@ node('build-zenoss-product') {
     def JOB_NAME = env.JOB_NAME        // e.g. product-assembly/support-6.0.x/begin
     def JOB_URL = env.JOB_URL          // e.g. ${JENKINS_URL}job/${JOB_NAME}/
     def BUILD_URL = env.BUILD_URL      // e.g. ${JOB_URL}${PRODUCT_BUILD_NUMBER}
+    def RUN_TESTS = env.RUN_TESTS      // e.g. "true", "false"
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} @${env.NODE_NAME}"
 
     try {
@@ -88,7 +90,9 @@ node('build-zenoss-product') {
         }
 
         stage('Test image') {
-            sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+            if (RUN_TESTS == "true") {
+                sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+            }
         }
 
         stage('Push image') {
