@@ -7,7 +7,7 @@ MAINTAINER Zenoss <dev@zenoss.com>
 ENV TERM xterm
 
 RUN groupadd -g 1201 -r mysql && useradd -u 1201 -g mysql -r mysql -d /nonexistent -s /bin/false \
-    && groupadd -g 1202 -r zenoss && useradd -u 1202 -g zenoss -r zenoss -d /home/zenoss  -c "Zenoss Account"
+    && groupadd -g 1202 -r zenoss && useradd -u 1202 -g zenoss -r zenoss -s /bin/bash -d /home/zenoss  -c "Zenoss Account"
 
 #make sure we don't use multiverse repo
 RUN sed -i '/^deb.*multiverse/s/^/#\ /' /etc/apt/sources.list \
@@ -52,10 +52,12 @@ RUN wget -qO- https://bootstrap.pypa.io/get-pip.py | python; \
 
 ADD my.cnf /etc/my.cnf
 
-COPY --from=0 /var/lib/mysql /var/lib/mysql
-COPY --from=0 /opt/zenoss/bin/metrics /opt/zenoss/bin/quiesce-mariadb.sh /opt/zenoss/bin/
+COPY --from=0 --chown=mysql:mysql /var/lib/mysql /var/lib/mysql
+COPY --from=0 /opt/zenoss/bin/metrics/ /opt/zenoss/bin/metrics/
+COPY --from=0 /opt/zenoss/bin/quiesce-mariadb.sh /opt/zenoss/bin/
+COPY --from=0 /opt/zenoss/etc/global.conf /opt/zenoss/etc/
 
-RUN chown -R mysql:mysql /var/lib/mysql; touch /var/log/mysqld.log; chown mysql:mysql /var/log/mysqld.log; \
-    chown -R zenoss:zenoss /opt/zenoss
+RUN touch /var/log/mysqld.log; chown mysql:mysql /var/log/mysqld.log; \
+    mkdir -p /opt/zenoss/var; chown -R zenoss:zenoss /opt/zenoss
 
 RUN mysqld_safe & until mysqladmin ping 2>/dev/null; do echo "Waiting for mysql..."; sleep 1; done && mysql_upgrade
