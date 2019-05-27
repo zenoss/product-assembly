@@ -52,6 +52,6 @@ ADD my.cnf /etc/my.cnf
 COPY --from=0 /var/lib/mysql /var/lib/mysql
 COPY --from=0 /opt/zenoss/bin/metrics /opt/zenoss/bin/metrics 
 
-RUN chown -R mysql:mysql /var/lib/mysql;
+RUN chown -R mysql:mysql /var/lib/mysql; touch /var/log/mysqld.log; chown mysql:mysql /var/log/mysqld.log
 
 RUN mysqld_safe & until mysqladmin ping; do sleep 1; done && mysql_upgrade
