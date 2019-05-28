@@ -50,7 +50,7 @@ node ('build-zenoss-product') {
         stage ('Run all product pipelines') {
             def branches = [
                 'core-pipeline': {
-                    build job: 'core-pipeline-test', parameters: [
+                    build job: 'core-pipeline', parameters: [
                         [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],
@@ -60,7 +60,7 @@ node ('build-zenoss-product') {
                     ]
                 },
                 'resmgr-pipeline': {
-                    build job: 'resmgr-pipeline-test', parameters: [
+                    build job: 'resmgr-pipeline', parameters: [
                         [$class: 'StringParameterValue', name: 'GIT_CREDENTIAL_ID', value: GIT_CREDENTIAL_ID],
                         [$class: 'StringParameterValue', name: 'GIT_SHA', value: GIT_SHA],
                         [$class: 'StringParameterValue', name: 'MATURITY', value: MATURITY],

@@ -53,9 +53,9 @@ node ('build-zenoss-product-mariadb') {
         archive includes: includePattern
     }
 
-//    stage ('Test image') {
-//        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
-//    }
+    stage ('Test image') {
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+    }
 
     stage ('Push image') {
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
