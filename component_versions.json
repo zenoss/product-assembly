@@ -50,8 +50,8 @@
     {
         "name": "zenoss-prodbin",
         "type": "jenkins",
-        "version": "ZEN-31701",
-        "jenkins.job": "TestBuilds/job/jpeacock/job/build_prodbin_branch"
+        "version": "support/6.x",
+        "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.x"
     },
     {
         "name": "zenoss-protocols",
