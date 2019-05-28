@@ -37,7 +37,6 @@ SVC_USE %MARIADB_TAG%
 # SVC_WAIT Zenoss.resmgr stopped 600
 
 # Run mariadb migration if we upgrade from resmgr < 6.4.0
-# - start zope and run service migration script to update my.cnf
 # - override image for mariadb services to a new one
 # - start mariadb services and run mysql_upgrade
 %MIGRATE_MARIADB_SERVICES%

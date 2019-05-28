@@ -48,15 +48,12 @@ fi
 MARIADB_MIGRATION="6.4.0"
 if [ $(echo -e "$FROM_VERSION\n$MARIADB_MIGRATION" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $MARIADB_MIGRATION ];
 then
-MIGRATE_MARIADB_SERVICES="SVC_START Zenoss.core/Infrastructure/mariadb\\
-SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb started 600\\
-SVC_EXEC NO_COMMIT 'Zenoss.core/Zenoss/User Interface/Zope' /opt/zenoss/bin/zenmigrate --step=AddBindAddress --dont-bump\\
-SVC_STOP Zenoss.core/Infrastructure/mariadb\\
-SVC_WAIT Zenoss.core/Infrastructure/mariadb stopped 600\\
-SVC_USE %MARIADB_TAG% zenoss/core_6.0 zenoss/core_6.1 zenoss/core_6.2 zenoss/core_6.3 service Zenoss.core/Infrastructure/mariadb\\
-SVC_START Zenoss.core/Infrastructure/mariadb\\
-SVC_WAIT Zenoss.core/Infrastructure/mariadb started 600\\
-SVC_EXEC NO_COMMIT 'Zenoss.core/Infrastructure/mariadb' mysql_upgrade\\
+
+MIGRATE_MARIADB_SERVICES="SVC_STOP Zenoss.core/Infrastructure/mariadb\\
+SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb stopped 600\\
+SVC_USE %MARIADB_TAG% zenoss/core_6.0 zenoss/core_6.1 zenoss/core_6.2 zenoss/core_6.3 zenoss/core_6.4 service Zenoss.core/Infrastructure/mariadb\\
+SVC_EXEC NO_COMMIT 'Zenoss.core/Infrastructure/mariadb' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& mysql_upgrade'\\
+
 fi
 
 
