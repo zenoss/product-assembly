@@ -4,10 +4,10 @@ FROM %FROM_IMAGE%
 FROM ubuntu:bionic
 MAINTAINER Zenoss <dev@zenoss.com>
 
-ENV TERM xterm
+ENV TERM=xterm ZENHOME=/opt/zenoss
 
 RUN groupadd -g 1201 -r mysql && useradd -u 1201 -g mysql -r mysql -d /nonexistent -s /bin/false \
-    && groupadd -g 1202 -r zenoss && useradd -u 1202 -g zenoss -r zenoss -s /bin/bash -d /home/zenoss  -c "Zenoss Account"
+    && groupadd -g 1202 -r zenoss && useradd -u 1202 -g zenoss -r zenoss -s /bin/bash -m -d /home/zenoss  -c "Zenoss Account"
 
 #make sure we don't use multiverse repo
 RUN sed -i '/^deb.*multiverse/s/^/#\ /' /etc/apt/sources.list \
