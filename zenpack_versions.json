@@ -213,7 +213,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Layer2",
-        "requirement": "ZenPacks.zenoss.Layer2==1.4.1",
+        "requirement": "ZenPacks.zenoss.Layer2===1.4.1",
         "type": "zenpack"
     },
     {
