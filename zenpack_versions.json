@@ -131,7 +131,7 @@
     },
     {
         "name": "ZenPacks.zenoss.EnterpriseCollector",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.EnterpriseCollector===1.9.0",
         "type": "zenpack"
     },
     {
