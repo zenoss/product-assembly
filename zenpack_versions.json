@@ -244,10 +244,8 @@
         "requirement": "ZenPacks.zenoss.Licensing===0.3.0"
     },
     {
-        "git_ref": "hotfix/2.3.3",
         "name": "ZenPacks.zenoss.LinuxMonitor",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.LinuxMonitor==2.3.*",
+        "requirement": "ZenPacks.zenoss.LinuxMonitor===2.3.3",
         "type": "zenpack"
     },
     {
