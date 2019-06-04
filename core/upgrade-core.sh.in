@@ -45,6 +45,7 @@ then
     REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS='SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump'
 fi
 
+# Run mariadb migration in case we upgrade from older than 6.4.0
 MARIADB_MIGRATION="6.4.0"
 if [ $(echo -e "$FROM_VERSION\n$MARIADB_MIGRATION" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $MARIADB_MIGRATION ];
 then
