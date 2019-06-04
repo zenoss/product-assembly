@@ -131,8 +131,8 @@
     },
     {
         "name": "ZenPacks.zenoss.DynamicView",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.DynamicView===1.7.0",
+        "type": "zenpack"
     },
     {
         "git_ref": "hotfix/2.1.1",
