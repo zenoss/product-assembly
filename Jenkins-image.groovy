@@ -11,7 +11,7 @@
 //    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
 //    DEPLOY_BRANCH        - The zenoss-deploy branch to forward to the appliance build job.
 //
-node ('build-zenoss-product') {
+node ('build-zenoss-product-mariadb') {
     def pipelineBuildName = env.JOB_NAME
     def pipelineBuildNumber = env.BUILD_NUMBER
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber} @${env.NODE_NAME})"
@@ -59,6 +59,14 @@ node ('build-zenoss-product') {
 
     stage ('Push image') {
         sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push clean")
+    }
+
+    stage ('Build mariadb image') {
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build-mariadb")
+    }
+
+    stage ('Push mariadb image') {
+        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push-mariadb")
     }
 
     stage ('Compile service definitions and build RPM') {

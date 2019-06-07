@@ -28,7 +28,6 @@ HBASE_VERSION=24.0.8
 HDFS_VERSION=24.0.8
 OPENTSDB_VERSION=24.0.8
 
-
 #
 # The serviced information is used to create the appliance artifacts for a given RM release.
 # There are two ways to identify which version of serviced to use in the appliances:
