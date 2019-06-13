@@ -461,10 +461,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/4.0.2",
         "name": "ZenPacks.zenoss.vSphere",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.vSphere==4.0.*",
+        "requirement": "ZenPacks.zenoss.vSphere===4.0.2",
         "type": "zenpack"
     }
 ]
