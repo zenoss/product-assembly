@@ -228,10 +228,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/1.4.3",
         "name": "ZenPacks.zenoss.Layer2",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.Layer2==1.4.*",
+        "requirement": "ZenPacks.zenoss.Layer2===1.4.3",
         "type": "zenpack"
     },
     {
