@@ -24,6 +24,7 @@
   "ZenPacks.zenoss.EnterpriseReports": "5.0.0",
   "ZenPacks.zenoss.EnterpriseSecurity": "5.0.0",
   "ZenPacks.zenoss.EnterpriseSkin": "5.0.0",
+  "ZenPacks.zenoss.FtpMonitor": "5.0.0",
   "ZenPacks.zenoss.HP.Proliant": "6.0.0",
   "ZenPacks.zenoss.HpuxMonitor": "5.0.0",
   "ZenPacks.zenoss.HttpMonitor": "5.0.0",
