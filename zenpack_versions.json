@@ -43,7 +43,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Ceph",
-        "requirement": "ZenPacks.zenoss.Ceph===2.0.1",
+        "requirement": "ZenPacks.zenoss.Ceph===2.1.0",
         "type": "zenpack"
     },
     {
