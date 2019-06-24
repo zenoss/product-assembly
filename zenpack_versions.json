@@ -36,10 +36,8 @@
         "requirement": "ZenPacks.zenoss.CiscoAPIC===1.2.3",
         "type": "zenpack"
     },{
-        "git_ref": "hotfix/5.10.1",
         "name": "ZenPacks.zenoss.CiscoMonitor",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.CiscoMonitor==5.10.*",
+        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.9.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoUCS",
@@ -90,10 +88,8 @@
         "requirement": "ZenPacks.zenoss.DnsMonitor===3.0.1",
         "type": "zenpack"
     },{
-        "git_ref": "hotfix/2.0.5",
         "name": "ZenPacks.zenoss.Docker",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.Docker==2.0.*",
+        "requirement": "ZenPacks.zenoss.Docker===2.0.4",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DurationThreshold",
@@ -104,10 +100,8 @@
         "requirement": "ZenPacks.zenoss.DynamicView===1.7.0",
         "type": "zenpack"
     },{
-        "git_ref": "hotfix/2.1.1",
         "name": "ZenPacks.zenoss.EMC.base",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.EMC.base==2.1.*",
+        "requirement": "ZenPacks.zenoss.EMC.base===2.1.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EnterpriseCollector",
@@ -218,10 +212,8 @@
         "requirement": "ZenPacks.zenoss.MySqlMonitor===3.1.0",
         "type": "zenpack"
     },{
-        "git_ref": "hotfix/4.0.1",
         "name": "ZenPacks.zenoss.NetAppMonitor",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.NetAppMonitor==4.0.*",
+        "requirement": "ZenPacks.zenoss.NetAppMonitor===3.6.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetScaler",
