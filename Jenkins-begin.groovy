@@ -57,6 +57,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'DEPLOY_BRANCH', value: DEPLOY_BRANCH],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                         [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
+                        [$class: 'BooleanParameterValue', name: 'IGNORE_TEST_IMAGE_FAILURE', value: IGNORE_TEST_IMAGE_FAILURE.toBoolean()],
                     ]
                 },
                 'resmgr-pipeline': {
@@ -67,6 +68,7 @@ node ('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'DEPLOY_BRANCH', value: DEPLOY_BRANCH],
                         [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: PRODUCT_BUILD_NUMBER],
                         [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
+                        [$class: 'BooleanParameterValue', name: 'IGNORE_TEST_IMAGE_FAILURE', value: IGNORE_TEST_IMAGE_FAILURE.toBoolean()],
                     ]
                 },
             ]
