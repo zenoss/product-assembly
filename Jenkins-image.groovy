@@ -10,6 +10,7 @@
 //    PRODUCT_BUIlD_NUMBER - the build number for any given execution of this build pipeline; set by the begin job.
 //    TARGET_PRODUCT       - identifies the target product (e.g. 'core', 'resmgr', 'ucspm', etc)
 //    DEPLOY_BRANCH        - The zenoss-deploy branch to forward to the appliance build job.
+//    IGNORE_TEST_IMAGE_FAILURE - Ignores any failure of the Test Image stage when true.
 //
 node ('build-zenoss-product-mariadb') {
     def pipelineBuildName = env.JOB_NAME
@@ -54,7 +55,10 @@ node ('build-zenoss-product-mariadb') {
     }
 
     stage ('Test image') {
-        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+        result = sh(
+            script: "cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests",
+            returnStatus: IGNORE_TEST_IMAGE_FAILURE.toBoolean()
+        )
     }
 
     stage ('Push image') {
