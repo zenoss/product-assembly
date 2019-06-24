@@ -97,7 +97,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DynamicView",
-        "requirement": "ZenPacks.zenoss.DynamicView===1.7.0",
+        "requirement": "ZenPacks.zenoss.DynamicView===1.6.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EMC.base",
@@ -260,8 +260,10 @@
         "requirement": "ZenPacks.zenoss.PropertyMonitor===1.1.1",
         "type": "zenpack"
     },{
+        "git_ref": "hotfix/1.10.2",
         "name": "ZenPacks.zenoss.PythonCollector",
         "pre": true,
+        "requirement": "ZenPacks.zenoss.PythonCollector==1.10.*",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RabbitMQ",
