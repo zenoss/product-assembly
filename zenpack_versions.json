@@ -17,7 +17,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.AWS",
-        "requirement": "ZenPacks.zenoss.AWS===4.0.2",
+        "requirement": "ZenPacks.zenoss.AWS===4.1.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.BigIpMonitor",
@@ -57,7 +57,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dashboard",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.Dashboard===1.3.7",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DatabaseMonitor",
@@ -69,7 +69,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dell.PowerEdge",
-        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===2.0.4",
+        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===3.0.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DeviceSearch",
@@ -81,7 +81,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DistributedCollector",
-        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.7",
+        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.8",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
@@ -137,7 +137,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HttpMonitor",
-        "requirement": "ZenPacks.zenoss.HttpMonitor===3.0.4",
+        "requirement": "ZenPacks.zenoss.HttpMonitor===3.1.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.IBM.Power",
@@ -145,7 +145,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.InstalledTemplatesReport",
-        "requirement": "ZenPacks.zenoss.InstalledTemplatesReport===1.1.1",
+        "requirement": "ZenPacks.zenoss.InstalledTemplatesReport===1.1.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.JBossMonitor",
@@ -185,7 +185,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Azure",
-        "requirement": "ZenPacks.zenoss.Microsoft.Azure===1.3.3",
+        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.0.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Exchange",
@@ -205,7 +205,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Windows",
-        "requirement": "ZenPacks.zenoss.Microsoft.Windows===2.9.2",
+        "requirement": "ZenPacks.zenoss.Microsoft.Windows===2.9.3",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.MySqlMonitor",
@@ -213,7 +213,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetAppMonitor",
-        "requirement": "ZenPacks.zenoss.NetAppMonitor===3.6.0",
+        "requirement": "ZenPacks.zenoss.NetAppMonitor===4.0.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetScaler",
@@ -261,7 +261,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PythonCollector",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.PythonCollector===1.10.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RabbitMQ",
@@ -273,7 +273,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.SolarisMonitor",
-        "requirement": "ZenPacks.zenoss.SolarisMonitor===2.5.1",
+        "requirement": "ZenPacks.zenoss.SolarisMonitor===2.5.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.StorageBase",
@@ -313,7 +313,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WSMAN",
-        "requirement": "ZenPacks.zenoss.WSMAN===1.0.3",
+        "requirement": "ZenPacks.zenoss.WSMAN===1.0.4",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.XenServer",
@@ -321,7 +321,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZaaS.UI",
-        "requirement": "ZenPacks.zenoss.ZaaS.UI===1.0.4",
+        "requirement": "ZenPacks.zenoss.ZaaS.UI===1.0.5",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenDeviceACL",
@@ -340,10 +340,8 @@
         "requirement": "ZenPacks.zenoss.ZenOperatorRole===2.2.0",
         "type": "zenpack"
     },{
-        "git_ref": "hotfix/2.1.2",
         "name": "ZenPacks.zenoss.ZenPackLib",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.ZenPackLib==2.1.*",
+        "requirement": "ZenPacks.zenoss.ZenPackLib===2.1.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenSQLTx",
