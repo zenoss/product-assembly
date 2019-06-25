@@ -269,7 +269,8 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RMMonitor",
-        "requirement": "ZenPacks.zenoss.RMMonitor===1.1.1",
+        "pre": true,
+        "requirement": "ZenPacks.zenoss.RMMonitor==1.2.*",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.SolarisMonitor",
