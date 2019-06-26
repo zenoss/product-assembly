@@ -270,6 +270,7 @@
     },{
         "name": "ZenPacks.zenoss.RMMonitor",
         "pre": true,
+        "git_ref": "support/6.x",
         "requirement": "ZenPacks.zenoss.RMMonitor==1.2.*",
         "type": "zenpack"
     },{
