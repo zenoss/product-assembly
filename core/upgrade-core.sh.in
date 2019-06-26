@@ -9,7 +9,6 @@ set -e
 export SERVICE_TENANT_ID="`serviced service list core --format='{{.ID}}'`"
 export UPGRADE_REINDEX
 export REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS
-export MIGRATE_MARIADB_SERVICES
 serviced snapshot untag $SERVICE_TENANT_ID preupgrade-core-%VERSION%
 
 FROM_VERSION=$(serviced service list core --format='{{.Version}}')
@@ -45,20 +44,7 @@ then
     REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS='SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump'
 fi
 
-# Run mariadb migration in case we upgrade from older than 6.4.0
-MARIADB_MIGRATION="6.4.0"
-if [ $(echo -e "$FROM_VERSION\n$MARIADB_MIGRATION" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $MARIADB_MIGRATION ];
-then
-
-MIGRATE_MARIADB_SERVICES="SVC_STOP Zenoss.core/Infrastructure/mariadb\\
-SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb stopped 600\\
-SVC_USE %MARIADB_TAG% zenoss/core_6.0 zenoss/core_6.1 zenoss/core_6.2 zenoss/core_6.3 zenoss/core_6.4 service Zenoss.core/Infrastructure/mariadb\\
-SVC_EXEC NO_COMMIT 'Zenoss.core/Infrastructure/mariadb' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& mysql_upgrade'\\
-
-fi
-
-
-sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g; s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHORT_VERSION%.x/upgrade-core.txt
+sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g;" /root/%SHORT_VERSION%.x/upgrade-core.txt
 
 serviced script run /root/%SHORT_VERSION%.x/upgrade-core.txt --service Zenoss.core
 /opt/serviced/bin/serviced-set-version Zenoss.core %VERSION%
