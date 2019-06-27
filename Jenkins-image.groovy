@@ -66,20 +66,14 @@ node ('build-zenoss-product-mariadb') {
     }
 
     stage ('Build mariadb image') {
-        when {
-            expression { return params.TARGET_PRODUCT == 'resmgr' }
-        }
-        steps {
+        if (params.TARGET_PRODUCT == 'resmgr') {
             sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build-mariadb")
         }
     }
 
     stage ('Push mariadb image') {
-        when {
-            expression { return params.TARGET_PRODUCT == 'resmgr' }
-         }
-         steps {
-             sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push-mariadb")
+        if (params.TARGET_PRODUCT == 'resmgr') {
+            sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make push-mariadb")
         }
     }
 
