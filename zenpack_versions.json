@@ -261,7 +261,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PythonCollector",
-        "requirement": "ZenPacks.zenoss.PythonCollector===1.10.1",
+        "requirement": "ZenPacks.zenoss.PythonCollector===1.11.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RabbitMQ",
