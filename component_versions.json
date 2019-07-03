@@ -12,8 +12,8 @@
     },
     {
         "name": "modelindex",
-        "type": "download",
-        "version": "1.0.5dev",
+        "type": "jenkins",
+        "version": "develop",
         "URL": "http://zenpip.zenoss.eng/packages/modelindex-{version}.tar.gz"
     },
     {
