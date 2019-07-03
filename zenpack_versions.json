@@ -351,10 +351,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "develop",
         "name": "ZenPacks.zenoss.PythonCollector",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.PythonCollector==1.11.*",
+        "requirement": "ZenPacks.zenoss.PythonCollector===1.11.0",
         "type": "zenpack"
     },
     {
