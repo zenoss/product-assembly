@@ -275,10 +275,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/2.9.4",
         "name": "ZenPacks.zenoss.Microsoft.Windows",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.Microsoft.Windows==2.9.*",
+        "requirement": "ZenPacks.zenoss.Microsoft.Windows===2.9.4",
         "type": "zenpack"
     },
     {
