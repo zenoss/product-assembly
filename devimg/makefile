@@ -3,6 +3,9 @@
 #
 # At high level, the image "stack" for zendev/devimg looks like:
 #
+# zendev/mariadb:<envName>
+#     ^
+#     |
 # zendev/devimg:<envName>
 #     ^
 #     |
@@ -49,6 +52,8 @@
 #
 include ../versions.mk
 IMAGENAME  = devimg
+MARIADB = mariadb
+MARIADB_TAG = zendev/$(MARIADB):$(DEV_ENV)
 DEV_ENV ?= metis
 TAG = zendev/$(IMAGENAME):$(DEV_ENV)
 BASE_TAG = zendev/$(IMAGENAME)-base:$(DEV_ENV)
@@ -103,7 +108,9 @@ endif
 # 4. build.sh - Initialize zenoss, link-install zenpacks (if any), and setup other
 #    linkages like Java apps, zenoss-protocols, etc.
 #
-build: make-dirs select-zenpacks build-devbase initialize-zenhome add-zenpack-file
+build: build-devimg build-mariadb
+
+build-devimg: make-dirs select-zenpacks build-devbase initialize-zenhome add-zenpack-file
 	BASE_TAG=$(BASE_TAG) \
 	TAG=$(TAG) \
 	ZENDEV_ROOT=$(ZENDEV_ROOT) \
@@ -121,10 +128,19 @@ clean:
 	-docker rmi -f $(TAG)
 	@echo "Cleaning ZENDEV_ROOT=$(ZENDEV_ROOT) (requires sudo) ..."
 	sudo rm -rf $(ZENDEV_ROOT)/zenhome/* $(ZENDEV_ROOT)/var_zenoss/*
+	@echo "REMOVING $(MARIADB_TAG) (if any)..."
+	-docker rmi -f $(MARIADB_TAG)
 
 build-devbase:
 	@echo "Building $(BASE_TAG) ..."
 	BASE_TAG=$(BASE_TAG) ./build-devbase.sh
+
+build-mariadb: ../mariadb/Dockerfile
+	docker build -t $(MARIADB_TAG) ../mariadb
+	rm -f ../mariadb/Dockerfile
+
+../mariadb/Dockerfile:
+	@sed -e 's#%FROM_IMAGE%#$(TAG)#' ../mariadb/Dockerfile.in > $@
 
 # Initialize our local ZENHOME using the contents from the initial devimg
 initialize-zenhome: make-dirs
