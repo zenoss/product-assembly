@@ -165,10 +165,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/1.0.2",
         "name": "ZenPacks.zenoss.GoogleCloudPlatform",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.GoogleCloudPlatform==1.0.*",
+        "requirement": "ZenPacks.zenoss.GoogleCloudPlatform===1.0.2",
         "type": "zenpack"
     },
     {
