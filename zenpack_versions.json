@@ -269,9 +269,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RMMonitor",
-        "pre": true,
-        "git_ref": "support/6.x",
-        "requirement": "ZenPacks.zenoss.RMMonitor==1.2.*",
+        "requirement": "ZenPacks.zenoss.RMMonitor===1.2.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.SolarisMonitor",
