@@ -87,7 +87,14 @@ repo_tag() {
     phase="$3"         # examples for testing: BETA1, CR13, GA
                        # examples for stable: 1, 2, 3
     # repo name: e.g., zenoss/resmgr_5.0
-    repo="zenoss/${target_product}_${ZENOSS_SHORT_VERSION}"
+    # as mariadb image build based on the product image promote mariadb as a part of product image promotion
+
+    if [[ $target_product == "mariadb" ]] 
+    then
+        repo="zenoss/${target_product}:10.1-"
+    else
+        repo="zenoss/${target_product}_${ZENOSS_SHORT_VERSION}:"
+    fi
     case $maturity in
         unstable )
             # e.g., 5.0.0_1234_unstable
@@ -107,7 +114,7 @@ repo_tag() {
             ;;
     esac
 
-    echo ${repo}:${tag}
+    echo ${repo}${tag}
 }
 
 retry() {
@@ -137,6 +144,29 @@ retry 4 5s docker pull "$FROM_STRING"
 
 # make sure there isn't already an image with this tag on docker hub
 TO_STRING=$(repo_tag "$TARGET_PRODUCT" "$TO_MATURITY" "$TO_RELEASEPHASE")
+echo "Verifying there is no existing 'to' docker image $TO_STRING"
+docker pull "$TO_STRING" &> /dev/null && echo "Image with tag $TO_STRING already exists on docker hub" && exit 1
+
+# tag the image with the new tag and push
+docker tag "$FROM_STRING" "$TO_STRING"
+retry 10 30s docker push "$TO_STRING"
+if [[ "$TO_MATURITY" = "stable" ]]; then
+    echo "Pulling image to ensure it is available ..."
+    retry 4 5s docker pull "$TO_STRING"    # ensure new tag is available
+    retry 4 5s docker pull "$FROM_STRING"  # allow a little time for dockerhub
+    LATEST_STRING="$(echo $TO_STRING | cut -f1 -d:):${ZENOSS_VERSION}"
+    docker pull "$LATEST_STRING" &> /dev/null && echo "Image with tag $LATEST_STRING already exists on docker hub" && exit 1
+
+    docker tag "$FROM_STRING" "$LATEST_STRING"
+    retry 10 30s docker push "$LATEST_STRING"
+fi
+
+# promote mariadb image
+FROM_STRING=$(repo_tag "mariadb" "$FROM_MATURITY" "$FROM_RELEASEPHASE")
+echo "Pulling 'from' docker image $FROM_STRING"
+retry 4 5s docker pull "$FROM_STRING"
+
+TO_STRING=$(repo_tag "mariadb" "$TO_MATURITY" "$TO_RELEASEPHASE")
 echo "Verifying there is no existing 'to' docker image $TO_STRING"
 docker pull "$TO_STRING" &> /dev/null && echo "Image with tag $TO_STRING already exists on docker hub" && exit 1
 
