@@ -40,7 +40,7 @@ node ('build-zenoss-product') {
     def SERVICED_VERSION=""
     def SERVICED_BUILD_NUMBER=""
 
-    stage ('Promote image') {
+    stage ('Checkout product-assembly') {
         // Make sure we start in a clean directory to ensure a fresh git clone
         deleteDir()
         // NOTE: The 'master' branch name here is only used to clone the github repo.
@@ -65,9 +65,24 @@ node ('build-zenoss-product') {
         echo "SERVICED_MATURITY=${SERVICED_MATURITY}"
         echo "SERVICED_VERSION=${SERVICED_VERSION}"
         echo "SERVICED_BUILD_NUMBER=${SERVICED_BUILD_NUMBER}"
+    }
 
+    stage ('Promote product image') {
         // Promote the docker images
         def promoteArgs = "TARGET_PRODUCT=${TARGET_PRODUCT}\
+            PRODUCT_BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
+            ZENOSS_VERSION=${ZENOSS_VERSION}\
+            ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}\
+            FROM_MATURITY=${FROM_MATURITY}\
+            FROM_RELEASEPHASE=${FROM_RELEASEPHASE}\
+            TO_MATURITY=${TO_MATURITY}\
+            TO_RELEASEPHASE=${TO_RELEASEPHASE}"
+        sh("cd svcdefs;${promoteArgs} ./image_promote.sh")
+    }
+
+    stage ('Promote mariadb image') {
+        // Promote the docker images
+        def promoteArgs = "TARGET_PRODUCT=mariadb\
             PRODUCT_BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
             ZENOSS_VERSION=${ZENOSS_VERSION}\
             ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}\
