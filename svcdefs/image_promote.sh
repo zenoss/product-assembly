@@ -81,34 +81,69 @@ echo "TO_RELEASEPHASE=${TO_RELEASEPHASE}"
 set -e
 set -x
 
-repo_tag() {
-    target_product="$1"        # examples: core, resmgr
-    maturity="$2"      # examples: stable, testing, unstable
-    phase="$3"         # examples for testing: BETA1, CR13, GA
-                       # examples for stable: 1, 2, 3
-    # repo name: e.g., zenoss/resmgr_5.0
-    repo="zenoss/${target_product}_${ZENOSS_SHORT_VERSION}"
-    case $maturity in
-        unstable )
-            # e.g., 5.0.0_1234_unstable
-            tag="${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_unstable"
-            ;;
-        testing )
-            # e.g., 5.0.0_CR13
-            tag="${ZENOSS_VERSION}_${phase}"
-            ;;
-        stable )
-            # e.g., 5.0.0_2
-            tag="${ZENOSS_VERSION}_${phase}"
-            ;;
-        * )
-            echo "maturity value '$maturity' is invalid"
-            exit 1
-            ;;
-    esac
 
-    echo ${repo}:${tag}
+tag() {
+   local product="$1"
+   local maturity="$2"  # examples: stable, testing, unstable
+   local phase="$3"     # examples for testing: BETA1, CR13, GA
+                        # examples for stable: 1, 2, 3
+   local tag=""
+
+   case $maturity in
+      unstable)
+         # e.g., 5.0.0_1234_unstable
+         tag="${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_unstable"
+         ;;
+      testing|stable)
+         # e.g., 5.0.0_CR13 or 5.0.0_2
+         tag="${ZENOSS_VERSION}$(test -z "${phase}" || echo "_${phase}")"
+         ;;
+      *)
+         echo "maturity value '$maturity' is invalid"
+         exit 1
+         ;;
+   esac
+
+   case $product in
+      mariadb)
+         tag="10.1-${tag}"
+         ;;
+      *)
+         ;;
+   esac
+
+   echo ${tag}
 }
+
+repo() {
+   # arguments: <maturity> <releasephase>
+   local product="$1"
+   local repo=""
+
+   case $product in
+      core|resmgr|ucspm)
+         repo="${product}_${ZENOSS_SHORT_VERSION}"
+         ;;
+      mariadb)
+         repo="${product}"
+         ;;
+      *)
+         echo "target product value '${product}' is invalid"
+         exit 1
+         ;;
+   esac
+
+   echo "zenoss/${repo}"
+}
+
+repo_tag() {
+   local product="$1"
+   local maturity="$2"  # examples: stable, testing, unstable
+   local phase="$3"     # examples for testing: BETA1, CR13, GA
+
+   echo $(repo ${product}):$(tag ${product} ${maturity} ${phase})
+}
+
 
 retry() {
     local maxtries=$1; shift
@@ -128,9 +163,10 @@ retry() {
     return ${result}
 }
 
+
 rm -rf output
 mkdir output
-# No quoting TARGET_PRODUCTS below in order to split the string on spaces
+
 FROM_STRING=$(repo_tag "$TARGET_PRODUCT" "$FROM_MATURITY" "$FROM_RELEASEPHASE")
 echo "Pulling 'from' docker image $FROM_STRING"
 retry 4 5s docker pull "$FROM_STRING"
@@ -147,7 +183,8 @@ if [[ "$TO_MATURITY" = "stable" ]]; then
     echo "Pulling image to ensure it is available ..."
     retry 4 5s docker pull "$TO_STRING"    # ensure new tag is available
     retry 4 5s docker pull "$FROM_STRING"  # allow a little time for dockerhub
-    LATEST_STRING="$(echo $TO_STRING | cut -f1 -d:):${ZENOSS_VERSION}"
+    TAG=$(tag "$TARGET_PRODUCT" "$FROM_MATURITY")
+    LATEST_STRING="$(echo $TO_STRING | cut -f1 -d:):${TAG}"
     docker pull "$LATEST_STRING" &> /dev/null && echo "Image with tag $LATEST_STRING already exists on docker hub" && exit 1
 
     docker tag "$FROM_STRING" "$LATEST_STRING"
