@@ -183,7 +183,7 @@ if [[ "$TO_MATURITY" = "stable" ]]; then
     echo "Pulling image to ensure it is available ..."
     retry 4 5s docker pull "$TO_STRING"    # ensure new tag is available
     retry 4 5s docker pull "$FROM_STRING"  # allow a little time for dockerhub
-    TAG=$(tag "$TARGET_PRODUCT" "$FROM_MATURITY")
+    TAG=$(tag "$TARGET_PRODUCT" "$TO_MATURITY")
     LATEST_STRING="$(echo $TO_STRING | cut -f1 -d:):${TAG}"
     docker pull "$LATEST_STRING" &> /dev/null && echo "Image with tag $LATEST_STRING already exists on docker hub" && exit 1
 
