@@ -27,7 +27,7 @@ REQUIRE_SVC
 SNAPSHOT preupgrade-resmgr-%VERSION%
 
 # Choose image to upgrade to
-SVC_USE zenoss/resmgr_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/resmgr_5.0 zenoss/resmgr_5.1 zenoss/resmgr_5.2 zenoss/resmgr_5.3 zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3
+SVC_USE zenoss/resmgr_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/resmgr_5.0 zenoss/resmgr_5.1 zenoss/resmgr_5.2 zenoss/resmgr_5.3 zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4
 SVC_USE zenoss/hbase:%HBASE_VERSION%
 SVC_USE zenoss/opentsdb:%OPENTSDB_VERSION%
 SVC_USE zenoss/mariadb:10.1-%VERSION%_%VERSION_TAG%
