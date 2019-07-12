@@ -13,7 +13,7 @@
     {
         "name": "modelindex",
         "type": "download",
-        "version": "1.0.4",
+        "version": "1.0.5",
         "URL": "http://zenpip.zenoss.eng/packages/modelindex-{version}.tar.gz"
     },
     {
@@ -37,7 +37,7 @@
     {
         "name": "service-migration",
         "type": "download",
-        "version": "1.1.12",
+        "version": "1.1.13",
         "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl"
     },
     {
@@ -50,7 +50,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "download",
-        "version": "6.3.2",
+        "version": "6.4.0",
         "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.x.tar.gz"
     },
     {

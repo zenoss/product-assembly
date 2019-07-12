@@ -61,6 +61,7 @@
         "ZenPacks.zenoss.CiscoAPIC",
         "ZenPacks.zenoss.DatabaseMonitor",
         "ZenPacks.zenoss.DB2",
+        "ZenPacks.zenoss.FtpMonitor",
         "ZenPacks.zenoss.GoogleCloudPlatform",
         "ZenPacks.zenoss.HpuxMonitor",
         "ZenPacks.zenoss.JBossMonitor",

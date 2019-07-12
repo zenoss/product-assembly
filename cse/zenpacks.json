@@ -44,7 +44,6 @@
         "ZenPacks.zenoss.IBM.Power",
         "ZenPacks.zenoss.AdvancedSearch",
         "ZenPacks.zenoss.Diagram",
-        "ZenPacks.zenoss.CiscoUCS",
         "ZenPacks.zenoss.ZenOperatorRole",
         "ZenPacks.zenoss.EnterpriseSecurity",
         "ZenPacks.zenoss.Licensing",
@@ -52,9 +51,10 @@
         "ZenPacks.zenoss.DistributedCollector",
         "ZenPacks.zenoss.ControlCenter",
         "ZenPacks.zenoss.ComponentGroups",
+        "ZenPacks.zenoss.CiscoUCS",
         "ZenPacks.zenoss.SupportBundle",
         "ZenPacks.zenoss.RMMonitor",
-	"ZenPacks.zenoss.ZaaS.UI"
+        "ZenPacks.zenoss.ZaaS.UI"
     ],
     "included_not_installed": [
         "ZenPacks.zenoss.BigIpMonitor",
@@ -62,6 +62,7 @@
         "ZenPacks.zenoss.CiscoAPIC",
         "ZenPacks.zenoss.DatabaseMonitor",
         "ZenPacks.zenoss.DB2",
+        "ZenPacks.zenoss.FtpMonitor",
         "ZenPacks.zenoss.HpuxMonitor",
         "ZenPacks.zenoss.JBossMonitor",
         "ZenPacks.zenoss.Layer2",
@@ -78,6 +79,7 @@
         "ZenPacks.zenoss.PostgreSQL",
         "ZenPacks.zenoss.RabbitMQ",
         "ZenPacks.zenoss.TomcatMonitor",
+        "ZenPacks.zenoss.UCSCapacity",
         "ZenPacks.zenoss.XenServer"
     ],
     "version_overrides": {}

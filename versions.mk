@@ -14,9 +14,9 @@
 # VERSION           the full Zenoss product version; e.g. 5.2.0
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
 #
-SHORT_VERSION=6.3
-SVCDEF_GIT_REF=6.3.2
-VERSION=6.3.2
+SHORT_VERSION=6.4
+SVCDEF_GIT_REF=6.4.0
+VERSION=6.4.0
 UCSPM_VERSION=3.0.0
 VERSION_TAG=1
 
@@ -27,7 +27,6 @@ VERSION_TAG=1
 HBASE_VERSION=24.0.8
 HDFS_VERSION=24.0.8
 OPENTSDB_VERSION=24.0.8
-
 
 #
 # The serviced information is used to create the appliance artifacts for a given RM release.
@@ -55,5 +54,5 @@ OPENTSDB_VERSION=24.0.8
 #
 SERVICED_BRANCH=
 SERVICED_MATURITY=stable
-SERVICED_VERSION=1.6.3
+SERVICED_VERSION=1.6.5
 SERVICED_BUILD_NUMBER=1
