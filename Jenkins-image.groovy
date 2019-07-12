@@ -12,7 +12,7 @@
 //    DEPLOY_BRANCH        - The zenoss-deploy branch to forward to the appliance build job.
 //    IGNORE_TEST_IMAGE_FAILURE - Ignores any failure of the Test Image stage when true.
 //
-node ('build-zenoss-product-mariadb') {
+node ('build-zenoss-product') {
     def pipelineBuildName = env.JOB_NAME
     def pipelineBuildNumber = env.BUILD_NUMBER
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} (pipeline job #${pipelineBuildNumber} @${env.NODE_NAME})"
