@@ -107,7 +107,7 @@ node('build-zenoss-product') {
         }
         
         stage('Build mariadb image') {
-           sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build-mariadb")
+           sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make build-mariadb")
            
            imageTag = "10.1-${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_${MATURITY}"
            imageName = "${IMAGE_PROJECT}/mariadb:${imageTag}"
