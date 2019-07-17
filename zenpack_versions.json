@@ -1,10 +1,8 @@
 [
     {
-        "git_ref": "hotfix/4.1.2",
         "name": "ZenPacks.zenoss.AWS",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.AWS==4.1.*",
-        "type": "zenpack"
+        "type": "zenpack",
+        "requirement": "ZenPacks.zenoss.AWS===4.1.1"
     },
     {
         "name": "ZenPacks.zenoss.AdvancedSearch",
@@ -52,10 +50,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/5.10.1",
         "name": "ZenPacks.zenoss.CiscoMonitor",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.CiscoMonitor==5.10.*",
+        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.10.0",
         "type": "zenpack"
     },
     {
@@ -89,10 +85,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/3.0.1",
         "name": "ZenPacks.zenoss.Dell.PowerEdge",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.Dell.PowerEdge==3.0.*",
+        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===3.0.0",
         "type": "zenpack"
     },
     {
@@ -102,12 +96,12 @@
     },
     {
         "name": "ZenPacks.zenoss.DiscoveryMapping",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.DiscoveryMapping===1.2.3",
         "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.DistributedCollector",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.9",
         "type": "zenpack"
     },
     {
@@ -116,10 +110,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/2.0.5",
         "name": "ZenPacks.zenoss.Docker",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.Docker==2.0.*",
+        "requirement": "ZenPacks.zenoss.Docker===2.0.4",
         "type": "zenpack"
     },
     {
@@ -133,15 +125,13 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/2.1.1",
         "name": "ZenPacks.zenoss.EMC.base",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.EMC.base==2.1.*",
+        "requirement": "ZenPacks.zenoss.EMC.base===2.1.0",
         "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.EnterpriseCollector",
-        "pre": true,
+        "requirement": "ZenPacks.zenoss.EnterpriseCollector===1.9.0",
         "type": "zenpack"
     },
     {
@@ -170,10 +160,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/3.3.3",
         "name": "ZenPacks.zenoss.HP.Proliant",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.HP.Proliant==3.3.*",
+        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.2",
         "type": "zenpack"
     },
     {
@@ -219,10 +207,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/1.0.2",
         "name": "ZenPacks.zenoss.Kubernetes",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.Kubernetes==1.0.*",
+        "requirement": "ZenPacks.zenoss.Kubernetes===1.0.1",
         "type": "zenpack"
     },
     {
@@ -246,10 +232,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/2.0.1",
         "name": "ZenPacks.zenoss.Microsoft.Azure",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.Microsoft.Azure==2.0.*",
+        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.0.0",
         "type": "zenpack"
     },
     {
@@ -278,10 +262,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/3.1.1",
         "name": "ZenPacks.zenoss.MySqlMonitor",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.MySqlMonitor==3.1.*",
+        "requirement": "ZenPacks.zenoss.MySqlMonitor===3.1.0",
         "type": "zenpack"
     },
     {
@@ -290,10 +272,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/4.0.1",
         "name": "ZenPacks.zenoss.NetAppMonitor",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.NetAppMonitor==4.0.*",
+        "requirement": "ZenPacks.zenoss.NetAppMonitor===4.0.0",
         "type": "zenpack"
     },
     {
@@ -357,10 +337,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/2.5.3",
         "name": "ZenPacks.zenoss.SolarisMonitor",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.SolarisMonitor==2.5.*",
+        "requirement": "ZenPacks.zenoss.SolarisMonitor===2.5.2",
         "type": "zenpack"
     },
     {
@@ -429,10 +407,8 @@
         "type": "zenpack"
     },
     {
-        "git_ref": "hotfix/2.1.2",
         "name": "ZenPacks.zenoss.ZenPackLib",
-        "pre": true,
-        "requirement": "ZenPacks.zenoss.ZenPackLib==2.1.*",
+        "requirement": "ZenPacks.zenoss.ZenPackLib===2.1.1",
         "type": "zenpack"
     },
     {
