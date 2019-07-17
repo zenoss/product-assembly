@@ -30,10 +30,15 @@ SNAPSHOT preupgrade-cse-%VERSION%
 SVC_USE gcr.io/zing-registry-188222/cse_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/cse_7.0
 SVC_USE gcr.io/zing-registry-188222/otsdb-bigtable:%OTSDB_BIGTABLE_VERSION%
 SVC_USE gcr.io/zing-registry-188222/zing-connector:%ZING_CONNECTOR_VERSION%
-
+SVC_USE gcr.io/zing-registry-188222/mariadb:10.1-%VERSION%_%VERSION_TAG%
 # Stop Zenoss
 # SVC_STOP Zenoss.cse auto
 # SVC_WAIT Zenoss.cse stopped 600
+
+# Run mariadb migration if we upgrade from resmgr < 7.0.13
+# - override image for mariadb services to a new one
+# - start mariadb services and run mysql_upgrade
+%MIGRATE_MARIADB_SERVICES%
 
 # Start all our dependent services
 SVC_START Zenoss.cse/Infrastructure/Impact

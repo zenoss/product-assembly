@@ -63,6 +63,7 @@ node('build-zenoss-product') {
         def ZENOSS_VERSION = ""
         def IMAGE_PROJECT = ""
         def customImage = ""
+        def mariadbImage = ""
         stage('Download zenpacks') {
             // Get the values of various versions out of the versions.mk file for use in later stages
             def versionProps = readProperties file: 'versions.mk'
@@ -104,6 +105,21 @@ node('build-zenoss-product') {
                 }
             }
         }
+        
+        stage('Build mariadb image') {
+           sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make build-mariadb")
+           
+           imageTag = "10.1-${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_${MATURITY}"
+           imageName = "${IMAGE_PROJECT}/mariadb:${imageTag}"
+           mariadbImage = docker.build(imageName, "-f mariadb/Dockerfile mariadb")            
+        }
+        
+        stage('Push mariadb image') {
+            docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
+                mariadbImage.push()
+            }
+        }
+        
         stage('Compile service definitions and build RPM') {
             // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
             sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
