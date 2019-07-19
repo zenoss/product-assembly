@@ -1,26 +1,12 @@
 *~
 .idea/
 product-base/component_info
-product-base/5.2.x
-product-base/5.3.x
-product-base/6.0.x
-product-base/6.1.x
+product-base/5.*.x
+product-base/6.*.x
 product-base/7.0.x
 product-base/Dockerfile
 
 */zenpacks_artifact.log
 */zenoss_component_artifact.log
-
-core/zenpacks
-core/Dockerfile
-core/upgrade-core.txt
-core/upgrade-core.sh
-
-resmgr/zenpacks
-resmgr/Dockerfile
-resmgr/upgrade-resmgr.txt
-resmgr/upgrade-resmgr.sh
-resmgr/upgrade-impact.txt
-resmgr/upgrade-impact.sh
 
 svcdefs/build
