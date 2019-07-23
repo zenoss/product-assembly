@@ -48,7 +48,12 @@ FROM_VERSION_SHORT=$(echo ${FROM_VERSION} | cut -d'.' -f1,2)
 sed -i 's/REPLACE/'"$FROM_VERSION_SHORT:$FROM_VERSION"'/g' /root/%SHORT_VERSION%.x/current_version.txt
 serviced script run /root/%SHORT_VERSION%.x/current_version.txt --service Zenoss.cse
 
+echo "Starting Impact upgrade."
+serviced script run /root/%SHORT_VERSION%.x/upgrade-impact.txt --service Zenoss.cse
+
 echo "Starting resmgr upgrade."
 serviced script run /root/%SHORT_VERSION%.x/upgrade-cse.txt --service Zenoss.cse
 
 /opt/serviced/bin/serviced-set-version Zenoss.cse %VERSION%
+
+serviced service run zenimpactstate update
