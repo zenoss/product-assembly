@@ -419,10 +419,9 @@ class ArtifactInfo(object):
             return False
         elif not self.version:
             return False
-        elif re.match('.*(dev).*|.*(snap).*', self.version, re.IGNORECASE):
+        elif not re.match("^\d+\.\d+(\.\d+)?$", self.version, re.IGNORECASE):
             return False
         return True
-
 
     def toDict(self):
         return {
@@ -525,7 +524,7 @@ class ZenPackInfo(ArtifactInfo):
             if self.requirement and '===' in self.requirement and not self.pre:
                 gitRef = self.requirement.split('===')[1]
             elif self.feature:
-                gitRef =  'feature/%s' % self.feature
+                gitRef = 'feature/%s' % self.feature
             elif self.pre and not self.requirement:
                 gitRef = 'develop'
             elif not self.pre and not self.requirement:
