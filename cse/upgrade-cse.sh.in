@@ -52,3 +52,5 @@ echo "Starting resmgr upgrade."
 serviced script run /root/%SHORT_VERSION%.x/upgrade-cse.txt --service Zenoss.cse
 
 /opt/serviced/bin/serviced-set-version Zenoss.cse %VERSION%
+
+serviced service run zenimpactstate update
