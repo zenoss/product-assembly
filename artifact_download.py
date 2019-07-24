@@ -377,6 +377,9 @@ def main(options):
 
 
 class ArtifactInfo(object):
+
+    _version_regex = re.compile("^\d+\.\d+(\.\d+){0,3}$", re.IGNORECASE)
+
     def __init__(self, versionInfo):
         self.info = versionInfo
 
@@ -419,7 +422,7 @@ class ArtifactInfo(object):
             return False
         elif not self.version:
             return False
-        elif not re.match("^\d+\.\d+(\.\d+)?$", self.version, re.IGNORECASE):
+        elif not self._version_regex.match(self.version):
             return False
         return True
 
