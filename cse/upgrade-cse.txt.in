@@ -31,9 +31,6 @@ SVC_USE gcr.io/zing-registry-188222/cse_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% 
 SVC_USE gcr.io/zing-registry-188222/otsdb-bigtable:%OTSDB_BIGTABLE_VERSION%
 SVC_USE gcr.io/zing-registry-188222/zing-connector:%ZING_CONNECTOR_VERSION%
 SVC_USE gcr.io/zing-registry-188222/mariadb:10.1-%VERSION%_%VERSION_TAG%
-# Stop Zenoss
-# SVC_STOP Zenoss.cse auto
-# SVC_WAIT Zenoss.cse stopped 600
 
 # Stop Zenoss
 SVC_STOP Zenoss.cse auto
