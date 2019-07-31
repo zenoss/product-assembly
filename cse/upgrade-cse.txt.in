@@ -37,7 +37,7 @@ SVC_STOP Zenoss.cse auto
 SVC_WAIT Zenoss.cse stopped 600
 
 # Upgrade image
-SVC_USE gcr.io/zing-registry-188222/impact_5.5:latest impact_5.3
+SVC_USE gcr.io/zing-registry-188222/impact_5.5:5.5.1.0.0 impact_5.3
 SVC_STOP Zenoss.cse/Infrastructure/Impact
 SVC_WAIT Zenoss.cse/Infrastructure/Impact stopped 600
 SVC_EXEC COMMIT 'Zenoss.cse/Infrastructure/Impact' /bin/bash -c 'su - zenossimpact; rm -rf /opt/zenoss_impact/var/db/*'
