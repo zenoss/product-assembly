@@ -56,7 +56,7 @@
     },
     {
         "name": "ZenPacks.zenoss.CiscoUCS",
-        "requirement": "ZenPacks.zenoss.CiscoUCS===3.0.0",
+        "requirement": "ZenPacks.zenoss.CiscoUCS===3.0.1",
         "type": "zenpack"
     },
     {
