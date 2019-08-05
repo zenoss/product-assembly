@@ -161,7 +161,7 @@
     },
     {
         "name": "ZenPacks.zenoss.HP.Proliant",
-        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.2",
+        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.3",
         "type": "zenpack"
     },
     {
