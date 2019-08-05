@@ -1,0 +1,15 @@
+FROM zenoss/%FROM_IMAGE%
+
+# maintener is redundant since base image is ours as well
+#MAINTAINER Zenoss <dev@zenoss.com>
+
+ENV ZENHOME=/opt/zenoss
+
+ADD %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
+
+# TODO: fix this. The hubpasswd file should be in the service definition
+ADD hubpasswd /opt/zenoss/etc/
+
+ADD install_scripts component_info /opt/zenoss/install_scripts/
+
+RUN /opt/zenoss/install_scripts/zenoss_component_install.sh %INSTALL_OPTIONS%

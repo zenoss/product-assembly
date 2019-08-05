@@ -1,0 +1,468 @@
+#!/usr/bin/env python
+
+import re
+import argparse
+import collections
+import json
+import os
+import string
+import sys
+import urllib2
+import urlparse
+
+from itertools import chain
+
+
+def buildDictionary(list):
+    result = {}
+    for item in list:
+        artifactInfo = artifactClass[item['type']](item)
+        result[item["name"]] = artifactInfo
+    return result
+
+def compare_artifacts(logfile1, logfile2):
+    logList1 = json.load(logfile1)
+    logList2 = json.load(logfile2)
+
+    artifacts1 = buildDictionary(logList1)
+    artifacts2 = buildDictionary(logList2)
+
+    diffs = {}
+    for name, item in artifacts1.iteritems():
+        if name in artifacts2:
+            diff = DiffInfo(name, item, artifacts2[name])
+        else:
+            diff = DiffInfo(name, item, ArtifactInfo({"name": name}))
+        diffs[name] = diff
+
+    for name, item in artifacts2.iteritems():
+        if not name in artifacts1:
+            diff = DiffInfo(name, ArtifactInfo({"name": name}), item)
+            diffs[name] = diff
+
+    return collections.OrderedDict(sorted(diffs.items()))
+
+def compare_components(logfile1, logfile2):
+    componentDiffs = compare_artifacts(logfile1, logfile2)
+    if not options.quiet and options.output_format == "plain":
+        Output.println("Component Differences:")
+        Output.println("%-40.40s %-32.32s %-32.32s Different" % ("Name", "c1 (gitRef)", "c2 (gitRef)"))
+    for name, item in componentDiffs.iteritems():
+        if not options.verbose and not item.different:
+            continue
+        if options.output_format == "plain":
+            if item.different:
+                diffIndicator = " Y"
+            else:
+                diffIndicator = ""
+            if not options.quiet:
+                Output.println("%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator))
+            else:
+                Output.println("%s %s %s %s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator))
+        else:
+            # Build HTTPS link to repository
+            repo = re.sub(r'^git\@([^:]+)\:([^\/]+)\/(.+?)\.git$', r'\1/\2/\3', item.artifact1.gitRepo)
+
+            # Sort component versions
+            start, end = sorted([item.artifact1.gitRef, item.artifact2.gitRef])
+
+            # Send data to output
+            Output.println({"service": item.name, "repo": repo, "start": start, "end": end})
+
+def compare_zenpacks(logfile1, logfile2):
+    zenPackDiffs = compare_artifacts(logfile1, logfile2)
+    if not options.quiet and options.output_format == "plain":
+        Output.println("ZenPack Differences:")
+        Output.println("%-40.40s %-32.32s %-32.32s" % ("Name", "z1 (gitRef)", "z2 (gitRef)"))
+    
+    for name, item in zenPackDiffs.iteritems():
+        if not options.verbose and not item.different:
+            continue
+        if options.output_format == "plain":
+            if item.different:
+                diffIndicator = " *"
+            else:
+                diffIndicator = ""
+            if not options.quiet:
+                Output.println("%-40.40s %-32.32s %-32.32s%s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator))
+            else:
+                Output.println("%s %s %s %s" % (item.name, item.artifact1.versionInfo, item.artifact2.versionInfo, diffIndicator))
+        else:
+            # Build HTTPS link to repository
+            repo = re.sub(r'^git\@([^:]+)\:([^\/]+)\/(.+?)\.git$', r'\1/\2/\3', item.artifact1.gitRepo)
+
+            # Get ZenPacks versions
+            start = item.artifact1.info['zenpack']['parsed_version']['local'][1:] if item.artifact1.pre else item.artifact1.versionInfo
+            end = item.artifact2.info['zenpack']['parsed_version']['local'][1:] if item.artifact2.pre else item.artifact2.versionInfo
+
+            # Sort ZenPacks versions
+            start, end = sorted([start, end])
+
+            # Send data to output
+            Output.println({"service": item.name, "repo": repo, "start": start, "end": end})
+
+def buildJobUrl(jobArg):
+    # Break jobArg into an array of words
+    urlParts = string.lstrip(string.rstrip(jobArg, "/"), "/").split("/")
+    n = len(urlParts)
+    if n < 2:
+        print "ERROR: job name '%s' is invalid. Should have at least 2 levels" % jobArg
+        sys.exit(1)
+
+    # given jobArgs like "develop/core-pipeline/2", create a value of url
+    # like "develop/job/core-pipeline/2"
+    jobUrl = string.join(urlParts[0:n-1], "/job/")
+    jobNumber = urlParts[n-1]
+    url = os.path.join(jobUrl, jobNumber)
+
+    # Return the full URL
+    baseURL = "http://platform-jenkins.zenoss.eng/job/product-assembly/job/"
+    return urlparse.urljoin(baseURL, url)
+
+def downloadLogFromJenkins(jobUrl, filename):
+    apiUrl = os.path.join(jobUrl, "api/json?tree=artifacts[*]")
+    try:
+        response = json.loads(urllib2.urlopen(apiUrl).read())
+    except urllib2.URLError as e:
+        raise Exception("Error downloading %s: %s" % (apiUrl, e))
+    except urllib2.HTTPError as e:
+        raise Exception("Error downloading %s: %s" % (apiUrl, e))
+    except httplib.HTTPException, e:
+        raise Exception("Error downloading %s: %s" % (apiUrl, e))
+
+    artifacts = response['artifacts']
+    relativePath = ""
+    for artifact in artifacts:
+        if artifact['fileName'] == filename:
+            relativePath = artifact['relativePath']
+    if relativePath == "":
+        print "ERROR: file '%s' not in job artifacts for %s" % (filename, jobUrl)
+        sys.exit(1)
+
+    fileUrl = os.path.join(jobUrl, "artifact")
+    fileUrl = os.path.join(fileUrl, relativePath)
+
+    try:
+        response = urllib2.urlopen(fileUrl)
+    except urllib2.URLError as e:
+        raise Exception("Error downloading %s: %s" % (fileUrl, e))
+    except urllib2.HTTPError as e:
+        raise Exception("Error downloading %s: %s" % (fileUrl, e))
+    except httplib.HTTPException, e:
+        raise Exception("Error downloading %s: %s" % (fileUrl, e))
+
+    return response
+
+def main(options):
+
+    if options.build_job_1 is None and options.build_job_2 is not None \
+       or \
+       options.build_job_1 is not None and options.build_job_2 is None:
+       sys.exit("if either of --build_job_1 or --build_job_2 is specified, both must be specified")
+
+    if options.build_job_1:
+        jobUrl = buildJobUrl(options.build_job_1)
+        component_log_1 = downloadLogFromJenkins(jobUrl, "zenoss_component_artifact.log")
+        zenpacks_log_1 = downloadLogFromJenkins(jobUrl, "zenpacks_artifact.log")
+
+        jobUrl = buildJobUrl(options.build_job_2)
+        component_log_2 = downloadLogFromJenkins(jobUrl, "zenoss_component_artifact.log")
+        zenpacks_log_2 = downloadLogFromJenkins(jobUrl, "zenpacks_artifact.log")
+
+        compare_components(component_log_1, component_log_2)
+
+        # Add a blank link before reporting ZP diffs
+        if options.output_format == "plain":
+            Output.println("")
+
+        compare_zenpacks(zenpacks_log_1, zenpacks_log_2)
+
+        Output.flush()
+        return
+
+    if options.component_log_1 is None and options.component_log_2 is not None \
+       or \
+       options.component_log_1 is not None and options.component_log_2 is None:
+       sys.exit("if either of --component_log_1 or --component_log_2 is specified, both must be specified")
+
+    if options.zenpacks_log_1 is None and options.zenpacks_log_2 is not None \
+       or \
+       options.zenpacks_log_1 is not None and options.zenpacks_log_2 is None:
+       sys.exit("if either of --zenpacks_log_1 or --zenpacks_log_2 is specified, both must be specified")
+
+    if options.component_log_1 is None and options.zenpacks_log_1 is None:
+       sys.exit("Nothing to compare. Specify -c1 and -c2, or -z1 and -z2, or all four optoins")
+
+    if options.component_log_1:
+        compare_components(options.component_log_1, options.component_log_2)
+
+    if options.zenpacks_log_1:
+        # if we already reported on component differences, add a blank link before reporting ZP diffs
+        if options.component_log_1 and options.output_format == "plain":
+            Output.println("")
+        compare_zenpacks(options.zenpacks_log_1, options.zenpacks_log_2)
+
+    Output.flush()
+
+class DiffInfo(object):
+    def __init__(self, name, artifact1, artifact2):
+        self.name = name
+        self.artifact1 = artifact1
+        self.artifact2 = artifact2
+
+    def __str__(self):
+        if self.different:
+            different = "diff"
+        else:
+            different = "same"
+        return "%s: %s: %s (%s) vs %s (%s)" % (self.name, different, self.artifact1.version, self.artifact1.gitRef, self.artifact2.version, self.artifact2.gitRef)
+
+    @property
+    def different(self):
+        if self.artifact1.versionInfo == self.artifact2.versionInfo:
+            return False
+        return True
+
+    def toDict(self):
+        return {
+            "name": self.name,
+            "artifact1": self.artifact1,
+            "artifact2": self.artifact2,
+            "different": self.different,
+        }
+
+class ArtifactInfo(object):
+    def __init__(self, versionInfo):
+        self.info = versionInfo
+
+    @property
+    def name(self):
+        return self.info['name']
+
+    @property
+    def version(self):
+        return self.info.get('version', None)
+
+    @property
+    def infoType(self):
+        return self.info['type']
+
+    @property
+    def gitRepo(self):
+        """
+        git hub repo url for artifact. Use value if present or generate url base on artifact name.
+        """
+        if 'git_repo' in self.info:
+            return self.info['git_repo']
+        return 'git@github.com:%s/%s.git' % (self.gitOwner, self.info['name'])
+
+    @property
+    def gitRef(self):
+        if 'git_ref' in self.info:
+            return self.info['git_ref']
+        return self.version
+
+    @property
+    def gitOwner(self):
+        if 'git_owner' in self.info:
+            return self.info['git_owner']
+        return 'zenoss'
+
+    @property
+    def pinned(self):
+        if not self.version:
+            return False
+        elif re.match('.*(dev).*|.*(snap).*', self.version, re.IGNORECASE):
+            return False
+        return True
+
+    @property
+    def versionInfo(self):
+        if self.version is None:
+            return "n/a"
+
+        if self.gitRef is not None:
+            if len(self.gitRef) > 14:
+                gitRef = "%-14.14s" % self.gitRef
+            else:
+                gitRef = self.gitRef
+        return "%s (%s)" % (self.version, gitRef)
+
+    def toDict(self):
+        return {
+            "git_repo": self.gitRepo,
+            "version": self.version,
+            "name": self.name,
+            "type": self.infoType
+        }
+
+
+class JenkinsInfo(ArtifactInfo):
+    def __init__(self, versionInfo):
+        super(JenkinsInfo, self).__init__(versionInfo)
+
+    @property
+    def server(self):
+        if 'jenkins.server' in self.info:
+            return self.info['jenkins.server']
+        return 'http://platform-jenkins.zenoss.eng'
+
+    @property
+    def job(self):
+        if 'jenkins.job' in self.info:
+            return self.info['jenkins.job']
+        return 'Components/job/%s/job/%s' % (self.name, self.version)
+
+    @property
+    def jobURL(self):
+        return "%s/job/%s" % (self.server, self.job)
+
+    @property
+    def subModule(self):
+        return self.info.get('jenkins.subModule')
+
+    @property
+    def patterns(self):
+        if 'jenkins.pattern' in self.info:
+            return [self.info['jenkins.pattern']]
+
+        return ['*.whl', '*.tgz', '*.tar.gz']
+
+    def toDict(self):
+        result = super(JenkinsInfo, self).toDict()
+        jenkinsDict = {
+            "jenkins.server": self.server,
+            "jenkins.job": self.job,
+            "jenkins.jobURL": self.jobURL,
+            "jenkins.subModule": self.subModule,
+            "jenkins.patterns": self.patterns
+        }
+        result.update(jenkinsDict)
+        return result
+
+
+class ZenPackInfo(ArtifactInfo):
+    def __init__(self, versionInfo):
+        super(ZenPackInfo, self).__init__(versionInfo)
+
+    @property
+    def pre(self):
+        return self.info.get('pre', False)
+
+    @property
+    def feature(self):
+        return self.info.get('feature', None)
+
+    @property
+    def requirement(self):
+        return self.info.get('requirement', None)
+
+    @property
+    def gitRef(self):
+        """
+        try to figure out the git ref for a zenpack
+        :return:
+        """
+        gitRef = super(ZenPackInfo, self).gitRef
+        if not gitRef:
+            if self.requirement and '===' in self.requirement and not self.pre:
+                gitRef = self.requirement.split('===')[1]
+            elif self.feature:
+                gitRef =  'feature/%s' % self.feature
+            elif self.pre and not self.requirement:
+                gitRef = 'develop'
+            elif not self.pre and not self.requirement:
+                gitRef = 'master'
+            else:
+                raise Exception("Could not determine git_ref for %s from provided fields. "\
+                        "Please specify desired git_ref field." % self.name)
+
+        return gitRef
+
+    @property
+    def pinned(self):
+        if self.pre:
+            return False
+        elif self.requirement and '==' in self.requirement and not ',' in self.requirement:
+            return True
+        return False
+
+    @property
+    def versionInfo(self):
+        zenpack = self.info.get('zenpack')
+        version = zenpack.get('version')
+        if version is None:
+            return "n/a"
+        return version
+
+    def toDict(self):
+        result = super(ZenPackInfo, self).toDict()
+        zpDict = {
+            "pre": self.pre,
+            "requirements": self.requirement,
+            "feature": self.feature,
+        }
+        result.update(zpDict)
+        return result
+
+artifactClass = {
+    "releasedArtifact": ArtifactInfo,
+    "jenkins": JenkinsInfo,
+    "zenpack": ZenPackInfo,
+}
+
+class Output(object):
+    """Results buffer"""
+
+    # Buffer data
+    data = []   
+
+    @classmethod
+    def println(cls, line):
+        """Print line to output buffer"""
+        cls.data.append(line)
+
+    @classmethod
+    def plain(cls):
+        """Print buffer to stdout"""
+        return os.linesep.join(cls.data)
+
+    @classmethod
+    def json(cls):
+        """Format and print buffer as JSON"""
+        return json.dumps({"services": cls.data}, indent=4)
+
+    @classmethod
+    def flush(cls):
+        """Display buffer"""
+        print getattr(cls, options.output_format)()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Compare build logs')
+    parser.add_argument('-b1', '--build_job_1', type=str,
+                        help='jenkins build job 1; e.g. develop/core-pipeline/5')
+    parser.add_argument('-b2',  '--build_job_2', type=str,
+                        help='jenkins build job 2; e.g. develop/core-pipeline/6')
+
+    parser.add_argument('-c1', '--component_log_1', type=file,
+                        help='zenoss_component_artifact log file 1')
+    parser.add_argument('-c2',  '--component_log_2', type=file,
+                        help='zenoss_component_artifact log file 2')
+
+    parser.add_argument('-z1', '--zenpacks_log_1', type=file,
+                        help='zenpacks_artifact log file 1')
+    parser.add_argument('-z2', '--zenpacks_log_2', type=file,
+                        help='zenpacks_artifact log file 2')
+
+    parser.add_argument('-v', '--verbose', action="store_true",
+                        help='show all items compared, not just the ones that are different')
+
+    parser.add_argument('-q', '--quiet', action="store_true",
+                        help='quiet output, suitable for further results processing')
+
+    parser.add_argument('-f', '--output-format', type=str, choices=['plain', 'json'], default='plain',
+                        help='format of output: json, plain(default)')
+
+    options = parser.parse_args()
+    main(options)

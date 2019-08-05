@@ -1,0 +1,62 @@
+[
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/zenoss-deploy.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/zenoss-utils.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/zenoss-zapp.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/zenoss.metric.tsdb.git"
+    },
+    {
+        "ref": "master",
+        "repo": "git@github.com:zenoss/zing-connector.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:control-center/serviced.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:control-center/serviced-iso.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:control-center/serviced-isvcs.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:control-center/serviced-resource-agents.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/QuickVis.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/zenoss-service.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/impact-server.git"
+    },
+    {
+        "ref": "develop",
+        "repo": "git@github.com:zenoss/impact-pkg.git"
+    },
+    {
+       "ref": "develop",
+       "repo": "git@github.com:zenoss/ZenPacks.zenoss.ImpactServer.git"
+    },
+    {
+       "ref": "develop",
+       "repo": "git@github.com:zenoss/ZenPacks.zenoss.Impact.git"
+    }
+]

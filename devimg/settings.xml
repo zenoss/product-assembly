@@ -1,0 +1,43 @@
+<settings>
+  <mirrors>
+    <mirror>
+      <id>europa</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://nexus.zenoss.eng:8081/nexus/content/groups/public</url>
+    </mirror>
+    <mirror>
+      <!--This is used to direct the public repo in the
+          profile below over to a different nexus group -->
+      <id>nexus-public</id>
+      <mirrorOf>public</mirrorOf>
+      <url>http://nexus.zenoss.eng:8081/nexus/content/groups/public</url>
+      </mirror>
+  </mirrors>
+  <profiles>
+    <profile>
+      <!--this profile will allow snapshots to be searched when
+          activated-->
+      <id>dev</id>
+      <repositories>
+        <repository>
+          <id>public</id>
+          <url>http://public</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>public</id>
+          <url>http://public</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>dev</activeProfile>
+  </activeProfiles>
+</settings>
+

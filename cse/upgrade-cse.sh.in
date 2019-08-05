@@ -1,0 +1,56 @@
+#!/bin/sh
+#
+###############################################################################
+#
+# Upgrade Zenoss Resource Manager
+#
+###############################################################################
+set -e
+export SERVICE_TENANT_ID="`serviced service list Zenoss.cse --format='{{.ID}}'`"
+serviced snapshot untag $SERVICE_TENANT_ID preupgrade-cse-%VERSION%
+
+echo "Getting FROM_VERSION from the 'Version' setting."
+FROM_VERSION=$(serviced service list Zenoss.cse --format='{{.Version}}')
+TO_VERSION=%VERSION%
+
+if [ -z "$FROM_VERSION" ];
+then
+    echo "Getting FROM_VERSION from the 'ImageID' setting."
+    FROM_VERSION=$(serviced service list Zenoss.cse --format '{{.ImageID}}' | awk '{ print "localhost:5000/"$0" cat /opt/zenoss/Products/ZenModel/ZVersion.py" }' | xargs docker run --rm | grep VERSION | cut -d'"' -f2)
+fi
+
+if [ -z "$FROM_VERSION" ];
+    then
+        echo "Could not get the previous RM version number from serviced, "
+        echo "Change this line 'SVC_USE zenoss/cse_REPLACE_1' to reflect the pre-upgrade version, for example:"
+        echo "SVC_USE zenoss/cse_5.2:5.2.6_1"
+        exit 1
+fi
+
+# Run mariadb migration in case we upgrade from older than 7.0.13
+MARIADB_MIGRATION="7.0.13"
+
+if [ $(echo "$FROM_VERSION $MARIADB_MIGRATION" | tr ' ' '\n' | sort | tr '\n' ' ' | cut -f 1 -d " ") = $FROM_VERSION ] && [ $FROM_VERSION != $MARIADB_MIGRATION ];
+then
+MIGRATE_MARIADB_SERVICES="SVC_STOP Zenoss.cse/Infrastructure/mariadb-model\\
+SVC_STOP Zenoss.cse/Infrastructure/mariadb-events\\
+SVC_WAIT Zenoss.cse/Infrastructure/mariadb-events Zenoss.cse/Infrastructure/mariadb-model stopped 600\\
+SVC_USE gcr.io/zing-registry-188222/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/cse_7.0 service Zenoss.cse/Infrastructure/mariadb-model\\
+SVC_EXEC NO_COMMIT 'Zenoss.cse/Infrastructure/mariadb-model' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& mysql_upgrade'\\
+SVC_USE gcr.io/zing-registry-188222/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/cse_7.0 service Zenoss.cse/Infrastructure/mariadb-events\\
+SVC_EXEC NO_COMMIT 'Zenoss.cse/Infrastructure/mariadb-events' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& mysql_upgrade'"
+fi
+
+sed -i "s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHORT_VERSION%.x/upgrade-cse.txt
+
+echo "Preparing to update from "$FROM_VERSION" to "$TO_VERSION" version."
+FROM_VERSION_SHORT=$(echo ${FROM_VERSION} | cut -d'.' -f1,2)
+sed -i 's/REPLACE/'"$FROM_VERSION_SHORT:$FROM_VERSION"'/g' /root/%SHORT_VERSION%.x/current_version.txt
+serviced script run /root/%SHORT_VERSION%.x/current_version.txt --service Zenoss.cse
+
+echo "Starting resmgr upgrade."
+serviced script run /root/%SHORT_VERSION%.x/upgrade-cse.txt --service Zenoss.cse
+
+/opt/serviced/bin/serviced-set-version Zenoss.cse %VERSION%
+
+serviced service run zenimpactstate update
