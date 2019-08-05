@@ -49,10 +49,10 @@
         "version": "4.1.3"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}.tar.gz",
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master.tar.gz",
         "name": "zenoss-prodbin",
         "type": "download",
-        "version": "7.0.13-rc"
+        "version": "7.0.13"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
