@@ -1,8 +1,10 @@
 #
-# versions.mk - Common version numbers for various portions of the product assembly process
+# versions.mk - Common version numbers for various portions of the product
+#               assembly process
 #
-# NOTE: This file must be formatted as a Java Properties file becuase it is read from Jenkins-image.groovy.
-#       Fortunately, Java properties and make properties are equivalent in the simplest case.
+# NOTE: This file must be formatted as a Java Properties file becuase it is
+# read from Jenkins-image.groovy.  Fortunately, Java properties and make
+# properties are equivalent in the simplest case.
 
 #
 # HBASE_VERSION     the HBase image version
@@ -30,7 +32,7 @@ HDFS_VERSION=24.0.8
 OPENTSDB_VERSION=24.0.8
 
 ZING_CONNECTOR_VERSION=2019-07-11-0
-OTSDB_BIGTABLE_VERSION=v2
+OTSDB_BIGTABLE_VERSION=v3
 IMPACT_VERSION=5.5.1.0.0
 ZING_API_PROXY_VERSION=2019-03-18-0
 
