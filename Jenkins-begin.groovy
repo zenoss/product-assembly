@@ -117,6 +117,10 @@ node('build-zenoss-product') {
         stage('Push mariadb image') {
             docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
                 mariadbImage.push()
+                if (PINNED == "true") {
+                    //add a pinned tag so we know if this image is viable for promotion
+                    mariadbImage.push("${imageTag}-pinned")
+                }
             }
         }
         
