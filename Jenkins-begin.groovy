@@ -121,6 +121,7 @@ node('build-zenoss-product') {
                     //add a pinned tag so we know if this image is viable for promotion
                     mariadbImage.push("${imageTag}-pinned")
                 }
+            }
         }
         
         stage('Compile service definitions and build RPM') {
