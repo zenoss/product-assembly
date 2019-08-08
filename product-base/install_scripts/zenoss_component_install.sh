@@ -73,12 +73,6 @@ su - zenoss -c "chmod +x ${ZENHOME}/bin/central-query.sh"
 # TODO: remove this and make sure the tar file contains the proper links
 su - zenoss -c "ln -s ${ZENHOME}/etc/central-query/central-query_supervisor.conf ${ZENHOME}/etc/supervisor/central-query_supervisor.conf"
 
-# Install icmpecho
-artifactDownload "icmpecho"
-su - zenoss -c "tar -C /tmp -xzvf /tmp/icmpecho*"
-su - zenoss -c "mv /tmp/pyraw ${ZENHOME}/bin"
-su - zenoss -c "pip install --no-index  /tmp/icmpecho*.whl"
-
 # Install zenoss-protocols
 artifactDownload "zenoss-protocols"
 su - zenoss -c "pip install --no-index  /tmp/zenoss.protocols*.whl"
