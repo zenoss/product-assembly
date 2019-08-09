@@ -14,9 +14,9 @@
 # VERSION           the full Zenoss product version; e.g. 5.2.0
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
 #
-SHORT_VERSION=6.5
+SHORT_VERSION=6.4
 SVCDEF_GIT_REF=support/6.x
-VERSION=6.5.0
+VERSION=6.4.1
 UCSPM_VERSION=3.0.0
 VERSION_TAG=1
 
