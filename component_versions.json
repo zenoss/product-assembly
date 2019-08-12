@@ -49,9 +49,9 @@
     },
     {
         "name": "zenoss-prodbin",
-        "type": "download",
-        "version": "6.4.0",
-        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.x.tar.gz"
+        "type": "jenkins",
+        "version": "hotfix/6.4.1",
+        "jenkins.job": "Components/job/zenoss-prodbin/job/hotfix-6.x"
     },
     {
         "name": "zenoss-protocols",
