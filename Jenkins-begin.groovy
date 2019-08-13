@@ -7,6 +7,9 @@
 //    BRANCH            - the name of the GIT branch to build from.
 //    GIT_CREDENTIAL_ID - the UUID of the Jenkins GIT credentials used to checkout stuff from github
 //    MATURITY          - the image maturity level (e.g. 'unstable', 'testing', 'stable')
+//    PINNED            - fail build if the artifacts are not pinned to explicitly released versions
+//    BUILD_APPLIANCES  - whether to build appliances artifacts
+//    CHECK_LATEST      - check if pinned versions are the latest known version. Only works for zenpacks
 //    RUN_TESTS         - whether to run the Test image pipeline stage
 //
 node('build-zenoss-product') {
@@ -19,7 +22,13 @@ node('build-zenoss-product') {
     def JOB_NAME = env.JOB_NAME        // e.g. product-assembly/support-6.0.x/begin
     def JOB_URL = env.JOB_URL          // e.g. ${JENKINS_URL}job/${JOB_NAME}/
     def BUILD_URL = env.BUILD_URL      // e.g. ${JOB_URL}${PRODUCT_BUILD_NUMBER}
-    def RUN_TESTS = env.RUN_TESTS      // e.g. "true", "false"
+    def BRANCH = params.BRANCH         // e.g. develop
+    def MATURITY = params.MATURITY     // e.g. unstable
+    def PINNED = params.PINNED         // e.g. "true", "false"
+    def BUILD_APPLIANCES = params.BUILD_APPLIANCES    // e.g. "true", "false"
+    def CHECK_LATEST = params.CHECK_LATEST    // e.g. "true", "false"
+    def RUN_TESTS = params.RUN_TESTS   // e.g. "true", "false"
+    
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} @${env.NODE_NAME}"
 
     try {
