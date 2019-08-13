@@ -190,7 +190,7 @@ node('build-zenoss-product') {
         }
 
         slackSend color: 'warning',
-                channel: '#zing-dev',
+                channel: '#cz-zsd-standup',
                 message: "CSE Build Failed: ${env.JOB_NAME} Build #${env.BUILD_NUMBER} ${env.BUILD_URL}"
         error "Job failed with the following error: ${err}"
     } finally {
