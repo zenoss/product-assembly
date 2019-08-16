@@ -47,7 +47,7 @@ shebang() {
    # replace the first line of any python sh-bang script with
    # #!$ZENHOME/bin/python
    find $ZENHOME/bin \( -type f -o -type l \) -exec readlink -e '{}' \; | \
-      egrep -v "zensocket|pyraw|metrics" | \
+      egrep -v "zensocket|metrics" | \
       xargs sed -i '1,1 s%#!.*python$%#!'"$ZENHOME/bin/python"'%'
 }
 
@@ -225,9 +225,7 @@ fix_zenhome_owner_and_group()
     echo "Setting zenoss owner in /opt/zenoss..."
     set -e
     chown -Rf zenoss:zenoss /opt/zenoss/*
-    echo "Setting permissions on pyraw and zensocket."
-    chown root:zenoss /opt/zenoss/bin/pyraw
-    chmod 04750 /opt/zenoss/bin/pyraw
+    echo "Setting permissions on zensocket."
     chown root:zenoss /opt/zenoss/bin/zensocket
     chmod 04750 /opt/zenoss/bin/zensocket
 }
