@@ -37,7 +37,25 @@ SVC_STOP Zenoss.cse/Infrastructure/mariadb-events\\
 SVC_WAIT Zenoss.cse/Infrastructure/mariadb-events Zenoss.cse/Infrastructure/mariadb-model stopped 600\\
 SVC_EXEC NO_COMMIT 'Zenoss.cse/Zenoss/User Interface/Zope' /opt/zenoss/bin/zenmigrate --step=addGlobalConfToMariadb --dont-bump\\
 SVC_USE gcr.io/zing-registry-188222/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/cse_7.0 service Zenoss.cse/Infrastructure/mariadb-model\\
-SVC_EXEC NO_COMMIT 'Zenoss.cse/Infrastructure/mariadb-model' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh'"
+SVC_EXEC NO_COMMIT 'Zenoss.cse/Infrastructure/mariadb-model' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh mariadb-model'\\
+SVC_USE gcr.io/zing-registry-188222/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/cse_7.0 service Zenoss.cse/Infrastructure/mariadb-events\\
+SVC_EXEC NO_COMMIT 'Zenoss.cse/Infrastructure/mariadb-events' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh mariadb-events'"
+fi
+
+sed -i "s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHORT_VERSION%.x/upgrade-cse.txt
+
+echo "Preparing to update from "$FROM_VERSION" to "$TO_VERSION" version."
+FROM_VERSION_SHORT=$(echo ${FROM_VERSION} | cut -d'.' -f1,2)
+sed -i 's/REPLACE/'"$FROM_VERSION_SHORT:$FROM_VERSION"'/g' /root/%SHORT_VERSION%.x/current_version.txt
+serviced script run /root/%SHORT_VERSION%.x/current_version.txt --service Zenoss.cse
+
+echo "Starting resmgr upgrade."
+serviced script run /root/%SHORT_VERSION%.x/upgrade-cse.txt --service Zenoss.cse
+
+/opt/serviced/bin/serviced-set-version Zenoss.cse %VERSION%
+
+serviced service run zenimpactstate update
+
 fi
 
 sed -i "s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHORT_VERSION%.x/upgrade-cse.txt
