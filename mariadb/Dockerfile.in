@@ -57,6 +57,8 @@ COPY --from=0 /opt/zenoss/bin/metrics/ /opt/zenoss/bin/metrics/
 COPY --from=0 /opt/zenoss/bin/quiesce-mariadb.sh /opt/zenoss/bin/
 COPY --from=0 /opt/zenoss/etc/global.conf /opt/zenoss/etc/
 
+ADD mysqlupgrade.sh /opt/zenoss/bin/mysqlupgrade.sh
+
 RUN touch /var/log/mysqld.log; chown mysql:mysql /var/log/mysqld.log; \
     mkdir -p /opt/zenoss/var; chown -R zenoss:zenoss /opt/zenoss
 
