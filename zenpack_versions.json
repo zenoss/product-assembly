@@ -180,7 +180,7 @@
         "type": "zenpack"
     },
     {
-        "URL": "http://artifacts.zenoss.eng/builds/impact/5.5.x/testing/Impact/82/{name}-{version}-testing-82-py2.7.egg",
+        "URL": "http://artifacts.zenoss.eng/builds/impact/5.5.x/testing/Impact/84/{name}-{version}-testing-84-py2.7.egg",
         "name": "ZenPacks.zenoss.Impact",
         "version": "5.5.2.0.0",
         "type": "download"
