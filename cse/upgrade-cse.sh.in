@@ -35,7 +35,7 @@ then
 MIGRATE_MARIADB_SERVICES="SVC_STOP Zenoss.cse/Infrastructure/mariadb-model\\
 SVC_STOP Zenoss.cse/Infrastructure/mariadb-events\\
 SVC_WAIT Zenoss.cse/Infrastructure/mariadb-events Zenoss.cse/Infrastructure/mariadb-model stopped 600\\
-SVC_EXEC NO_COMMIT 'Zenoss.cse/Zenoss/User Interface/Zope' /opt/zenoss/bin/zenmigrate --step=addGlobalConfToMariadb --dont-bump\\
+SVC_EXEC NO_COMMIT 'Zenoss.cse/Zenoss/User Interface/Zope' /opt/zenoss/bin/zenmigrate --step=AddGlobalConfToMariadb --dont-bump\\
 SVC_USE gcr.io/zing-registry-188222/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/cse_7.0 service Zenoss.cse/Infrastructure/mariadb-model\\
 SVC_EXEC NO_COMMIT 'Zenoss.cse/Infrastructure/mariadb-model' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh mariadb-model'\\
 SVC_USE gcr.io/zing-registry-188222/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/cse_7.0 service Zenoss.cse/Infrastructure/mariadb-events\\
