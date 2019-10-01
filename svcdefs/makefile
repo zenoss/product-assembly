@@ -6,13 +6,14 @@
 # This file REQUIRES the following input variables.  Note that all of these
 # except TARGET_PRODUCT are defined in ../versions.mk
 #
-# HBASE_VERSION     the HBase image version
-# HDFS_VERSION      the HDFS image version
-# OPENTSDB_VERSION  the opentsdb image version
+# HBASE_VERSION          the HBase image version
+# HDFS_VERSION           the HDFS image version
+# OPENTSDB_VERSION       the opentsdb image version
 # ZING_CONNECTOR_VERSION the version tag for the zing-connector image
-# SHORT_VERSION     the two-digit Zenoss product version; e.g. 5.2
-# TARGET_PRODUCT    the target product name (e.g. 'core', 'resmgr', 'ucspm', etc)
-# VERSION           the full Zenoss product version; e.g. 5.2.0
+# ZING_API_PROXY_VERSION the version tag for the api-key-proxy image
+# SHORT_VERSION          the two-digit Zenoss product version; e.g. 5.2
+# TARGET_PRODUCT         the target product name (e.g. 'core', 'resmgr', 'ucspm', etc)
+# VERSION                the full Zenoss product version; e.g. 5.2.0
 #
 include ../versions.mk
 
@@ -46,6 +47,9 @@ ifndef HDFS_VERSION
 endif
 ifndef ZING_CONNECTOR_VERSION
 	$(error ZING_CONNECTOR_VERSION is not set)
+endif
+ifndef ZING_API_PROXY_VERSION
+	$(error ZING_API_PROXY_VERSION is not set)
 endif
 ifndef OTSDB_BIGTABLE_VERSION
 	$(error OTSDB_BIGTABLE_VERSION is not set)
