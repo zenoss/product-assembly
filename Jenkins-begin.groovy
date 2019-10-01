@@ -100,8 +100,13 @@ node('build-zenoss-product') {
         }
 
         stage('Test image') {
-            if (RUN_TESTS == "true") {
-                sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+            dir("${TARGET_PRODUCT}") {
+                withEnv(["MATURITY=${MATURITY}", "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"]) {
+                    sh(
+                        script: "make run-tests",
+                        returnStatus: IGNORE_TEST_IMAGE_FAILURE.toBoolean()
+                    )
+                }
             }
         }
 
