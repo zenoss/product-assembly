@@ -7,6 +7,7 @@
 #       sudo docker pull gcr.io/zing-registry-188222/cse_%SHORT_VERSION%:%VERSION%  # about 10-20 minutes
 #       sudo docker pull gcr.io/zing-registry-188222/otsdb-bigtable:%OTSDB_BIGTABLE_VERSION%        # about  5-10 minutes
 #       sudo docker pull gcr.io/zing-registry-188222/zing-connector:%ZING_CONNECTOR_VERSION%      # about  7-15 minutes
+#       sudo docker pull gcr.io/zing-registry-188222/api-key-proxy:%ZING_API_PROXY_VERSION%      # about  5-10 minutes
 #       serviced docker sync                      # about 10m:cse 5m:hbase 8m:opentsdb
 #
 # Run via 'serviced script run upgrade-cse.txt --service Zenoss.cse' and restart
@@ -30,6 +31,7 @@ SNAPSHOT preupgrade-cse-%VERSION%
 SVC_USE gcr.io/zing-registry-188222/cse_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/cse_7.0
 SVC_USE gcr.io/zing-registry-188222/otsdb-bigtable:%OTSDB_BIGTABLE_VERSION%
 SVC_USE gcr.io/zing-registry-188222/zing-connector:%ZING_CONNECTOR_VERSION%
+SVC_USE gcr.io/zing-registry-188222/api-key-proxy:%ZING_API_PROXY_VERSION%
 SVC_USE gcr.io/zing-registry-188222/mariadb:10.1-%VERSION%_%VERSION_TAG%
 
 # Stop Zenoss
