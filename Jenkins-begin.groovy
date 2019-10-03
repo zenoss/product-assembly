@@ -29,6 +29,13 @@ node('build-zenoss-product') {
     def NOTIFY_TEAM = "false"
     def TEAM_CHANNEL = ""
 
+    println("Build parameters:")
+    println("BRANCH = ${BRANCH}")
+    println("MATURITY = ${MATURITY}")
+    println("PINNED = ${PINNED}")
+    println("CHECK_LATEST = ${CHECK_LATEST}")
+    println("IGNORE_TEST_IMAGE_FAILURE = ${IGNORE_TEST_IMAGE_FAILURE}")
+
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} @${env.NODE_NAME}"
 
     try {
