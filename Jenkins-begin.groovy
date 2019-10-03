@@ -8,7 +8,6 @@
 //    GIT_CREDENTIAL_ID - the UUID of the Jenkins GIT credentials used to checkout stuff from github
 //    MATURITY          - the image maturity level (e.g. 'unstable', 'testing', 'stable')
 //    PINNED            - fail build if the artifacts are not pinned to explicitly released versions
-//    BUILD_APPLIANCES  - whether to build appliances artifacts
 //    CHECK_LATEST      - check if pinned versions are the latest known version. Only works for zenpacks
 //    RUN_TESTS         - whether to run the Test image pipeline stage
 //
@@ -25,10 +24,11 @@ node('build-zenoss-product') {
     def BRANCH = params.BRANCH         // e.g. develop
     def MATURITY = params.MATURITY     // e.g. unstable
     def PINNED = params.PINNED         // e.g. "true", "false"
-    def BUILD_APPLIANCES = params.BUILD_APPLIANCES    // e.g. "true", "false"
     def CHECK_LATEST = params.CHECK_LATEST    // e.g. "true", "false"
-    def RUN_TESTS = params.RUN_TESTS   // e.g. "true", "false"
-    
+    def IGNORE_TEST_IMAGE_FAILURE = params.IGNORE_TEST_IMAGE_FAILURE   // e.g. "true", "false"
+    def NOTIFY_TEAM = "false"
+    def TEAM_CHANNEL = ""
+
     currentBuild.displayName = "product build #${PRODUCT_BUILD_NUMBER} @${env.NODE_NAME}"
 
     try {
@@ -65,7 +65,11 @@ node('build-zenoss-product') {
                 println "Checking for pinned versions in zenpack_versions.json"
                 sh("./artifact_download.py zenpack_versions.json --pinned" + checkLatest)
             }
-            sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build")
+            dir("product-base") {
+                withEnv(["MATURITY=${MATURITY}", "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"]) {
+                    sh("make clean build")
+                }
+            }
         }
 
         def SVCDEF_GIT_REF = ""
@@ -84,7 +88,11 @@ node('build-zenoss-product') {
             echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
 
             // Make the target product
-            sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean build-deps")
+            dir("${TARGET_PRODUCT}") {
+                withEnv(["MATURITY=${MATURITY}", "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"]) {
+                    sh("make clean build-deps")
+                }
+            }
         }
 
         stage('Build image') {
@@ -94,14 +102,23 @@ node('build-zenoss-product') {
             echo "imageName=${imageName}"
             customImage = docker.build(imageName, "-f ${TARGET_PRODUCT}/Dockerfile ${TARGET_PRODUCT}")
 
-            sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make getDownloadLogs")
+            dir("${TARGET_PRODUCT}") {
+                withEnv(["MATURITY=${MATURITY}", "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"]) {
+                    sh("make getDownloadLogs")
+                }
+            }
             def includePattern = TARGET_PRODUCT + '/*artifact.log'
             archive includes: includePattern
         }
 
         stage('Test image') {
-            if (RUN_TESTS == "true") {
-                sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make run-tests")
+            dir("${TARGET_PRODUCT}") {
+                withEnv(["MATURITY=${MATURITY}", "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"]) {
+                    sh(
+                        script: "make run-tests",
+                        returnStatus: IGNORE_TEST_IMAGE_FAILURE.toBoolean()
+                    )
+                }
             }
         }
 
@@ -114,15 +131,18 @@ node('build-zenoss-product') {
                 }
             }
         }
-        
+
         stage('Build mariadb image') {
-           sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make build-mariadb")
-           
-           imageTag = "10.1-${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_${MATURITY}"
-           imageName = "${IMAGE_PROJECT}/mariadb:${imageTag}"
-           mariadbImage = docker.build(imageName, "-f mariadb/Dockerfile mariadb")            
+            dir("${TARGET_PRODUCT}") {
+                withEnv(["MATURITY=${MATURITY}", "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"]) {
+                    sh("make build-mariadb")
+                }
+            }
+            imageTag = "10.1-${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_${MATURITY}"
+            imageName = "${IMAGE_PROJECT}/mariadb:${imageTag}"
+            mariadbImage = docker.build(imageName, "-f mariadb/Dockerfile mariadb")
         }
-        
+
         stage('Push mariadb image') {
             docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
                 mariadbImage.push()
@@ -132,39 +152,54 @@ node('build-zenoss-product') {
                 }
             }
         }
-        
+
         stage('Compile service definitions and build RPM') {
-            // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
-            sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
-            dir('svcdefs/build/zenoss-service') {
-                // NOTE: The 'master' branch name here is only used to clone the github repo.
-                //       The next checkout command will align the build with the correct target revision.
-                echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
-                git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
-                sh("git checkout ${SVCDEF_GIT_REF}")
-
-                // Log the current SHA of zenoss-service so, when building from a branch,
-                // we know exactly which commit went into a particular build
-                sh("echo zenoss/zenoss-service git SHA = \$(git rev-parse HEAD)")
+            // Run the checkout in a separate directory.
+            dir("svcdefs") {
+                // We have to clean it ourselves, because Jenkins doesn't (apparently)
+                sh("rm -rf build")
+                sh("mkdir -p build/zenoss-service")
+                dir("build/zenoss-service") {
+                    echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
+                    // NOTE: The 'master' branch name here is only used to clone the github repo.
+                    //       The next checkout command will align the build with the correct target revision.
+                    git(
+                        branch: 'master',
+                        credentialsId: '${GIT_CREDENTIAL_ID}',
+                        url: 'https://github.com/zenoss/zenoss-service.git'
+                    )
+                    sh("git checkout ${SVCDEF_GIT_REF}")
+                    // Log the current SHA of zenoss-service so, when building from a branch,
+                    // we know exactly which commit went into a particular build
+                    sh("echo zenoss/zenoss-service git SHA = \$(git rev-parse HEAD)")
+                }
+                // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own
+                // because we need to use Jenkins credentials instead
+                withEnv([
+                    "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}",
+                    "IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}",
+                    "MATURITY=${MATURITY}",
+                    "SVCDEF_GIT_READY=true",
+                    "TARGET_PRODUCT=${TARGET_PRODUCT}"
+                ]) {
+                    sh("make build")
+                }
             }
-
-            // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
-            //     Jenkins credentials instead
-            def makeArgs = "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} \
-             IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER} \
-             MATURITY=${MATURITY} \
-             SVCDEF_GIT_READY=true \
-             TARGET_PRODUCT=${TARGET_PRODUCT} "
-            sh("cd svcdefs;make build ${makeArgs}")
             sh("mkdir -p artifacts")
             sh("cp svcdefs/build/zenoss-service/output/*.json artifacts/.")
-            sh("cd artifacts; for file in *json; do tar -cvzf \$file.tgz \$file; done")
+            dir("artifacts") {
+                sh("for file in *json; do tar -cvzf \$file.tgz \$file; done")
+            }
             archive includes: 'artifacts/*.json*'
         }
 
         stage('Upload service definitions') {
-            googleStorageUpload bucket: "gs://cse_artifacts/${TARGET_PRODUCT}/${MATURITY}/${ZENOSS_VERSION}/${PRODUCT_BUILD_NUMBER}", \
-         credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
+            googleStorageUpload(
+                bucket: "gs://cse_artifacts/${TARGET_PRODUCT}/${MATURITY}/${ZENOSS_VERSION}/${PRODUCT_BUILD_NUMBER}",
+                credentialsId: 'zing-registry-188222',
+                pathPrefix: 'artifacts/',
+                pattern: 'artifacts/*tgz'
+            )
         }
 
         stage('3rd-party Python packages check') {
@@ -178,7 +213,13 @@ node('build-zenoss-product') {
 
             try {
                 // Copy 3rd-party dependencies from last successful build
-                copyArtifacts projectName: "${JOB_NAME}", filter: '3rd-party.json', target: 'lastSuccessful', flatten: true, selector: lastSuccessful()
+                copyArtifacts(
+                    projectName: "${JOB_NAME}",
+                    filter: '3rd-party.json',
+                    target: 'lastSuccessful',
+                    flatten: true,
+                    selector: lastSuccessful()
+                )
 
                 // Generate differences report
                 sh 'python compare_pip.py -o 3rd-party-difference.log lastSuccessful/3rd-party.json 3rd-party.json'
@@ -198,12 +239,22 @@ node('build-zenoss-product') {
             currentBuild.result = 'FAILED'
         }
 
-        slackSend color: 'warning',
-                channel: '#cz-zsd-standup',
+        if (NOTIFY_TEAM == "true" && TEAM_CHANNEL != "") {
+            slackSend(
+                color: 'warning',
+                channel: '#${TEAM_CHANNEL}',
                 message: "CSE Build Failed: ${env.JOB_NAME} Build #${env.BUILD_NUMBER} ${env.BUILD_URL}"
+            )
+        }
         error "Job failed with the following error: ${err}"
     } finally {
-        sh("cd ${TARGET_PRODUCT};MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean")
-        sh("cd product-base;MATURITY=${MATURITY} BUILD_NUMBER=${PRODUCT_BUILD_NUMBER} make clean")
+        withEnv(["MATURITY=${MATURITY}", "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"]) {
+            dir("${TARGET_PRODUCT}") {
+                sh("make clean")
+            }
+            dir("product-base") {
+                sh("make clean")
+            }
+        }
     }
 }
