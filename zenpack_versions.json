@@ -2,7 +2,9 @@
     {
         "name": "ZenPacks.zenoss.AWS",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.AWS===4.1.1"
+        "requirement": "ZenPacks.zenoss.AWS==4.1.*",
+        "git_ref": "hotfix/4.1.2",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.AdvancedSearch",
@@ -51,8 +53,10 @@
     },
     {
         "name": "ZenPacks.zenoss.CiscoMonitor",
-        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.10.0",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.CiscoMonitor==5.10.*",
+        "type": "zenpack",
+        "git_ref": "hotfix/5.10.1",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.CiscoUCS",
@@ -86,8 +90,10 @@
     },
     {
         "name": "ZenPacks.zenoss.Dell.PowerEdge",
-        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===3.0.0",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.Dell.PowerEdge==3.0.*",
+        "type": "zenpack",
+        "git_ref": "hotfix/3.0.1",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.DeviceSearch",
@@ -111,8 +117,10 @@
     },
     {
         "name": "ZenPacks.zenoss.Docker",
-        "requirement": "ZenPacks.zenoss.Docker===2.0.4",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.Docker==2.0.*",
+        "type": "zenpack",
+        "git_ref": "hotfix/2.0.5",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.DurationThreshold",
@@ -126,7 +134,7 @@
     },
     {
         "name": "ZenPacks.zenoss.EMC.base",
-        "requirement": "ZenPacks.zenoss.EMC.base===2.1.0",
+        "requirement": "ZenPacks.zenoss.EMC.base===2.1.1",
         "type": "zenpack"
     },
     {
@@ -208,8 +216,10 @@
     },
     {
         "name": "ZenPacks.zenoss.Kubernetes",
-        "requirement": "ZenPacks.zenoss.Kubernetes===1.0.1",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.Kubernetes==1.0.*",
+        "type": "zenpack",
+        "git_ref": "hotfix/1.0.2",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.Layer2",
@@ -233,7 +243,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Microsoft.Azure",
-        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.0.0",
+        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.1.0",
         "type": "zenpack"
     },
     {
@@ -408,8 +418,10 @@
     },
     {
         "name": "ZenPacks.zenoss.ZenPackLib",
-        "requirement": "ZenPacks.zenoss.ZenPackLib===2.1.1",
-        "type": "zenpack"
+        "requirement": "ZenPacks.zenoss.ZenPackLib==2.1.*",
+        "type": "zenpack",
+        "git_ref": "hotfix/2.1.2",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.ZenSQLTx",
