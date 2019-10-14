@@ -46,7 +46,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "jenkins",
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/zenoss-prodbin/job/develop",
+        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/TestBuilds/job/test_lbernard/job/product-assembly-build-test/",
         "version": "develop"
     },
     {
