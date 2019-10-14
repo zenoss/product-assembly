@@ -194,7 +194,7 @@
         "type": "download"
     },
     {
-        "URL": "http://artifacts.zenoss.eng/builds/impact/5.5.x/testing/ImpactServer/99/{name}-{version}-testing-239-py2.7.egg",
+        "URL": "http://artifacts.zenoss.eng/builds/impact/5.5.x/testing/ImpactServer/104/{name}-{version}-testing-247-py2.7.egg",
         "name": "ZenPacks.zenoss.ImpactServer",
         "version": "5.5.2.0.0",
         "type": "download"
