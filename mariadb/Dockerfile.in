@@ -39,6 +39,8 @@ RUN sed -i '/^deb.*multiverse/s/^/#\ /' /etc/apt/sources.list \
     less               \
     mariadb-server     \
     python2.7          \
+    patch              \
+    python-mysqldb     \
     && apt-get clean
 
  
