@@ -49,15 +49,12 @@ function download_artifact
 }
 
 # Install Prodbin
-download_artifact "zenoss-prodbin"
-run "tar -C ${ZENHOME} -xzvf /tmp/prodbin* --exclude=Products/ZenModel/migrate/tests --exclude=Products/ZenUITests"
+artifactDownload "zenoss-prodbin"
+run "tar -C ${ZENHOME} -xzvf /tmp/prodbin*"
 
 # TODO: remove this and make sure the tar file contains the proper links
-run "mkdir -p ${ZENHOME}/etc/supervisor ${ZENHOME}/var/zauth ${ZENHOME}/libexec"
+run "mkdir -p ${ZENHOME}/etc/supervisor ${ZENHOME}/var/zauth ${ZENHOME}/libexec ${ZENHOME}/lib/python"
 run "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
-
-run "pip install --no-index ${ZENHOME}/dist/*.whl"
-run "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
 
 # Install zensocket
 download_artifact "zensocket"

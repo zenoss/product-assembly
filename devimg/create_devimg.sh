@@ -37,6 +37,9 @@ echo "Linking in metrics dir"
 rm -rf ${ZENHOME}/bin/metrics
 su - zenoss -c "ln -s ${SRCROOT}/zenoss-prodbin/bin/metrics ${ZENHOME}/bin/metrics"
 
+# Install Zenoss Products (in developer/edit mode)
+su - zenoss -c "pip install -e ${SRCROOT}/zenoss-prodbin"
+
 #TODO: do we want to do this for prodbin bin files as well?
 if [ -d ${SRCROOT}/zenoss-zep/dist/src/assembly/bin ]; then
     for srcfile in ${SRCROOT}/zenoss-zep/dist/src/assembly/bin/*; do
