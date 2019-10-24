@@ -53,7 +53,7 @@ shebang() {
 
 start_requirements() {
     echo "Starting mysql..."
-    /usr/bin/mysql_install_db --user=mysql
+    /usr/bin/mysql_install_db --user=mysql --basedir=/usr
     /usr/bin/mysqld_safe &
 
     echo "Starting redis..."
