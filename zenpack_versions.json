@@ -383,7 +383,7 @@
     },
     {
         "name": "ZenPacks.zenoss.WSMAN",
-        "requirement": "ZenPacks.zenoss.WSMAN===1.0.4",
+        "requirement": "ZenPacks.zenoss.WSMAN===1.0.5",
         "type": "zenpack"
     },
     {
