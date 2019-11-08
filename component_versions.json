@@ -46,7 +46,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "jenkins",
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/zenoss-prodbin/job/develop",
+        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/zenoss-prodbin/job/build-rc",
         "version": "develop"
     },
     {
