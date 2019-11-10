@@ -380,7 +380,7 @@
     },
     {
         "name": "ZenPacks.zenoss.WBEM",
-        "requirement": "ZenPacks.zenoss.WBEM===2.1.0",
+        "requirement": "ZenPacks.zenoss.WBEM===3.0.0",
         "type": "zenpack"
     },
     {
