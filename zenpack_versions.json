@@ -169,10 +169,8 @@
     },
     {
         "name": "ZenPacks.zenoss.HP.Proliant",
-        "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.HP.Proliant==3.3.*",
-        "git_ref": "hotfix/3.3.4",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.4",
+        "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.HpuxMonitor",
