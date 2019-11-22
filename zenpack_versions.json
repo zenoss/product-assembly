@@ -442,5 +442,10 @@
         "name": "ZenPacks.zenoss.vSphere",
         "requirement": "ZenPacks.zenoss.vSphere===4.0.2",
         "type": "zenpack"
+    },
+    {
+        "name": "ZenPacks.zenoss.CloudView",
+        "requirement": "ZenPacks.zenoss.CloudView===1.0.0",
+        "type": "zenpack"
     }
 ]
