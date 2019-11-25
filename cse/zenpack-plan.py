@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 # render a table of current, develop and latest ZPs based on ZP manifest
 
 import argparse
@@ -6,25 +8,20 @@ from subprocess import call
 import json
 import re
 import urllib2
-from pprint import pprint
 import os
 
-github = Github("my_token")
-org = github.get_organization("zenoss")
-call(["git", "clone", "git@github.com:zenoss/product-assembly"]) 
-os.chdir("product-assembly")
 
 def get_latest_zp_version(zp_name):
     url = "http://zenpacks.zenoss.eng/requirement/%s" % zp_name
     info = json.loads(urllib2.urlopen(url).read())
     return info['version']
 
-def get_latest_cz_release():
+def get_latest_cz_release(org):
     repo = org.get_repo("product-assembly")
     release = repo.get_latest_release()
     return release.tag_name, release.title
 
-def get_zenpack_manifest(tag):
+def get_zenpack_manifest(product, tag):
     call(["git", "checkout", tag])
     call(["git", "pull"])
     with open("zenpack_versions.json") as f:
@@ -33,10 +30,10 @@ def get_zenpack_manifest(tag):
     zenpacks = dict()
     zp_versions = {i["name"]:i for i in data}
 
-    with open("cse/zenpacks.json") as f:
+    with open("%s/zenpacks.json" % product) as f:
         data = json.load(f)
 
-    for zp in data["install_order"]:
+    for zp in (data["install_order"] + data["included_not_installed"]):
         item = dict()
         item["packaged"] = not zp in data["included_not_installed"]
         item.update(zp_versions[zp])
@@ -46,26 +43,35 @@ def get_zenpack_manifest(tag):
 
 def main(options):
     unpackaged_style="color: #999999; font-style: italic;"
-    last_release_tag, last_release_title = get_latest_cz_release()
-    print "Last release of CZ was %s" % (last_release_tag)
-    print "Loading ZPs for %s" % (last_release_tag)
-    last_cz_zps = get_zenpack_manifest(last_release_tag)
-    develop_cz_zps = get_zenpack_manifest("develop")
+
+    github = Github(options.ghuser, options.ghpass)
+    org = github.get_organization("zenoss")
+
+    call(["git", "clone", "git@github.com:zenoss/product-assembly"]) 
+    os.chdir("product-assembly")
+#    last_release_tag, last_release_title = get_latest_cz_release(org)
+#    last_release_tag = options.base
+
+    print "Loading ZPs for %s" % (options.base)
+    last_cz_zps = get_zenpack_manifest(options.product, options.base)
+    develop_cz_zps = get_zenpack_manifest(options.product, options.compare)
 
     regex = re.compile("^.*===")
     print "<table>"
-    print "<tr><th>ZenPack</th><th>%s</th><th>Planned Next CZ</th><th>Latest ZP Release</th></tr>" \
-                                                                                % (last_release_title)
+    print "<tr><th>ZenPack</th><th>%s</th><th>%s</th><th>Latest ZP Release</th></tr>" \
+                                                                                % (options.base, options.compare)
     unchanged_zps = dict()
     for zenpack in sorted(develop_cz_zps):
         if develop_cz_zps[zenpack]['type'] != "zenpack":
             continue
         if ('requirement' in develop_cz_zps[zenpack]):
-            _, dev_ver = develop_cz_zps[zenpack]['requirement'].split("===")
+            _, dev_ver = re.split("=*",develop_cz_zps[zenpack]['requirement'])
         else:
             dev_ver = "in development"    
+        if "*" in dev_ver:
+            dev_ver = "in development"
         if zenpack in last_cz_zps:
-            _, rel_ver = last_cz_zps[zenpack]['requirement'].split("===")
+            _, rel_ver = re.split("=*",last_cz_zps[zenpack]['requirement'])
         else:
             new_zp = {"packaged":"not present"}
             last_cz_zps[zenpack] = new_zp
@@ -93,8 +99,15 @@ def main(options):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Build ZenPack Plan')
 
-    #parser.add_argument('tag1', type=str, 
-    #                    help='Tag of product-assembly to check')
-
+    parser.add_argument('--product', type=str, 
+                        help='Product = cse or resmgr', required=True)
+    parser.add_argument('--base', type=str, 
+                        help='Base branch for comparison', required=True)
+    parser.add_argument('--compare', type=str, 
+                        help='Commit/tag to compare with base', required=True)
+    parser.add_argument('--ghuser', type=str, 
+                        help='Github username', required=True)
+    parser.add_argument('--ghpass', type=str, 
+                        help='Github password', required=True)
     options = parser.parse_args()
     main(options)
