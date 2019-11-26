@@ -46,6 +46,7 @@ sed -i "s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHOR
 
 UPGRADE_IMPACT_VERSION="5.5.1.0.0"
 CURRENT_IMPACT_VERSION=$(serviced service shell Infrastructure/Impact /bin/bash -c 'cat /opt/zenoss_impact/image_version | cut -d ":" -f2 | cut -d "_" -f1')
+RUN_GRAPH_UPDATE=false
 
 if [ "$(printf '%s\n' "$UPGRADE_IMPACT_VERSION" "$CURRENT_IMPACT_VERSION" | sort -V | head -n1)" = "$UPGRADE_IMPACT_VERSION" ]; then
     echo "Skipping Impact upgrade. Current version greater than or equal to $UPGRADE_IMPACT_VERSION"
@@ -54,6 +55,7 @@ else
     SVC_STOP Zenoss.cse/Infrastructure/Impact\\
     SVC_WAIT Zenoss.cse/Infrastructure/Impact stopped 600\\
     SVC_EXEC COMMIT 'Zenoss.cse/Infrastructure/Impact' /bin/bash -c 'su - zenossimpact; rm -rf /opt/zenoss_impact/var/db/*'"
+    RUN_GRAPH_UPDATE=true
 fi
 
 sed -i "s@%UPGRADE_IMPACT_SERVICE%@${UPGRADE_IMPACT_SERVICE}@g;" /root/%SHORT_VERSION%.x/upgrade-cse.txt
@@ -68,5 +70,6 @@ serviced script run /root/%SHORT_VERSION%.x/upgrade-cse.txt --service Zenoss.cse
 
 /opt/serviced/bin/serviced-set-version Zenoss.cse %VERSION%
 
-serviced service run zenimpactstate update
-
+if [ "$RUN_GRAPH_UPDATE" = true ] ; then
+    serviced service run zenimpactstate update
+fi
