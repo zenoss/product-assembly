@@ -65,6 +65,11 @@
         "type": "zenpack"
     },
     {
+        "name": "ZenPacks.zenoss.CloudView",
+        "requirement": "ZenPacks.zenoss.CloudView===1.0.0",
+        "type": "zenpack"
+    },
+    {
         "name": "ZenPacks.zenoss.ComponentGroups",
         "requirement": "ZenPacks.zenoss.ComponentGroups===1.8.0",
         "type": "zenpack"
