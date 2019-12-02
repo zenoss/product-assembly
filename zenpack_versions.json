@@ -36,7 +36,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Capacity",
-        "requirement": "ZenPacks.zenoss.Capacity===1.0.4",
+        "requirement": "ZenPacks.zenoss.Capacity===1.0.5",
         "type": "zenpack"
     },
     {
