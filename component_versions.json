@@ -1,9 +1,9 @@
 [
     {
         "name": "metricshipper",
-        "type": "jenkins",
-        "version": "develop",
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/metricshipper/job/develop/"
+        "type": "download",
+        "version": "1.1.5",
+        "URL": "http://zenpip.zenoss.eng/packages/metricshipper-{version}.tgz"
     },
     {
         "name": "modelindex",
