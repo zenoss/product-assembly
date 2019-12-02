@@ -348,7 +348,7 @@
     },
     {
         "name": "ZenPacks.zenoss.StorageBase",
-        "requirement": "ZenPacks.zenoss.StorageBase===1.4.3",
+        "requirement": "ZenPacks.zenoss.StorageBase===1.4.4",
         "type": "zenpack"
     },
     {
