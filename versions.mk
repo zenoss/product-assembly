@@ -19,7 +19,7 @@
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
 #
 SHORT_VERSION=7.0
-SVCDEF_GIT_REF=develop
+SVCDEF_GIT_REF=7.0.14
 VERSION=7.0.14
 VERSION_TAG=1
 
@@ -33,7 +33,7 @@ OPENTSDB_VERSION=24.0.8
 
 ZING_CONNECTOR_VERSION=2019-09-30-0
 OTSDB_BIGTABLE_VERSION=v3
-IMPACT_VERSION=5.5.2.0.0
+IMPACT_VERSION=5.5.1.0.0
 ZING_API_PROXY_VERSION=2019-10-08-0
 
 #Image project or organization used for images eg.  zing-registry-188222/cse_7.0:[TAG]

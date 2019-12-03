@@ -1,9 +1,9 @@
 [
     {
         "name": "metricshipper",
-        "type": "jenkins",
-        "version": "develop",
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/metricshipper/job/develop/"
+        "type": "download",
+        "version": "1.1.5",
+        "URL": "http://zenpip.zenoss.eng/packages/metricshipper-{version}.tgz"
     },
     {
         "name": "modelindex",
@@ -19,9 +19,9 @@
     },
     {
         "name": "query",
-        "type": "jenkins",
-        "version": "develop",
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/query/job/develop/"
+        "type": "download",
+        "version": "0.1.36",
+        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
@@ -45,9 +45,9 @@
     },
     {
         "name": "zenoss-prodbin",
-        "type": "jenkins",
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/zenoss-prodbin/job/develop",
-        "version": "develop"
+        "type": "download",
+        "version": "7.0.14",
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master.tar.gz"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
@@ -57,15 +57,15 @@
     },
     {
         "name": "zenoss-zep",
-        "type": "jenkins",
-        "version": "develop",
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/zenoss-zep/job/develop/"
+        "version": "2.7.3",
+        "type": "download",
+        "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz"
     },
     {
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/zenoss.metric.consumer/job/develop/",
         "name": "zenoss.metric.consumer",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "0.1.13",
+        "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
