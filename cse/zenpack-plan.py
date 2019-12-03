@@ -11,7 +11,7 @@ import os
 
 github = Github("my_token")
 org = github.get_organization("zenoss")
-call(["git", "clone", "git@github.com:zenoss/product-assembly"]) 
+call(["git", "clone", "git@github.com:zenoss/product-assembly"])
 os.chdir("product-assembly")
 
 def get_latest_zp_version(zp_name):
@@ -63,7 +63,7 @@ def main(options):
         if ('requirement' in develop_cz_zps[zenpack]):
             _, dev_ver = develop_cz_zps[zenpack]['requirement'].split("===")
         else:
-            dev_ver = "in development"    
+            dev_ver = "in development"
         if zenpack in last_cz_zps:
             _, rel_ver = last_cz_zps[zenpack]['requirement'].split("===")
         else:
@@ -93,7 +93,7 @@ def main(options):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Build ZenPack Plan')
 
-    #parser.add_argument('tag1', type=str, 
+    #parser.add_argument('tag1', type=str,
     #                    help='Tag of product-assembly to check')
 
     options = parser.parse_args()

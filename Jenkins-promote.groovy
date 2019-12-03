@@ -40,7 +40,7 @@ node ('build-zenoss-product') {
     def SERVICED_VERSION=""
     def SERVICED_BUILD_NUMBER=""
 
-    stage ('Pull image') {
+    stage ('Pull cz image') {
         // Make sure we start in a clean directory to ensure a fresh git clone
         deleteDir()
         // NOTE: The 'master' branch name here is only used to clone the github repo.
@@ -113,7 +113,7 @@ node ('build-zenoss-product') {
         }
 
     }
-    stage ('Promote image') {
+    stage ('Promote cz image') {
         if  (TO_MATURITY == "stable" || TO_MATURITY == "testing"){
             promote_tag="${ZENOSS_VERSION}_${BUILD_NUMBER}"
         }else{
@@ -124,7 +124,37 @@ node ('build-zenoss-product') {
             CZ_IMAGE.push("${promote_tag}")
         }
     }
-
+    stage ('Pull mariadb image'){
+        repo = "gcr.io/zing-registry-188222/mariadb"
+        tag = "10.1-"
+        if (FROM_MATURITY == "unstable") {
+            // only accept images where all sub-components were pinned at build time
+            tag = tag + "${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_unstable-pinned"
+        } else if (FROM_MATURITY == "stable" || FROM_MATURITY == "testing") {
+            tag = tag + "${ZENOSS_VERSION}_${FROM_RELEASEPHASE}"
+        } else {
+            error "Invalid maturity value ${FROM_MATURITY}"
+        }
+        from_image = "${repo}:${tag}"
+        echo "pulling ${from_image}"
+        CZ_IMAGE=null
+        docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
+            CZ_IMAGE=docker.image("${from_image}")
+            CZ_IMAGE.pull()
+        }
+    }
+    stage ('Promote mariadb image'){
+        
+        if  (TO_MATURITY == "stable" || TO_MATURITY == "testing"){
+            promote_tag="10.1-" + "${ZENOSS_VERSION}_${BUILD_NUMBER}"
+        }else{
+            error "Invalid maturity value ${TO_MATURITY}"
+        }
+        docker.withRegistry('https://gcr.io', 'gcr:zing-registry-188222') {
+            CZ_IMAGE.tag("${promote_tag}")
+            CZ_IMAGE.push("${promote_tag}")
+        }
+    }   
     stage ('Compile service definitions') {
         // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
         sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")

@@ -1,8 +1,8 @@
 [
     {
         "name": "ZenPacks.zenoss.AWS",
-        "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.AWS===4.1.1"
+        "requirement": "ZenPacks.zenoss.AWS===5.0.0",
+        "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.AdvancedSearch",
@@ -36,7 +36,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Capacity",
-        "requirement": "ZenPacks.zenoss.Capacity===1.0.4",
+        "requirement": "ZenPacks.zenoss.Capacity===1.0.5",
         "type": "zenpack"
     },
     {
@@ -56,12 +56,17 @@
     },
     {
         "name": "ZenPacks.zenoss.CiscoUCS",
-        "requirement": "ZenPacks.zenoss.CiscoUCS===3.0.1",
+        "requirement": "ZenPacks.zenoss.CiscoUCS===3.0.2",
         "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.CiscoUCSCentral",
         "requirement": "ZenPacks.zenoss.CiscoUCSCentral===1.3.1",
+        "type": "zenpack"
+    },
+    {
+        "name": "ZenPacks.zenoss.CloudView",
+        "requirement": "ZenPacks.zenoss.CloudView===1.0.0",
         "type": "zenpack"
     },
     {
@@ -76,7 +81,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Dashboard",
-        "requirement": "ZenPacks.zenoss.Dashboard===1.3.9",
+        "requirement": "ZenPacks.zenoss.Dashboard===1.3.10",
         "type": "zenpack"
     },
     {
@@ -86,7 +91,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Dell.PowerEdge",
-        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===3.0.0",
+        "requirement": "ZenPacks.zenoss.Dell.PowerEdge===3.0.1",
         "type": "zenpack"
     },
     {
@@ -101,7 +106,7 @@
     },
     {
         "name": "ZenPacks.zenoss.DistributedCollector",
-        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.9",
+        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.10",
         "type": "zenpack"
     },
     {
@@ -126,7 +131,7 @@
     },
     {
         "name": "ZenPacks.zenoss.EMC.base",
-        "requirement": "ZenPacks.zenoss.EMC.base===2.1.0",
+        "requirement": "ZenPacks.zenoss.EMC.base===2.1.1",
         "type": "zenpack"
     },
     {
@@ -156,12 +161,12 @@
     },
     {
         "name": "ZenPacks.zenoss.GoogleCloudPlatform",
-        "requirement": "ZenPacks.zenoss.GoogleCloudPlatform===1.0.2",
+        "requirement": "ZenPacks.zenoss.GoogleCloudPlatform===1.1.0",
         "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.HP.Proliant",
-        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.3",
+        "requirement": "ZenPacks.zenoss.HP.Proliant===3.3.4",
         "type": "zenpack"
     },
     {
@@ -176,20 +181,20 @@
     },
     {
         "name": "ZenPacks.zenoss.IBM.Power",
-        "requirement": "ZenPacks.zenoss.IBM.Power===1.1.3",
+        "requirement": "ZenPacks.zenoss.IBM.Power===1.2.0",
         "type": "zenpack"
     },
     {
-        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/{name}-{version}-py2.7.egg",
         "name": "ZenPacks.zenoss.Impact",
         "version": "5.5.1.0.0",
-        "type": "download"
+        "type": "download",
+        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/{name}-{version}-py2.7.egg"
     },
     {
-        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/{name}-{version}-py2.7.egg",
         "name": "ZenPacks.zenoss.ImpactServer",
         "version": "5.5.1.0.0",
-        "type": "download"
+        "type": "download",
+        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/{name}-{version}-py2.7.egg"
     },
     {
         "name": "ZenPacks.zenoss.InstalledTemplatesReport",
@@ -233,7 +238,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Microsoft.Azure",
-        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.0.0",
+        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.1.0",
         "type": "zenpack"
     },
     {
@@ -343,7 +348,7 @@
     },
     {
         "name": "ZenPacks.zenoss.StorageBase",
-        "requirement": "ZenPacks.zenoss.StorageBase===1.4.3",
+        "requirement": "ZenPacks.zenoss.StorageBase===1.4.4",
         "type": "zenpack"
     },
     {
@@ -368,12 +373,12 @@
     },
     {
         "name": "ZenPacks.zenoss.WBEM",
-        "requirement": "ZenPacks.zenoss.WBEM===2.1.0",
+        "requirement": "ZenPacks.zenoss.WBEM===3.0.0",
         "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.WSMAN",
-        "requirement": "ZenPacks.zenoss.WSMAN===1.0.4",
+        "requirement": "ZenPacks.zenoss.WSMAN===1.0.5",
         "type": "zenpack"
     },
     {
