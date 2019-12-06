@@ -45,9 +45,9 @@
     },
     {
         "name": "zenoss-prodbin",
-        "type": "jenkins",
-        "version": "build-rc",
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/zenoss-prodbin/job/build-rc"
+        "type": "download",
+        "version": "7.0.15",
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master.tar.gz"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
