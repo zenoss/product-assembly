@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 ###############################################################################
 #
@@ -20,18 +20,18 @@ then
 fi
 
 if [ -z "$FROM_VERSION" ];
-    then
-        echo "Could not get the previous RM version number from serviced, "
-        echo "Change this line 'SVC_USE zenoss/cse_REPLACE_1' to reflect the pre-upgrade version, for example:"
-        echo "SVC_USE zenoss/cse_5.2:5.2.6_1"
-        exit 1
+then
+    echo "Could not get the previous RM version number from serviced, "
+    echo "Change this line 'SVC_USE zenoss/cse_REPLACE_1' to reflect the pre-upgrade version, for example:"
+    echo "SVC_USE zenoss/cse_5.2:5.2.6_1"
+    exit 1
 fi
 
-# Run mariadb migration in case we upgrade from older than 7.0.13
-MARIADB_MIGRATION="7.0.13"
+MARIADB_IMAGE_ID=$(serviced service list mariadb-model --format "{{.ImageID}}")
+echo "mariadb-model service's image ID is "${MARIADB_IMAGE_ID}
 
-if [ $(echo "$FROM_VERSION $MARIADB_MIGRATION" | tr ' ' '\n' | sort | tr '\n' ' ' | cut -f 1 -d " ") = $FROM_VERSION ] && [ $FROM_VERSION != $MARIADB_MIGRATION ];
-then
+# Run mariadb migration if the mariadb-model service's image ID does not correspond to the mariadb image.
+if [[ ! $MARIADB_IMAGE_ID =~ "${SERVICE_TENANT_ID}/mariadb:" ]]; then
 MIGRATE_MARIADB_SERVICES="SVC_STOP Zenoss.cse/Infrastructure/mariadb-model\\
 SVC_STOP Zenoss.cse/Infrastructure/mariadb-events\\
 SVC_WAIT Zenoss.cse/Infrastructure/mariadb-events Zenoss.cse/Infrastructure/mariadb-model stopped 600\\
@@ -47,7 +47,7 @@ sed -i "s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHOR
 UPGRADE_IMPACT_VERSION="5.5.1.0.0"
 CURRENT_IMPACT_VERSION=$(serviced service shell Infrastructure/Impact /bin/bash -c 'cat /opt/zenoss_impact/image_version | cut -d ":" -f2 | cut -d "_" -f1')
 RUN_GRAPH_UPDATE=false
-#
+
 if [ "$(printf '%s\n' "$UPGRADE_IMPACT_VERSION" "$CURRENT_IMPACT_VERSION" | sort -V | head -n1)" = "$UPGRADE_IMPACT_VERSION" ]; then
     echo "Skipping Impact upgrade. Current version greater than or equal to $UPGRADE_IMPACT_VERSION"
 else

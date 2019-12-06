@@ -46,7 +46,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "download",
-        "version": "7.0.14",
+        "version": "7.0.15",
         "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master.tar.gz"
     },
     {
