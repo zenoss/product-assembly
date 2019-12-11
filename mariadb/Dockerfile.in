@@ -56,6 +56,8 @@ COPY --from=0 --chown=mysql:mysql /var/lib/mysql /var/lib/mysql
 COPY --from=0 /opt/zenoss/bin/metrics/ /opt/zenoss/bin/metrics/
 COPY --from=0 /opt/zenoss/bin/quiesce-mariadb.sh /opt/zenoss/bin/
 COPY --from=0 /opt/zenoss/etc/global.conf /opt/zenoss/etc/
+COPY --from=0 /opt/zenoss/Products/ZenUtils/ZenDB.py /opt/zenoss/Products/ZenUtils/
+COPY --from=0 /opt/zenoss/Products/ZenUtils/config.py /opt/zenoss/Products/ZenUtils/
 
 RUN touch /var/log/mysqld.log; chown mysql:mysql /var/log/mysqld.log; \
     mkdir -p /opt/zenoss/var; chown -R zenoss:zenoss /opt/zenoss
