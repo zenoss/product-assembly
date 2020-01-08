@@ -57,7 +57,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dashboard",
-        "requirement": "ZenPacks.zenoss.Dashboard===1.3.8",
+        "requirement": "ZenPacks.zenoss.Dashboard===1.3.10",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DatabaseMonitor",
@@ -185,7 +185,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Azure",
-        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.0.0",
+        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.1.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Exchange",
