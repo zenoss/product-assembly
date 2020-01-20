@@ -19,9 +19,8 @@
     },
     {
         "name": "query",
-        "type": "download",
-        "version": "0.1.36",
-        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
