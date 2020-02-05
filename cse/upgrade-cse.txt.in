@@ -4,11 +4,11 @@
 # preseed the master with the images (that the upgrade will automatically
 # pull from the internet) before the upgrade maintenance window:
 #   ssh MASTER
-#       sudo docker pull gcr.io/zing-registry-188222/cse_%SHORT_VERSION%:%VERSION%  # about 10-20 minutes
-#       sudo docker pull gcr.io/zing-registry-188222/otsdb-bigtable:%OTSDB_BIGTABLE_VERSION%        # about  5-10 minutes
-#       sudo docker pull gcr.io/zing-registry-188222/zing-connector:%ZING_CONNECTOR_VERSION%      # about  7-15 minutes
-#       sudo docker pull gcr.io/zing-registry-188222/api-key-proxy:%ZING_API_PROXY_VERSION%      # about  5-10 minutes
-#       serviced docker sync                      # about 10m:cse 5m:hbase 8m:opentsdb
+#   sudo docker pull gcr.io/zing-registry-188222/cse_%SHORT_VERSION%:%VERSION%  # about 10-20 minutes
+#   sudo docker pull gcr.io/zing-registry-188222/otsdb-bigtable:%OTSDB_BIGTABLE_VERSION%  # about 5-10 minutes
+#   sudo docker pull gcr.io/zing-registry-188222/zing-connector:%ZING_CONNECTOR_VERSION%  # about 7-15 minutes
+#   sudo docker pull gcr.io/zing-registry-188222/api-key-proxy:%ZING_API_PROXY_VERSION%  # about 5-10 minutes
+#   serviced docker sync  # about 10m:cse 5m:hbase 8m:opentsdb
 #
 # Run via 'serviced script run upgrade-cse.txt --service Zenoss.cse' and restart
 # the deployment
@@ -22,17 +22,17 @@
 #
 ###################################################################################
 
-DESCRIPTION  Zenoss RM %VERSION% upgrade
-VERSION   cse-%VERSION%
+DESCRIPTION Zenoss RM %VERSION% upgrade
+VERSION cse-%VERSION%
 REQUIRE_SVC
 SNAPSHOT preupgrade-cse-%VERSION%
 
-# Choose image to upgrade to
+# Choose images to upgrade to
 SVC_USE gcr.io/zing-registry-188222/cse_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/cse_7.0
 SVC_USE gcr.io/zing-registry-188222/otsdb-bigtable:%OTSDB_BIGTABLE_VERSION%
 SVC_USE gcr.io/zing-registry-188222/zing-connector:%ZING_CONNECTOR_VERSION%
 SVC_USE gcr.io/zing-registry-188222/api-key-proxy:%ZING_API_PROXY_VERSION%
-SVC_USE gcr.io/zing-registry-188222/mariadb:10.1-%VERSION%_%VERSION_TAG%
+SVC_USE gcr.io/zing-registry-188222/mariadb:%VERSION%_%VERSION_TAG%
 
 # Stop Zenoss
 SVC_STOP Zenoss.cse auto
@@ -41,10 +41,14 @@ SVC_WAIT Zenoss.cse stopped 600
 # Run impact upgrade if we upgrade from Impact < $UPGRADE_IMPACT_VERSION
 %UPGRADE_IMPACT_SERVICE%
 
-# Run mariadb migration if we upgrade from resmgr < 7.0.13
+# Run mariadb migration if mariadb services are not using the mariadb image
 # - override image for mariadb services to a new one
 # - start mariadb services and run mysql_upgrade
 %MIGRATE_MARIADB_SERVICES%
+
+# Upgrade the mariadb database(s)
+SVC_EXEC NO_COMMIT "Zenoss.cse/Infrastructure/mariadb-model" /opt/zenoss/bin/upgrade_database.sh
+SVC_EXEC NO_COMMIT "Zenoss.cse/Infrastructure/mariadb-events" /opt/zenoss/bin/upgrade_database.sh
 
 # Start all our dependent services
 SVC_START Zenoss.cse/Infrastructure/Impact

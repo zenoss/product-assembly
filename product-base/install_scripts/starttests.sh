@@ -1,12 +1,30 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Start Zenoss and run all platform and ZenPack tests
 #
+
 set -e
-set -x
+# set -x
 
-${ZENHOME}/install_scripts/startZenossForTests.sh
+# prepare the environment
+source ${ZENHOME}/install_scripts/prepare.sh
+prepare
 
-su - zenoss  -c "${ZENHOME}/bin/runtests $*"
+. ${ZENHOME}/install_scripts/install_lib.sh
 
+cleanup() {
+	stop_zep
+	stop_solr
+	stop_rabbitmq
+	stop_redis
+}
+trap cleanup EXIT
 
+sync_zope_conf
+
+start_redis
+start_rabbitmq
+start_solr
+start_zep
+
+su - zenoss -c "${ZENHOME}/bin/runtests $*"

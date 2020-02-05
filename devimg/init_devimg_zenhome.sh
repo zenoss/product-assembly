@@ -4,24 +4,21 @@
 #   to a mount point outside of the container which points to the current
 #   user's ZENHOME on the host OS.
 #
-if [ -z "${1}" ]
-then
+if [ -z "${1}" ]; then
 	echo "ERROR: missing required argument for target mount point"
 	exit 1
-elif [ ! -d "${1}" ]
-then
+elif [ ! -d "${1}" ]; then
 	echo "ERROR: target mount point '${1}' not found"
 	exit 1
+else
+	TARGET_MOUNT=${1}
 fi
 
-if [ -z "${ZENHOME}" ]
-then
+if [ -z "${ZENHOME}" ]; then
 	echo "ERROR: ZENHOME not defined"
 	exit 1
 fi
 
-TARGET_MOUNT=${1}
-set -x 
 # Delete anything that's already in the mounted volume. This step executes
 # in the container as root so we can remove any root-owned files that get
 # created in the developer's local ZENHOME.

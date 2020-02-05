@@ -126,7 +126,7 @@ node ('build-zenoss-product') {
     }
     stage ('Pull mariadb image'){
         repo = "gcr.io/zing-registry-188222/mariadb"
-        tag = "10.1-"
+        tag = ""
         if (FROM_MATURITY == "unstable") {
             // only accept images where all sub-components were pinned at build time
             tag = tag + "${ZENOSS_VERSION}_${PRODUCT_BUILD_NUMBER}_unstable-pinned"
@@ -146,7 +146,7 @@ node ('build-zenoss-product') {
     stage ('Promote mariadb image'){
         
         if  (TO_MATURITY == "stable" || TO_MATURITY == "testing"){
-            promote_tag="10.1-" + "${ZENOSS_VERSION}_${BUILD_NUMBER}"
+            promote_tag="${ZENOSS_VERSION}_${BUILD_NUMBER}"
         }else{
             error "Invalid maturity value ${TO_MATURITY}"
         }
