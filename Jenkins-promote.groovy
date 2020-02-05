@@ -80,9 +80,9 @@ node ('build-zenoss-product') {
         sh("cd svcdefs;${promoteArgs} ./image_promote.sh")
     }
 
-    stage ('Promote mariadb image') {
+    stage ('Promote mariadb Image') {
         // Promote the docker images
-        def promoteArgs = "TARGET_PRODUCT=mariadb\
+        def promoteArgs = "TARGET_PRODUCT=mariadb-${TARGET_PRODUCT}\
             PRODUCT_BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
             ZENOSS_VERSION=${ZENOSS_VERSION}\
             ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}\

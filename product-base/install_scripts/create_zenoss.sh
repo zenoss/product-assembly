@@ -1,61 +1,78 @@
-#!/bin/sh
-
-
-# load the installation functions
-. ${ZENHOME}/install_scripts/install_lib.sh
+#!/bin/bash
 
 set -e
-set -x
+# set -x
 
-# ZEN-28791: Set mysqld.log initial permissions
-fix_mysqld_log
+# prepare the environment
+source ${ZENHOME}/install_scripts/prepare.sh
+prepare
 
-start_requirements
+# load the installation functions
+source ${ZENHOME}/install_scripts/install_lib.sh
 
-/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management
-/sbin/rabbitmqctl stop
-sleep 5
-rm -r /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
-/usr/sbin/rabbitmq-server 2>&1 > ${ZENHOME}/log/rabbitmq.log &
-rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
+rabbitmq_configure
 
-echo "Running zenoss_init"
-${ZENHOME}/install_scripts/zenoss_init.sh
+# Initialize and load the zodb database
+initialize_relstorage
+load_zodb
+pack_zodb
 
-echo "Cleaning up dmd.uuid"
-echo "dmd.uuid = None" > /tmp/cleanuuid.zendmd
-su - zenoss -c "zendmd --commit --script=/tmp/cleanuuid.zendmd"
+# Initialize the zenoss_zep database
+initialize_zep
 
-echo "Truncating heartbeats"
-mysql -u root zenoss_zep -e "truncate daemon_heartbeat;"
+# Start services to finish initialization
+start_redis
+start_rabbitmq
+start_solr
 
-echo "Stopping mysql..."
-mysqladmin shutdown
+# Update Zope conf files from globals.conf
+sync_zope_conf
 
-#TODO stop and clean content of rabbit queues
-echo "Stopping redis..."
-pkill redis
+# # set up the zope instance
+run_mkzopeinstance
 
-echo "Stopping rabbit..."
-/sbin/rabbitmqctl stop
+# Register zproxy scripts and conf
+init_zproxy
 
-echo "Stopping solr..."
-kill $SOLR_PID
+# Remediate file ownership under $ZENHOME.
+fix_zenhome_owner_and_group
 
-sleep 10
-echo "Cleaning up mysql data..."
-rm /var/lib/mysql/ib_logfile0
-rm /var/lib/mysql/ib_logfile1
+# Copy missing files from $ZENHOME/etc into /etc
+copy_missing_etc_files
+
+# Remediate file permissions on /etc/sudoers.d and /etc/logrotate.d
+fix_etc_permissions
+
+init_modelcatalog
+
+echo "Add default system user..."
+su - zenoss -c "${ZENHOME}/bin/zendmd --script ${ZENHOME}/bin/addSystemUser.py"
+
+# These directories need to be setup prior to zenpack install to facilitate
+# link installs for zendev/devimg
+ensure_dfs_dirs
+
+install_zenpacks
+
+# Pass along arguments to this function (e.g. --no-quickstart)
+reset_zenoss_uuid $*
+
+cleanup_zep_database
+
+# shut down servers
+stop_redis
+stop_rabbitmq
+stop_solr
 
 echo "Cleaning up after install..."
+set -x
 find ${ZENHOME} -name \*.py[co] -delete
 rm -f ${ZENHOME}/log/\*.log
 rm -rf /opt/solr/logs/*
-/sbin/scrub.sh
+set +x
 
 echo "Component Artifact Report"
 cat ${ZENHOME}/log/zenoss_component_artifact.log
 
 echo "ZenPack Artifact Report"
 cat ${ZENHOME}/log/zenpacks_artifact.log
-

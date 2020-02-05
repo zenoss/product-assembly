@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cp /src/upgrade-core.txt /src/upgrade-core.sh /src/current_version.txt /root/%SHORT_VERSION%.x/
