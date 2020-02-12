@@ -146,7 +146,7 @@
     },
     {
         "name": "ZenPacks.zenoss.EnterpriseSecurity",
-        "requirement": "ZenPacks.zenoss.EnterpriseSecurity===2.0.1",
+        "requirement": "ZenPacks.zenoss.EnterpriseSecurity===1.2.0",
         "type": "zenpack"
     },
     {
