@@ -2,7 +2,7 @@
     {
         "name": "metricshipper",
         "type": "download",
-        "version": "1.1.4",
+        "version": "1.1.5",
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz"
     },
     {
@@ -32,7 +32,7 @@
     {
         "name": "service-migration",
         "type": "download",
-        "version": "1.1.13",
+        "version": "1.1.15",
         "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl"
     },
     {
@@ -57,13 +57,13 @@
     {
         "name": "zenoss-zep",
         "type": "download",
-        "version": "2.6.1",
+        "version": "2.7.3",
         "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz"
     },
     {
         "name": "zenoss.metric.consumer",
         "type": "download",
-        "version": "0.1.7",
+        "version": "0.1.13",
         "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz"
     },
     {
