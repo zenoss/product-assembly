@@ -186,9 +186,8 @@
     },
     {
         "name": "ZenPacks.zenoss.Impact",
-        "version": "5.5.2.0.0",
-        "type": "download",
-        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/{name}-{version}-py2.7.egg"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.ImpactServer",
