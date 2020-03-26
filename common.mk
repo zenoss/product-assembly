@@ -43,6 +43,7 @@ clean:
 	rm -f Dockerfile $(UPGRADE_SCRIPTS) zenoss_component_artifact.log zenpacks_artifact.log
 	-docker rmi -f $(TAG)
 	-docker rmi -f $(MARIADB_TAG)
+	-docker image prune -f --filter label=stage=temp_for_mariadb
 
 getDownloadLogs:
 	docker run --rm -v $(PWD):/mnt/export -t $(TAG) rsync -a /opt/zenoss/log/zenoss_component_artifact.log /opt/zenoss/log/zenpacks_artifact.log /mnt/export
