@@ -7,6 +7,9 @@
 ###############################################################################
 set -e
 export SERVICE_TENANT_ID="`serviced service list resmgr --format='{{.ID}}'`"
+export VER_6_3_0="6.3.0"
+export VER_6_4_0="6.4.0"
+export HUB_SERVICE_MIGRATION
 export UPGRADE_REINDEX
 export REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS
 export MIGRATE_MARIADB_SERVICES
@@ -51,21 +54,31 @@ then
 fi
 
 # Run mariadb migration in case we upgrade from older than 6.4.0
-MARIADB_MIGRATION="6.4.0"
-if [ $(echo -e "$FROM_VERSION\n$MARIADB_MIGRATION" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $MARIADB_MIGRATION ];
+if [ $(echo -e "$FROM_VERSION\n$VER_6_4_0" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $VER_6_4_0 ];
 then
 
 MIGRATE_MARIADB_SERVICES="SVC_STOP Zenoss.resmgr/Infrastructure/mariadb-model\\
 SVC_STOP Zenoss.resmgr/Infrastructure/mariadb-events\\
 SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/mariadb-model stopped 600\\
-SVC_USE zenoss/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4 service Zenoss.resmgr/Infrastructure/mariadb-model\\
-SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-model' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& mysql_upgrade'\\
-SVC_USE zenoss/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4 service Zenoss.resmgr/Infrastructure/mariadb-events\\
-SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-events' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& mysql_upgrade'"
+SVC_USE zenoss/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4 zenoss/resmgr_6.5 service Zenoss.resmgr/Infrastructure/mariadb-model\\
+SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-model' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh mariadb-model'\\
+SVC_USE zenoss/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4 zenoss/resmgr_6.5 service Zenoss.resmgr/Infrastructure/mariadb-events\\
+SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-events' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh mariadb-model'"
 fi
 
-sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g; s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHORT_VERSION%.x/upgrade-resmgr.txt
-sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g; s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHORT_VERSION%.x/upgrade-impact.txt
+# Due to limitation of service-migration if a migration adds service then it is invisible to subsequent migrations in the same migration run what causes missed migrations. To mitigate that we run migrations by hand before upgrade. Fixes ZEN-32266 and ZEN-32165
+if [ $(echo -e "$FROM_VERSION\n$VER_6_3_0" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $VER_6_3_0 ];
+then
+    HUB_SERVICE_MIGRATION='SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddZenHubWorkerService --dont-bump\n'
+fi
+
+if [ $(echo -e "$FROM_VERSION\n$VER_6_4_0" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $VER_6_4_0 ];
+then
+    HUB_SERVICE_MIGRATION+='SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddADMZenHubWorkerService --dont-bump\n'
+fi
+
+sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g; s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g; s@%HUB_SERVICE_MIGRATION%@${HUB_SERVICE_MIGRATION}@g;" /root/%SHORT_VERSION%.x/upgrade-resmgr.txt
+sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g; s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g; s@%HUB_SERVICE_MIGRATION%@${HUB_SERVICE_MIGRATION}@g;" /root/%SHORT_VERSION%.x/upgrade-impact.txt
 
 if [ $(serviced service status --show-fields Name  Zenoss.resmgr/Infrastructure/Impact | grep Impact) ]; then
     echo "Starting Impact upgrade."

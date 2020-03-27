@@ -51,6 +51,7 @@ RUN wget -qO- https://bootstrap.pypa.io/get-pip.py | python; \
     ln -s /usr/local/bin/supervisord /bin/supervisord
 
 ADD my.cnf /etc/my.cnf
+ADD mysqlupgrade.sh /opt/zenoss/bin/mysqlupgrade.sh
 
 COPY --from=0 --chown=mysql:mysql /var/lib/mysql /var/lib/mysql
 COPY --from=0 /opt/zenoss/bin/metrics/ /opt/zenoss/bin/metrics/

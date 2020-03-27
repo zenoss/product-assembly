@@ -2,7 +2,7 @@ include ../versions.mk
 IMAGENAME  = product-base
 MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
-FROM_IMAGE ?= zenoss-centos-base:1.2.22
+FROM_IMAGE ?= zenoss-centos-base:1.2.25
 
 TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 MARIADB_VERSION= 10.1-$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
