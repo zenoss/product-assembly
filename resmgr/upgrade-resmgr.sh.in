@@ -61,9 +61,9 @@ MIGRATE_MARIADB_SERVICES="SVC_STOP Zenoss.resmgr/Infrastructure/mariadb-model\\
 SVC_STOP Zenoss.resmgr/Infrastructure/mariadb-events\\
 SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/mariadb-model stopped 600\\
 SVC_USE zenoss/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4 zenoss/resmgr_6.5 service Zenoss.resmgr/Infrastructure/mariadb-model\\
-SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-model' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& mysql_upgrade'\\
+SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-model' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh mariadb-model'\\
 SVC_USE zenoss/mariadb:10.1-%VERSION%_%VERSION_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4 service zenoss/resmgr_6.5 Zenoss.resmgr/Infrastructure/mariadb-events\\
-SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-events' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& mysql_upgrade'"
+SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-events' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh mariadb-model'"
 fi
 
 # Due to limitation of service-migration if a migration adds service then it is invisible to subsequent migrations in the same migration run what causes missed migrations. To mitigate that we run migrations by hand before upgrade. Fixes ZEN-32266 and ZEN-32165
