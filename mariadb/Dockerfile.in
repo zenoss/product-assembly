@@ -1,5 +1,6 @@
 FROM %FROM_IMAGE%
-
+COPY source_files_to_copy.txt /tmp/source_files_to_copy.txt
+RUN tar -cvf /tmp/files.tar -T /tmp/source_files_to_copy.txt
 
 FROM ubuntu:bionic
 MAINTAINER Zenoss <dev@zenoss.com>
@@ -39,6 +40,7 @@ RUN sed -i '/^deb.*multiverse/s/^/#\ /' /etc/apt/sources.list \
     less               \
     mariadb-server     \
     python2.7          \
+    python-mysqldb     \
     && apt-get clean
 
  
@@ -54,9 +56,10 @@ ADD my.cnf /etc/my.cnf
 ADD mysqlupgrade.sh /opt/zenoss/bin/mysqlupgrade.sh
 
 COPY --from=0 --chown=mysql:mysql /var/lib/mysql /var/lib/mysql
-COPY --from=0 /opt/zenoss/bin/metrics/ /opt/zenoss/bin/metrics/
-COPY --from=0 /opt/zenoss/bin/quiesce-mariadb.sh /opt/zenoss/bin/
-COPY --from=0 /opt/zenoss/etc/global.conf /opt/zenoss/etc/
+COPY --from=0 /tmp/files.tar /tmp/files.tar
+
+RUN tar -xf /tmp/files.tar -C / \
+    && rm /tmp/files.tar
 
 RUN touch /var/log/mysqld.log; chown mysql:mysql /var/log/mysqld.log; \
     mkdir -p /opt/zenoss/var; chown -R zenoss:zenoss /opt/zenoss
