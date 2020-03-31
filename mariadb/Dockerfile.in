@@ -1,11 +1,13 @@
 FROM %FROM_IMAGE%
+LABEL stage=temp_for_mariadb
 COPY source_files_to_copy.txt /tmp/source_files_to_copy.txt
+COPY zencheckdbstats zencheckdbstats.py /opt/zenoss/bin/
 RUN tar -cvf /tmp/files.tar -T /tmp/source_files_to_copy.txt
 
 FROM ubuntu:bionic
 MAINTAINER Zenoss <dev@zenoss.com>
 
-ENV TERM=xterm ZENHOME=/opt/zenoss
+ENV TERM=xterm ZENHOME=/opt/zenoss PATH="/opt/zenoss/bin:${PATH}"
 
 RUN groupadd -g 1201 -r mysql && useradd -u 1201 -g mysql -r mysql -d /nonexistent -s /bin/false \
     && groupadd -g 1202 -r zenoss && useradd -u 1202 -g zenoss -r zenoss -s /bin/bash -m -d /home/zenoss  -c "Zenoss Account"
@@ -44,8 +46,9 @@ RUN sed -i '/^deb.*multiverse/s/^/#\ /' /etc/apt/sources.list \
     && apt-get clean
 
  
-RUN ln -s /usr/bin/vi /usr/bin/vim; ln -s /usr/bin/python2.7 /usr/bin/python; \
-    mkdir -p /opt/zenoss/log /opt/zenoss/bin/metrics; rm /etc/mysql/mariadb.conf.d/50-server.cnf; \
+RUN ln -s /usr/bin/vi /usr/bin/vim; \
+    mkdir -p /opt/zenoss/log /opt/zenoss/bin/metrics; \
+    rm /etc/mysql/mariadb.conf.d/50-server.cnf; \
     rm -rf /var/lib/mysql/*
 
 RUN wget -qO- https://bootstrap.pypa.io/get-pip.py | python; \
@@ -61,7 +64,9 @@ COPY --from=0 /tmp/files.tar /tmp/files.tar
 RUN tar -xf /tmp/files.tar -C / \
     && rm /tmp/files.tar
 
-RUN touch /var/log/mysqld.log; chown mysql:mysql /var/log/mysqld.log; \
-    mkdir -p /opt/zenoss/var; chown -R zenoss:zenoss /opt/zenoss
+RUN touch /var/log/mysqld.log; \
+    chown mysql:mysql /var/log/mysqld.log; \
+    mkdir -p /opt/zenoss/var; \
+    chown -R zenoss:zenoss /opt/zenoss
 
 RUN mysqld_safe & until mysqladmin ping 2>/dev/null; do echo "Waiting for mysql..."; sleep 1; done && mysql_upgrade
