@@ -11,9 +11,8 @@
 #
 # BASE_TAG=zendev/devimg:metis ./build-devbase.sh
 #
-if [ -z "${BASE_TAG}" ]
-then
-	echo "ERROR: Missing required argument - BASE_TAG"
+if [ -z "${PRODUCT_BASE_IMAGE_ID}" ]; then
+	echo "ERROR: Missing required argument - PRODUCT_BASE_IMAGE_ID"
 	exit 1
 fi
 
@@ -23,20 +22,18 @@ fi
 # Normally, native makefile syntax is used for these kinds of checks, but
 # in the case of docker images, it's more straightfoward to implement here.
 #
-IMAGE_EXISTS=`docker images | awk '{print $1":"$2}' | grep ${BASE_TAG} 2>/dev/null`
-if [ ! -z "${IMAGE_EXISTS}" ]
-then
-	echo "Skipping build-devimg because ${BASE_TAG} exists already"
+IMAGE_EXISTS=$(docker image ls -q ${PRODUCT_BASE_IMAGE_ID} 2>/dev/null)
+if [ ! -z "${IMAGE_EXISTS}" ]; then
+	echo "Image ${PRODUCT_BASE_IMAGE_ID} exists already, moving on."
 	exit 0
 fi
 
 # Get the uid/gid of the current user so that we can change the zenoss user in the
 # the container to match the UID/GID of the current user.
-CURRENT_UID=`id -u`
-CURRENT_GID=`id -g`
+CURRENT_UID=$(id -u)
+CURRENT_GID=$(id -g)
 
-set -e
-set -x
+INSTALL_OPTIONS="--change-uid ${CURRENT_UID}:${CURRENT_GID}"
+export INSTALL_OPTIONS
 
-cd ../product-base
-TAG=${BASE_TAG} INSTALL_OPTIONS="--change-uid ${CURRENT_UID}:${CURRENT_GID}" make build-devimg
+make -C ../product-base build-devimg

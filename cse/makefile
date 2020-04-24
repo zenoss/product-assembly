@@ -1,4 +1,3 @@
-TARGET_PRODUCT = cse
+SHELL := /bin/bash
 
-include ../versions.mk
 include ../common.mk

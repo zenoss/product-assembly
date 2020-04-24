@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cp /src/upgrade-cse.txt /src/upgrade-cse.sh /src/current_version.txt /root/%SHORT_VERSION%.x/
