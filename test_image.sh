@@ -1,5 +1,29 @@
 #!/bin/bash
 
+TEST_PARAMS=""
+MOUNTS=""
+ENV_VARS=""
+
+while (( "$#" )); do
+	case "$1" in
+		--no-zenpacks)
+			TEST_PARAMS="$TEST_PARAMS $1"
+			shift
+			;;
+		--mount)
+			MOUNTS="${MOUNTS} -v $2"
+			shift 2
+			;;
+		--env)
+			ENV_VARS="${ENV_VARS} -e $2"
+			shift 2
+			;;
+		-*) # unsupported options
+			echo "Error: unknown option $1" >&2
+			exit 1
+	esac
+done
+
 # Expected variables
 #
 # PRODUCT_IMAGE_ID - final product image
@@ -42,7 +66,7 @@ cleanup() {
 	docker network rm ${network_name} >/dev/null 2>&1
 	test $? -eq 0 && echo Removed network ${network_name}
 }
-# trap cleanup EXIT
+trap cleanup EXIT
 
 # Create the mariadb-net network
 echo
@@ -71,6 +95,7 @@ docker container create \
 	-it \
 	--name ${product_name} \
 	--network ${network_name} \
+	${MOUNTS} \
 	${PRODUCT_IMAGE_ID} \
 	/bin/bash \
 	|| fail "Count not create product container"
@@ -81,9 +106,10 @@ docker container start ${product_name} || fail "Could not start product containe
 
 echo
 echo "Testing Zenoss"
+ENV_VARS="-e DBHOST=${mariadb_name} ${ENV_VARS}"
 docker container exec \
 	-w /opt/zenoss/install_scripts \
-	-e "DBHOST=${mariadb_name}" \
+	${ENV_VARS} \
 	${product_name} \
-	/bin/bash -l -c "./starttests.sh" \
+	/bin/bash -l -c "./starttests.sh ${TEST_PARAMS}" \
 	|| fail "Could not execute starttests.sh script"
