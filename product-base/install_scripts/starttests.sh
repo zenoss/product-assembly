@@ -10,7 +10,7 @@ set -e
 source ${ZENHOME}/install_scripts/prepare.sh
 prepare
 
-. ${ZENHOME}/install_scripts/install_lib.sh
+source ${ZENHOME}/install_scripts/install_lib.sh
 
 cleanup() {
 	stop_zep

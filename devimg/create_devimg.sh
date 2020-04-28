@@ -4,8 +4,8 @@ if [ -z "${SRCROOT}" ]; then
     SRCROOT=/mnt/src
 fi
 if [ ! -d "${SRCROOT}" ]; then
-    echo "ERROR: Path ${SRCROOT} does not exist"
-    exit 1
+	echo "ERROR: Path ${SRCROOT} does not exist"
+	exit 1
 fi
 
 # link source code for zenoss initialization
@@ -80,7 +80,6 @@ su - zenoss -c "ln -s ${SRCROOT}/zenoss.metric.consumer ${ZENHOME}/lib/metric-co
 #su - zenoss -c "pip install -e ${SRCROOT}/zenoss-protocols/python"
 
 echo "Install zenwipe"
-su - zenoss -c "ln -s ${SRCROOT}/zenoss-prodbin/devimg ${ZENHOME}/devimg"
-cp ${ZENHOME}/devimg/zenwipe.sh ${ZENHOME}/bin/zenwipe.sh
+cp ${SRCROOT}/product-assembly/devimg/zenwipe.sh ${ZENHOME}/bin/zenwipe.sh
 chown zenoss:zenoss ${ZENHOME}/bin/zenwipe.sh
 chmod 754 ${ZENHOME}/bin/zenwipe.sh

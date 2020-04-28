@@ -49,7 +49,7 @@ download_zenpacks: | $(ZENPACK_DIR)
 clean:
 	@rm -rf $(ZENPACK_DIR)
 	@rm -f copy_upgrade_scripts.sh $(UPGRADE_SCRIPTS) zenoss_component_artifact.log zenpacks_artifact.log
-	@-docker image rm -f $(PRODUCT_IMAGE_ID) $(MARIADB_IMAGE_ID)
+	@-docker image rm -f $(PRODUCT_IMAGE_ID) $(MARIADB_IMAGE_ID) 2>/dev/null
 
 getDownloadLogs:
 	@docker run --rm \
