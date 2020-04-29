@@ -14,7 +14,7 @@
     {
         "name": "pynetsnmp",
         "type": "download",
-        "version": "0.41.1",
+        "version": "0.41.2",
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
     },
     {
