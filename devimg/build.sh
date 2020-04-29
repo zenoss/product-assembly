@@ -113,9 +113,16 @@ docker container exec \
 	/mnt/devimg/create_devimg.sh \
 	|| fail "Could not execute create_devimg.sh script"
 
+echo "Stopping the ${PRODUCT_BASE_IMAGE_ID} container."
 docker container stop ${product_name}
+echo "Stopping the ${MARIADB_BASE_IMAGE_ID} container."
 docker container exec ${mariadb_name} mysqladmin shutdown
 docker container wait ${product_name} ${mariadb_name}
+echo "The ${PRODUCT_BASE_IMAGE_ID} and ${MARIADB_BASE_IMAGE_ID} containers have stopped."
 
+echo "Committing changes and creating the ${MARIADB_IMAGE_ID} image."
 docker container commit -m "ZODB loaded" ${mariadb_name} ${MARIADB_IMAGE_ID}
+echo "done"
+echo "Committing changes and creating the ${PRODUCT_IMAGE_ID} image."
 docker container commit -m "devimg created" ${product_name} ${PRODUCT_IMAGE_ID}
+echo "done"

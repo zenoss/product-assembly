@@ -83,3 +83,4 @@ echo "Install zenwipe"
 cp ${SRCROOT}/product-assembly/devimg/zenwipe.sh ${ZENHOME}/bin/zenwipe.sh
 chown zenoss:zenoss ${ZENHOME}/bin/zenwipe.sh
 chmod 754 ${ZENHOME}/bin/zenwipe.sh
+echo "zenwipe has been installed."
