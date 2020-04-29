@@ -38,7 +38,7 @@ start_solr() {
 	printf "Starting solr on port ${SOLR_PORT}..."
 	local cmd="/opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model -Dsolr.jetty.request.header.size=1000000"
 	if [[ $EUID -eq 0 ]]; then
-		cmd="su - zenoss -c \"${cmd}\""
+		cmd="setuser zenoss ${cmd}"
 	fi
 	eval ${cmd} &
 	# setuser zenoss /opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model -Dsolr.jetty.request.header.size=1000000 &
