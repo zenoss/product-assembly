@@ -29,12 +29,6 @@ then
 	chown zenoss:zenoss /var/spool/mail/zenoss
 fi
 
-# echo "Replace scrub.sh script"
-# rm -f /sbin/scrub.sh
-# cp ${ZENHOME}/install_scripts/scrub.sh /sbin/scrub.sh
-# cp ${ZENHOME}/install_scripts/clean_locale.sh /sbin/clean_locale.sh
-# chmod +x /sbin/scrub.sh /sbin/clean_locale.sh
-
 # Ensure ZENHOME has a log directory
 mkdir -p ${ZENHOME}/log/
 
@@ -155,15 +149,14 @@ chmod -R g+rw,o+r,+X ${ZENHOME}/*
 
 # TODO add upgrade templates to /root  - probably done in core/rm image builds
 
-echo "TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT MIGRATE TESTS"
+# TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT MIGRATE TESTS
 rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
 
-echo "TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT ZenUITests-based TESTS"
+# TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT ZenUITests-based TESTS
 rm -rf ${ZENHOME}/Products/ZenUITests
 
 echo "Cleaning up after install..."
 find ${ZENHOME} -name \*.py[co] -delete
-/sbin/clean_locale.sh
 /sbin/scrub.sh
 
 echo "Component Artifact Report"

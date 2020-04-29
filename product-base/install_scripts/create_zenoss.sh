@@ -46,7 +46,7 @@ fix_etc_permissions
 init_modelcatalog
 
 echo "Add default system user..."
-${ZENHOME}/bin/zendmd --script ${ZENHOME}/bin/addSystemUser.py
+su - zenoss -c "${ZENHOME}/bin/zendmd --script ${ZENHOME}/bin/addSystemUser.py"
 
 # These directories need to be setup prior to zenpack install to facilitate
 # link installs for zendev/devimg

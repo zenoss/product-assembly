@@ -4,6 +4,10 @@ fi
 
 CONFIG_FILE=${ZENHOME}/etc/global.conf
 
+get_random_key() {
+	dd bs=16 count=1 status=none if=/dev/urandom | base64 | tr -cd "[:alnum:]" | cut -c1-16
+}
+
 die() { echo "ERROR: ${*}" >&2; exit 1; }
 
 get_var() {
@@ -16,11 +20,9 @@ get_var() {
 source ${ZENHOME}/install_scripts/rabbitmq_lib.sh
 source ${ZENHOME}/install_scripts/databases_lib.sh
 
-export SOLR_PORT="8983"
-
 start_redis() {
-    printf "Starting redis..."
-    /usr/bin/redis-server /etc/redis.conf &
+	printf "Starting redis..."
+	/usr/bin/redis-server /etc/redis.conf &
 	echo "OK"
 }
 
@@ -30,14 +32,19 @@ stop_redis() {
 	echo "OK"
 }
 
+export SOLR_PORT="8983"
+
 start_solr() {
-	echo "SOLR_PORT=$SOLR_PORT"
-	printf "Starting solr..."
-	setuser zenoss /opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model -Dsolr.jetty.request.header.size=1000000 &
+	printf "Starting solr on port ${SOLR_PORT}..."
+	local cmd="/opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model -Dsolr.jetty.request.header.size=1000000"
+	if [[ $EUID -eq 0 ]]; then
+		cmd="su - zenoss -c \"${cmd}\""
+	fi
+	eval ${cmd} &
+	# setuser zenoss /opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model -Dsolr.jetty.request.header.size=1000000 &
 	export SOLR_PID=$!
-	printf "waiting for solr to start..."
 	until $(curl -A 'Solr answering healthcheck' -sI http://localhost:$SOLR_PORT/solr/admin/cores | grep -q 200); do
-	  sleep 5
+		sleep 5
 	done
 	echo "OK"
 }
@@ -53,44 +60,74 @@ stop_solr() {
 
 start_zep() {
 	printf "Starting zeneventserver..."
-	su - zenoss -c "${ZENHOME}/bin/zeneventserver start"
+	local cmd="${ZENHOME}/bin/zeneventserver start"
+	if [[ $EUID -eq 0 ]]; then
+		cmd="su - zenoss -c \"${cmd}\""
+	fi
+	eval ${cmd}
 	echo "OK"
 }
 
 stop_zep() {
 	printf "Stopping zeneventserver..."
-	su - zenoss -c "${ZENHOME}/bin/zeneventserver stop"
+	local cmd="${ZENHOME}/bin/zeneventserver stop"
+	if [[ $EUID -eq 0 ]]; then
+		cmd="su - zenoss -c \"${cmd}\""
+	fi
+	eval ${cmd}
 	echo "OK"
 }
 
 sync_zope_conf() {
 	echo "Update Zope config file from globals.conf"
-	su - zenoss -l -c "$ZENHOME/bin/zenglobalconf -s"
+	local cmd="$ZENHOME/bin/zenglobalconf -s"
+	if [[ $EUID -eq 0 ]]; then
+		cmd="su - zenoss -c \"${cmd}\""
+	fi
+	eval ${cmd}
 }
 
 init_zproxy() {
 	echo "Initializing zproxy..."
 
-	printf "..validating redis is running .. "
+	printf "...validating redis is running..."
 	local msg=$(redis-cli FLUSHALL 2>&1)
 	[ $? -eq 0 ] || die "Failed to connect to redis: ${msg}"
 	echo ${msg}
 
-	echo "..linking zproxy files"
-	su - zenoss -l -c 'mkdir -p ${ZENHOME}/etc/supervisor'
-	su - zenoss -l -c 'ln -sf ${ZENHOME}/zproxy/conf/zproxy_supervisor.conf ${ZENHOME}/etc/supervisor/zproxy_supervisor.conf'
-	su - zenoss -l -c 'ln -sf ${ZENHOME}/zproxy/sbin/zproxy ${ZENHOME}/bin/zproxy'
+	echo "...linking zproxy files"
+	mkdir -p ${ZENHOME}/etc/supervisor
+	if [[ $EUID -eq 0 ]]; then
+		chown zenoss:zenoss ${ZENHOME}/etc/supervisor
+	fi
 
-	echo "..register zproxy scripts"
-	su - zenoss -c "zproxy register load-scripts" || die "Failed to load proxy scripts"
+	local cmd1="ln -sf ${ZENHOME}/zproxy/conf/zproxy_supervisor.conf ${ZENHOME}/etc/supervisor/zproxy_supervisor.conf"
+	local cmd2="ln -sf ${ZENHOME}/zproxy/sbin/zproxy ${ZENHOME}/bin/zproxy"
+	local cmd3="zproxy register load-scripts"
+	local cmd4="zproxy register from-file ${ZENHOME}/etc/zproxy_registration.conf"
+	if [[ $EUID -eq 0 ]]; then
+		cmd1="su - zenoss -c \"${cmd1}\""
+		cmd2="su - zenoss -c \"${cmd2}\""
+		cmd3="su - zenoss -c \"${cmd3}\""
+		cmd4="su - zenoss -c \"${cmd4}\""
+	fi
 
-	echo "..register zproxy conf"
-	su - zenoss -c "zproxy register from-file ${ZENHOME}/etc/zproxy_registration.conf" \
-		|| die "Failed to load proxy registrations"
+	eval ${cmd1}
+	eval ${cmd2}
+
+	echo "...register zproxy scripts"
+	eval ${cmd3} || die "Failed to load proxy scripts"
+
+	echo "...register zproxy conf"
+	eval ${cmd4} || die "Failed to load proxy registrations"
 }
 
 # Set permission and ownership under zenhome
 fix_zenhome_owner_and_group() {
+	if [[ $EUID -ne 0 ]]; then
+		echo "fix_zenhome_owner_and_group must run as root"
+		exit 1
+	fi
 	echo "Setting zenoss owner in /opt/zenoss..."
 	chown -Rf zenoss:zenoss /opt/zenoss/*
 	echo "Setting permissions on zensocket."
@@ -100,6 +137,10 @@ fix_zenhome_owner_and_group() {
 
 # Set permissions under /etc
 copy_missing_etc_files() {
+	if [[ $EUID -ne 0 ]]; then
+		echo "copy_missing_etc_files must run as root"
+		exit 1
+	fi
 	echo "Copying missing files from $ZENHOME/etc to /etc"
 	sudoersd_files=("zenoss_dmidecode" "zenoss_nmap" "zenoss_ping" "zenoss_rabbitmq_stats")
 	for f in "${sudoersd_files[@]}"
@@ -119,6 +160,10 @@ copy_missing_etc_files() {
 
 # Set permissions under /etc
 fix_etc_permissions() {
+	if [[ $EUID -ne 0 ]]; then
+		echo "fix_etc_permissions must run as root"
+		exit 1
+	fi
 	echo "Setting correct permissions on files under /etc/"
 	local sudoersd_files=("zenoss_dmidecode" "zenoss_nmap" "zenoss_ping" "zenoss_rabbitmq_stats")
 	for f in "${sudoersd_files[@]}"; do
@@ -150,7 +195,11 @@ install_zenpacks() {
 		   LINK_INSTALL="--link"
 		   ZENPACK_BLACKLIST="${ZENHOME}/install_scripts/zp_blacklist.json"
 		fi
-		su - zenoss -c "${ZENHOME}/install_scripts/zp_install.py ${ZENHOME}/install_scripts/zenpacks.json ${ZENHOME}/packs ${ZENPACK_BLACKLIST} ${LINK_INSTALL}"
+		local cmd="${ZENHOME}/install_scripts/zp_install.py ${ZENHOME}/install_scripts/zenpacks.json ${ZENHOME}/packs ${ZENPACK_BLACKLIST} ${LINK_INSTALL}"
+		if [[ $EUID -eq 0 ]]; then
+			cmd="su - zenoss -c \"${cmd}\""
+		fi
+		eval ${cmd}
 
 		stop_zep
 	fi
@@ -159,7 +208,6 @@ install_zenpacks() {
 DESIRED_OWNERSHIP=${DESIRED_OWNERSHIP:-"zenoss:zenoss"}
 
 ensure_dir() {
-
 	local dirs="$@"
 	for dirpath in "$@"; do
 		# ensure directory exists

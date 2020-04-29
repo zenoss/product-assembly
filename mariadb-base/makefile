@@ -11,7 +11,7 @@ build: exported.tar Dockerfile
 	@docker build -t $(MARIADB_BASE_IMAGE_ID) .
 
 clean:
-	@-docker image rm -f $(MARIADB_BASE_IMAGE_ID)
+	@-docker image rm -f $(MARIADB_BASE_IMAGE_ID) 2>/dev/null
 	@rm -f exported.tar Dockerfile
 	@rm -rf exported_files
 

@@ -1,5 +1,3 @@
-# Setup /var/log/mysqld.log and give permissions to mysqld to write to it.
-
 export ZEP_DB_TYPE="`get_var zep-db-type`"
 export ZEP_HOST="`get_var zep-host`"
 export ZEP_DB="`get_var zep-db`"
@@ -22,25 +20,28 @@ export ZODB_PASSWORD="`get_var zodb-password`"
 initialize_relstorage() {
 	echo "Initialize relstorage (zodb database)..."
 
-	su - zenoss -l -c "${ZENHOME}/install_scripts/zodb_relstorage_init.py" \
-		|| die "Unable to initialize relstorage"
+	local cmd="${ZENHOME}/install_scripts/zodb_relstorage_init.py"
+	if [[ $EUID -eq 0 ]]; then
+		cmd="su - zenoss -c \"${cmd}\""
+	fi
+	eval ${cmd} || die "Unable to initialize relstorage"
 
 	local schemadir=${ZENHOME}/Products/ZenUtils/relstorage/mysql
+	local sqlscript=/tmp/patch_$(get_random_key).sql
 	for patch_file in $(find ${schemadir} -name \*.sql | sort); do
-		cat ${patch_file} >> patch.sql
+		cat ${patch_file} >> ${sqlscript}
 	done
-	cat patch.sql | mysql \
+	cat ${sqlscript} | mysql \
 		--batch \
 		--user=${ZODB_USER} --password=${ZODB_PASSWORD} \
 		--host=${ZODB_HOST} \
 		--database=${ZODB_DB} \
 		|| die "Unable to patch relstorage tables"
-	rm -f patch.sql
+	rm -f ${sqlscript}
 }
 
 
-load_zodb()
-{
+load_zodb() {
 	echo "Load ZODB dump file..."
 	ZODB_SQL_GZ=${ZENHOME}/Products/ZenModel/data/zodb.sql.gz
 	gunzip -c $ZODB_SQL_GZ | mysql \
@@ -54,69 +55,101 @@ load_zodb()
 
 pack_zodb() {
 	echo "Packing the ZODB database..."
-	su - zenoss -l -c "zodbpack ${ZENHOME}/install_scripts/zodbpack.conf" || die "Unable to pack ZODB"
+	local cmd="zodbpack ${ZENHOME}/install_scripts/zodbpack.conf"
+	if [[ $EUID -eq 0 ]]; then
+		cmd="su - zenoss -c \"${cmd}\""
+	fi
+	eval ${cmd} || die "Unable to pack ZODB"
 }
 
 initialize_zep() {
 	echo "Initialize zeneventserver (zenoss_zep) database..."
 
 	local schemadir=${ZENHOME}/share/zeneventserver/sql/mysql
+	local sqlscript=/tmp/patch_$(get_random_key).sql
 	for patch_file in $(find ${schemadir} -name \*.sql | sort); do
-		cat ${patch_file} >> patch.sql
+		cat ${patch_file} >> ${sqlscript}
 	done
-	cat patch.sql | mysql \
+	cat ${sqlscript} | mysql \
 		--batch \
 		--user=${ZEP_USER} --password=${ZEP_PASSWORD} \
 		--host=${ZEP_HOST} \
 		--database=${ZEP_DB} \
-		|| die "Unable to patch relstorage tables"
-	rm -f patch.sql
+		|| die "Unable to patch zenoss_zep tables"
+	rm -f ${sqlscript}
 }
 
 # initialize the model catalog in solr
-init_modelcatalog()
-{
+init_modelcatalog() {
 	echo "Initialize model catalog..."
+	local cmd="python $ZENHOME/Products/Zuul/catalog/model_catalog_init.py --hard"
 	if [ -f $ZENHOME/Products/Zuul/catalog/model_catalog_init.py ]; then
-		su - zenoss -c "python $ZENHOME/Products/Zuul/catalog/model_catalog_init.py --hard"
+		if [[ $EUID -eq 0 ]]; then
+			cmd="su - zenoss -c \"${cmd}\""
+		fi
+		eval ${cmd} || die "Unable to initialize model catalog"
 	fi
 }
 
-edit_root_permissions()
-{
-  mysql --user="root" --database="mysql" --execute="SELECT user, host, plugin FROM mysql.user;"
-  mysql --user="root" --database="mysql" --execute="UPDATE user SET plugin='mysql_native_password' WHERE user='root'; FLUSH PRIVILEGES;"
-  mysql --user="root" --database="mysql" --execute="SELECT user, host, plugin FROM mysql.user;"
+edit_root_permissions() {
+  mysql \
+	  --user="root" \
+	  --database="mysql" \
+	  --execute="SELECT user, host, plugin FROM mysql.user;"
+
+  mysql \
+	  --user="root" \
+	  --database="mysql" \
+	  --execute="UPDATE user SET plugin='mysql_native_password' WHERE user='root'; FLUSH PRIVILEGES;"
+
+  mysql \
+	  --user="root" \
+	  --database="mysql" \
+	  --execute="SELECT user, host, plugin FROM mysql.user;"
 }
 
 # create a zope instance
-run_mkzopeinstance()
-{
-	echo "Set up zope instance..."
-	# If these are present mkzopeinstance won't put the shell scripts in place
-	mkdir -p /opt/zenoss/zopehome
+run_mkzopeinstance() {
+	echo "Create Zope instance..."
+	mkdir -p ${ZENHOME}/zopehome
 	for script in addzope2user mkzopeinstance runzope zopectl zpasswd; do
-		mv /opt/zenoss/bin/${script} /opt/zenoss/zopehome/
+		mv ${ZENHOME}/bin/${script} ${ZENHOME}/zopehome/
 	done
-	# sed -i -e's/^import os.*activate_this$$//g' /opt/zenoss/zopehome/*
-	cp /opt/zenoss/bin/activate_this.py /opt/zenoss/zopehome/
+	if [[ $EUID -eq 0 ]]; then
+		chown zenoss:zenoss ${ZENHOME}/zopehome/*
+	fi
 
-	echo "Initializing zope with default admin/zenoss user..."
+	cp --preserve ${ZENHOME}/bin/activate_this.py ${ZENHOME}/zopehome/
+
 	# Initializes zope with default admin/zenoss user
-	su zenoss -l -c 'python $ZENHOME/zopehome/mkzopeinstance --dir="$ZENHOME" --user="admin:zenoss"' || die "Unable to create Zope instance."
+	local cmd="python $ZENHOME/zopehome/mkzopeinstance --dir=\"$ZENHOME\" --user=\"admin:zenoss\""
+	if [[ $EUID -eq 0 ]]; then
+		cmd="su - zenoss -c \"${cmd}\""
+	fi
+	eval ${cmd} || die "Unable to create Zope instance."
 }
 
 reset_zenoss_uuid() {
-	echo "Cleaning up dmd.uuid"
-	echo "dmd.uuid = None" > /tmp/cleanuuid.zendmd
+	echo "Cleaning up dmd.uuid..."
+	local script=/tmp/cleanuuid_$(get_random_key).zendmd
+	echo "dmd.uuid = None" > ${script}
 	if [  "$1" == '--no-quickstart' ]; then
-		 echo "dmd._rq = True " >> /tmp/cleanuuid.zendmd
-		 echo "dmd.ZenUsers.getUserSettings('admin') " >> /tmp/cleanuuid.zendmd
+		 echo "dmd._rq = True " >> ${script}
+		 echo "dmd.ZenUsers.getUserSettings('admin') " >> ${script}
 	fi
-	su - zenoss -c "zendmd --commit --script=/tmp/cleanuuid.zendmd"
+	local cmd="zendmd --commit --script=${script}"
+	if [[ $EUID -eq 0 ]]; then
+		cmd="su - zenoss -c \"${cmd}\""
+	fi
+	eval ${cmd} || die "Unable to clean up dmd.uuid"
+	rm -f ${script}
 }
 
 cleanup_zep_database() {
 	echo "Truncating heartbeats"
-	mysql -u ${ZEP_USER} -p${ZEP_PASSWORD} -h ${ZEP_HOST} ${ZEP_DB} -e "truncate daemon_heartbeat;"
+	mysql \
+		--user=${ZEP_USER} --password=${ZEP_PASSWORD} \
+		--host=${ZEP_HOST} --port=${ZEP_PORT} \
+		${ZEP_DB} \
+		-e "TRUNCATE daemon_heartbeat;"
 }

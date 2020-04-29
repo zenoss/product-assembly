@@ -4,6 +4,10 @@ if [ -z "${DBHOST}" ]; then
 	echo "DBHOST environment variable not specified. Aborting."
 	exit 1
 fi
+if [ -z "${SRCROOT}" ]; then
+	echo "SRCROOT environment variable not specified. Aborting."
+	exit 1
+fi
 
 zodbpack_config=${ZENHOME}/install_scripts/zodbpack.conf
 global_config=${ZENHOME}/etc/global.conf
