@@ -35,47 +35,46 @@ stop_redis() {
 export SOLR_PORT="8983"
 
 start_solr() {
-	printf "Starting solr on port ${SOLR_PORT}..."
-	local cmd="/opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model -Dsolr.jetty.request.header.size=1000000"
+	echo "Starting solr on port ${SOLR_PORT}..."
+	local solr_cmd="/opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model -Dsolr.jetty.request.header.size=1000000"
 	if [[ $EUID -eq 0 ]]; then
-		cmd="setuser zenoss ${cmd}"
+		solr_cmd="setuser zenoss ${solr_cmd}"
 	fi
-	eval ${cmd} &
-	# setuser zenoss /opt/solr/zenoss/bin/start-solr -cloud -Dbootstrap_confdir=/opt/solr/server/solr/configsets/zenoss_model/conf -Dcollection.configName=zenoss_model -Dsolr.jetty.request.header.size=1000000 &
+	eval ${solr_cmd} &
 	export SOLR_PID=$!
 	until $(curl -A 'Solr answering healthcheck' -sI http://localhost:$SOLR_PORT/solr/admin/cores | grep -q 200); do
 		sleep 5
 	done
-	echo "OK"
+	echo "Solr has started"
 }
 
 stop_solr() {
-	printf "Stopping solr..."
+	echo "Stopping solr..."
 	kill $SOLR_PID
 	until [[ ! $(ps h -q $SOLR_PID) ]]; do
 		sleep 1
 	done
-	echo "OK"
+	echo "Solr has stopped"
 }
 
 start_zep() {
 	printf "Starting zeneventserver..."
-	local cmd="${ZENHOME}/bin/zeneventserver start"
+	local zep_cmd="${ZENHOME}/bin/zeneventserver start"
 	if [[ $EUID -eq 0 ]]; then
-		cmd="su - zenoss -c \"${cmd}\""
+		zep_cmd="su - zenoss -c \"${zep_cmd}\""
 	fi
-	eval ${cmd}
-	echo "OK"
+	eval ${zep_cmd}
+	echo "zeneventserver has started"
 }
 
 stop_zep() {
-	printf "Stopping zeneventserver..."
-	local cmd="${ZENHOME}/bin/zeneventserver stop"
+	echo "Stopping zeneventserver..."
+	local zep_cmd="${ZENHOME}/bin/zeneventserver stop"
 	if [[ $EUID -eq 0 ]]; then
-		cmd="su - zenoss -c \"${cmd}\""
+		zep_cmd="su - zenoss -c \"${zep_cmd}\""
 	fi
-	eval ${cmd}
-	echo "OK"
+	eval ${zep_cmd}
+	echo "zeneventserver has stopped"
 }
 
 sync_zope_conf() {

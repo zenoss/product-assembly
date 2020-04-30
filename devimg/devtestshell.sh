@@ -1,9 +1,7 @@
 #!/bin/bash
 #
-# Start Zenoss and run all platform and ZenPack tests
+# Configure the environment and start a shell
 #
-
-set -e
 
 # prepare the environment
 source ${ZENHOME}/install_scripts/prepare.sh
@@ -24,4 +22,4 @@ start_redis
 start_rabbitmq
 start_zep
 
-su - zenoss -l -c "${ZENHOME}/bin/runtests $*"
+/bin/bash

@@ -90,12 +90,14 @@ rabbitmq_declarations() {
 	fi
 }
 
+rabbitmqctl_cmd=$(which rabbitmqctl 2>/dev/null)
+if [ -z "${rabbitmqctl_cmd}" ]; then
+	die "'rabbitmqctl' command not found.  Is RabbitMQ installed?"
+fi
+
 start_rabbitmq()
 {
 	echo "Starting RabbitMQ..."
-
-	local cmd=$(which rabbitmqctl 2>/dev/null)
-	test -z "${cmd}" && die "'rabbitmqctl' command not found.  Is RabbitMQ installed?"
 
 	local server=$(which rabbitmq-server 2>/dev/null)
 	test -z "${server}" && die "'rabbitmq-server' command not found.  Is RabbitMQ installed?"
@@ -113,7 +115,7 @@ start_rabbitmq()
 	local ERLANG_COOKIE_FILE=/var/lib/rabbitmq/.erlang.cookie
 
 	if [ ! -f ${ERLANG_COOKIE_FILE} ]; then
-		${cmd} status >/dev/null 2>&1 || true  # noop; suppress error code
+		${rabbitmqctl_cmd} status >/dev/null 2>&1 || true  # noop; suppress error code
 
 		# Wait for the erlang cookie file to exist
 		until [ -f ${ERLANG_COOKIE_FILE} ]; do sleep 1; done
@@ -123,7 +125,7 @@ start_rabbitmq()
 	${server} &
 
 	# Wait for the server to be ready
-	if ${cmd} wait ${RABBITMQ_PID_FILE}; then
+	if ${rabbitmqctl_cmd} wait ${RABBITMQ_PID_FILE}; then
 		echo "RabbitMQ is running"
 	else
 		echo "RabbitMQ failed to start"
@@ -137,15 +139,12 @@ stop_rabbitmq()
 		return
 	fi
 
-	local cmd=$(which rabbitmqctl 2>/dev/null)
-	[ -n "${cmd}" ] || die "'rabbitmqctl' command not found.  Is RabbitMQ installed?"
-
-	local pid=$(${cmd} status | sed -ne "s/^.*{pid,\([0-9]\+\)}.*$/\1/p")
+	local pid=$(${rabbitmqctl_cmd} status | sed -ne "s/^.*{pid,\([0-9]\+\)}.*$/\1/p")
 
 	echo "Stopping RabbitMQ..."
 
 	# Stop the rabbitmq server
-	${cmd} stop
+	${rabbitmqctl_cmd} stop
 
 	# Wait for the server to exit
 	until [ ! $(ps -p ${pid} >/dev/null 2>&1) ]; do sleep 1; done
