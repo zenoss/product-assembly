@@ -60,6 +60,9 @@ EOF
 # Copy the devimg version of prepare.sh into the install_scripts directory.
 cp ${SRCROOT}/product-assembly/devimg/prepare.sh ${ZENHOME}/install_scripts/prepare.sh
 
+# Copy the zendev test --interactive shell script to the install_scripts dir
+cp ${SRCROOT}/product-assembly/devimg/devtestshell.sh ${ZENHOME}/install_scripts/
+
 cat /home/zenoss/.bashrc
 echo "Install Zenoss ..."
 export BUILD_DEVIMG=1

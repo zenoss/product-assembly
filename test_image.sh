@@ -3,11 +3,12 @@
 TEST_PARAMS=""
 MOUNTS=""
 ENV_VARS=""
+USESHELL=0
 
 while (( "$#" )); do
 	case "$1" in
-		--no-zenpacks)
-			TEST_PARAMS="$TEST_PARAMS $1"
+		--shell)
+			USESHELL=1
 			shift
 			;;
 		--mount)
@@ -18,9 +19,10 @@ while (( "$#" )); do
 			ENV_VARS="${ENV_VARS} -e $2"
 			shift 2
 			;;
-		-*) # unsupported options
-			echo "Error: unknown option $1" >&2
-			exit 1
+		*) # All other params are forwarded to starttests.sh
+			TEST_PARAMS="$TEST_PARAMS $1"
+			shift
+			;;
 	esac
 done
 
@@ -105,11 +107,20 @@ echo "Starting the product container for testing"
 docker container start ${product_name} || fail "Could not start product container"
 
 echo
-echo "Testing Zenoss"
 ENV_VARS="-e DBHOST=${mariadb_name} ${ENV_VARS}"
-docker container exec \
-	-w /opt/zenoss/install_scripts \
-	${ENV_VARS} \
-	${product_name} \
-	/bin/bash -l -c "./starttests.sh ${TEST_PARAMS}" \
-	|| fail "Could not execute starttests.sh script"
+if (( ${USESHELL} )); then
+	echo "Starting shell in container"
+	docker container exec \
+		-it \
+		${ENV_VARS} \
+		${product_name} \
+		/opt/zenoss/install_scripts/devtestshell.sh
+else
+	echo "Testing Zenoss"
+	docker container exec \
+		-w /opt/zenoss/install_scripts \
+		${ENV_VARS} \
+		${product_name} \
+		/bin/bash -l -c "./starttests.sh ${TEST_PARAMS}" \
+		|| fail "Could not execute starttests.sh script"
+fi
