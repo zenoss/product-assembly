@@ -21,7 +21,7 @@
         "name": "query",
         "type": "jenkins",
         "version": "develop",
-        "jenkins.jobURL": "https://platform-jenkins.zenoss.eng/job/Components/job/query/job/develop/"
+        "jenkins.job": "Components/job/query/job/develop/"
     },
     {
         "name": "redis-mon",
@@ -46,7 +46,7 @@
         "name": "zenoss-prodbin",
         "type": "jenkins",
         "version": "support/6.x",
-        "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.x"
+        "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.x/"
     },
     {
         "name": "zenoss-protocols",
@@ -58,7 +58,7 @@
         "name": "zenoss-zep",
         "type": "jenkins",
         "version": "develop",
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/zenoss-zep/job/develop/"
+        "jenkins.job": "Components/job/zenoss-zep/job/develop/"
     },
     {
         "name": "zenoss.metric.consumer",

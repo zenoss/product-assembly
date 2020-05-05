@@ -1,60 +1,36 @@
 #!/bin/bash
 
+# prepare the environment
+source ${ZENHOME}/install_scripts/prepare.sh
+prepare
+
 # load the installation functions
-#   so we can use start_requirements
-. ${ZENHOME}/install_scripts/install_lib.sh
+source ${ZENHOME}/install_scripts/install_lib.sh
 
+cleanup() {
+	set +x
+	set +e
+	stop_solr
+	stop_rabbitmq
+	stop_redis
+}
+trap cleanup EXIT
 
-if [ -z "${SRCROOT}" ]
-then
-    SRCROOT=/mnt/src
-fi
+sync_zope_conf || die "Failed to sync globals.conf to zope config files"
 
-if [ ! -d "${SRCROOT}" ]
-then
-    echo "ERROR: SRCROOT=${SRCROOT} does not exist"
-    exit 1
-fi
+start_redis
+start_rabbitmq
+start_solr
 
 set -e
 set -x
 
-echo "Starting required applications ..."
-
-start_requirements
-
-/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management
-/sbin/rabbitmqctl stop
-sleep 5
-rm -r /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
-/usr/sbin/rabbitmq-server 2>&1 > ${ZENHOME}/log/rabbitmq.log &
-rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit@rbt0.pid
-
 echo "Running zenwipe.sh $@"
-su - zenoss -c "/opt/zenoss/bin/zenwipe.sh $@"
+su - zenoss -l -c "/opt/zenoss/bin/zenwipe.sh $@" \
+	|| die "Failed to run zenwipe.sh"
+
 echo "Running exportXml"
-su - zenoss -c "cd /opt/zenoss/Products/ZenModel/data && ./exportXml.sh"
-
-echo "Stopping mysql..."
-mysqladmin shutdown
-
-echo "Stopping redis..."
-pkill redis
-
-echo "Stopping rabbit..."
-/sbin/rabbitmqctl stop
-
-sleep 10
-echo "Cleaning up mysql data..."
-rm /var/lib/mysql/ib_logfile0
-rm /var/lib/mysql/ib_logfile1
-
-echo "Cleaning up after install..."
-find ${ZENHOME} -name \*.py[co] -delete
-rm -f ${ZENHOME}/log/\*.log
-/sbin/scrub.sh
+su - zenoss -l -c "cd /opt/zenoss/Products/ZenModel/data && ./exportXml.sh" \
+	|| die "Failed to export XML and SQL dump file"
 
 echo "Finished dumping zodb"
-
-
-
