@@ -108,7 +108,7 @@ docker container exec \
 	-w /opt/zenoss/install_scripts \
 	-e "DBHOST=${mariadb_name}" \
 	${product_name} \
-	/bin/bash -l -c "./create_zenoss.sh --no-quickstart" \
+	/bin/bash -l -c "./create_zenoss.sh" \
 	|| fail "Could not execute create_zenoss.sh script"
 
 echo
