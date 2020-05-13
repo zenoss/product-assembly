@@ -131,7 +131,7 @@
     },
     {
         "name": "ZenPacks.zenoss.EMC.base",
-        "requirement": "ZenPacks.zenoss.EMC.base===2.1.1",
+	"pre": true,
         "type": "zenpack"
     },
     {

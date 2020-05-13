@@ -50,13 +50,5 @@
     {
         "ref": "develop",
         "repo": "git@github.com:zenoss/impact-pkg.git"
-    },
-    {
-       "ref": "develop",
-       "repo": "git@github.com:zenoss/ZenPacks.zenoss.ImpactServer.git"
-    },
-    {
-       "ref": "develop",
-       "repo": "git@github.com:zenoss/ZenPacks.zenoss.Impact.git"
     }
 ]
