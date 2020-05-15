@@ -8,10 +8,13 @@ FROM_IMAGE ?= zenoss-centos-base:$(ZENOSS_CENTOS_BASE_VERSION)
 
 COPIED_DEPS = $(addprefix component_info/,artifact_download.py component_versions.json)
 
+MIGRATION_WHEEL = zenservicemigration-${VERSION}-py2-none-any.whl
+
 BUILD_DEPENDENCIES = \
 	$(SHORT_VERSION).x/pull-docker-images.sh \
 	Dockerfile \
 	component_info/versions.sh \
+	component_info/${MIGRATION_WHEEL} \
 	$(COPIED_DEPS)
 
 build: $(BUILD_DEPENDENCIES)
@@ -44,8 +47,12 @@ $(COPIED_DEPS): component_info/%: ../%
 
 component_info/versions.sh: | component_info
 component_info/versions.sh:
-	@echo "export BUILD_NUMBER=$(BUILD_NUMBER)" > component_info/versions.sh
-	@echo "export VERSION=$(VERSION)" >> component_info/versions.sh
+	@echo "export BUILD_NUMBER=$(BUILD_NUMBER)" > $@
+	@echo "export VERSION=$(VERSION)" >> $@
+
+component_info/${MIGRATION_WHEEL}: | component_info
+component_info/${MIGRATION_WHEEL}: ../svcdefs/${MIGRATION_WHEEL}
+	@cp ../svcdefs/${MIGRATION_WHEEL} $@
 
 $(SHORT_VERSION).x/pull-docker-images.sh: | $(SHORT_VERSION).x
 $(SHORT_VERSION).x/pull-docker-images.sh: pull-docker-images.sh.in

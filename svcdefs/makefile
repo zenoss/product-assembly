@@ -61,9 +61,6 @@ endif
 ifndef SVCDEF_GIT_REF
 	$(error SVCDEF_GIT_REF is not set)
 endif
-ifndef TARGET_PRODUCT
-	$(error TARGET_PRODUCT is not set)
-endif
 ifndef VERSION
 	$(error VERSION is not set)
 endif
@@ -73,7 +70,10 @@ default: build
 repo_dir: $(SVC_REPO_DIR)
 
 build: $(SVC_REPO)/HEAD verifyInputs
-	cd $(dir $(<D)) && \
+ifndef TARGET_PRODUCT
+	$(error TARGET_PRODUCT is not set)
+endif
+	make -C $(dir $(<D)) docker_svcdefpkg-$(TARGET_PRODUCT) \
 		BUILD_NUMBER=$(BUILD_NUMBER) \
 		hbase_VERSION=$(HBASE_VERSION) \
 		hdfs_VERSION=$(HDFS_VERSION) \
@@ -83,7 +83,21 @@ build: $(SVC_REPO)/HEAD verifyInputs
 		opentsdb_VERSION=$(OPENTSDB_VERSION) \
 		SHORT_VERSION=$(SHORT_VERSION) \
 		VERSION=$(VERSION) \
-		make docker_svcdefpkg-$(TARGET_PRODUCT)
+		BASE_IMAGE_VERSION=$(ZENOSS_CENTOS_BASE_VERSION)
+
+migrations: $(SVC_REPO)/HEAD verifyInputs
+	make -C $(dir $(<D)) build-migrations \
+		BUILD_NUMBER=$(BUILD_NUMBER) \
+		hbase_VERSION=$(HBASE_VERSION) \
+		hdfs_VERSION=$(HDFS_VERSION) \
+		IMAGE_NUMBER=$(IMAGE_NUMBER) \
+		MILESTONE=$(MATURITY) \
+		RELEASE_PHASE=$(RELEASE_PHASE) \
+		opentsdb_VERSION=$(OPENTSDB_VERSION) \
+		SHORT_VERSION=$(SHORT_VERSION) \
+		VERSION=$(VERSION) \
+		BASE_IMAGE_VERSION=$(ZENOSS_CENTOS_BASE_VERSION)
+	cp $(dir $(<D))/output/*.whl ./
 
 # Using $(SVC_REPO)/HEAD as the target because GNU make appears to
 # consider a hidden directory target as always unsatisfied.
@@ -97,3 +111,4 @@ $(SVC_REPO_DIR):
 
 clean:
 	@-rm -rf $(TEMP_DIR)
+	@-rm *.whl
