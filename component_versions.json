@@ -80,8 +80,8 @@
     },
     {
         "name": "zenoss.toolbox",
-        "type": "download",
-        "version": "2.3.0",
-        "URL": "http://zenpip.zenoss.eng/packages/zenoss.toolbox-{version}-py2-none-any.whl"
+        "type": "jenkins",
+        "version": "develop",
+        "URL": "https://platform-jenkins.zenoss.eng/job/Components/job/zenoss.toolbox/job/develop/"
     }
 ]
