@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 ###############################################################################
 #
@@ -19,25 +19,22 @@ echo "Getting FROM_VERSION from the 'Version' setting."
 FROM_VERSION=$(serviced service list resmgr --format='{{.Version}}')
 TO_VERSION=%VERSION%
 
-if [ -z "$FROM_VERSION" ];
-then
-    echo "Getting FROM_VERSION from the 'ImageID' setting."
-    FROM_VERSION=$(serviced service list resmgr --format '{{.ImageID}}' | awk '{ print "localhost:5000/"$0" cat /opt/zenoss/Products/ZenModel/ZVersion.py" }' | xargs docker run --rm | grep VERSION | cut -d'"' -f2)
+if [ -z "$FROM_VERSION" ]; then
+	echo "Getting FROM_VERSION from the 'ImageID' setting."
+	FROM_VERSION=$(serviced service list resmgr --format '{{.ImageID}}' | awk '{ print "localhost:5000/"$0" cat /opt/zenoss/Products/ZenModel/ZVersion.py" }' | xargs docker run --rm | grep VERSION | cut -d'"' -f2)
 fi
 
-if [ -z "$FROM_VERSION" ];
-then
-    echo "Getting FROM_VERSION from the current_version.txt file."
-    FROM_VERSION=$(grep 'SVC_USE zenoss/resmgr_[^:_]*:.*' /root/%SHORT_VERSION%.x/current_version.txt | cut -d':' -f2 | cut -d'_' -f1)
-    if [ -z "$FROM_VERSION" ];
-    then
-        echo "Could not get the previous RM version number from serviced, please edit current_version.txt to set it."
-        echo "Change this line 'SVC_USE zenoss/resmgr_REPLACE_1' to reflect the pre-upgrade version, for example:"
-        echo "SVC_USE zenoss/resmgr_5.2:5.2.6_1"
-        exit 1
-    else
-        echo "Using FROM_VERSION provided by change to current_version.txt"
-    fi
+if [ -z "$FROM_VERSION" ]; then
+	echo "Getting FROM_VERSION from the current_version.txt file."
+	FROM_VERSION=$(grep 'SVC_USE zenoss/resmgr_[^:_]*:.*' /root/%SHORT_VERSION%.x/current_version.txt | cut -d':' -f2 | cut -d'_' -f1)
+	if [ -z "$FROM_VERSION" ]; then
+		echo "Could not get the previous RM version number from serviced, please edit current_version.txt to set it."
+		echo "Change this line 'SVC_USE zenoss/resmgr_REPLACE_1' to reflect the pre-upgrade version, for example:"
+		echo "SVC_USE zenoss/resmgr_5.2:5.2.6_1"
+		exit 1
+	else
+		echo "Using FROM_VERSION provided by change to current_version.txt"
+	fi
 fi
 
 echo "Preparing to update from "$FROM_VERSION" to "$TO_VERSION" version."
@@ -60,10 +57,10 @@ then
 MIGRATE_MARIADB_SERVICES="SVC_STOP Zenoss.resmgr/Infrastructure/mariadb-model\\
 SVC_STOP Zenoss.resmgr/Infrastructure/mariadb-events\\
 SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/mariadb-model stopped 600\\
-SVC_USE zenoss/mariadb-resmgr:%VERSION%_%VERSION_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4 service Zenoss.resmgr/Infrastructure/mariadb-model\\
+SVC_USE zenoss/mariadb-resmgr:%VERSION%_%VERSION_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 service Zenoss.resmgr/Infrastructure/mariadb-model\\
 SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-model' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh mariadb-model'\\
-SVC_USE zenoss/mariadb-resmgr:%VERSION%_%VERSION_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4 service Zenoss.resmgr/Infrastructure/mariadb-events\\
-SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-events' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh mariadb-model'"
+SVC_USE zenoss/mariadb-resmgr:%VERSION%_%VERSION_TAG% zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 service Zenoss.resmgr/Infrastructure/mariadb-events\\
+SVC_EXEC NO_COMMIT 'Zenoss.resmgr/Infrastructure/mariadb-events' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql; mysqld_safe \& until mysqladmin ping 2>/dev/null; do echo \"Waiting for mysql...\"; sleep 1; done \&\& /opt/zenoss/bin/mysqlupgrade.sh mariadb-events'"
 fi
 
 # Due to limitation of service-migration if a migration adds service then it is invisible to subsequent migrations in the same migration run what causes missed migrations. To mitigate that we run migrations by hand before upgrade. Fixes ZEN-32266 and ZEN-32165
@@ -79,6 +76,8 @@ fi
 
 sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g; s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g; s@%HUB_SERVICE_MIGRATION%@${HUB_SERVICE_MIGRATION}@g;" /root/%SHORT_VERSION%.x/upgrade-resmgr.txt
 sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g; s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g; s@%HUB_SERVICE_MIGRATION%@${HUB_SERVICE_MIGRATION}@g;" /root/%SHORT_VERSION%.x/upgrade-impact.txt
+
+sed -i -e "s/%FROM_VERSION%/${FROM_VERSION}/" /root/%SHORT_VERSION%.x/upgrade-resmgr.txt
 
 if [ $(serviced service status --show-fields Name  Zenoss.resmgr/Infrastructure/Impact | grep Impact) ]; then
     echo "Starting Impact upgrade."
