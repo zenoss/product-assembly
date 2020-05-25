@@ -4,7 +4,7 @@ include ../variables.mk
 
 FROM_IMAGE ?= zenoss-centos-base:$(ZENOSS_CENTOS_BASE_VERSION)
 
-.PHONY: change-from-image build build-devimg push clean
+.PHONY: change-from-image build-base-image build build-devimg push clean
 
 COPIED_DEPS = $(addprefix component_info/,artifact_download.py component_versions.json)
 
@@ -14,15 +14,16 @@ BUILD_DEPENDENCIES = \
 	$(SHORT_VERSION).x/pull-docker-images.sh \
 	Dockerfile \
 	component_info/versions.sh \
-	component_info/${MIGRATION_WHEEL} \
 	$(COPIED_DEPS)
 
-build: $(BUILD_DEPENDENCIES)
+build-base-image: $(BUILD_DEPENDENCIES)
 	docker build --no-cache=true -t $(PRODUCT_BASE_IMAGE_ID) .
+
+build: component_info/${MIGRATION_WHEEL} build-base-image
 
 # To build the dev image, change the FROM_IMAGE value to use the .devtools base
 # image and then build like any other product-base image.
-build-devimg: change-from-image build
+build-devimg: change-from-image build-base-image
 
 change-from-image:
 	$(eval FROM_IMAGE = $(FROM_IMAGE).devtools)
