@@ -33,16 +33,24 @@ SVC_USE zenoss/opentsdb:%OPENTSDB_VERSION%
 SVC_USE zenoss/mariadb-resmgr:%VERSION%_%VERSION_TAG% zenoss/mariadb
 
 # Stop Zenoss
-# SVC_STOP Zenoss.resmgr auto
-# SVC_WAIT Zenoss.resmgr stopped 600
+SVC_STOP Zenoss.resmgr auto
+SVC_WAIT Zenoss.resmgr stopped 600
+
+# Add timeout here as a temporary workaround for unknown issue when
+# underlying SVC_EXEC commands running using old images or old service definitions
+SVC_EXEC NO_COMMIT "Zenoss.resmgr" sleep 120
+
+# Run the service migrations
+SVC_EXEC NO_COMMIT "Zenoss.resmgr" /opt/zenoss/bin/zensvcmigrate --from %FROM_VERSION%
 
 # Run mariadb migration if we upgrade from resmgr < 6.4.0
 # - override image for mariadb services to a new one
 # - start mariadb services and run mysql_upgrade
 %MIGRATE_MARIADB_SERVICES%
 
-# Run the service migrations
-SVC_EXEC NO_COMMIT "Zenoss.resmgr" /opt/zenoss/bin/zensvcmigrate --from %FROM_VERSION%
+# Run mysql_upgrade
+SVC_EXEC NO_COMMIT Zenoss.resmgr/Infrastructure/mariadb-model /opt/zenoss/bin/database_upgrade.sh mariadb-model
+SVC_EXEC NO_COMMIT Zenoss.resmgr/Infrastructure/mariadb-model /opt/zenoss/bin/database_upgrade.sh mariadb-events
 
 # Start all our dependent services
 SVC_START Zenoss.resmgr/Infrastructure/mariadb-model
