@@ -49,8 +49,8 @@ SVC_EXEC NO_COMMIT "Zenoss.resmgr" /opt/zenoss/bin/zensvcmigrate --from %FROM_VE
 %MIGRATE_MARIADB_SERVICES%
 
 # Run mysql_upgrade
-SVC_EXEC NO_COMMIT Zenoss.resmgr/Infrastructure/mariadb-model /opt/zenoss/bin/database_upgrade.sh mariadb-model
-SVC_EXEC NO_COMMIT Zenoss.resmgr/Infrastructure/mariadb-model /opt/zenoss/bin/database_upgrade.sh mariadb-events
+SVC_EXEC NO_COMMIT Zenoss.resmgr/Infrastructure/mariadb-model /opt/zenoss/bin/upgrade_database.sh mariadb-model
+SVC_EXEC NO_COMMIT Zenoss.resmgr/Infrastructure/mariadb-events /opt/zenoss/bin/upgrade_database.sh mariadb-events
 
 # Start all our dependent services
 SVC_START Zenoss.resmgr/Infrastructure/mariadb-model
