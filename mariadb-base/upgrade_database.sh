@@ -18,6 +18,7 @@ case $SERVICE in
 esac
 
 start_db() {
+	chown m-R mysql:mysql /var/lib/mysql
 	mysqld_safe --skip-syslog --log-error=/var/log/mysql/upgrade.log &
 	until mysqladmin ping 2>/dev/null; do
 		echo "Waiting for mysqld..."
@@ -38,5 +39,4 @@ trap cleanup EXIT
 set -e
 
 start_db
-chown -R mysql:mysql /var/lib/mysql
-mysql_upgrade -u $USERNAME -p $PASSWD
+mysql_upgrade -u $ADMIN_USER -p $PASSWD
