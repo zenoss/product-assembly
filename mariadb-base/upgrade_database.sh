@@ -18,7 +18,7 @@ case $SERVICE in
 esac
 
 start_db() {
-	chown m-R mysql:mysql /var/lib/mysql
+	chown -R mysql:mysql /var/lib/mysql
 	mysqld_safe --skip-syslog --log-error=/var/log/mysql/upgrade.log &
 	until mysqladmin ping 2>/dev/null; do
 		echo "Waiting for mysqld..."
