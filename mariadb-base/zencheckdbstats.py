@@ -19,12 +19,11 @@ import argparse
 import datetime
 import logging
 import math
-import MySQLdb
 import os
+import pymysql
 import re
 import socket
 import string
-import subprocess
 import sys
 import time
 
@@ -37,11 +36,11 @@ def configure_logging(name, version, tmpdir):
     # Confirm %tmpdir, $ZENHOME and check for $ZENHOME/log/toolbox (create if missing)
     if not os.path.exists(tmpdir):
         print "%s doesn't exist - aborting" % (tmpdir)
-        exit(1)
+        sys.exit(1)
     zenhome_path = os.getenv("ZENHOME")
     if not zenhome_path:
         print "$ZENHOME undefined - are you running as the zenoss user?"
-        exit(1)
+        sys.exit(1)
     log_file_path = os.path.join(zenhome_path, 'log', 'toolbox')
     if not os.path.exists(log_file_path):
         os.makedirs(log_file_path)
@@ -132,34 +131,20 @@ def parse_options(scriptVersion, description_string):
     return parser
 
 
-def log_zends_conf(filename, log):
-    log.info("Logging $ZENDSHOME/etc/zends.cnf for review")
-    zends_cnf_file = open(filename)
-    for line in zends_cnf_file:
-        log.info(line.strip())
-    zends_cnf_file.close()
-
-
 def connect_to_mysql(database_dict, log):
-    log.info("Opening connection to MySQL/ZenDS for database %s at %s", database_dict['prettyName'], database_dict['host'])
+    log.info("Opening connection to MySQL for database %s at %s", database_dict['prettyName'], database_dict['host'])
     try:
-        if os.environ.get('ZENDSHOME'):   # If ZENDSHOME is set, assume running with ZenDS
-            if database_dict['host'] == 'localhost' and 'zodb-socket' in database_dict:
-                mysql_connection = MySQLdb.connect(unix_socket=database_dict['socket'],
-                                                   user=database_dict['admin-user'],
-                                                   passwd=database_dict['admin-password'],
-                                                   db=database_dict['database'])
-            else:
-                mysql_connection = MySQLdb.connect(host=database_dict['host'], port=int(database_dict['port']),
-                                                   user=database_dict['admin-user'],
-                                                   passwd=database_dict['admin-password'],
-                                                   db=database_dict['database'])
-        else:    # Assume MySQL (with no customized zodb-socket)
-            mysql_connection = MySQLdb.connect(host=database_dict['host'], port=int(database_dict['port']),
-                                               user=database_dict['admin-user'],
-                                               passwd=database_dict['admin-password'],
-                                                   db=database_dict['database'])
-    except MySQLdb.Error, e:
+        if database_dict['host'] == 'localhost' and 'zodb-socket' in database_dict:
+            mysql_connection = pymysql.connect(unix_socket=database_dict['socket'],
+                                               user=database_dict['user'],
+                                               passwd=database_dict['password'],
+                                               db=database_dict['database'])
+        else:
+            mysql_connection = pymysql.connect(host=database_dict['host'], port=int(database_dict['port']),
+                                               user=database_dict['user'],
+                                               passwd=database_dict['password'],
+                                               db=database_dict['database'])
+    except pymysql.Error as e:
         print "Error %d: %s" % (e.args[0], e.args[1])
         log.error(e)
         sys.exit(1)
@@ -202,9 +187,9 @@ def gather_MySQL_statistics(mysql_connection, log):
         results_dict['number_active_transactions_over'] = len(active_transactions_over)
 
         # Gather results and grab data for "Buffer Pool Percentage Used"
-        mysql_cursor.execute("SELECT FORMAT(DataPages*100.0/TotalPages,2) FROM \
-            (SELECT variable_value DataPages FROM information_schema.global_status WHERE variable_name = 'Innodb_buffer_pool_pages_data') AS A, \
-            (SELECT variable_value TotalPages FROM information_schema.global_status WHERE variable_name = 'Innodb_buffer_pool_pages_total') AS B")
+        mysql_cursor.execute("SELECT FORMAT(a.DataPages*100.0/b.TotalPages,2) FROM \
+            (SELECT variable_value DataPages FROM information_schema.global_status WHERE variable_name = 'Innodb_buffer_pool_pages_data') AS a, \
+            (SELECT variable_value TotalPages FROM information_schema.global_status WHERE variable_name = 'Innodb_buffer_pool_pages_total') AS b")
 
         results_dict['buffer_pool_used_percentage'] = float(mysql_cursor.fetchone()[0])
 
@@ -268,8 +253,8 @@ def main():
     intermediate_dict = { 'prettyName': "'zodb' Database",
                           'host': global_conf_dict['zodb-host'],
                           'port': global_conf_dict['zodb-port'],
-                          'admin-user': global_conf_dict['zodb-admin-user'],
-                          'admin-password': global_conf_dict['zodb-admin-password'],
+                          'user': global_conf_dict['zodb-user'],
+                          'password': global_conf_dict['zodb-password'],
                           'database': global_conf_dict['zodb-db'],
                           'mysql_results_list': []
                         }
@@ -281,8 +266,8 @@ def main():
         intermediate_dict = { 'prettyName': "'zenoss_zep' Database",
                               'host': global_conf_dict['zep-host'],
                               'port': global_conf_dict['zep-port'],
-                              'admin-user': global_conf_dict['zep-admin-user'],
-                              'admin-password': global_conf_dict['zep-admin-password'],
+                              'user': global_conf_dict['zep-user'],
+                              'password': global_conf_dict['zep-password'],
                               'database': global_conf_dict['zep-db'],
                               'mysql_results_list': []
                             }
@@ -292,17 +277,15 @@ def main():
                 intermediate_dict['socket'] = global_conf_dict['zodb-socket']
         databases_to_examine.append(intermediate_dict)
 
-    # If running in debug, log global.conf, grab 'SHOW VARIABLES' and zends.cnf, if straightforward (localhost)
+    # If running in debug, log global.conf, grab 'SHOW VARIABLES', if straightforward (localhost)
     if cli_options['debug']:
-        if global_conf_dict['zodb-host'] == 'localhost':
-            log_zends_conf(os.environ['ZENDSHOME'] + '/etc/zends.cnf', log)
         try:
             for item in databases_to_examine:
                 mysql_connection = connect_to_mysql(item, log)
                 log_MySQL_variables(mysql_connection, log)
                 if mysql_connection:
                     mysql_connection.close()
-                    log.info("Closed connection to MySQL/ZenDS for database %s at %s", item['prettyName'], item['host'])
+                    log.info("Closed connection to MySQL for database %s at %s", item['prettyName'], item['host'])
         except Exception as e:
             print "Exception encountered: ", e
             log.error(e)
@@ -313,7 +296,7 @@ def main():
     while sample_count < cli_options['times']:
         sample_count += 1
         current_time = time.time()
-        inline_print("[%s] Gathering MySQL/ZenDS metrics... (%d/%d)" %
+        inline_print("[%s] Gathering MySQL metrics... (%d/%d)" %
                      (time.strftime(TIME_FORMAT), sample_count, cli_options['times']))
         try:
             for item in databases_to_examine:
@@ -322,7 +305,7 @@ def main():
                 item['mysql_results_list'].append((current_time, mysql_results))
                 if mysql_connection:
                     mysql_connection.close()
-                    log.info("Closed connection to MySQL/ZenDS for database %s at %s", item['prettyName'], item['host'])
+                    log.info("Closed connection to MySQL for database %s at %s", item['prettyName'], item['host'])
         except Exception as e:
             print "Exception encountered: ", e
             log.error(e)
