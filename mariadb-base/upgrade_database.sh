@@ -30,7 +30,7 @@ cleanup() {
 	mysqladmin ping 2>/dev/null
 	if [ $? -eq 0 ]; then
 		echo "Shutting down mysqld..."
-		mysqladmin shutdown
+		mysqladmin shutdown -u $ADMIN_USER -p$PASSWD
 	fi
 }
 
@@ -39,4 +39,4 @@ trap cleanup EXIT
 set -e
 
 start_db
-mysql_upgrade -u $ADMIN_USER -p $PASSWD
+mysql_upgrade -u $ADMIN_USER -p$PASSWD
