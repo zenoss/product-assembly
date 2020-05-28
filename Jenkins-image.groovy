@@ -165,7 +165,6 @@ node('build-zenoss-product') {
                         [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
                         [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
                         [$class: 'BooleanParameterValue', name: 'BUILD_APPLIANCES', value: BUILD_APPLIANCES.toBoolean()],
-
                     ]
                 }
 
