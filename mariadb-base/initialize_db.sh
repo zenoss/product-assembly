@@ -4,6 +4,10 @@ SQL_COMMON_IN=/home/zenoss/permissions_common.sql.in
 SQL_DB_IN=/home/zenoss/permissions.sql.in
 SQL_PERMS=/home/zenoss/permissions.sql
 
+install_toolbox() {
+	pip install /home/zenoss/zends.toolbox*whl --no-index
+}
+
 start_db() {
 	mysqld_safe --skip-syslog --log-error=/var/log/mysql/build.log &
 	until mysqladmin ping 2>/dev/null; do
@@ -51,11 +55,13 @@ create_databases() {
 }
 
 cleanup() {
-	rm -f ${SQL_COMMON_IN} ${SQL_DB_IN} ${SQL_PERMS} /home/zenoss/initialize_db.sh
+	rm -f ${SQL_COMMON_IN} ${SQL_DB_IN} ${SQL_PERMS} /home/zenoss/initialize_db.sh /home/zenoss/zends.toolbox*whl
 	stop_db
 }
 
 trap cleanup EXIT
+
+install_toolbox
 
 start_db
 

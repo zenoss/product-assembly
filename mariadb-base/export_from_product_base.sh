@@ -41,8 +41,6 @@ ${cmd} start ${container}
 echo
 echo "Export the files"
 mkdir -p exported_files
-${cmd} cp zencheckdbstats ${container}:/opt/zenoss/bin/
-${cmd} cp zencheckdbstats.py ${container}:/opt/zenoss/bin/
 ${cmd} cp "${SOURCE_FILES}" ${container}:/home/zenoss/files_to_copy.txt
 ${cmd} exec ${container} tar cv -T /home/zenoss/files_to_copy.txt | tar xv -C "${OUTPUT_DIR}"
 echo
