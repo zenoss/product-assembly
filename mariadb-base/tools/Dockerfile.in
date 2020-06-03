@@ -1,0 +1,6 @@
+FROM zenoss/zenoss-centos-base:%VERSION%.devtools
+
+RUN pip install -U setuptools
+
+RUN groupadd --gid %GID% builder
+RUN useradd --uid %UID% --gid %GID% --comment "" builder
