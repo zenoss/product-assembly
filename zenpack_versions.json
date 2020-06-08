@@ -233,11 +233,11 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.OpenStack",
-        "requirement": "ZenPacks.zenoss.OpenStack===1.2.4",
+        "requirement": "ZenPacks.zenoss.OpenStack===1.3.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.OpenStackInfrastructure",
-        "requirement": "ZenPacks.zenoss.OpenStackInfrastructure===2.4.1",
+        "requirement": "ZenPacks.zenoss.OpenStackInfrastructure===3.0.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.OpenvSwitch",
