@@ -19,9 +19,9 @@
     },
     {
         "name": "query",
-        "type": "jenkins",
-        "version": "develop",
-        "jenkins.job": "Components/job/query/job/develop/"
+        "type": "download",
+        "version": "0.1.37",
+        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz"
     },
     {
         "name": "redis-mon",
@@ -56,9 +56,9 @@
     },
     {
         "name": "zenoss-zep",
-        "type": "jenkins",
-        "version": "develop",
-        "jenkins.job": "Components/job/zenoss-zep/job/develop/"
+        "type": "download",
+        "version": "2.7.4",
+        "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz"
     },
     {
         "name": "zenoss.metric.consumer",
