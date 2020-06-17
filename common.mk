@@ -1,60 +1,78 @@
-
-MATURITY ?= DEV
-BUILD_NUMBER  ?= DEV
-
-IMAGENAME  = $(TARGET_PRODUCT)_$(SHORT_VERSION)
+include ../variables.mk
 
 FROM_IMAGE = product-base:$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
-TAG = zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
+UPGRADE_SCRIPTS = upgrade-$(PRODUCT).txt upgrade-$(PRODUCT).sh $(ADDITIONAL_UPGRADE_SCRIPTS)
 
-MARIADB_TAG=zenoss/mariadb:10.1-$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
+ZENPACK_DIR = zenpacks
 
-.PHONY: build push clean getDownloadLogs
+.PHONY: build build-deps push clean getDownloadLogs download_zenpacks
 
-UPGRADE_SCRIPTS = upgrade-$(TARGET_PRODUCT).txt upgrade-$(TARGET_PRODUCT).sh $(ADDITIONAL_UPGRADE_SCRIPTS)
+build: build-deps
+	PRODUCT_IMAGE_ID="$(PRODUCT_IMAGE_ID)" PRODUCT_BASE_IMAGE_ID="$(PRODUCT_BASE_IMAGE_ID)" MARIADB_IMAGE_ID="$(MARIADB_IMAGE_ID)" MARIADB_BASE_IMAGE_ID="$(MARIADB_BASE_IMAGE_ID)" ../build_images.sh
 
-build: $(UPGRADE_SCRIPTS) Dockerfile zenpack_download
-	docker build  -t $(TAG) .
+build-deps: $(UPGRADE_SCRIPTS) copy_upgrade_scripts.sh download_zenpacks
 
-Dockerfile:
-	echo $(FROM_IMAGE)
-	@sed -e  's/%FROM_IMAGE%/$(FROM_IMAGE)/g; s/%SHORT_VERSION%/$(SHORT_VERSION)/g' Dockerfile.in > $@
+product-image-id:
+	@echo $(PRODUCT_IMAGE_ID)
 
-build-mariadb: ../mariadb/Dockerfile
-	docker build -t $(MARIADB_TAG) ../mariadb
-	-rm -f ../mariadb/Dockerfile
+product-image-tag:
+	@echo $(PRODUCT_IMAGE_TAG)
 
-../mariadb/Dockerfile:
-	@sed -e 's#%FROM_IMAGE%#$(TAG)#' ../mariadb/Dockerfile.in > $@
+mariadb-image-id:
+	@echo $(MARIADB_IMAGE_ID)
 
-push-mariadb:
-	docker push $(MARIADB_TAG)
+mariadb-image-tag:
+	@echo $(MARIADB_IMAGE_TAG)
 
-zenpacks:
+copy_upgrade_scripts.sh: copy_upgrade_scripts.sh.in
+	@sed -e "s/%SHORT_VERSION%/$(SHORT_VERSION)/g" $< > $@
+	@chmod +x $@
+
+$(ZENPACK_DIR):
 	@mkdir $@
 
-zenpack_download: zenpacks
-	../artifact_download.py ../zenpack_versions.json --zp_manifest zenpacks.json --out_dir zenpacks --reportFile zenpacks_artifact.log
+download_zenpacks: | $(ZENPACK_DIR)
+	@../artifact_download.py \
+		--zp_manifest zenpacks.json \
+		--out_dir zenpacks \
+		--reportFile zenpacks_artifact.log \
+		../zenpack_versions.json
 
 push:
-	docker push $(TAG)
+	docker push $(PRODUCT_IMAGE_ID)
+	docker push $(MARIADB_IMAGE_ID)
 
 clean:
-	rm -rf zenpacks
-	rm -f Dockerfile $(UPGRADE_SCRIPTS) zenoss_component_artifact.log zenpacks_artifact.log
-	-docker rmi -f $(TAG)
-	-docker rmi -f $(MARIADB_TAG)
+	@rm -rf $(ZENPACK_DIR)
+	@rm -f copy_upgrade_scripts.sh $(UPGRADE_SCRIPTS) zenoss_component_artifact.log zenpacks_artifact.log
+	@-docker image rm -f $(PRODUCT_IMAGE_ID) $(MARIADB_IMAGE_ID) 2>/dev/null
 
 getDownloadLogs:
-	docker run --rm -v $(PWD):/mnt/export -t $(TAG) rsync -a /opt/zenoss/log/zenoss_component_artifact.log /opt/zenoss/log/zenpacks_artifact.log /mnt/export
+	@docker run --rm \
+		-v $(PWD):/mnt/export \
+		-t $(PRODUCT_IMAGE_ID) \
+		rsync -a /opt/zenoss/log/zenoss_component_artifact.log /opt/zenoss/log/zenpacks_artifact.log /mnt/export
 
-upgrade-%.txt:
-	@sed -e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g; s/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g; s/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%VERSION%/$(VERSION)/g; s/%UCSPM_VERSION%/$(UCSPM_VERSION)/g; s/%RELEASE_PHASE%/$(MATURITY)/g; s/%VERSION_TAG%/$(VERSION_TAG)/g;' upgrade-$*.txt.in > $@
+upgrade-%.txt: upgrade-%.txt.in
+	@sed \
+		-e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g' \
+		-e 's/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g' \
+		-e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g' \
+		-e 's/%VERSION%/$(VERSION)/g' \
+		-e 's/%UCSPM_VERSION%/$(UCSPM_VERSION)/g' \
+		-e 's/%RELEASE_PHASE%/$(MATURITY)/g' \
+		-e 's/%VERSION_TAG%/$(VERSION_TAG)/g' \
+		$^ > $@
 
-upgrade-%.sh:
-	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%VERSION%/$(VERSION)/g; s/%UCSPM_VERSION%/$(UCSPM_VERSION)/g; s/%VERSION_TAG%/$(VERSION_TAG)/g;' upgrade-$*.sh.in > $@
+upgrade-%.sh: upgrade-%.sh.in
+	@sed \
+		-e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g' \
+		-e 's/%VERSION%/$(VERSION)/g' \
+		-e 's/%UCSPM_VERSION%/$(UCSPM_VERSION)/g' \
+		-e 's/%VERSION_TAG%/$(VERSION_TAG)/g' \
+		$^ > $@
 	@chmod +x $@
 
 run-tests:
-	docker run -i --rm $(TAG) /opt/zenoss/install_scripts/starttests.sh
+	@PRODUCT_IMAGE_ID="$(PRODUCT_IMAGE_ID)" MARIADB_IMAGE_ID="$(MARIADB_IMAGE_ID)" ../test_image.sh

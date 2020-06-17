@@ -1,5 +1,4 @@
 #!/bin/sh
-#
 ###############################################################################
 #
 # Pull all of the images needed to upgrade Control Center and Resource Manager

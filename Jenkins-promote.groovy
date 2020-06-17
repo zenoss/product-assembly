@@ -26,7 +26,7 @@
 //                        If TO_MATURITY is testing, then this value is typically something "BETA" or "RC1".
 //                        If TO_MATURITY is stable, then this value must be a single digit such as 1.
 //
-node ('build-zenoss-product') {
+node('build-zenoss-product') {
     def pipelineBuildName = env.JOB_NAME
     def pipelineBuildNumber = env.BUILD_NUMBER
     currentBuild.displayName = "promote ${TARGET_PRODUCT} from ${FROM_MATURITY} to ${TO_MATURITY}"
@@ -40,17 +40,23 @@ node ('build-zenoss-product') {
     def SERVICED_VERSION=""
     def SERVICED_BUILD_NUMBER=""
 
-    stage ('Checkout product-assembly') {
+    stage('Checkout product-assembly') {
         // Make sure we start in a clean directory to ensure a fresh git clone
         deleteDir()
         // NOTE: The 'master' branch name here is only used to clone the github repo.
         //       The next checkout command will align the build with the correct target revision.
-        git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/product-assembly'
+        git(
+            branch: 'master',
+            credentialsId: '${GIT_CREDENTIAL_ID}',
+            url: 'https://github.com/zenoss/product-assembly',
+        )
         sh("git checkout ${GIT_SHA}")
-        sh("pwd;git status")
+
+        sh("pwd; git status")
 
         // Get the values of various versions out of the versions.mk file for use in later stages
         def versionProps = readProperties file: 'versions.mk'
+
         SVCDEF_GIT_REF=versionProps['SVCDEF_GIT_REF']
         ZENOSS_VERSION=versionProps['VERSION']
         ZENOSS_SHORT_VERSION=versionProps['SHORT_VERSION']
@@ -58,6 +64,7 @@ node ('build-zenoss-product') {
         SERVICED_MATURITY=versionProps['SERVICED_MATURITY']
         SERVICED_VERSION=versionProps['SERVICED_VERSION']
         SERVICED_BUILD_NUMBER=versionProps['SERVICED_BUILD_NUMBER']
+
         echo "SVCDEF_GIT_REF=${SVCDEF_GIT_REF}"
         echo "ZENOSS_VERSION=${ZENOSS_VERSION}"
         echo "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}"
@@ -67,56 +74,77 @@ node ('build-zenoss-product') {
         echo "SERVICED_BUILD_NUMBER=${SERVICED_BUILD_NUMBER}"
     }
 
-    stage ('Promote product image') {
-        // Promote the docker images
-        def promoteArgs = "TARGET_PRODUCT=${TARGET_PRODUCT}\
-            PRODUCT_BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
-            ZENOSS_VERSION=${ZENOSS_VERSION}\
-            ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}\
-            FROM_MATURITY=${FROM_MATURITY}\
-            FROM_RELEASEPHASE=${FROM_RELEASEPHASE}\
-            TO_MATURITY=${TO_MATURITY}\
-            TO_RELEASEPHASE=${TO_RELEASEPHASE}"
-        sh("cd svcdefs;${promoteArgs} ./image_promote.sh")
-    }
-
-    stage ('Promote mariadb image') {
-        // Promote the docker images
-        def promoteArgs = "TARGET_PRODUCT=mariadb\
-            PRODUCT_BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
-            ZENOSS_VERSION=${ZENOSS_VERSION}\
-            ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}\
-            FROM_MATURITY=${FROM_MATURITY}\
-            FROM_RELEASEPHASE=${FROM_RELEASEPHASE}\
-            TO_MATURITY=${TO_MATURITY}\
-            TO_RELEASEPHASE=${TO_RELEASEPHASE}"
-        sh("cd svcdefs;${promoteArgs} ./image_promote.sh")
-    }
-
-    stage ('Compile service definitions and build RPM') {
-        // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
-        sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
-        dir('svcdefs/build/zenoss-service') {
-            // NOTE: The 'master' branch name here is only used to clone the github repo.
-            //       The next checkout command will align the build with the correct target revision.
-            echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
-            git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
-            sh("pwd;git checkout ${SVCDEF_GIT_REF}")
+    stage('Promote Product Image') {
+        dir("svcdefs") {
+            withEnv([
+                "TARGET_PRODUCT=${TARGET_PRODUCT}",
+                "PRODUCT_BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}",
+                "ZENOSS_VERSION=${ZENOSS_VERSION}",
+                "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}",
+                "FROM_MATURITY=${FROM_MATURITY}",
+                "FROM_RELEASEPHASE=${FROM_RELEASEPHASE}",
+                "TO_MATURITY=${TO_MATURITY}",
+                "TO_RELEASEPHASE=${TO_RELEASEPHASE}",
+            ]) {
+                sh("./image_promote.sh")
+            }
         }
-
-        // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
-        //     Jenkins credentials instead
-        def makeArgs = "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
-            IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
-            MATURITY=${TO_MATURITY}\
-            SVCDEF_GIT_READY=true\
-            RELEASE_PHASE=${TO_RELEASEPHASE}\
-            TARGET_PRODUCT=${TARGET_PRODUCT}"
-        sh("cd svcdefs;make build ${makeArgs}")
-        archive includes: 'svcdefs/build/zenoss-service/output/**'
     }
 
-    stage ('Push RPM') {
+    stage('Promote MariaDB Image') {
+        dir("svcdefs") {
+            withEnv([
+                "TARGET_PRODUCT=mariadb-${TARGET_PRODUCT}",
+                "PRODUCT_BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}",
+                "ZENOSS_VERSION=${ZENOSS_VERSION}",
+                "ZENOSS_SHORT_VERSION=${ZENOSS_SHORT_VERSION}",
+                "FROM_MATURITY=${FROM_MATURITY}",
+                "FROM_RELEASEPHASE=${FROM_RELEASEPHASE}",
+                "TO_MATURITY=${TO_MATURITY}",
+                "TO_RELEASEPHASE=${TO_RELEASEPHASE}",
+            ]) {
+                sh("./image_promote.sh")
+            }
+        }
+    }
+
+    stage('Build Service Template RPM') {
+        dir("svcdefs") {
+            // Run the checkout in a separate directory.
+            // We have to clean it ourselves, because Jenkins doesn't (apparently)
+            sh("make clean")
+            def repo_dir = sh(returnStdout: true, script: "make repo_dir").trim()
+            dir("${repo_dir}") {
+                echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
+                // NOTE: The 'master' branch name here is only used to clone the github repo.
+                //       The next checkout command will align the build with the correct target revision.
+                git(
+                    branch: 'master',
+                    credentialsId: '${GIT_CREDENTIAL_ID}',
+                    url: 'https://github.com/zenoss/zenoss-service.git',
+                )
+                sh("git checkout ${SVCDEF_GIT_REF}")
+
+                // Log the current SHA of zenoss-service so, when building from a branch,
+                // we know exactly which commit went into a particular build
+                def HEAD_SHA = sh(returnStdout: true, script: "git rev-parse HEAD")
+                echo "zenoss/zenoss-service git SHA = ${HEAD_SHA}"
+            }
+
+            def makeArgs = [
+                "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}",
+                "IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}",
+                "MATURITY=${TO_MATURITY}",
+                "RELEASE_PHASE=${TO_RELEASEPHASE}",
+                "TARGET_PRODUCT=${TARGET_PRODUCT}",
+            ].join(' ')
+            sh("make build ${makeArgs}")
+
+            archiveArtifacts artifacts: "${repo_dir}/output/**"
+        }
+    }
+
+    stage('Push Service Template RPM') {
         // FIXME - if we never use the pipeline to build/publish artifacts directly to the stable or
         //         testing repos, then maybe we should remove MATURITY as an argument for this job?
         def s3Subdirectory = "/yum/zenoss/" + TO_MATURITY + "/centos/el7/os/x86_64"
@@ -128,7 +156,7 @@ node ('build-zenoss-product') {
         ]
     }
 
-    stage ('Build Appliances') {
+    stage('Build Appliances') {
         if (BUILD_APPLIANCES != "true") {
             echo "Skipped Build Appliances"
             return
@@ -145,21 +173,21 @@ node ('build-zenoss-product') {
             // We have to use this version of the for-loop and _not_ the for(String s: strings)
             // as per https://jenkins.io/doc/pipeline/examples/#parallel-from-list
             def appliances = ["zsd", "poc"]
-            for(int i=0; i<appliances.size(); i++) {
+            for (int i = 0; i < appliances.size(); i++) {
                 def applianceTarget = appliances.get(i);
                 def jobLabel = applianceTarget + " appliance for " + TARGET_PRODUCT + " product build #" + PRODUCT_BUILD_NUMBER
                 def branch = {
                     build job: 'appliance-build', parameters: [
-                            [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
-                            [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
-                            [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
-                            [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: TO_RELEASEPHASE],
-                            [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: TO_MATURITY],
-                            [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
-                            [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
-                            [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
-                            [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
+                        [$class: 'StringParameterValue', name: 'JOB_LABEL', value: jobLabel],
+                        [$class: 'StringParameterValue', name: 'TARGET_PRODUCT', value: applianceTarget],
+                        [$class: 'StringParameterValue', name: 'BRANCH', value: BRANCH],
+                        [$class: 'StringParameterValue', name: 'PRODUCT_BUILD_NUMBER', value: TO_RELEASEPHASE],
+                        [$class: 'StringParameterValue', name: 'ZENOSS_MATURITY', value: TO_MATURITY],
+                        [$class: 'StringParameterValue', name: 'ZENOSS_VERSION', value: ZENOSS_VERSION],
+                        [$class: 'StringParameterValue', name: 'SERVICED_BRANCH', value: SERVICED_BRANCH],
+                        [$class: 'StringParameterValue', name: 'SERVICED_MATURITY', value: SERVICED_MATURITY],
+                        [$class: 'StringParameterValue', name: 'SERVICED_VERSION', value: SERVICED_VERSION],
+                        [$class: 'StringParameterValue', name: 'SERVICED_BUILD_NUMBER', value: SERVICED_BUILD_NUMBER],
                     ]
                 }
 

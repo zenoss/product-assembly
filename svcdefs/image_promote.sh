@@ -104,14 +104,6 @@ tag() {
          ;;
    esac
 
-   case $product in
-      mariadb)
-         tag="10.1-${tag}"
-         ;;
-      *)
-         ;;
-   esac
-
    echo ${tag}
 }
 
@@ -124,7 +116,7 @@ repo() {
       core|resmgr|ucspm)
          repo="${product}_${ZENOSS_SHORT_VERSION}"
          ;;
-      mariadb)
+      mariadb-core|mariadb-resmgr)
          repo="${product}"
          ;;
       *)

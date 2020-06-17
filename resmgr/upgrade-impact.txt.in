@@ -27,19 +27,30 @@ REQUIRE_SVC
 SNAPSHOT preupgrade-resmgr-%VERSION%
 
 # Choose image to upgrade to
-SVC_USE zenoss/resmgr_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/resmgr_5.0 zenoss/resmgr_5.1 zenoss/resmgr_5.2 zenoss/resmgr_5.3 zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3
+SVC_USE zenoss/resmgr_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/resmgr_5.0 zenoss/resmgr_5.1 zenoss/resmgr_5.2 zenoss/resmgr_5.3 zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4
 SVC_USE zenoss/hbase:%HBASE_VERSION%
 SVC_USE zenoss/opentsdb:%OPENTSDB_VERSION%
-SVC_USE zenoss/mariadb:10.1-%VERSION%_%VERSION_TAG%
+SVC_USE zenoss/mariadb-resmgr:%VERSION%_%VERSION_TAG% zenoss/mariadb
 
 # Stop Zenoss
-# SVC_STOP Zenoss.resmgr auto
-# SVC_WAIT Zenoss.resmgr stopped 600
+SVC_STOP Zenoss.resmgr auto
+SVC_WAIT Zenoss.resmgr stopped 600
+
+# Add timeout here as a temporary workaround for unknown issue when
+# underlying SVC_EXEC commands running using old images or old service definitions
+SVC_EXEC NO_COMMIT "Zenoss.resmgr" sleep 120
+
+# Run the service migrations
+SVC_EXEC NO_COMMIT "Zenoss.resmgr" /opt/zenoss/bin/zensvcmigrate --from %FROM_VERSION%
 
 # Run mariadb migration if we upgrade from resmgr < 6.4.0
 # - override image for mariadb services to a new one
 # - start mariadb services and run mysql_upgrade
 %MIGRATE_MARIADB_SERVICES%
+
+# Run mysql_upgrade
+SVC_EXEC NO_COMMIT Zenoss.resmgr/Infrastructure/mariadb-model /opt/zenoss/bin/upgrade_database.sh mariadb-model
+SVC_EXEC NO_COMMIT Zenoss.resmgr/Infrastructure/mariadb-events /opt/zenoss/bin/upgrade_database.sh mariadb-events
 
 # Start all our dependent services
 SVC_START Zenoss.resmgr/Infrastructure/mariadb-model
@@ -64,6 +75,9 @@ SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/ze
 
 # Run script to completely remove Catalog Service ZenPack
 SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/remove_CatalogServiceZenPack.sh"
+
+# Run migrations for zenhubworker services
+%HUB_SERVICE_MIGRATION%
 
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.resmgr/Zenoss/User Interface/Zope" upgrade

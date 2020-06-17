@@ -1,0 +1,10 @@
+<relstorage>
+  keep-history false
+  pack-gc true
+  <mysql>
+    user zenoss
+    passwd zenoss
+    host %DBHOST%
+    db zodb
+  </mysql>
+</relstorage>

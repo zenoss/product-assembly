@@ -1,13 +1,8 @@
 [
     {
-        "name": "icmpecho",
-        "type": "download",
-        "version": "1.0.1"
-    },
-    {
         "name": "metricshipper",
         "type": "download",
-        "version": "1.1.4",
+        "version": "1.1.5",
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz"
     },
     {
@@ -19,13 +14,13 @@
     {
         "name": "pynetsnmp",
         "type": "download",
-        "version": "0.41.1",
-        "URL": "http://zenpip.zenoss.eng/packages/pynetsnmp-{version}-py2-none-any.whl"
+        "version": "0.41.3",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
     },
     {
         "name": "query",
         "type": "download",
-        "version": "0.1.33",
+        "version": "0.1.37",
         "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz"
     },
     {
@@ -37,7 +32,7 @@
     {
         "name": "service-migration",
         "type": "download",
-        "version": "1.1.13",
+        "version": "1.1.15",
         "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl"
     },
     {
@@ -50,7 +45,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "download",
-        "version": "6.4.1",
+        "version": "6.5.0",
         "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.x.tar.gz"
     },
     {
@@ -62,13 +57,13 @@
     {
         "name": "zenoss-zep",
         "type": "download",
-        "version": "2.6.1",
+        "version": "2.7.4",
         "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz"
     },
     {
         "name": "zenoss.metric.consumer",
         "type": "download",
-        "version": "0.1.7",
+        "version": "0.1.13",
         "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz"
     },
     {
@@ -86,7 +81,7 @@
     {
         "name": "zenoss.toolbox",
         "type": "download",
-        "version": "2.3.0",
-        "URL": "http://zenpip.zenoss.eng/packages/zenoss.toolbox-{version}-py2-none-any.whl"
+        "version": "2.3.1",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
     }
 ]

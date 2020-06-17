@@ -33,6 +33,12 @@ BUILD_NUMBER ?= $(shell date +%Y%m%d%H%M%S)
 IMAGE_NUMBER ?= DEV
 MATURITY     ?= DEV
 
+TEMP_DIR := src
+SVC_REPO_DIR := $(TEMP_DIR)/zenoss-service
+SVC_REPO := $(SVC_REPO_DIR)/.git
+
+.PHONY: clean default build repo_dir verifyInputs
+
 verifyInputs:
 ifndef BUILD_NUMBER
 	$(error BUILD_NUMBER is not set)
@@ -52,33 +58,22 @@ endif
 ifndef SHORT_VERSION
 	$(error SHORT_VERSION is not set)
 endif
-ifndef SVCDEF_GIT_READY
 ifndef SVCDEF_GIT_REF
 	$(error SVCDEF_GIT_REF is not set)
-endif
-endif
-ifndef TARGET_PRODUCT
-	$(error TARGET_PRODUCT is not set)
 endif
 ifndef VERSION
 	$(error VERSION is not set)
 endif
 
-TEMP_DIR := build
-
-.PHONY: verifyInputs clean
-
 default: build
 
-buildTempDir:
-	if [ ! -d $(TEMP_DIR) ]; then mkdir $(TEMP_DIR); fi
+repo_dir: $(SVC_REPO_DIR)
 
-build: verifyInputs buildTempDir
-ifndef SVCDEF_GIT_READY
-	cd $(TEMP_DIR) && git clone git@github.com:zenoss/zenoss-service.git
-	cd $(TEMP_DIR)/zenoss-service && git checkout $(SVCDEF_GIT_REF)
+build: $(SVC_REPO)/HEAD verifyInputs
+ifndef TARGET_PRODUCT
+	$(error TARGET_PRODUCT is not set)
 endif
-	cd $(TEMP_DIR)/zenoss-service && \
+	make -C $(dir $(<D)) docker_svcdefpkg-$(TARGET_PRODUCT) \
 		BUILD_NUMBER=$(BUILD_NUMBER) \
 		hbase_VERSION=$(HBASE_VERSION) \
 		hdfs_VERSION=$(HDFS_VERSION) \
@@ -88,7 +83,32 @@ endif
 		opentsdb_VERSION=$(OPENTSDB_VERSION) \
 		SHORT_VERSION=$(SHORT_VERSION) \
 		VERSION=$(VERSION) \
-		make docker_svcdefpkg-$(TARGET_PRODUCT)
+		BASE_IMAGE_VERSION=$(ZENOSS_CENTOS_BASE_VERSION)
+
+migrations: $(SVC_REPO)/HEAD verifyInputs
+	make -C $(dir $(<D)) build-migrations \
+		BUILD_NUMBER=$(BUILD_NUMBER) \
+		hbase_VERSION=$(HBASE_VERSION) \
+		hdfs_VERSION=$(HDFS_VERSION) \
+		IMAGE_NUMBER=$(IMAGE_NUMBER) \
+		MILESTONE=$(MATURITY) \
+		RELEASE_PHASE=$(RELEASE_PHASE) \
+		opentsdb_VERSION=$(OPENTSDB_VERSION) \
+		SHORT_VERSION=$(SHORT_VERSION) \
+		VERSION=$(VERSION) \
+		BASE_IMAGE_VERSION=$(ZENOSS_CENTOS_BASE_VERSION)
+	cp $(dir $(<D))/output/*.whl ./
+
+# Using $(SVC_REPO)/HEAD as the target because GNU make appears to
+# consider a hidden directory target as always unsatisfied.
+$(SVC_REPO)/HEAD: | $(SVC_REPO_DIR)
+	cd $(SVC_REPO_DIR) && git clone git@github.com:zenoss/zenoss-service.git .
+	cd $(SVC_REPO_DIR) && git checkout $(SVCDEF_GIT_REF)
+
+$(SVC_REPO_DIR):
+	@mkdir -p $@
+	@echo $@
 
 clean:
-	-rm -rf $(TEMP_DIR)
+	@-rm -rf $(TEMP_DIR)
+	@-rm *.whl

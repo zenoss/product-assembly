@@ -1,0 +1,5 @@
+/opt/zenoss/bin/metrics/
+/opt/zenoss/bin/quiesce-mariadb.sh
+/opt/zenoss/etc/global.conf
+/opt/zenoss/Products/ZenUtils/ZenDB.py
+/opt/zenoss/Products/ZenUtils/config.py
