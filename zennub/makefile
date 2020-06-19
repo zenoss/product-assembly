@@ -30,8 +30,7 @@ push:
 clean:
 	rm -rf component_info Dockerfile
 	-docker rmi -f $(TAG)
-	-docker rmi -f $(ZENDEV_BASE_TAG)
-	-docker rmi -f $(ZENDEV_TAG)
+	make -C devimg clean
 
 component_versions: component_info
 	@cp ../artifact_download.py ../component_versions.json component_info/.

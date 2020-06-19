@@ -13,4 +13,4 @@ ADD zenpacks_artifact.log /opt/zenoss/log/
 RUN /opt/zenoss/install_scripts/zenoss_component_install.sh %INSTALL_OPTIONS%
 
 ADD License.zenoss /opt/zenoss/
-
+ADD global.conf /opt/zenoss/etc

@@ -12,6 +12,7 @@ ADD install_scripts component_info /opt/zenoss/install_scripts/
 RUN /opt/zenoss/install_scripts/zenoss_component_install.sh %INSTALL_OPTIONS%
 
 ADD License.zenoss /opt/zenoss/
+ADD global.conf /opt/zenoss/etc
 
 # the manifest of zenpacks to install
 ADD zenpacks.json /opt/zenoss/install_scripts/
@@ -20,5 +21,5 @@ ADD zenpacks_artifact.log /opt/zenoss/log/
 # the zenpacks shipped in the images
 COPY zenpacks /opt/zenoss/packs/
 
-# Initializes zenoss, creates DB and installs zenpacks...
+# Initializes zenoss and installs zenpacks...
 RUN /opt/zenoss/install_scripts/create_zenoss.sh --no-quickstart

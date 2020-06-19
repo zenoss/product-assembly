@@ -39,11 +39,11 @@ fix_etc_permissions
 ensure_dfs_dirs
 ensure_dir /opt/zenoss/ZenPacks
 
-# This needs to exist, and be owned by the zenoss user, so that when
-# the snapshot-volume is mounted over it, it is writable by the zenoss user
-# as well.
-ensure_dir /opt/zenoss/etc/nub
-ensure_dir /opt/zenoss/etc/nub/snapshot
+# These need to exist, and be owned by the zenoss user, so that when
+# the docker volumes are mounted over them, they will also be writable
+# by the zenoss user as well.
+ensure_dir /data
+ensure_dir /cfg
 
 echo "Upgrading yaml parser ..."
 yum -y install libyaml-devel
