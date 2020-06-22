@@ -408,8 +408,8 @@
     },
     {
         "name": "ZenPacks.zenoss.ZenOperatorRole",
-        "requirement": "ZenPacks.zenoss.ZenOperatorRole===2.2.0",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.ZenPackLib",
