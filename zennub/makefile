@@ -28,7 +28,7 @@ push:
 	docker push $(TAG)
 
 clean:
-	rm -rf component_info Dockerfile
+	rm -rf component_info Dockerfile zenpacks_artifact.log
 	-docker rmi -f $(TAG)
 	make -C devimg clean
 
