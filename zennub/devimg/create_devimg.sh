@@ -24,6 +24,9 @@ su - zenoss -c "ln -s ${SRCROOT} ${ZENHOME}/packs"
 echo "Linking in modelindex..."
 su - zenoss -c "pip uninstall -y zenoss.modelindex"
 su - zenoss -c "ln -s ${SRCROOT}/modelindex ${ZENHOME}/modelindex"
+ls -l ${ZENHOME}/modelindex
+ls -l /mnt/src
+
 su - zenoss -c "pip install -e ${ZENHOME}/modelindex"
 
 echo "Configuring maven..."

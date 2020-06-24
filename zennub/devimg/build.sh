@@ -13,7 +13,7 @@
 # Required Arguments (specified as environment variables):
 # BASE_TAG    - the tag of image to start from (e.g. zendev/devimg-base:<envName>)
 # TAG         - the full docker tag of image to build (e.g. zendev/devimg:<envName>)
-# ZENDEV_ROOT - see the description in makefile
+# ZENHOME - see the description in makefile
 # SRCROOT     - see the description in makefile
 
 if [ -z "${BASE_TAG}" ]
@@ -24,9 +24,9 @@ elif [ -z "${TAG}" ]
 then
 	echo "ERROR: Missing required argument - TAG"
 	exit 1
-elif [ -z "${ZENDEV_ROOT}" ]
+elif [ -z "${ZENHOME}" ]
 then
-	echo "ERROR: Missing required argument - ZENDEV_ROOT"
+	echo "ERROR: Missing required argument - ZENHOME"
 	exit 1
 elif [ -z "${SRCROOT}" ]
 then
@@ -44,8 +44,8 @@ cleanup() {
 trap cleanup EXIT
 
 echo "Initializing Zenoss and installing Zenpacks ..."
-echo "   ZENHOME=${ZENDEV_ROOT}/zenhome"
-echo "   VAR_ZENOSS=${ZENDEV_ROOT}/var_zenoss"
+echo "   ZENHOME=${ZENHOME}/zenhome"
+echo "   VAR_ZENOSS=${ZENHOME}/var_zenoss"
 echo "   SRCROOT=${SRCROOT}"
 
 CONTAINER_ID_FILE=containerID.txt
@@ -60,11 +60,16 @@ set -x
 PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DEVIMG_WD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../../devimg && pwd )"
 
+if ! [ -d ${SRCROOT}/github.com/zenoss/zenoss-prodbin ]; then
+	echo "SRCROOT seems to be incorrect (should be set to the directory that contains github.com subdirectory)"
+	exit 1
+fi
+
 docker run \
 	--cidfile ${CONTAINER_ID_FILE} \
-	-v ${ZENDEV_ROOT}/zenhome:/opt/zenoss \
-	-v ${ZENDEV_ROOT}/var_zenoss:/var/zenoss \
-	-v ${SRCROOT}:/mnt/src \
+	-v ${ZENHOME}/zenhome:/opt/zenoss \
+	-v ${ZENHOME}/var_zenoss:/var/zenoss \
+	-v ${SRCROOT}/github.com/zenoss:/mnt/src \
 	-v ${PWD}:/mnt/zennub \
 	-v ${DEVIMG_WD}:/mnt/devimg \
         -v ${HOME}/.m2:/home/zenoss/.m2 \

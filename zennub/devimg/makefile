@@ -23,19 +23,20 @@ build: build-deps
 
 build-devbase: build-deps
 	@echo "Building $(ZENDEV_BASE_TAG) ..."
+	touch ../zenpacks_artifact.log
 	cd ..; docker build -f devimg/Dockerfile --no-cache=true -t $(ZENDEV_BASE_TAG) .
 
 build-devimg: build-devbase make-dirs initialize-zenhome add-zenpack-file
 	BASE_TAG=$(ZENDEV_BASE_TAG) \
 	TAG=$(ZENDEV_TAG) \
-	ZENDEV_ROOT=$(ZENDEV_ROOT) \
+	ZENHOME=$(ZENHOME) \
 	./build.sh
 
 # Initialize our local ZENHOME using the contents from the initial devimg
 initialize-zenhome: make-dirs
 	@echo "Initializing ZENHOME from container contents..."
 	docker run --rm \
-		-v $(ZENDEV_ROOT)/zenhome:/mnt/local-zenhome \
+		-v $(ZENHOME)/zenhome:/mnt/local-zenhome \
 		-v $(shell (cd ../../devimg; pwd)):/mnt/devimg \
 		-t $(ZENDEV_BASE_TAG) \
 		bash -c "/mnt/devimg/init_devimg_zenhome.sh /mnt/local-zenhome"
@@ -44,23 +45,23 @@ initialize-zenhome: make-dirs
 # Note that this list includes the directories used as mount points. We create
 # need to create those directories here so they are owned by the current user
 # (otherwise, they will be owned by root when docker creates them).
-make-dirs: verifyInputs $(ZENDEV_ROOT)/zenhome  $(ZENDEV_ROOT)/var_zenoss
+make-dirs: verifyInputs $(ZENHOME)/zenhome  $(ZENHOME)/var_zenoss
 	@mkdir -p $$HOME/.m2
 
-$(ZENDEV_ROOT)/%:
+$(ZENHOME)/%:
 	mkdir -p $@
 
 verifyInputs:
-ifndef ZENDEV_ROOT
-	$(error ZENDEV_ROOT is not set)
+ifndef ZENHOME
+	$(error ZENHOME is not set)
 endif
 ifndef SRCROOT
 	$(error SRCROOT is not set)
 endif
 
 add-zenpack-file:
-	cp ../zenpacks.json $(ZENDEV_ROOT)/zenhome/install_scripts;
-	cp ../zp_blacklist.json $(ZENDEV_ROOT)/zenhome/install_scripts;
+	cp ../zenpacks.json $(ZENHOME)/zenhome/install_scripts;
+	cp ../zp_blacklist.json $(ZENHOME)/zenhome/install_scripts;
 
 push:
 	docker push $(TAG)

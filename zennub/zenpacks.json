@@ -7,14 +7,15 @@
         "ZenPacks.zenoss.PredictiveThreshold",
         "ZenPacks.zenoss.AdvancedSearch",
         "ZenPacks.zenoss.EnterpriseSkin",
+        "ZenPacks.zenoss.PythonCollector",
         "ZenPacks.zenoss.ZenJMX",
         "ZenPacks.zenoss.CalculatedPerformance",
         "ZenPacks.zenoss.ImpactServer",
         "ZenPacks.zenoss.Impact",
-        "ZenPacks.zenoss.PythonCollector",
         "ZenPacks.zenoss.StorageBase",
         "ZenPacks.zenoss.WBEM",
         "ZenPacks.zenoss.EMC.base",
+        "ZenPacks.zenoss.EMC.Isilon",
         "ZenPacks.zenoss.NetAppMonitor"
     ],
     "included_not_installed": [
