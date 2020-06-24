@@ -43,11 +43,11 @@ def main(args):
             zpFile = os.path.join(args.zpDir, zpFileName[0])
 
             if args.link:
+                fix_dependencies_setup(zpName, zpFile)
                 cmd = ['/opt/zenoss/bin/python', 'setup.py', 'develop', '--site-dirs', '/opt/zenoss/ZenPacks', '-d', '/opt/zenoss/ZenPacks']
                 print "Installing zenpack: %s %s" % (zpName, zpFile)
                 sys.stdout.flush()
                 subprocess.check_call(cmd, env=os.environ, cwd=zpFile)
-                fix_dependencies_setup(zpName, zpFile)
             else:
                 cmd = ['/opt/zenoss/bin/easy_install', '--site-dirs', '/opt/zenoss/ZenPacks', '-d', '/opt/zenoss/ZenPacks', '--allow-hosts=None', '--no-deps', zpFile]
                 print "Installing zenpack: %s %s" % (zpName, zpFile)
@@ -61,7 +61,8 @@ def fix_dependencies_setup(zpName, zpDir):
     f = fileinput.input(files=(file), inplace=True, backup='.bak')
     for line in f:
         for dep in ignore_dependencies:
-            line = line.replace("'%s'," % dep, "")
+            if dep in line and not line.startswith("#"):
+                line = "# " + line
         print line,
     f.close()
 
