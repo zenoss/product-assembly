@@ -13,18 +13,16 @@ echo "Getting FROM_VERSION from the 'Version' setting."
 FROM_VERSION=$(serviced service list Zenoss.cse --format='{{.Version}}')
 TO_VERSION=%VERSION%
 
-if [ -z "$FROM_VERSION" ];
-then
-    echo "Getting FROM_VERSION from the 'ImageID' setting."
-    FROM_VERSION=$(serviced service list Zenoss.cse --format '{{.ImageID}}' | awk '{ print "localhost:5000/"$0" cat /opt/zenoss/Products/ZenModel/ZVersion.py" }' | xargs docker run --rm | grep VERSION | cut -d'"' -f2)
+if [ -z "$FROM_VERSION" ]; then
+      echo "Getting FROM_VERSION from the 'ImageID' setting."
+      FROM_VERSION=$(serviced service list Zenoss.cse --format '{{.ImageID}}' | awk '{ print "localhost:5000/"$0" cat /opt/zenoss/Products/ZenModel/ZVersion.py" }' | xargs docker run --rm | grep VERSION | cut -d'"' -f2)
 fi
 
-if [ -z "$FROM_VERSION" ];
-then
-    echo "Could not get the previous RM version number from serviced, "
-    echo "Change this line 'SVC_USE zenoss/cse_REPLACE_1' to reflect the pre-upgrade version, for example:"
-    echo "SVC_USE zenoss/cse_5.2:5.2.6_1"
-    exit 1
+if [ -z "$FROM_VERSION" ]; then
+      echo "Could not get the previous RM version number from serviced, "
+      echo "Change this line 'SVC_USE zenoss/cse_REPLACE_1' to reflect the pre-upgrade version, for example:"
+      echo "SVC_USE zenoss/cse_5.2:5.2.6_1"
+      exit 1
 fi
 
 MARIADB_IMAGE_ID=$(serviced service list mariadb-model --format "{{.ImageID}}")
@@ -32,14 +30,8 @@ echo "mariadb-model service's image ID is "${MARIADB_IMAGE_ID}
 
 # Run mariadb migration if the mariadb-model service's image ID does not correspond to the mariadb image.
 if [[ ! $MARIADB_IMAGE_ID =~ "${SERVICE_TENANT_ID}/mariadb:" ]]; then
-MIGRATE_MARIADB_SERVICES="SVC_STOP Zenoss.cse/Infrastructure/mariadb-model\\
-SVC_STOP Zenoss.cse/Infrastructure/mariadb-events\\
-SVC_WAIT Zenoss.cse/Infrastructure/mariadb-events Zenoss.cse/Infrastructure/mariadb-model stopped 600\\
-SVC_EXEC NO_COMMIT 'Zenoss.cse/Zenoss/User Interface/Zope' /opt/zenoss/bin/zenmigrate --step=AddGlobalConfToMariadb --dont-bump\\
-SVC_USE gcr.io/zing-registry-188222/mariadb:%VERSION%_%VERSION_TAG% zenoss/cse_7.0 service Zenoss.cse/Infrastructure/mariadb-model\\
-SVC_EXEC NO_COMMIT 'Zenoss.cse/Infrastructure/mariadb-model' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql'\\
-SVC_USE gcr.io/zing-registry-188222/mariadb:%VERSION%_%VERSION_TAG% zenoss/cse_7.0 service Zenoss.cse/Infrastructure/mariadb-events\\
-SVC_EXEC NO_COMMIT 'Zenoss.cse/Infrastructure/mariadb-events' /bin/bash -c 'chown -R mysql:mysql /var/lib/mysql'"
+MIGRATE_MARIADB_SERVICES="SVC_USE gcr.io/zing-registry-188222/mariadb:%VERSION%_%VERSION_TAG% zenoss/cse_7.0 service Zenoss.cse/Infrastructure/mariadb-model\\
+SVC_USE gcr.io/zing-registry-188222/mariadb:%VERSION%_%VERSION_TAG% zenoss/cse_7.0 service Zenoss.cse/Infrastructure/mariadb-events"
 fi
 
 sed -i "s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g;" /root/%SHORT_VERSION%.x/upgrade-cse.txt
@@ -59,6 +51,7 @@ else
 fi
 
 sed -i "s@%UPGRADE_IMPACT_SERVICE%@${UPGRADE_IMPACT_SERVICE}@g;" /root/%SHORT_VERSION%.x/upgrade-cse.txt
+sed -i -e "s/%FROM_VERSION%/${FROM_VERSION}/" /root/%SHORT_VERSION%.x/upgrade-cse.txt
 
 echo "Preparing to update from "$FROM_VERSION" to "$TO_VERSION" version."
 FROM_VERSION_SHORT=$(echo ${FROM_VERSION} | cut -d'.' -f1,2)
