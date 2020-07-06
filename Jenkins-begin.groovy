@@ -28,7 +28,7 @@ node('build-zenoss-product') {
     def IGNORE_TEST_IMAGE_FAILURE = params.IGNORE_TEST_IMAGE_FAILURE   // e.g. "true", "false"
     def NOTIFY_TEAM = "false"
     def TEAM_CHANNEL = ""
-    def SVCDEF_GIT_REF = ''
+    def SVCDEF_GIT_REF = ""
 
     println("Build parameters:")
     println("BRANCH = ${BRANCH}")
@@ -126,7 +126,6 @@ node('build-zenoss-product') {
             }
         }
 
-        def SVCDEF_GIT_REF = ""
         def ZENOSS_VERSION = ""
         def IMAGE_PROJECT = ""
         def productImageID = ""
