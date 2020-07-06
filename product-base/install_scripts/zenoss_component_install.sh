@@ -155,6 +155,9 @@ rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
 # TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT ZenUITests-based TESTS
 rm -rf ${ZENHOME}/Products/ZenUITests
 
+# Install the service migration package
+run "pip install --no-index ${ZENHOME}/install_scripts/zenservicemigration*.whl"
+
 echo "Cleaning up after install..."
 find ${ZENHOME} -name \*.py[co] -delete
 /sbin/scrub.sh

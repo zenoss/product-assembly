@@ -32,11 +32,18 @@ SVC_USE gcr.io/zing-registry-188222/cse_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% 
 SVC_USE gcr.io/zing-registry-188222/otsdb-bigtable:%OTSDB_BIGTABLE_VERSION%
 SVC_USE gcr.io/zing-registry-188222/zing-connector:%ZING_CONNECTOR_VERSION%
 SVC_USE gcr.io/zing-registry-188222/api-key-proxy:%ZING_API_PROXY_VERSION%
-SVC_USE gcr.io/zing-registry-188222/mariadb:%VERSION%_%VERSION_TAG%
+SVC_USE gcr.io/zing-registry-188222/mariadb:%VERSION%_%VERSION_TAG% zenoss/mariadb
 
 # Stop Zenoss
 SVC_STOP Zenoss.cse auto
 SVC_WAIT Zenoss.cse stopped 600
+
+# Add timeout here as a temporary workaround for unknown issue when 
+# underlying SVC_EXEC commands running using old images or old service definitions
+SVC_EXEC NO_COMMIT "Zenoss.cse" sleep 120
+
+# Run the service migrations
+SVC_EXEC NO_COMMIT "Zenoss.cse" /opt/zenoss/bin/zensvcmigrate --from %FROM_VERSION%
 
 # Run impact upgrade if we upgrade from Impact < $UPGRADE_IMPACT_VERSION
 %UPGRADE_IMPACT_SERVICE%
@@ -46,9 +53,9 @@ SVC_WAIT Zenoss.cse stopped 600
 # - start mariadb services and run mysql_upgrade
 %MIGRATE_MARIADB_SERVICES%
 
-# Upgrade the mariadb database(s)
-SVC_EXEC NO_COMMIT "Zenoss.cse/Infrastructure/mariadb-model" /opt/zenoss/bin/upgrade_database.sh
-SVC_EXEC NO_COMMIT "Zenoss.cse/Infrastructure/mariadb-events" /opt/zenoss/bin/upgrade_database.sh
+# Run mysql_upgrade
+SVC_EXEC NO_COMMIT Zenoss.cse/Infrastructure/mariadb-model /opt/zenoss/bin/upgrade_database.sh mariadb-model
+SVC_EXEC NO_COMMIT Zenoss.cse/Infrastructure/mariadb-events /opt/zenoss/bin/upgrade_database.sh mariadb-events
 
 # Start all our dependent services
 SVC_START Zenoss.cse/Infrastructure/Impact

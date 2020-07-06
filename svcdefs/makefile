@@ -71,9 +71,6 @@ ifndef SVCDEF_GIT_REF
 	$(error SVCDEF_GIT_REF is not set)
 endif
 endif
-ifndef TARGET_PRODUCT
-	$(error TARGET_PRODUCT is not set)
-endif
 ifndef VERSION
 	$(error VERSION is not set)
 endif
@@ -88,6 +85,9 @@ buildTempDir:
 	if [ ! -d $(TEMP_DIR) ]; then mkdir $(TEMP_DIR); fi
 
 build: verifyInputs buildTempDir
+ifndef TARGET_PRODUCT
+	$(error TARGET_PRODUCT is not set)
+endif
 ifndef SVCDEF_GIT_READY
 	cd $(TEMP_DIR) && git clone git@github.com:zenoss/zenoss-service.git
 	cd $(TEMP_DIR)/zenoss-service && git checkout $(SVCDEF_GIT_REF)
@@ -113,5 +113,9 @@ endif
 		VERSION=$(VERSION) \
 		make docker_svcdef-$(TARGET_PRODUCT)
 
+migrations: $(SVC_REPO)/HEAD verifyInputs
+
+
 clean:
-	-rm -rf $(TEMP_DIR)
+	@-rm -rf $(TEMP_DIR)
+	@-rm *.whl
