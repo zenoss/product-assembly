@@ -1,7 +1,7 @@
 [
     {
         "name": "ZenPacks.zenoss.AWS",
-        "requirement": "ZenPacks.zenoss.AWS===5.1.0",
+        "requirement": "ZenPacks.zenoss.AWS===5.0.1",
         "type": "zenpack"
     },
     {
