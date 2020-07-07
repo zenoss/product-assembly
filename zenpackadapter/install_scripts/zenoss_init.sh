@@ -65,6 +65,6 @@ if [ -f "${ZENHOME}/install_scripts/zenpacks.json" ]; then
     fi
     su - zenoss  -c "${ZENHOME}/install_scripts/zp_install.py ${ZENHOME}/install_scripts/zenpacks.json ${ZENHOME}/packs ${ZENPACK_BLACKLIST} ${LINK_INSTALL}"
 
-    su - zenoss  -c "mkdir -p /opt/zenoss/etc/nub/system; /opt/zenoss/Products/ZenNub/update_zenpacks.py"
+    su - zenoss  -c "mkdir -p /opt/zenoss/etc/zenpackadapter/system; /opt/zenoss/Products/ZenPackAdapter/update_zenpacks.py"
 
 fi

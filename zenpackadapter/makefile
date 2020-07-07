@@ -1,7 +1,7 @@
 
 include ../versions.mk
 
-IMAGENAME  = zennub
+IMAGENAME  = zenpackadapter
 MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
 # Note: I'm only using the devtools image because I want to upgrade
@@ -10,7 +10,7 @@ FROM_IMAGE ?= zenoss-centos-base:1.2.23.devtools
 
 TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
-DEV_ENV ?= zennub
+DEV_ENV ?= zenpackadapter
 ZENDEV_BASE_TAG = zendev/$(IMAGENAME)-base:$(DEV_ENV)
 ZENDEV_TAG = zendev/$(IMAGENAME):$(DEV_ENV)
 

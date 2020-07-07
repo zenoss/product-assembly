@@ -70,11 +70,11 @@ docker run \
 	-v ${ZENHOME}/zenhome:/opt/zenoss \
 	-v ${ZENHOME}/var_zenoss:/var/zenoss \
 	-v ${SRCROOT}/github.com/zenoss:/mnt/src \
-	-v ${PWD}:/mnt/zennub \
+	-v ${PWD}:/mnt/zenpackadapter \
 	-v ${DEVIMG_WD}:/mnt/devimg \
         -v ${HOME}/.m2:/home/zenoss/.m2 \
         -t ${BASE_TAG} \
-	/mnt/zennub/create_devimg.sh
+	/mnt/zenpackadapter/create_devimg.sh
 
 echo "Committing all of the changes to ${TAG}"
 CONTAINER_ID=`cat ${CONTAINER_ID_FILE}`

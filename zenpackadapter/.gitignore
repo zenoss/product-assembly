@@ -1,5 +1,4 @@
 component_info
 Dockerfile
 zenpacks/
-upgrade-nub.sh
 devimg/*.log
