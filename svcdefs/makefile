@@ -116,6 +116,8 @@ $(SVC_REPO_DIR):
 	@echo $@
 
 migrations: $(SVC_REPO)/HEAD verifyInputs
+	make -C $(dir $(<D)) build-migrations
+	cp $(dir $(<D))/output/*.whl ./
 
 clean:
 	@-rm -rf $(TEMP_DIR)
