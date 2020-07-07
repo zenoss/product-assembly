@@ -23,17 +23,19 @@ include ../versions.mk
 # BUILD_NUMBER      the build number for this product pipeline build; defaults to YYYYMMDDhhmmss
 # IMAGE_NUMBER      the docker image number for this build; defaults to DEV
 # MATURITY          the image maturity level (e.g. 'unstable', 'testing', 'stable'); defaults to DEV
-# SVCDEF_GIT_READY  a flag that is only set when the svcdef repo has already been checked out
-#                   by the caller. If this flag is set, SVCDEF_GIT_REF is ignored.
 # SVCDEF_GIT_REF    the git branch name, tag name or SHA for the version of the
 #                   github.com:zenoss/zenoss-service repo to checkout and build
-#                   Ignored (i.e. optional) if SVCDEF_GET_READY is set; required if
-#                   SVCDEF_GIT_READY is NOT set.
 #
 
 BUILD_NUMBER ?= $(shell date +%Y%m%d%H%M%S)
 IMAGE_NUMBER ?= DEV
 MATURITY     ?= DEV
+
+TEMP_DIR := src
+SVC_REPO_DIR := $(TEMP_DIR)/zenoss-service
+SVC_REPO := $(SVC_REPO_DIR)/.git
+
+.PHONY: clean default build repo_dir verifyInputs
 
 verifyInputs:
 ifndef BUILD_NUMBER
@@ -66,34 +68,24 @@ endif
 ifndef SHORT_VERSION
 	$(error SHORT_VERSION is not set)
 endif
-ifndef SVCDEF_GIT_READY
 ifndef SVCDEF_GIT_REF
 	$(error SVCDEF_GIT_REF is not set)
-endif
 endif
 ifndef VERSION
 	$(error VERSION is not set)
 endif
 
-TEMP_DIR := build
-
-.PHONY: verifyInputs clean
 
 default: build
 
-buildTempDir:
-	if [ ! -d $(TEMP_DIR) ]; then mkdir $(TEMP_DIR); fi
+repo_dir: $(SVC_REPO_DIR)
 
-build: verifyInputs buildTempDir
+build: $(SVC_REPO)/HEAD verifyInputs
 ifndef TARGET_PRODUCT
 	$(error TARGET_PRODUCT is not set)
 endif
-ifndef SVCDEF_GIT_READY
-	cd $(TEMP_DIR) && git clone git@github.com:zenoss/zenoss-service.git
-	cd $(TEMP_DIR)/zenoss-service && git checkout $(SVCDEF_GIT_REF)
-endif
     #delete infrastructure services not used in GCP
-	cd $(TEMP_DIR)/zenoss-service && \
+	cd $(SVC_REPO_DIR) && \
         rm -rf services/Zenoss.cse/Infrastructure/HBase && \
         rm -rf services/Zenoss.cse/Infrastructure/HDFS && \
         rm -rf services/Zenoss.cse/Infrastructure/opentsdb/writer && \
@@ -113,8 +105,17 @@ endif
 		VERSION=$(VERSION) \
 		make docker_svcdef-$(TARGET_PRODUCT)
 
-migrations: $(SVC_REPO)/HEAD verifyInputs
+# Using $(SVC_REPO)/HEAD as the target because GNU make appears to
+# consider a hidden directory target as always unsatisfied.
+$(SVC_REPO)/HEAD: | $(SVC_REPO_DIR)
+	cd $(SVC_REPO_DIR) && git clone git@github.com:zenoss/zenoss-service.git .
+	cd $(SVC_REPO_DIR) && git checkout $(SVCDEF_GIT_REF)
 
+$(SVC_REPO_DIR):
+	@mkdir -p $@
+	@echo $@
+
+migrations: $(SVC_REPO)/HEAD verifyInputs
 
 clean:
 	@-rm -rf $(TEMP_DIR)
