@@ -14,7 +14,6 @@ BUILD_DEPENDENCIES = \
 	$(SHORT_VERSION).x/pull-docker-images.sh \
 	Dockerfile \
 	component_info/versions.sh \
-	component_info/${MIGRATION_WHEEL} \
 	$(COPIED_DEPS)
 
 build-base-image: $(BUILD_DEPENDENCIES)
