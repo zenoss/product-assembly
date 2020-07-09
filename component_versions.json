@@ -31,9 +31,9 @@
     {
         "name": "service-migration",
         "git_owner": "control-center",
-        "type": "download",
-        "version": "1.1.15",
-        "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl"
+        "type": "jenkins",
+        "version": "develop",
+        "jenkins.job": "ControlCenter/job/service-migration/job/develop"
     },
     {
         "URL": "http://zenpip.zenoss.eng/packages/zenoss.extjs-{version}.tar.gz",
