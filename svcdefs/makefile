@@ -121,4 +121,4 @@ migrations: $(SVC_REPO)/HEAD verifyInputs
 
 clean:
 	@-rm -rf $(TEMP_DIR)
-	@-rm *.whl
+	@-rm -f *.whl
