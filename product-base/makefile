@@ -52,6 +52,9 @@ component_info/${MIGRATION_WHEEL}: | component_info
 component_info/${MIGRATION_WHEEL}: ../svcdefs/${MIGRATION_WHEEL}
 	@cp ../svcdefs/${MIGRATION_WHEEL} $@
 
+../svcdefs/${MIGRATION_WHEEL}:
+	@make -C ../svcdefs clean migrations
+
 $(SHORT_VERSION).x/pull-docker-images.sh: | $(SHORT_VERSION).x
 $(SHORT_VERSION).x/pull-docker-images.sh: pull-docker-images.sh.in
 	@sed \
