@@ -111,4 +111,4 @@ $(SVC_REPO_DIR):
 
 clean:
 	@-rm -rf $(TEMP_DIR)
-	@-rm *.whl
+	@-rm -f *.whl
