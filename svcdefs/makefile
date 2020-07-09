@@ -33,11 +33,13 @@ BUILD_NUMBER ?= $(shell date +%Y%m%d%H%M%S)
 IMAGE_NUMBER ?= DEV
 MATURITY     ?= DEV
 
+MIGRATION_WHEEL = zenservicemigration-$(VERSION)-py2-none-any.whl
+
 TEMP_DIR := src
 SVC_REPO_DIR := $(TEMP_DIR)/zenoss-service
 SVC_REPO := $(SVC_REPO_DIR)/.git
 
-.PHONY: clean default build repo_dir verifyInputs
+.PHONY: clean default build repo_dir verifyInputs migrations
 
 verifyInputs:
 ifndef BUILD_NUMBER
@@ -85,8 +87,14 @@ endif
 		VERSION=$(VERSION) \
 		BASE_IMAGE_VERSION=$(ZENOSS_CENTOS_BASE_VERSION)
 
-migrations: $(SVC_REPO)/HEAD verifyInputs
-	make -C $(dir $(<D)) build-migrations \
+migrations: $(MIGRATION_WHEEL) verifyInputs
+
+$(MIGRATION_WHEEL): $(SVC_REPO_DIR)/output/$(MIGRATION_WHEEL)
+	cp $(SVC_REPO_DIR)/output/$@ $@
+
+$(SVC_REPO_DIR)/output/$(MIGRATION_WHEEL): $(SVC_REPO)/HEAD 
+	git -C $(SVC_REPO_DIR) checkout $(SVCDEF_GIT_REF)
+	make -C $(SVC_REPO_DIR) build-migrations \
 		BUILD_NUMBER=$(BUILD_NUMBER) \
 		hbase_VERSION=$(HBASE_VERSION) \
 		hdfs_VERSION=$(HDFS_VERSION) \
@@ -97,13 +105,11 @@ migrations: $(SVC_REPO)/HEAD verifyInputs
 		SHORT_VERSION=$(SHORT_VERSION) \
 		VERSION=$(VERSION) \
 		BASE_IMAGE_VERSION=$(ZENOSS_CENTOS_BASE_VERSION)
-	cp $(dir $(<D))/output/*.whl ./
 
 # Using $(SVC_REPO)/HEAD as the target because GNU make appears to
 # consider a hidden directory target as always unsatisfied.
 $(SVC_REPO)/HEAD: | $(SVC_REPO_DIR)
-	cd $(SVC_REPO_DIR) && git clone git@github.com:zenoss/zenoss-service.git .
-	cd $(SVC_REPO_DIR) && git checkout $(SVCDEF_GIT_REF)
+	git -C $(SVC_REPO_DIR) clone git@github.com:zenoss/zenoss-service.git .
 
 $(SVC_REPO_DIR):
 	@mkdir -p $@
