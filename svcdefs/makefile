@@ -39,6 +39,8 @@ SVC_REPO := $(SVC_REPO_DIR)/.git
 
 .PHONY: clean default build repo_dir verifyInputs migrations
 
+default: build
+
 verifyInputs:
 ifndef BUILD_NUMBER
 	$(error BUILD_NUMBER is not set)
@@ -77,35 +79,30 @@ ifndef VERSION
 	$(error VERSION is not set)
 endif
 
-
-default: build
-
 repo_dir: $(SVC_REPO_DIR)
 
 build: $(SVC_REPO)/HEAD verifyInputs
 ifndef TARGET_PRODUCT
 	$(error TARGET_PRODUCT is not set)
 endif
-    #delete infrastructure services not used in GCP
+	# Delete infrastructure services not used in a CZ
+	cd $(SVC_REPO_DIR)/services/Zenoss.cse/Infrastructure && \
+		rm -rf HBase HDFS opentsdb/writer opentsdb/reader
 	cd $(SVC_REPO_DIR) && \
-        rm -rf services/Zenoss.cse/Infrastructure/HBase && \
-        rm -rf services/Zenoss.cse/Infrastructure/HDFS && \
-        rm -rf services/Zenoss.cse/Infrastructure/opentsdb/writer && \
-        rm -rf services/Zenoss.cse/Infrastructure/opentsdb/reader && \
-		BUILD_NUMBER=$(BUILD_NUMBER) \
-		hbase_VERSION=$(HBASE_VERSION) \
-		hdfs_VERSION=$(HDFS_VERSION) \
-		zing_connector_VERSION=$(ZING_CONNECTOR_VERSION) \
-		zing_api_proxy_VERSION=$(ZING_API_PROXY_VERSION) \
-		otsdb_bigtable_VERSION=$(OTSDB_BIGTABLE_VERSION) \
-		impact_VERSION=$(IMPACT_VERSION) \
-		IMAGE_NUMBER=$(IMAGE_NUMBER) \
-		MILESTONE=$(MATURITY) \
-		RELEASE_PHASE=$(RELEASE_PHASE) \
-		opentsdb_VERSION=$(OPENTSDB_VERSION) \
-		SHORT_VERSION=$(SHORT_VERSION) \
-		VERSION=$(VERSION) \
-		make docker_svcdef-$(TARGET_PRODUCT)
+		make docker_svcdef-$(TARGET_PRODUCT) \
+			BUILD_NUMBER=$(BUILD_NUMBER) \
+			hbase_VERSION=$(HBASE_VERSION) \
+			hdfs_VERSION=$(HDFS_VERSION) \
+			zing_connector_VERSION=$(ZING_CONNECTOR_VERSION) \
+			zing_api_proxy_VERSION=$(ZING_API_PROXY_VERSION) \
+			otsdb_bigtable_VERSION=$(OTSDB_BIGTABLE_VERSION) \
+			impact_VERSION=$(IMPACT_VERSION) \
+			IMAGE_NUMBER=$(IMAGE_NUMBER) \
+			MILESTONE=$(MATURITY) \
+			RELEASE_PHASE=$(RELEASE_PHASE) \
+			opentsdb_VERSION=$(OPENTSDB_VERSION) \
+			SHORT_VERSION=$(SHORT_VERSION) \
+			VERSION=$(VERSION)
 
 migrations: $(MIGRATION_WHEEL) verifyInputs
 
@@ -113,13 +110,13 @@ $(MIGRATION_WHEEL): $(SVC_REPO_DIR)/output/$(MIGRATION_WHEEL)
 	cp $(SVC_REPO_DIR)/output/$@ $@
 
 $(SVC_REPO_DIR)/output/$(MIGRATION_WHEEL): $(SVC_REPO)/HEAD 
-	git -C $(SVC_REPO_DIR) checkout $(SVCDEF_GIT_REF)
+	cd $(SVC_REPO_DIR) && git checkout $(SVCDEF_GIT_REF)
 	make -C $(SVC_REPO_DIR) build-migrations VERSION=$(VERSION)
 
 # Using $(SVC_REPO)/HEAD as the target because GNU make appears to
 # consider a hidden directory target as always unsatisfied.
 $(SVC_REPO)/HEAD: | $(SVC_REPO_DIR)
-	git -C $(SVC_REPO_DIR) clone git@github.com:zenoss/zenoss-service.git .
+	cd $(SVC_REPO_DIR) && git clone git@github.com:zenoss/zenoss-service.git .
 
 $(SVC_REPO_DIR):
 	@mkdir -p $@
