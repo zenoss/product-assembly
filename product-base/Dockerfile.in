@@ -1,6 +1,6 @@
 FROM zenoss/%FROM_IMAGE%
 
-ENV ZENHOME=/opt/zenoss
+ENV ZENHOME=/opt/zenoss BUILD_NUMBER=%BUILD_NUMBER%
 
 # TODO: fix this. The hubpasswd file should be in the service definition
 ADD hubpasswd /opt/zenoss/etc/
