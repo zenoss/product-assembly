@@ -1,5 +1,11 @@
 #!/bin/bash
 
+echo "ZENHOME is '${ZENHOME}'"
+if [ -z "${ZENHOME}" ]; then
+	echo "ZENHOME is not defined" >&2
+	exit 1
+fi
+
 if [ $# -ne 0 -a $# -ne 2 ]
 then
 	echo "ERROR: $# is an invalid number of arguments; only 0 or 2 arguments are allowed"

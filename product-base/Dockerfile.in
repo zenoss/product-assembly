@@ -1,10 +1,169 @@
-FROM zenoss/%FROM_IMAGE%
+FROM centos:7 AS pre
 
-ENV ZENHOME=/opt/zenoss BUILD_NUMBER=%BUILD_NUMBER%
+RUN groupadd epmd      -r -g 1201
+RUN useradd  epmd      -r -g epmd      -u 1201 -d /tmp -s /sbin/nologin -c "Erlang Port Mapper Daemon"
 
-# TODO: fix this. The hubpasswd file should be in the service definition
-ADD hubpasswd /opt/zenoss/etc/
-ADD install_scripts component_info /opt/zenoss/install_scripts/
-ADD %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
+RUN groupadd nagios    -r -g 1202
+RUN useradd  nagios    -r -g nagios    -u 1202 -d /var/spool/nagios -s /sbin/nologin
 
-RUN /opt/zenoss/install_scripts/zenoss_component_install.sh %INSTALL_OPTIONS%
+RUN groupadd rabbitmq  -r -g 1203
+RUN useradd  rabbitmq  -r -g rabbitmq  -u 1203 -d /var/lib/rabbitmq -c "RabbitMQ messaging server"
+
+RUN groupadd redis     -r -g 1204
+RUN useradd  redis     -r -g redis     -u 1204 -d /var/lib/redis -s /sbin/nologin -c "Redis Database Server"
+
+RUN groupadd memcached -r -g 1205
+RUN useradd  memcached -r -g memcached -u 1205 -d /run/memcached -s /sbin/nologin -c "Memcached daemon"
+
+RUN groupadd zenoss       -g 1206
+RUN useradd  zenoss       -g zenoss    -u 1337 -c "Zenoss Account"
+
+# ===========================================================================================================
+FROM centos:7 AS base
+
+COPY --from=pre /etc/passwd /etc/passwd- /etc/shadow /etc/shadow- /etc/group /etc/
+COPY --from=pre /home/zenoss /home/zenoss/
+
+COPY %RPM_LIBSMI% /tmp/
+
+RUN yum update -y --setopt=tsflags="nodocs" \
+	&& yum install -y --setopt=tsflags="nodocs" epel-release \
+    && yum install -y --setopt=tsflags="nodocs" httpie \
+	&& yum install -y --setopt=tsflags="nodocs" %RPM_PACKAGES% \
+	&& yum install -y --setopt=tsflags="nodocs" /tmp/%RPM_LIBSMI% \
+	&& yum -y erase epel-release \
+	&& yum clean all
+
+ENV JAVA_HOME /usr/lib/jvm/jre
+ENV TERM xterm
+ENV ZENHOME=/opt/zenoss BUILD_NUMBER=%BUILD%
+
+# ===========================================================================================================
+FROM base AS build
+
+RUN wget -q https://raw.githubusercontent.com/phusion/baseimage-docker/master/image/bin/setuser -O /sbin/setuser \
+    && sed -ie 's/python3/python/' /sbin/setuser \
+    && chmod a+x /sbin/setuser 
+
+# Install jq to work with JSON
+RUN wget -q https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -O /usr/bin/jq \
+	&& chmod a+x /usr/bin/jq
+
+# Add TERM=xterm to /root/.bashrc
+RUN echo "export TERM=xterm" >> /root/.bashrc
+RUN echo -e "NODENAME=rabbit@rbt0\nNODE_IP_ADDRESS=0.0.0.0" > /etc/rabbitmq/rabbitmq-env.conf
+
+COPY scrub.sh /sbin/scrub.sh
+RUN chmod +x /sbin/scrub.sh
+
+COPY my.cnf /etc/my.cnf
+
+COPY %PYDEPS% /tmp/
+COPY %JSBUILDER% /tmp/
+COPY %PHANTOMJS% /tmp/
+COPY %GETPIP% /tmp/
+
+COPY %PRODBIN% %METRIC_CONSUMER% %QUERY% %PROTOCOLS% %PYNETSNMP% %EXTJS% %ZEP% %METRICSHIPPER% %ZMINION% %REDISMON% %ZPROXY% %TOOLBOX% %MIGRATION% /tmp/
+
+# COPY zenoss_deps_install.sh /tmp/
+
+RUN mkdir -p /opt/zenoss
+RUN chown zenoss:zenoss /opt/zenoss /home/zenoss
+
+SHELL ["/bin/su", "-", "zenoss", "-c"]
+RUN python /tmp/%GETPIP% --user --no-cache-dir
+RUN pip install --user --no-cache-dir virtualenv==16.7.10
+RUN virtualenv /opt/zenoss && virtualenv --relocatable /opt/zenoss
+RUN echo -e "export ZENHOME=/opt/zenoss\nsource /opt/zenoss/bin/activate\nexport PYTHONPATH=/opt/zenoss/lib/python\nexport PATH=/opt/zenoss/bin:/opt/zenoss/var/ext/bin:$PATH\n" >> /home/zenoss/.bashrc
+
+RUN mkdir -p /tmp/pydeps \
+	&& tar -x -f /tmp/%PYDEPS% --strip-components=1 -C /tmp/pydeps \
+	&& cd /tmp/pydeps \
+	&& pip install --no-index --no-cache-dir --find-links=./wheelhouse -r ./requirements.txt wheel \
+	&& cat patches/* | patch -d $(python -c "import pip, os.path; print os.path.dirname(pip.__path__[0])") -p0
+
+RUN unzip -d /tmp/JSBuilder /tmp/%JSBUILDER%
+RUN mkdir -p /opt/zenoss/share/java/sencha_jsbuilder-2
+RUN cp /tmp/JSBuilder/*.jar /opt/zenoss/share/java/sencha_jsbuilder-2
+RUN cp /tmp/JSBuilder/Readme.txt /opt/zenoss/share/java/sencha_jsbuilder-2
+
+RUN mkdir -p /tmp/phantomjs
+RUN tar -x -f /tmp/%PHANTOMJS% --strip-components=1 -C /tmp/phantomjs
+RUN cp /tmp/phantomjs/bin/phantomjs /opt/zenoss/bin/
+
+# Install the zenoss-prodbin component
+RUN tar -C ${ZENHOME} -xzvf /tmp/%PRODBIN% --exclude=${ZENHOME}/Products/ZenModel/migrate/tests --exclude=${ZENHOME}/Products/ZenUITests
+# TODO: remove this and make sure the tar file contains the proper links
+RUN mkdir -p ${ZENHOME}/etc/supervisor ${ZENHOME}/var/zauth ${ZENHOME}/libexec
+RUN ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf
+RUN pip install --no-index --no-cache-dir ${ZENHOME}/dist/*.whl
+RUN mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/
+RUN rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy
+RUN sed -e 's/%VERSION_STRING%/%VERSION%/g; s/%BUILD_NUMBER%/%BUILD%/g' ${ZENHOME}/Products/ZenModel/ZVersion.py.in > ${ZENHOME}/Products/ZenModel/ZVersion.py
+
+# Install MetricConsumer
+RUN tar -C ${ZENHOME} -xzvf /tmp/%METRIC_CONSUMER%
+RUN chmod +x ${ZENHOME}/bin/metric-consumer-app.sh
+RUN ln -s ${ZENHOME}/etc/metric-consumer-app/metric-consumer-app_supervisor.conf ${ZENHOME}/etc/supervisor/metric-consumer-app_supervisor.conf
+
+# Install CentralQuery
+RUN tar -C ${ZENHOME} -xzvf /tmp/%QUERY%
+RUN chmod +x ${ZENHOME}/bin/central-query.sh
+RUN ln -s ${ZENHOME}/etc/central-query/central-query_supervisor.conf ${ZENHOME}/etc/supervisor/central-query_supervisor.conf
+
+# Install zenoss-protocols
+RUN pip install --no-index --no-cache-dir /tmp/%PROTOCOLS%
+
+# Install pynetsnmp
+RUN pip install --no-index --no-cache-dir /tmp/%PYNETSNMP%
+
+# Install zenoss-extjs
+RUN pip install --no-index --no-cache-dir /tmp/%EXTJS%
+
+# Install zep
+RUN tar -C ${ZENHOME} -xzvf /tmp/%ZEP%
+
+# Install metricshipper
+RUN tar -C ${ZENHOME} -xzvf /tmp/%METRICSHIPPER%
+
+# Install zminion
+RUN tar -C ${ZENHOME} -xzvf /tmp/%ZMINION%
+
+# Install redis-mon
+RUN tar -C ${ZENHOME} -xzvf /tmp/%REDISMON%
+
+# Install zproxy
+RUN tar --strip-components=2 -C ${ZENHOME} -xzvf /tmp/%ZPROXY%
+
+# Install zenoss.toolobx
+RUN pip install --no-index --no-cache-dir /tmp/%TOOLBOX%
+
+# Install the service migration SDK
+RUN pip install --no-index --no-cache-dir /tmp/%MIGRATION%
+
+RUN find /opt/zenoss -name \*.py[co] -delete
+
+# Make sure SHELL has default value
+SHELL ["/bin/sh", "-c"]
+
+COPY hubpasswd /opt/zenoss/etc/
+COPY install_scripts component_info /opt/zenoss/install_scripts/
+COPY %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
+
+# RUN /opt/zenoss/install_scripts/zenoss_component_install.sh %INSTALL_OPTIONS%
+
+# ===========================================================================================================
+FROM base
+
+LABEL maintainer="Zenoss <dev@zenoss.com>"
+
+COPY --from=build /etc/my.cnf /etc/passwd /etc/passwd- /etc/shadow /etc/shadow- /etc/group /etc/
+COPY --from=build /etc/rabbitmq/rabbitmq-env.conf /etc/rabbitmq/
+COPY --from=build /sbin/setuser /sbin/scrub.sh /sbin/
+COPY --from=build /usr/bin/jq /usr/bin/
+COPY --from=build /root/* /root/
+COPY --from=build /opt/zenoss /opt/zenoss/
+COPY --from=build /home/zenoss /home/zenoss/
+
+# Add symlink for vim
+RUN ln -s /usr/bin/vi /usr/bin/vim
