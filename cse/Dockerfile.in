@@ -1,0 +1,9 @@
+FROM %BASE_IMAGE%
+
+COPY /src/zphistory.json /src/licenses.cse.html /src/License.zenoss /opt/zenoss/
+COPY /src/licenses.cse.html /opt/zenoss/Products/ZenUI3/docs/licenses.html
+
+COPY /src/zenpacks.json /opt/zenoss/install_scripts/
+COPY /src/zenpacks_artifact.log /opt/zenoss/log/
+
+COPY /src/zenpacks /opt/zenoss/packs/

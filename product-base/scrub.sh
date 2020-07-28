@@ -18,8 +18,8 @@ rm -rf /usr/share/i18n/locales/*
 mv /tmp/en_US /usr/share/i18n/locales/
 rm -vf /etc/yum/protected.d/*
 rm -rf /boot/*
-echo "yum clean"
-yum clean all
+# echo "yum clean"
+# yum clean all
 truncate -c -s 0 /var/log/yum.log
 rm -rf /var/lib/yum/yumdb/*
 rm -rf /var/lib/yum/history/*
@@ -27,4 +27,3 @@ rm -rf /var/cache/*
 rm -rf /var/tmp/*
 rm -rf /tmp/*
 find /usr/lib/python2.7/site-packages -name '*.pyc' -delete
-

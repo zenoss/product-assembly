@@ -1,4 +1,4 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 
 LABEL maintainer="Zenoss <dev@zenoss.com>"
 
@@ -14,36 +14,36 @@ RUN sed -i '/^deb.*multiverse/s/^/#\ /' /etc/apt/sources.list \
     && apt-get update -y \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y \
-          bash-completion \
-          ca-certificates \
-          curl            \
-          dnsutils        \
-          file            \
-          htop            \
-          iproute2        \
-          iputils-ping    \
-          less            \
-          lsof            \
-          mariadb-server  \
-          nano            \
-          netcat          \
-          net-tools       \
-          openssh-client  \
-          patch           \
-          python2.7       \
-          python-mysqldb  \
-          strace          \
-          sysstat         \
-          tcpdump         \
-          telnet          \
-          tmux            \
-          traceroute      \
-          tree            \
-          unzip           \
-          vim-tiny        \
-          wget            \
-          unzip           \
-          zip             \
+		bash-completion \
+		ca-certificates \
+		curl            \
+		dnsutils        \
+		file            \
+		htop            \
+		iproute2        \
+		iputils-ping    \
+		less            \
+		lsof            \
+		mariadb-server  \
+		nano            \
+		netcat          \
+		net-tools       \
+		openssh-client  \
+		patch           \
+		python2.7       \
+		python-mysqldb  \
+		strace          \
+		sysstat         \
+		tcpdump         \
+		telnet          \
+		tmux            \
+		traceroute      \
+		tree            \
+		unzip           \
+		vim-tiny        \
+		wget            \
+		unzip           \
+		zip             \
     && apt-get check \
     && apt-get clean
 
@@ -55,9 +55,7 @@ RUN wget -qO- https://bootstrap.pypa.io/get-pip.py | python; \
     pip install --no-cache-dir supervisor requests \
     && ln -s /usr/local/bin/supervisord /bin/supervisord
 
-COPY exported.tar /tmp/exported.tar
-
-RUN tar -xf /tmp/exported.tar -C / && rm /tmp/exported.tar
+ADD exported.tar /
 
 RUN touch /var/log/mysqld.log; \
     chown mysql:mysql /var/log/mysqld.log; \

@@ -12,70 +12,78 @@ REDISMON = $(shell ../artifact.py filename ../component_versions.json redis-mon)
 ZPROXY = $(shell ../artifact.py filename ../component_versions.json zproxy)
 TOOLBOX = $(shell ../artifact.py filename ../component_versions.json zenoss.toolbox)
 MIGRATION = $(shell ../artifact.py filename ../component_versions.json service-migration)
+MODEL_INDEX = $(shell ../artifact.py filename ../component_versions.json modelindex)
 
-COMPONENTS = $(PRODBIN) $(METRIC_CONSUMER) $(QUERY) $(PROTOCOLS) $(PYNETSNMP) $(EXTJS) $(ZEP) $(METRICSHIPPER) $(ZMINION) $(REDISMON) $(ZPROXY) $(TOOLBOX) $(MIGRATION)
+COMPONENTS = $(PRODBIN) $(METRIC_CONSUMER) $(QUERY) $(PROTOCOLS) $(PYNETSNMP) $(EXTJS) $(ZEP) $(METRICSHIPPER) $(ZMINION) $(REDISMON) $(ZPROXY) $(TOOLBOX) $(MIGRATION) $(MODEL_INDEX)
+
+COMPONENT_LOG = zenoss_component_artifact.log
 
 zenoss-prodbin: $(PRODBIN)
 
 $(PRODBIN):
-	@../artifact.py get ../component_versions.json zenoss-prodbin
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json zenoss-prodbin
 
 zenoss.metric.consumer: $(METRIC_CONSUMER)
 
 $(METRIC_CONSUMER):
-	@../artifact.py get ../component_versions.json zenoss.metric.consumer
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json zenoss.metric.consumer
 
 query: $(QUERY)
 
 $(QUERY):
-	@../artifact.py get ../component_versions.json query
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json query
 
 zenoss-protocols: $(PROTOCOLS)
 
 $(PROTOCOLS):
-	@../artifact.py get ../component_versions.json zenoss-protocols
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json zenoss-protocols
 
 pynetsnmp: $(PYNETSNMP)
 
 $(PYNETSNMP):
-	@../artifact.py get ../component_versions.json pynetsnmp
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json pynetsnmp
 
 zenoss-extjs: $(EXTJS)
 
 $(EXTJS):
-	@../artifact.py get ../component_versions.json zenoss-extjs
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json zenoss-extjs
 
 zenoss-zep: $(ZEP)
 
 $(ZEP):
-	@../artifact.py get ../component_versions.json zenoss-zep
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json zenoss-zep
 
 metricshipper: $(METRICSHIPPER)
 
 $(METRICSHIPPER):
-	@../artifact.py get ../component_versions.json metricshipper
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json metricshipper
 
 zminion: $(ZMINION)
 
 $(ZMINION):
-	@../artifact.py get ../component_versions.json zminion
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json zminion
 
 redis-mon: $(REDISMON)
 
 $(REDISMON):
-	@../artifact.py get ../component_versions.json redis-mon
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json redis-mon
 
 zproxy: $(ZPROXY)
 
 $(ZPROXY):
-	@../artifact.py get ../component_versions.json zproxy
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json zproxy
 
 zenoss.toolbox: $(TOOLBOX)
 
 $(TOOLBOX):
-	@../artifact.py get ../component_versions.json zenoss.toolbox
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json zenoss.toolbox
 
 service-migration: $(MIGRATION)
 
 $(MIGRATION):
-	@../artifact.py get ../component_versions.json service-migration
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json service-migration
+
+modelindex: $(MODEL_INDEX)
+
+$(MODEL_INDEX):
+	@../artifact.py get --log $(COMPONENT_LOG) ../component_versions.json modelindex

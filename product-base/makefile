@@ -7,16 +7,16 @@ include components.mk
 PYDEPS_VERSION = 5.6.4
 PHANTOMJS_VERSION = 1.9.7
 LIBSMI_VERSION = 0.5.0-1
+SOLR_VERSION = 1.0dev
 
-# pydeps package
 PYDEPS = pydeps-$(PYDEPS_VERSION)-el7-1.tar.gz
 PHANTOMJS = phantomjs-$(PHANTOMJS_VERSION)-linux-x86_64.tar.bz2
 RPM_LIBSMI = libsmi-$(LIBSMI_VERSION).el7.x86_64.rpm
 JSBUILDER = JSBuilder2.zip
+SOLR = zenoss-solr-$(SOLR_VERSION).tgz
 GET_PIP = get-pip.py
-RPM_PACKAGES = $(shell cat rpm_packages.txt)
 
-FROM_IMAGE ?= zenoss-centos-base:$(ZENOSS_CENTOS_BASE_VERSION)
+FROM_IMAGE ?= centos-base:$(CENTOS_BASE_VERSION)
 
 .PHONY: change-from-image build-base-image build build-devimg push clean
 
@@ -29,6 +29,8 @@ BUILD_DEPENDENCIES = \
 	Dockerfile \
 	component_info/versions.sh \
 	$(RPM_LIBSMI) $(PYDEPS) $(JSBUILDER) $(PHANTOMJS) $(GET_PIP) \
+	$(SOLR) \
+	$(MIGRATION_WHEEL) \
 	$(COMPONENTS) \
 	$(COPIED_DEPS)
 
@@ -36,7 +38,7 @@ build-base-image: scrub.sh $(BUILD_DEPENDENCIES)
 	docker build -t $(PRODUCT_BASE_IMAGE_ID) .
 	# docker build --no-cache=true -t $(PRODUCT_BASE_IMAGE_ID) .
 
-build: component_info/${MIGRATION_WHEEL} build-base-image
+build: build-base-image
 
 # To build the dev image, change the FROM_IMAGE value to use the .devtools base
 # image and then build like any other product-base image.
@@ -48,7 +50,9 @@ change-from-image:
 	# Force creation of a new Dockerfile to minimize rebuild confusion
 	@rm -f Dockerfile
 
-$(RPM_LIBSMI) $(PYDEPS) $(JSBUILDER) $(PHANTOMJS):
+get-components: $(COMPONENTS)
+
+$(RPM_LIBSMI) $(PYDEPS) $(JSBUILDER) $(PHANTOMJS) $(SOLR):
 	wget http://zenpip.zenoss.eng/packages/$@ -O $@
 
 $(GET_PIP):
@@ -70,11 +74,10 @@ component_info/versions.sh: | component_info
 component_info/versions.sh:
 	@echo "export VERSION=$(VERSION)" > $@
 
-component_info/${MIGRATION_WHEEL}: | component_info
-component_info/${MIGRATION_WHEEL}: ../svcdefs/${MIGRATION_WHEEL}
-	@cp ../svcdefs/${MIGRATION_WHEEL} $@
+$(MIGRATION_WHEEL): ../svcdefs/$(MIGRATION_WHEEL)
+	@cp $< $@
 
-../svcdefs/${MIGRATION_WHEEL}:
+../svcdefs/$(MIGRATION_WHEEL):
 	@make -C ../svcdefs clean migrations
 
 $(SHORT_VERSION).x/pull-docker-images.sh: | $(SHORT_VERSION).x
@@ -87,19 +90,17 @@ $(SHORT_VERSION).x/pull-docker-images.sh: pull-docker-images.sh.in
 
 Dockerfile: Dockerfile.in
 	@sed \
+		-e 's/%VERSION%/$(VERSION)/g' \
 		-e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g' \
-		-e 's/%FROM_IMAGE%/$(FROM_IMAGE)/g' \
-		-e 's/%INSTALL_OPTIONS%/$(INSTALL_OPTIONS)/g' \
+		-e 's/%BASE_VERSION%/$(CENTOS_BASE_VERSION)/g' \
 		-e 's/%BUILD%/$(BUILD_NUMBER)/g;' \
-		-e 's/%RPM_DEPS%/$(RPM_DEPS)/g' \
+		-e 's/%INSTALL_OPTIONS%/$(INSTALL_OPTIONS)/g' \
 		-e 's/%RPM_LIBSMI%/$(RPM_LIBSMI)/g' \
-		-e 's/%RPM_PACKAGES%/$(RPM_PACKAGES)/g' \
 		-e 's/%PYDEPS%/$(PYDEPS)/g' \
 		-e 's/%GETPIP%/$(GET_PIP)/g' \
 		-e 's/%JSBUILDER%/$(JSBUILDER)/g' \
 		-e 's/%PHANTOMJS%/$(PHANTOMJS)/g' \
 		-e 's/%PRODBIN%/$(PRODBIN)/g' \
-		-e 's/%VERSION%/$(VERSION)/g' \
 		-e 's/%METRIC_CONSUMER%/$(METRIC_CONSUMER)/g' \
 		-e 's/%QUERY%/$(QUERY)/g' \
 		-e 's/%PROTOCOLS%/$(PROTOCOLS)/g' \
@@ -112,4 +113,7 @@ Dockerfile: Dockerfile.in
 		-e 's/%ZPROXY%/$(ZPROXY)/g' \
 		-e 's/%TOOLBOX%/$(TOOLBOX)/g' \
 		-e 's/%MIGRATION%/$(MIGRATION)/g' \
+		-e 's/%SOLR%/$(SOLR)/g' \
+		-e 's/%MIGRATION_WHEEL%/$(MIGRATION_WHEEL)/g' \
+		-e 's/%MODEL_INDEX%/$(MODEL_INDEX)/g' \
 		$< > $@
