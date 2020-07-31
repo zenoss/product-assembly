@@ -6,7 +6,8 @@ MATURITY ?= DEV
 BUILD_NUMBER  ?= DEV
 # Note: I'm only using the devtools image because I want to upgrade
 # pyyaml to use CLoader, and doing so requires a compiler.
-FROM_IMAGE ?= zenoss-centos-base:1.2.23.devtools
+BUILD_IMAGE ?= zenoss-centos-base:1.2.23.devtools
+BASE_IMAGE ?= zenoss-centos-base:1.2.23
 
 TAG ?= zenoss/$(IMAGENAME):$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
@@ -41,7 +42,7 @@ component_info:
 	@mkdir component_info
 
 Dockerfile: Dockerfile.in
-	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%FROM_IMAGE%/$(FROM_IMAGE)/g; s/%INSTALL_OPTIONS%/$(INSTALL_OPTIONS)/g;' Dockerfile.in > $@
+	@sed -e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g; s/%BUILD_IMAGE%/$(BUILD_IMAGE)/g; s/%BASE_IMAGE%/$(BASE_IMAGE)/g; s/%INSTALL_OPTIONS%/$(INSTALL_OPTIONS)/g;' Dockerfile.in > $@
 
 zenpacks:
 	@mkdir $@

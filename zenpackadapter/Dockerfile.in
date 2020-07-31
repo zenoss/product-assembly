@@ -1,4 +1,4 @@
-FROM zenoss/%FROM_IMAGE%
+FROM zenoss/%BUILD_IMAGE% as build
 
 # maintener is redundant since base image is ours as well
 #MAINTAINER Zenoss <dev@zenoss.com>
@@ -23,3 +23,10 @@ COPY zenpacks /opt/zenoss/packs/
 
 # Initializes zenoss and installs zenpacks...
 RUN /opt/zenoss/install_scripts/create_zenoss.sh --no-quickstart
+
+FROM zenoss/%BASE_IMAGE%
+
+COPY --from=build /opt/zenoss /opt/zenoss/
+COPY --from=build /home/zenoss /home/zenoss/
+RUN yum install -y libyaml
+RUN mkdir /data /cfg ; chown zenoss:zenoss /data /cfg
