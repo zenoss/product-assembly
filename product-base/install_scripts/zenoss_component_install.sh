@@ -122,14 +122,14 @@ run "pip install --no-index  /tmp/servicemigration*"
 
 # Install zenoss-solr
 download_artifact "zenoss-solr"
-run "tar -C / -xzvf /tmp/zenoss-solr*"
-run "chown -R zenoss:zenoss /var/solr"
+tar -C / -xzvf /tmp/zenoss-solr*
+chown -R zenoss:zenoss /var/solr
 
 # Install Modelindex
 download_artifact "modelindex"
 run "mkdir /tmp/modelindex"
 run "tar -C /tmp/modelindex -xzvf /tmp/modelindex-*"
-run "pip install /tmp/modelindex/dist/zenoss.modelindex*"
+run "pip install --no-index /tmp/modelindex/dist/zenoss.modelindex*"
 # Copy the modelindex configsets into solr for bootstrapping.
 #  TODO:  when we move to external zookeeper for solr, do something else
 rm -rf /opt/solr/server/solr/configsets
