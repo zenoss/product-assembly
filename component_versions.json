@@ -28,24 +28,24 @@
         "version": "develop"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
         "name": "redis-mon",
         "type": "download",
-        "version": "0.1.2"
+        "version": "0.1.2",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz"
     },
     {
         "name": "service-migration",
-        "git_owner": "control-center",
         "type": "jenkins",
         "version": "develop",
+        "git_owner": "control-center",
         "jenkins.job": "ControlCenter/job/service-migration/job/develop"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/zenoss.extjs-{version}.tar.gz",
-        "git_ref": "master",
         "name": "zenoss-extjs",
         "type": "download",
-        "version": "4.1.3"
+        "version": "4.1.3",
+        "git_ref": "master",
+        "URL": "http://zenpip.zenoss.eng/packages/zenoss.extjs-{version}.tar.gz"
     },
     {
         "name": "zenoss-prodbin",
@@ -53,15 +53,15 @@
         "version": "develop"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl",
         "name": "zenoss-protocols",
         "type": "download",
-        "version": "2.1.8"
+        "version": "2.1.8",
+        "URL": "http://zenpip.zenoss.eng/packages/zenoss.protocols-{version}-py2-none-any.whl"
     },
     {
         "name": "zenoss-zep",
-        "version": "develop",
         "type": "jenkins",
+        "version": "develop",
         "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/zenoss-zep/job/develop/"
     },
     {
@@ -71,21 +71,21 @@
         "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz",
         "name": "zminion",
         "type": "download",
-        "version": "1.5.0"
+        "version": "1.5.0",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz",
         "name": "zproxy",
         "type": "download",
-        "version": "1.0.6"
+        "version": "1.0.6",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz"
     },
     {
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl",
         "name": "zenoss.toolbox",
         "type": "download",
-        "version": "2.3.0"
+        "version": "2.3.0",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
     }
 ]
