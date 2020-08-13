@@ -121,18 +121,15 @@ download_artifact "service-migration"
 run "pip install --no-index  /tmp/servicemigration*"
 
 # Install zenoss-solr
-# TODO:  Don't do this.  Either componentize our solr startup scripts, do this in zenoss-centos-base,
-#  move solr to its own image, or some combination of these.
-#  But for now, go ahead and do this.
-wget -q http://zenpip.zenoss.eng/packages/zenoss-solr-1.0dev.tgz -O /tmp/zenoss-solr.tgz
-tar -C "/" -xzvf /tmp/zenoss-solr.tgz
+download_artifact "zenoss-solr"
+tar -C / -xzvf /tmp/zenoss-solr*
 chown -R zenoss:zenoss /var/solr
 
 # Install Modelindex
 download_artifact "modelindex"
 run "mkdir /tmp/modelindex"
 run "tar -C /tmp/modelindex -xzvf /tmp/modelindex-*"
-run "pip install /tmp/modelindex/dist/zenoss.modelindex*"
+run "pip install --no-index /tmp/modelindex/dist/zenoss.modelindex*"
 # Copy the modelindex configsets into solr for bootstrapping.
 #  TODO:  when we move to external zookeeper for solr, do something else
 rm -rf /opt/solr/server/solr/configsets
