@@ -121,7 +121,7 @@ download_artifact "service-migration"
 run "pip install --no-index  /tmp/servicemigration*"
 
 # Install zenoss-solr
-download_artifact "zenoss-solr"
+download_artifact "solr-image"
 tar -C / -xzvf /tmp/zenoss-solr*
 chown -R zenoss:zenoss /var/solr
 

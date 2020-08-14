@@ -1,9 +1,10 @@
 [
 
     {
-        "name": "zenoss-solr",
+        "name": "solr-image",
         "type": "jenkins",
-        "version": "develop"
+        "version": "develop",
+        "jenkins.job": "Components/job/zenoss-solr/job/develop/"
     },
     {
         "name": "metricshipper",
