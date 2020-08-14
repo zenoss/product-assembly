@@ -243,8 +243,8 @@
     },
     {
         "name": "ZenPacks.zenoss.ZenJMX",
-        "requirement": "ZenPacks.zenoss.ZenJMX===3.12.1",
-        "type": "zenpack"
+        "type": "zenpack",
+        "pre": true
     },
     {
         "name": "ZenPacks.zenoss.ZenMail",
