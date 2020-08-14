@@ -1,7 +1,7 @@
 [
 
     {
-        "name": "zenoss-solr",
+        "name": "solr-image",
         "type": "jenkins",
         "version": "develop",
         "jenkins.jobURL": "https://platform-jenkins.zenoss.eng/job/Components/job/zenoss-solr/job/develop/"
