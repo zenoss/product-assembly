@@ -50,9 +50,7 @@ function download_artifact
 
 # Install Prodbin
 download_artifact "zenoss-prodbin"
-run "tar -C ${ZENHOME} -xzvf /tmp/prodbin* --exclude=${ZENHOME}/Products/ZenModel/migrate/tests --exclude=${ZENHOME}/Products/ZenUITests"
-# rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
-# rm -rf ${ZENHOME}/Products/ZenUITests
+run "tar -C ${ZENHOME} -xzvf /tmp/prodbin* --exclude=Products/ZenModel/migrate/tests --exclude=Products/ZenUITests"
 
 # TODO: remove this and make sure the tar file contains the proper links
 run "mkdir -p ${ZENHOME}/etc/supervisor ${ZENHOME}/var/zauth ${ZENHOME}/libexec"
@@ -143,14 +141,6 @@ cp -R /tmp/modelindex/zenoss/modelindex/solr/configsets /opt/solr/server/solr/
 # Note that the final arbitration of permissions will be done by zenoss_init.sh
 # when the actual product image is created.
 chmod -R g+rw,o+r,+X ${ZENHOME}/*
-
-# TODO add upgrade templates to /root  - probably done in core/rm image builds
-
-# TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT MIGRATE TESTS
-rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
-
-# TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT ZenUITests-based TESTS
-rm -rf ${ZENHOME}/Products/ZenUITests
 
 # Install the service migration package
 run "pip install --no-index ${ZENHOME}/install_scripts/zenservicemigration*.whl"
