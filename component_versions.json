@@ -1,10 +1,9 @@
 [
-
     {
         "name": "solr-image",
-        "type": "jenkins",
-        "version": "develop",
-        "jenkins.job": "Components/job/zenoss-solr/job/develop/"
+        "type": "download",
+        "version": "1.0dev",
+        "URL": "http://zenpip.zenoss.eng/packages/zenoss-solr-{version}.tgz"
     },
     {
         "name": "metricshipper",
@@ -14,8 +13,9 @@
     },
     {
         "name": "modelindex",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "1.0.5",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz"
     },
     {
         "name": "pynetsnmp",
