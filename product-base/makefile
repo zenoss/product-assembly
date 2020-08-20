@@ -71,4 +71,6 @@ Dockerfile: Dockerfile.in
 		-e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g' \
 		-e 's/%FROM_IMAGE%/$(FROM_IMAGE)/g' \
 		-e 's/%INSTALL_OPTIONS%/$(INSTALL_OPTIONS)/g;' \
+		-e 's/%VERSION%/$(VERSION)/g;' \
+		-e 's/%BUILD_NUMBER%/$(BUILD_NUMBER)/g;' \
 		$< > $@
