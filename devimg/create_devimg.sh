@@ -30,8 +30,8 @@ su - zenoss -c "ln -s ${SRCROOT}/modelindex ${ZENHOME}/modelindex"
 su - zenoss -c "pip install -e ${ZENHOME}/modelindex"
 
 echo "Linking in solr configsets..."
-rm -rf /opt/solr/server/solr/configsets
-ln -s ${SRCROOT}/modelindex/zenoss/modelindex/solr/configsets /opt/solr/server/solr/configsets
+rm -rf /opt/solr/server/solr/configsets/zenoss_model
+ln -s ${SRCROOT}/modelindex/zenoss/modelindex/solr/configsets/zenoss_model /opt/solr/server/solr/configsets
 
 echo "Linking in metrics dir"
 rm -rf ${ZENHOME}/bin/metrics
