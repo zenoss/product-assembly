@@ -7,4 +7,6 @@ ADD hubpasswd /opt/zenoss/etc/
 ADD install_scripts component_info /opt/zenoss/install_scripts/
 ADD %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
 
+RUN echo -e "export CSE_VERSION=%VERSION%\nexport BUILD_NUMBER=%BUILD_NUMBER%" > /etc/profile.d/zenoss.sh
+
 RUN /opt/zenoss/install_scripts/zenoss_component_install.sh %INSTALL_OPTIONS%
