@@ -130,8 +130,7 @@ run "tar -C /tmp/modelindex -xzvf /tmp/modelindex-*"
 run "pip install --no-index /tmp/modelindex/dist/zenoss.modelindex*"
 # Copy the modelindex configsets into solr for bootstrapping.
 #  TODO:  when we move to external zookeeper for solr, do something else
-rm -rf /opt/solr/server/solr/configsets
-cp -R /tmp/modelindex/zenoss/modelindex/solr/configsets /opt/solr/server/solr/
+cp -R /tmp/modelindex/zenoss/modelindex/solr/configsets/zenoss_model /opt/solr/server/solr/configsets
 
 # Some components have files which are read-only by zenoss, so we need to
 # open up the permissions to allow read/write for the group and read for
