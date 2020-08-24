@@ -26,12 +26,12 @@
     },
     {
         "name": "ZenPacks.zenoss.EMC.base",
-    	"pre": true,
+        "pre": true,
         "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.EMC.Isilon",
-        "pre": "ZenPacks.zenoss.EMC.Isilon===1.0.2",
+        "pre": true,
         "type": "zenpack"
     },
     {
@@ -53,7 +53,7 @@
     },
     {
         "name": "ZenPacks.zenoss.NetAppMonitor",
-        "requirement": "ZenPacks.zenoss.NetAppMonitor===4.0.0",
+        "pre": true,
         "type": "zenpack"
     },
     {
