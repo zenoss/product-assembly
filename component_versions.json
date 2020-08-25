@@ -7,14 +7,14 @@
     },
     {
         "name": "metricshipper",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "1.1.5",
+        "URL": "http://zenpip.zenoss.eng/packages/metricshipper-{version}.tgz"
     },
     {
         "name": "modelindex",
-        "type": "download",
-        "version": "1.0.5",
-        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tar.gz"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "name": "pynetsnmp",
