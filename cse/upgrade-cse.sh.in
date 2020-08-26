@@ -6,8 +6,13 @@
 #
 ###############################################################################
 set -e
-export SERVICE_TENANT_ID="`serviced service list Zenoss.cse --format='{{.ID}}'`"
-serviced snapshot untag $SERVICE_TENANT_ID preupgrade-cse-%VERSION%
+
+PRE_SNAPSHOT=$(serviced snapshot list -t | grep preupgrade-cse-%VERSION%);
+
+if [! -z "$PRE_SNAPSHOT"]; then
+      export SERVICE_TENANT_ID="`serviced service list Zenoss.cse --format='{{.ID}}'`"
+      serviced snapshot untag $SERVICE_TENANT_ID preupgrade-cse-%VERSION%
+fi
 
 echo "Getting FROM_VERSION from the 'Version' setting."
 FROM_VERSION=$(serviced service list Zenoss.cse --format='{{.Version}}')
