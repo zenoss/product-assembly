@@ -5,12 +5,10 @@
 # Upgrade Zenoss Resource Manager
 #
 ###############################################################################
-set -e
 
-PRE_SNAPSHOT=$(serviced snapshot list -t | grep preupgrade-cse-%VERSION%);
+export SERVICE_TENANT_ID=$(serviced service list Zenoss.cse --format='{{.ID}}')
 
-if [! -z "$PRE_SNAPSHOT"]; then
-      export SERVICE_TENANT_ID="`serviced service list Zenoss.cse --format='{{.ID}}'`"
+if serviced snapshot list -t | grep preupgrade-cse-%VERSION%; then
       serviced snapshot untag $SERVICE_TENANT_ID preupgrade-cse-%VERSION%
 fi
 
