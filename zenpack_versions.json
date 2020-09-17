@@ -141,15 +141,15 @@
     },
     {
         "name": "ZenPacks.zenoss.Impact",
-        "version": "5.5.2.1.0",
+        "version": "5.5.3.0.0",
         "type": "download",
-        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/{name}-{version}-py2.7.egg"
+        "URL": "http://artifacts.zenoss.eng/builds/impact/5.5.x/testing/Impact/102/{name}-{version}-testing-102-py2.7.egg"
     },
     {
         "name": "ZenPacks.zenoss.ImpactServer",
-        "version": "5.5.2.1.0",
+        "version": "5.5.3.0.0",
         "type": "download",
-        "URL": "http://artifacts.zenoss.eng/releases/impact/{version}/{name}-{version}-py2.7.egg"
+        "URL": "http://artifacts.zenoss.eng/builds/impact/5.5.x/testing/ImpactServer/145/{name}-{version}-testing-314-py2.7.egg"
     },
     {
         "name": "ZenPacks.zenoss.InstalledTemplatesReport",
