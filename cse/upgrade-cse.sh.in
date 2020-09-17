@@ -46,7 +46,7 @@ RUN_GRAPH_UPDATE=false
 if [ "$(printf '%s\n' "$UPGRADE_IMPACT_VERSION" "$CURRENT_IMPACT_VERSION" | sort -V | head -n1)" = "$UPGRADE_IMPACT_VERSION" ]; then
     echo "Skipping Impact upgrade. Current version greater than or equal to $UPGRADE_IMPACT_VERSION"
 else
-    UPGRADE_IMPACT_SERVICE="SVC_USE gcr.io/zing-registry-188222/impact_5.5:$UPGRADE_IMPACT_VERSION impact_5.5\\
+    UPGRADE_IMPACT_SERVICE="SVC_USE gcr.io/zing-registry-188222/impact_5.5:$UPGRADE_IMPACT_VERSION impact_5.5"
 fi
 
 sed -i "s@%UPGRADE_IMPACT_SERVICE%@${UPGRADE_IMPACT_SERVICE}@g;" /root/%SHORT_VERSION%.x/upgrade-cse.txt
