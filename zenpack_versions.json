@@ -1,7 +1,7 @@
 [
     {
         "name": "ZenPacks.zenoss.AWS",
-        "requirement": "ZenPacks.zenoss.AWS===5.0.1",
+        "requirement": "ZenPacks.zenoss.AWS===5.1.0",
         "type": "zenpack"
     },
     {
@@ -36,7 +36,7 @@
     },
     {
         "name": "ZenPacks.zenoss.CiscoMonitor",
-        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.11.1",
+        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.12.0",
         "type": "zenpack"
     },
     {
@@ -121,7 +121,7 @@
     },
     {
         "name": "ZenPacks.zenoss.GoogleCloudPlatform",
-        "requirement": "ZenPacks.zenoss.GoogleCloudPlatform===1.1.0",
+        "requirement": "ZenPacks.zenoss.GoogleCloudPlatform===1.2.0",
         "type": "zenpack"
     },
     {
@@ -163,7 +163,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Kubernetes",
-        "requirement": "ZenPacks.zenoss.Kubernetes===1.0.1",
+        "requirement": "ZenPacks.zenoss.Kubernetes===1.1.0",
         "type": "zenpack"
     },
     {
@@ -178,7 +178,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Microsoft.Azure",
-        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.1.0",
+        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.2.0",
         "type": "zenpack"
     },
     {
