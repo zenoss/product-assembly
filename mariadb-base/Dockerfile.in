@@ -7,7 +7,8 @@ ENV TERM=xterm ZENHOME=/opt/zenoss PATH="/opt/zenoss/bin:${PATH}"
 RUN groupadd -g 1201 -r mysql \
     && useradd -u 1201 -g mysql -r mysql -d /nonexistent -s /bin/false \
     && groupadd -g %GID% -r zenoss \
-    && useradd -u %UID% -g zenoss -r zenoss -s /bin/bash -m -d /home/zenoss  -c "Zenoss Account"
+    && useradd -u %UID% -g zenoss -r zenoss -s /bin/bash -m -d /home/zenoss  -c "Zenoss Account" \
+    && echo "ZENHOME=/opt/zenoss" >> /etc/environment
 
 #make sure we don't use multiverse repo
 RUN sed -i '/^deb.*multiverse/s/^/#\ /' /etc/apt/sources.list \
@@ -52,12 +53,10 @@ RUN ln -s /usr/bin/vi /usr/bin/vim; \
     rm /etc/mysql/mariadb.conf.d/50-server.cnf
 
 RUN wget -qO- https://bootstrap.pypa.io/get-pip.py | python; \
-    pip install --no-cache-dir supervisor requests \
+    pip install --no-cache-dir supervisor requests pymysql \
     && ln -s /usr/local/bin/supervisord /bin/supervisord
 
-COPY exported.tar /tmp/exported.tar
-
-RUN tar -xf /tmp/exported.tar -C / && rm /tmp/exported.tar
+ADD exported.tar /
 
 RUN touch /var/log/mysqld.log; \
     chown mysql:mysql /var/log/mysqld.log; \
