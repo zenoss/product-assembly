@@ -84,7 +84,7 @@
     {
         "name": "zenoss.toolbox",
         "type": "download",
-        "version": "2.3.0",
+        "version": "2.3.1",
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
     }
 ]
