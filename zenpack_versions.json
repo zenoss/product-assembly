@@ -81,7 +81,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Docker",
-        "requirement": "ZenPacks.zenoss.Docker===2.0.4",
+        "requirement": "ZenPacks.zenoss.Docker===2.0.5",
         "type": "zenpack"
     },
     {
@@ -106,8 +106,8 @@
     },
     {
         "name": "ZenPacks.zenoss.EnterpriseReports",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.EnterpriseReports===2.6.0",
+        "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.EnterpriseSecurity",
