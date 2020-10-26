@@ -1,9 +1,9 @@
 [
     {
         "name": "solr-image",
-        "type": "jenkins",
-        "version": "develop",
-        "jenkins.job": "Components/job/zenoss-solr/job/develop/"
+        "type": "download",
+        "version": "1.0.0",
+        "URL": "http://zenpip.zenoss.eng/packages/zenoss-solr-{version}.tgz"
     },
     {
         "name": "metricshipper",
