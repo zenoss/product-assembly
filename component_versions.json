@@ -13,8 +13,9 @@
     },
     {
         "name": "modelindex",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "1.0.6",
+        "URL": "http://zenpip.zenoss.eng/packages/modelindex-{version}.tar.gz"
     },
     {
         "name": "pynetsnmp",
@@ -35,10 +36,10 @@
     },
     {
         "name": "service-migration",
-        "type": "jenkins",
-        "version": "develop",
+        "type": "download",
+        "version": "1.1.16",
         "git_owner": "control-center",
-        "jenkins.job": "ControlCenter/job/service-migration/job/develop"
+        "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl"
     },
     {
         "name": "zenoss-extjs",
