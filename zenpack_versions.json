@@ -274,8 +274,6 @@
     {
         "name": "ZenPacks.zenoss.vSphere",
         "type": "zenpack",
-        "requirement": "ZenPacks.zenoss.vSphere==4.0.*",
-        "git_ref": "hotfix/4.0.4",
         "pre": true
     },
     {
