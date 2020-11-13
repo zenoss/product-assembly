@@ -25,9 +25,8 @@
     },
     {
         "name": "query",
-        "type": "download",
-        "version": "0.1.38",
-        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "name": "redis-mon",
@@ -62,15 +61,13 @@
     },
     {
         "name": "zenoss-zep",
-        "type": "download",
-        "version": "2.7.5",
-        "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "name": "zenoss.metric.consumer",
-        "type": "download",
-        "version": "0.1.14",
-        "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "name": "zminion",
