@@ -178,7 +178,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Microsoft.Azure",
-        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.2.0",
+        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.2.1",
         "type": "zenpack"
     },
     {
@@ -193,7 +193,7 @@
     },
     {
         "name": "ZenPacks.zenoss.NetAppMonitor",
-        "requirement": "ZenPacks.zenoss.NetAppMonitor===4.0.0",
+        "requirement": "ZenPacks.zenoss.NetAppMonitor===4.1.0",
         "type": "zenpack"
     },
     {
