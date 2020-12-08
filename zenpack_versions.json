@@ -91,8 +91,8 @@
     },
     {
         "name": "ZenPacks.zenoss.DynamicView",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.DynamicView===1.8.1",
+        "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.EMC.base",
