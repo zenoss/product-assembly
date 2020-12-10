@@ -61,9 +61,8 @@
     },
     {
         "name": "zenoss-zep",
-        "type": "download",
-        "version": "2.7.6",
-        "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "name": "zenoss.metric.consumer",
