@@ -72,9 +72,9 @@
     },
     {
         "name": "zminion",
-        "type": "jenkins",
-        "version": "develop",
-        "jenkins.jobURL": "http://platform-jenkins.zenoss.eng/job/Components/job/zminion/job/develop/"
+        "type": "download",
+        "version": "1.6.0",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz"
     },
     {
         "name": "zproxy",
