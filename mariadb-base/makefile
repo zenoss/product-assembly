@@ -5,6 +5,8 @@ include ../variables.mk
 GID ?= 1202
 UID ?= 1202
 
+PACKAGES = $(shell tr '\n' ' ' < packages.txt)
+
 .PHONY: clean build
 
 build: exported.tar Dockerfile
@@ -16,7 +18,11 @@ clean: clean-toolbox
 	@rm -rf exported_files
 
 Dockerfile: Dockerfile.in
-	@sed -e "s/%GID%/$(GID)/" -e "s/%UID%/$(UID)/" $< > $@
+	@sed \
+		-e "s/%GID%/$(GID)/" \
+		-e "s/%UID%/$(UID)/" \
+		-e "s/%PACKAGES%/${PACKAGES}/" \
+		$< > $@
 
 dirs = exported_files exported_files/opt/zenoss/bin exported_files/home/zenoss exported_files/etc
 

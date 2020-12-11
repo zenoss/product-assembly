@@ -1,4 +1,4 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 
 LABEL maintainer="Zenoss <dev@zenoss.com>"
 
@@ -10,41 +10,13 @@ RUN groupadd -g 1201 -r mysql \
     && useradd -u %UID% -g zenoss -r zenoss -s /bin/bash -m -d /home/zenoss  -c "Zenoss Account" \
     && echo "ZENHOME=/opt/zenoss" >> /etc/environment
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 #make sure we don't use multiverse repo
 RUN sed -i '/^deb.*multiverse/s/^/#\ /' /etc/apt/sources.list \
     && apt-get update -y \
     && apt-get upgrade -y \
-    && apt-get install --no-install-recommends -y \
-          bash-completion \
-          ca-certificates \
-          curl            \
-          dnsutils        \
-          file            \
-          htop            \
-          iproute2        \
-          iputils-ping    \
-          less            \
-          lsof            \
-          mariadb-server  \
-          nano            \
-          netcat          \
-          net-tools       \
-          openssh-client  \
-          patch           \
-          python2.7       \
-          python-mysqldb  \
-          strace          \
-          sysstat         \
-          tcpdump         \
-          telnet          \
-          tmux            \
-          traceroute      \
-          tree            \
-          unzip           \
-          vim-tiny        \
-          wget            \
-          unzip           \
-          zip             \
+    && apt-get install --no-install-recommends -y %PACKAGES% \
     && apt-get check \
     && apt-get clean
 
