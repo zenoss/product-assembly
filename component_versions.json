@@ -67,8 +67,9 @@
     },
     {
         "name": "zenoss.metric.consumer",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "0.1.15",
+        "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz"
     },
     {
         "name": "zminion",
