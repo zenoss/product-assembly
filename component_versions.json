@@ -25,8 +25,9 @@
     },
     {
         "name": "query",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "0.1.39",
+        "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz"
     },
     {
         "name": "redis-mon",
