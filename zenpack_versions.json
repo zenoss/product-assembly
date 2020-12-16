@@ -273,8 +273,8 @@
     },
     {
         "name": "ZenPacks.zenoss.vSphere",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.vSphere===4.1.0",
+        "type": "zenpack"
     },
     {
         "name": "ZenPacks.zenoss.CloudView",
