@@ -283,7 +283,7 @@
     },
     {
         "name": "ZenPacks.zenoss.SRE",
-        "type": "zenpack",
-        "pre": true
+        "requirement": "ZenPacks.zenoss.SRE===1.0.1",
+        "type": "zenpack"
     }
 ]
