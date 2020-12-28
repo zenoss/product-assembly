@@ -20,6 +20,7 @@ sync_zope_conf
 
 start_redis
 start_rabbitmq
+start_solr
 start_zep
 
 /bin/bash
