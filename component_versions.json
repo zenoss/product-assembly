@@ -1,5 +1,11 @@
 [
     {
+        "name": "solr-image",
+        "type": "download",
+        "version": "1.0.0",
+        "URL": "http://zenpip.zenoss.eng/packages/zenoss-solr-{version}.tgz"
+    },
+    {
         "name": "metricshipper",
         "type": "download",
         "version": "1.1.5",
@@ -8,7 +14,7 @@
     {
         "name": "modelindex",
         "type": "download",
-        "version": "1.0.5",
+        "version": "1.0.6",
         "URL": "http://zenpip.zenoss.eng/packages/modelindex-{version}.tar.gz"
     },
     {
@@ -20,7 +26,7 @@
     {
         "name": "query",
         "type": "download",
-        "version": "0.1.37",
+        "version": "0.1.39",
         "URL": "http://zenpip.zenoss.eng/packages/central-query-{version}-zapp.tar.gz"
     },
     {
@@ -32,7 +38,7 @@
     {
         "name": "service-migration",
         "type": "download",
-        "version": "1.1.15",
+        "version": "1.1.16",
         "URL": "http://zenpip.zenoss.eng/packages/servicemigration-{version}-py2-none-any.whl"
     },
     {
@@ -57,19 +63,19 @@
     {
         "name": "zenoss-zep",
         "type": "download",
-        "version": "2.7.4",
+        "version": "2.7.7",
         "URL": "http://zenpip.zenoss.eng/packages/zep-dist-{version}.tar.gz"
     },
     {
         "name": "zenoss.metric.consumer",
         "type": "download",
-        "version": "0.1.13",
+        "version": "0.1.15",
         "URL": "http://zenpip.zenoss.eng/packages/metric-consumer-app-{version}-zapp.tar.gz"
     },
     {
         "name": "zminion",
         "type": "download",
-        "version": "1.5.0",
+        "version": "1.6.0",
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}.tgz"
     },
     {

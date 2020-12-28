@@ -51,9 +51,7 @@ function download_artifact
 
 # Install Prodbin
 download_artifact "zenoss-prodbin"
-run "tar -C ${ZENHOME} -xzvf /tmp/prodbin* --exclude=${ZENHOME}/Products/ZenModel/migrate/tests --exclude=${ZENHOME}/Products/ZenUITests"
-# rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
-# rm -rf ${ZENHOME}/Products/ZenUITests
+run "tar -C ${ZENHOME} -xzvf /tmp/prodbin* --exclude=Products/ZenModel/migrate/tests --exclude=Products/ZenUITests"
 
 # TODO: remove this and make sure the tar file contains the proper links
 run "mkdir -p ${ZENHOME}/etc/supervisor ${ZENHOME}/var/zauth ${ZENHOME}/libexec"
@@ -122,22 +120,18 @@ download_artifact "service-migration"
 run "pip install --no-index  /tmp/servicemigration*"
 
 # Install zenoss-solr
-# TODO:  Don't do this.  Either componentize our solr startup scripts, do this in zenoss-centos-base,
-#  move solr to its own image, or some combination of these.
-#  But for now, go ahead and do this.
-wget -q http://zenpip.zenoss.eng/packages/zenoss-solr-1.0dev.tgz -O /tmp/zenoss-solr.tgz
-tar -C "/" -xzvf /tmp/zenoss-solr.tgz
+download_artifact "solr-image"
+tar -C / -xzvf /tmp/zenoss-solr*
 chown -R zenoss:zenoss /var/solr
 
 # Install Modelindex
 download_artifact "modelindex"
 run "mkdir /tmp/modelindex"
 run "tar -C /tmp/modelindex -xzvf /tmp/modelindex-*"
-run "pip install /tmp/modelindex/dist/zenoss.modelindex*"
+run "pip install --no-index /tmp/modelindex/dist/zenoss.modelindex*"
 # Copy the modelindex configsets into solr for bootstrapping.
 #  TODO:  when we move to external zookeeper for solr, do something else
-rm -rf /opt/solr/server/solr/configsets
-cp -R /tmp/modelindex/zenoss/modelindex/solr/configsets /opt/solr/server/solr/
+cp -R /tmp/modelindex/zenoss/modelindex/solr/configsets/zenoss_model /opt/solr/server/solr/configsets
 
 # Some components have files which are read-only by zenoss, so we need to
 # open up the permissions to allow read/write for the group and read for
@@ -147,14 +141,6 @@ cp -R /tmp/modelindex/zenoss/modelindex/solr/configsets /opt/solr/server/solr/
 # Note that the final arbitration of permissions will be done by zenoss_init.sh
 # when the actual product image is created.
 chmod -R g+rw,o+r,+X ${ZENHOME}/*
-
-# TODO add upgrade templates to /root  - probably done in core/rm image builds
-
-# TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT MIGRATE TESTS
-rm -rf ${ZENHOME}/Products/ZenModel/migrate/tests
-
-# TODO REMOVE THIS AFTER PRODBIN IS UPDATED TO FILTER OUT ZenUITests-based TESTS
-rm -rf ${ZENHOME}/Products/ZenUITests
 
 # Install the service migration package
 run "pip install --no-index ${ZENHOME}/install_scripts/zenservicemigration*.whl"
