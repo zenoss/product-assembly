@@ -51,9 +51,8 @@
     },
     {
         "name": "zenoss-prodbin",
-        "type": "download",
-        "version": "7.0.16",
-        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master.tar.gz"
+        "type": "jenkins",
+        "version": "develop"
     },
     {
         "name": "zenoss-protocols",
