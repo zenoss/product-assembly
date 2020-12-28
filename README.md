@@ -9,6 +9,7 @@
   - [Build like Jenkins](#build-like-jenkins)
   - [Test like Jenkins](#test-like-jenkins)
   - [Compare Builds](#compare-builds)
+  - [Developer Config](#configure-cz-for-development)
 
 ## Overview
 
@@ -172,3 +173,24 @@ $ cat repos.json
             "service": "ZenPacks.zenoss.Dell.PowerEdge"
         }
 ```
+
+# Configure CZ for Development
+These changes allow you to access the RM directly without using Auth0 and SmartView, although it does make SmartView not work anymore.
+1. In Control Center, click `Edit Variables` for the "Zenoss.cse" service and comment out the following lines:
+   ```
+   global.conf.auth0-audience https://dev.zing.ninja
+   global.conf.auth0-emailkey https://dev.zing.ninja/email
+   global.conf.auth0-tenant https://zenoss-dev.auth0.com/
+   global.conf.auth0-tenantkey https://dev.zing.ninja/tenant
+   global.conf.auth0-whitelist <login-id>
+   ```
+   where `<login-id>` is your ID.
+2. Staying in the "Zenoss.cse" service, edit the `/opt/zenoss/zproxy/conf/zproxy-nginx.conf` file and comment out these lines (lines 169-172 in the 7.0.15 service defs):
+   ```
+   location ~* ^/zport/acl_users/cookieAuthHelper/login {
+      # ZEN-30567: Disallow the basic auth login page.
+      return 403;
+   }
+   ```
+3. Restart your services.  Probably only the "Zope", "ZAuth", "zenapi", "zenreports", and "Zenoss.cse" services need restarting rather than all the services.  Not all the services look at the `auth0` settings in the `global.conf` file or the `zproxy-nginx.conf` file.
+4. After the services have restarted, go to `https://<login-id>.zing.soy/cz0/zport/dmd` and use `admin/zenoss` for your credentials.

@@ -53,6 +53,7 @@
         "ZenPacks.zenoss.DiscoveryMapping",
         "ZenPacks.zenoss.Kubernetes",
         "ZenPacks.zenoss.CloudView",
+        "ZenPacks.zenoss.SRE",
         "ZenPacks.zenoss.ImpactServer",
         "ZenPacks.zenoss.Impact"
     ],

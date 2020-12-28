@@ -1,15 +1,15 @@
 FROM zenoss/%FROM_IMAGE%
 
-# maintener is redundant since base image is ours as well
-#MAINTAINER Zenoss <dev@zenoss.com>
+ENV ZENHOME=/opt/zenoss BUILD_NUMBER=%BUILD_NUMBER%
 
-ENV ZENHOME=/opt/zenoss
-
-ADD %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
+# Configure ZENHOME for all users
+RUN echo "ZENHOME=/opt/zenoss" >> /etc/environment
 
 # TODO: fix this. The hubpasswd file should be in the service definition
 ADD hubpasswd /opt/zenoss/etc/
-
 ADD install_scripts component_info /opt/zenoss/install_scripts/
+ADD %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
+
+RUN echo -e "export ZENOSS_VERSION=%VERSION%\nexport BUILD_NUMBER=%BUILD_NUMBER%" > /etc/profile.d/zenoss.sh
 
 RUN /opt/zenoss/install_scripts/zenoss_component_install.sh %INSTALL_OPTIONS%

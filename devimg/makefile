@@ -51,51 +51,74 @@
 #                 If not specifeid, defaults to ../devimg/zp_blacklist.json
 #
 include ../versions.mk
-IMAGENAME  = devimg
-MARIADB = mariadb
-MARIADB_TAG = zendev/$(MARIADB):$(DEV_ENV)
-DEV_ENV ?= metis
-TAG = zendev/$(IMAGENAME):$(DEV_ENV)
-BASE_TAG = zendev/$(IMAGENAME)-base:$(DEV_ENV)
-DIR = ${CURDIR}
-ZENPACK_BLACKLIST ?= ${CURDIR}/zp_blacklist.json
+
+SHELL := /bin/bash
+
+ZENDEV := $(shell which zendev)
+ifeq ($(ZENDEV),)
+IMAGE_TAG ?= metis
+else
+IMAGE_TAG ?= $(shell zendev env)
+endif
+
+IMAGE_PROJECT = zendev
+
+PRODUCT_BASE_IMAGE_REPO = $(IMAGE_PROJECT)/devimg-base
+PRODUCT_BASE_IMAGE_ID = $(PRODUCT_BASE_IMAGE_REPO):$(IMAGE_TAG)
+
+PRODUCT_IMAGE_REPO = $(IMAGE_PROJECT)/devimg
+PRODUCT_IMAGE_ID = $(PRODUCT_IMAGE_REPO):$(IMAGE_TAG)
+
+MARIADB_BASE_IMAGE_REPO = $(IMAGE_PROJECT)/mariadb-base
+MARIADB_BASE_IMAGE_ID = $(MARIADB_BASE_IMAGE_REPO):$(IMAGE_TAG)
+
+MARIADB_IMAGE_REPO = $(IMAGE_PROJECT)/mariadb
+MARIADB_IMAGE_ID = $(MARIADB_IMAGE_REPO):$(IMAGE_TAG)
+
+DIR = $(CURDIR)
+ZENPACK_BLACKLIST ?= $(CURDIR)/zp_blacklist.json
 
 CONTAINER_ZENHOME=/opt/zenoss
 
-.PHONY: clean build
+ZENDEV_ROOT ?= $(shell zendev root || echo)
+SRCROOT = $(ZENDEV_ROOT)/src/github.com/zenoss
 
-verifyInputs:
-ifndef ZENDEV_ROOT
+CURRENT_UID = $(shell id -u)
+CURRENT_GID = $(shell id -g)
+
+# Verify that ZENDEV_ROOT is set
+ifeq ($(ZENDEV_ROOT),)
 	$(error ZENDEV_ROOT is not set)
 endif
-ifndef SRCROOT
+
+# Verify that SRCROOT is set
+ifeq ($(SRCROOT),)
 	$(error SRCROOT is not set)
 endif
 
-# Note that this list includes the directories used as mount points. We create
-# need to create those directories here so they are owned by the current user
-# (otherwise, they will be owned by root when docker creates them).
-make-dirs: verifyInputs $(ZENDEV_ROOT)/zenhome  $(ZENDEV_ROOT)/var_zenoss
-	@mkdir -p $$HOME/.m2
-
-$(ZENDEV_ROOT)/%:
-	mkdir -p $@
-
-select-zenpacks: verifyInputs
 ifdef TARGET_PRODUCT
-	@echo "Using TARGET_PRODUCT='$(TARGET_PRODUCT)'"
-	$(eval ZENPACK_FILE=../$(TARGET_PRODUCT)/zenpacks.json)
-else
+$(info Using TARGET_PRODUCT='$(TARGET_PRODUCT)')
+ZENPACK_FILE = $(realpath ../$(TARGET_PRODUCT)/zenpacks.json)
+$(info $(ZENPACK_FILE))
+endif
+
 ifdef ZENPACK_FILE
-	@echo "Using ZENPACK_FILE='$(ZENPACK_FILE)'"
+$(info Build devimg with zenpacks from $(ZENPACK_FILE).)
+ZENPACK_BLACKLIST := $(realpath $(ZENPACK_BLACKLIST))
 else
-	@echo "Building without zenpacks"
+ZENPACK_FILE =
+ZENPACK_BLACKLIST =
 endif
-endif
-	@echo "ZENPACK_FILE='$(ZENPACK_FILE)'"
-	@if [ ! -f $(ZENPACK_FILE) ]; then echo "ZENPACK_FILE=$(ZENPACK_FILE) does not exist"; exit 1; fi
-	@echo "ZENPACK_BLACKLIST='$(ZENPACK_BLACKLIST)'"
-	@if [ ! -f $(ZENPACK_BLACKLIST) ]; then echo "ZENPACK_BLACKLIST=$(ZENPACK_BLACKLIST) does not exist"; exit 1; fi
+
+.PHONY: clean clean-devimg-base clean-mariadb-base build build-devimg-base build-mariadb-base add-zenpack-file dumpdb initialize-zenhome make-dirs
+
+dumpdb: 
+	@PRODUCT_IMAGE_ID=$(PRODUCT_IMAGE_ID) \
+	MARIADB_IMAGE_ID=$(MARIADB_IMAGE_ID) \
+	ZENDEV_ROOT=$(ZENDEV_ROOT) \
+	ZENWIPE_ARGS=$(ZENWIPE_ARGS) \
+	SRCROOT=$(SRCROOT) \
+	./docker_run_dumpzodb.sh
 
 #
 # four major steps to creating the devimg:
@@ -108,55 +131,63 @@ endif
 # 4. build.sh - Initialize zenoss, link-install zenpacks (if any), and setup other
 #    linkages like Java apps, zenoss-protocols, etc.
 #
-build: build-devimg build-mariadb
-
-build-devimg: make-dirs select-zenpacks build-devbase initialize-zenhome add-zenpack-file
-	BASE_TAG=$(BASE_TAG) \
-	TAG=$(TAG) \
+build: build-mariadb-base add-zenpack-file
+	@PRODUCT_BASE_IMAGE_ID=$(PRODUCT_BASE_IMAGE_ID) \
+	PRODUCT_IMAGE_ID=$(PRODUCT_IMAGE_ID) \
+	MARIADB_BASE_IMAGE_ID=$(MARIADB_BASE_IMAGE_ID) \
+	MARIADB_IMAGE_ID=$(MARIADB_IMAGE_ID) \
 	ZENDEV_ROOT=$(ZENDEV_ROOT) \
+	SRCROOT=$(SRCROOT) \
 	./build.sh
 
-dumpdb: 
-	TAG=$(TAG) \
-	ZENDEV_ROOT=$(ZENDEV_ROOT) \
-	ZENWIPE_ARGS=$(ZENWIPE_ARGS) \
-	./docker_run_dumpzodb.sh
-
-clean:
-	-cd ../product-base;TAG=$(BASE_TAG) make clean
-	@echo "Removing $(TAG) (if any)..."
-	-docker rmi -f $(TAG)
+clean: clean-devimg-base clean-mariadb-base
+	@-docker image rm -f $(PRODUCT_IMAGE_ID) $(MARIADB_IMAGE_ID)
 	@echo "Cleaning ZENDEV_ROOT=$(ZENDEV_ROOT) (requires sudo) ..."
-	sudo rm -rf $(ZENDEV_ROOT)/zenhome/* $(ZENDEV_ROOT)/var_zenoss/*
-	@echo "REMOVING $(MARIADB_TAG) (if any)..."
-	-docker rmi -f $(MARIADB_TAG)
+	@sudo rm -rf $(ZENDEV_ROOT)/zenhome/* $(ZENDEV_ROOT)/var_zenoss/*
 
-build-devbase:
-	@echo "Building $(BASE_TAG) ..."
-	BASE_TAG=$(BASE_TAG) ./build-devbase.sh
+clean-devimg-base:
+	@-PRODUCT_BASE_IMAGE_ID=$(PRODUCT_BASE_IMAGE_ID) make -C ../product-base clean
 
-build-mariadb: ../mariadb/Dockerfile
-	docker build -t $(MARIADB_TAG) ../mariadb
+clean-mariadb-base:
+	@-MARIADB_BASE_IMAGE_ID=$(MARIADB_BASE_IMAGE_ID) make -C ../mariadb-base clean
 
-../mariadb/Dockerfile:
-	@sed -e 's#%FROM_IMAGE%#$(TAG)#' ../mariadb/Dockerfile.in > $@
+build-devimg-base:
+	@echo "Building $(PRODUCT_BASE_IMAGE_ID) ..."
+	@PRODUCT_BASE_IMAGE_ID=$(PRODUCT_BASE_IMAGE_ID) ./build-devbase.sh
+
+build-mariadb-base: build-devimg-base
+	@echo "Building $(MARIADB_BASE_IMAGE_ID) ..."
+	@make -C ../mariadb-base build \
+		GID=$(CURRENT_GID) UID=$(CURRENT_UID) \
+		PRODUCT_BASE_IMAGE_ID=$(PRODUCT_BASE_IMAGE_ID) \
+		MARIADB_BASE_IMAGE_ID=$(MARIADB_BASE_IMAGE_ID)
+
+# Note that this list includes the directories used as mount points. We create
+# need to create those directories here so they are owned by the current user
+# (otherwise, they will be owned by root when docker creates them).
+make-dirs: $(ZENDEV_ROOT)/zenhome  $(ZENDEV_ROOT)/var_zenoss
+	@mkdir -p $$HOME/.m2
+
+# devimg ZENHOME-based path directory maker
+$(ZENDEV_ROOT)/%:
+	@mkdir -p $@
 
 # Initialize our local ZENHOME using the contents from the initial devimg
-initialize-zenhome: make-dirs
+initialize-zenhome: make-dirs build-devimg-base
 	@echo "Initializing ZENHOME from container contents..."
-	docker run --rm \
+	@docker run --rm \
 		-v $(ZENDEV_ROOT)/zenhome:/mnt/local-zenhome \
-		-v ${DIR}:/mnt/devimg \
-		-t $(BASE_TAG) \
+		-v $(CURDIR):/mnt/devimg \
+		-t $(PRODUCT_BASE_IMAGE_ID) \
 		bash -c "/mnt/devimg/init_devimg_zenhome.sh /mnt/local-zenhome"
 
-add-zenpack-file:
-	@if [ -z "$(ZENPACK_FILE)" ]; then \
-		echo "ZENPACK_FILE is empty; not installing any zenpacks"; \
-	else \
-		echo "Using the zenpacks defined by $(ZENPACK_FILE)"; \
-		cp $(ZENPACK_FILE) $(ZENDEV_ROOT)/zenhome/install_scripts; \
-	fi
+add-zenpack-file: initialize-zenhome
+ifdef ZENPACK_FILE
+	@echo "Using the zenpacks defined by $(ZENPACK_FILE)"
+	@cp $(ZENPACK_FILE) $(ZENDEV_ROOT)/zenhome/install_scripts
+endif
 	@echo "No downloaded zenpacks; all zenpacks link-installed from source" > $(ZENDEV_ROOT)/zenhome/log/zenpacks_artifact.log
+ifdef ZENPACK_BLACKLIST
 	@echo "Using the zenpack blacklist defined by $(ZENPACK_BLACKLIST)"
-	cp $(ZENPACK_BLACKLIST) $(ZENDEV_ROOT)/zenhome/install_scripts/zp_blacklist.json
+	@cp $(ZENPACK_BLACKLIST) $(ZENDEV_ROOT)/zenhome/install_scripts/zp_blacklist.json
+endif
