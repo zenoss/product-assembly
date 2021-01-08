@@ -24,8 +24,9 @@ RUN ln -s /usr/bin/vi /usr/bin/vim; \
     mkdir -p /opt/zenoss/bin /opt/zenoss/log /opt/zenoss/bin/metrics /opt/zenoss/var; \
     rm /etc/mysql/mariadb.conf.d/50-server.cnf
 
-RUN wget -qO- https://bootstrap.pypa.io/get-pip.py | python; \
-    pip install --no-cache-dir supervisor requests pymysql \
+RUN wget -qO- https://bootstrap.pypa.io/get-pip.py > /tmp/get-pip.py; \
+    python /tmp/get-pip.py "pip<21"; \
+    pip install --no-cache-dir supervisor requests "pymysql<1" \
     && ln -s /usr/local/bin/supervisord /bin/supervisord
 
 ADD exported.tar /
