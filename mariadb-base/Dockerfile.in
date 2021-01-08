@@ -26,6 +26,7 @@ RUN ln -s /usr/bin/vi /usr/bin/vim; \
 
 RUN wget -qO- https://bootstrap.pypa.io/get-pip.py > /tmp/get-pip.py; \
     python /tmp/get-pip.py "pip<21"; \
+    rm /tmp/get-pip.py; \
     pip install --no-cache-dir supervisor requests "pymysql<1" \
     && ln -s /usr/local/bin/supervisord /bin/supervisord
 
