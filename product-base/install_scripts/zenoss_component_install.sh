@@ -63,6 +63,10 @@ run "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
 source ${ZENHOME}/install_scripts/versions.sh 
 run "sed -e 's/%VERSION_STRING%/${VERSION}/g; s/%BUILD_NUMBER%/${BUILD_NUMBER}/g' ${ZENHOME}/Products/ZenModel/ZVersion.py.in > ${ZENHOME}/Products/ZenModel/ZVersion.py"
 
+# Install zensocket
+download_artifact "zensocket"
+run "tar -C ${ZENHOME} -xzvf /tmp/zensocket*"
+
 # Install MetricConsumer
 download_artifact "zenoss.metric.consumer"
 run "tar -C ${ZENHOME} -xzvf /tmp/metric-consumer*"
