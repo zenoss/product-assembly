@@ -60,8 +60,6 @@ run "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/
 run "pip install --no-index ${ZENHOME}/dist/*.whl"
 run "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
 run "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
-source ${ZENHOME}/install_scripts/versions.sh 
-run "sed -e 's/%VERSION_STRING%/${VERSION}/g; s/%BUILD_NUMBER%/${BUILD_NUMBER}/g' ${ZENHOME}/Products/ZenModel/ZVersion.py.in > ${ZENHOME}/Products/ZenModel/ZVersion.py"
 
 # Install zensocket
 download_artifact "zensocket"
