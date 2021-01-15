@@ -9,7 +9,7 @@ ZENPACK_DIR = zenpacks
 .PHONY: build build-deps push clean getDownloadLogs download_zenpacks
 
 build: build-deps
-	PRODUCT_IMAGE_ID="$(PRODUCT_IMAGE_ID)" PRODUCT_BASE_IMAGE_ID="$(PRODUCT_BASE_IMAGE_ID)" MARIADB_IMAGE_ID="$(MARIADB_IMAGE_ID)" MARIADB_BASE_IMAGE_ID="$(MARIADB_BASE_IMAGE_ID)" ../build_images.sh
+	PRODUCT_IMAGE_ID="$(PRODUCT_IMAGE_ID)" PRODUCT_BASE_IMAGE_ID="$(PRODUCT_BASE_IMAGE_ID)" MARIADB_IMAGE_ID="$(MARIADB_IMAGE_ID)" MARIADB_BASE_IMAGE_ID="$(MARIADB_BASE_IMAGE_ID)" ./build.sh
 
 build-deps: $(UPGRADE_SCRIPTS) copy_upgrade_scripts.sh download_zenpacks
 
