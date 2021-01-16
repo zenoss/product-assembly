@@ -113,6 +113,11 @@ docker container exec \
 	/mnt/devimg/create_devimg.sh \
 	|| fail "Could not execute create_devimg.sh script"
 
+docker container exec \
+	${product_name} \
+	/mnt/devimg/install-activepython.sh \
+	|| fail "Could not execute install-activepython.sh script"
+
 echo "Stopping the ${PRODUCT_BASE_IMAGE_ID} container."
 docker container stop ${product_name}
 echo "Stopping the ${MARIADB_BASE_IMAGE_ID} container."
