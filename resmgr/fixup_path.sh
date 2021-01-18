@@ -25,4 +25,4 @@ pathmunge /opt/activepython/bin
 pathmunge /opt/zenoss/var/ext/bin
 pathmunge /opt/zenoss/bin
 
-sed -i -e "s~export PATH=.*~export PATH=${PATH}~" /home/zenoss/.bashrc
+sed -i -e "0,/export PATH=.*/ s~export PATH=.*~export PATH=${PATH}~" /home/zenoss/.bashrc
