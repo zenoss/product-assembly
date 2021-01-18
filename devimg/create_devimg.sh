@@ -53,9 +53,7 @@ echo "Configuring maven..."
 cat /home/zenoss/.bashrc
 rm /opt/maven/conf/settings.xml
 cp /mnt/devimg/settings.xml /opt/maven/conf/settings.xml
-cat <<EOF >> /home/zenoss/.bashrc
-export PATH=/opt/maven/bin:\$PATH
-EOF
+sed -i -e 's|PATH=\(.*\)|PATH=/opt/maven/bin:\1|' /home/zenoss/.bashrc
 
 # Copy the devimg version of prepare.sh into the install_scripts directory.
 cp ${SRCROOT}/product-assembly/devimg/prepare.sh ${ZENHOME}/install_scripts/prepare.sh
