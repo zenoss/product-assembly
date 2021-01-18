@@ -133,7 +133,7 @@ dumpdb:
 # 4. build.sh - Initialize zenoss, link-install zenpacks (if any), and setup other
 #    linkages like Java apps, zenoss-protocols, etc.
 #
-build: build-mariadb-base add-zenpack-file fixup_path.sh activepython/_install.py
+build: build-mariadb-base add-zenpack-file activepython/_install.py
 	@PRODUCT_BASE_IMAGE_ID=$(PRODUCT_BASE_IMAGE_ID) \
 	PRODUCT_IMAGE_ID=$(PRODUCT_IMAGE_ID) \
 	MARIADB_BASE_IMAGE_ID=$(MARIADB_BASE_IMAGE_ID) \
@@ -146,7 +146,7 @@ clean: clean-devimg-base clean-mariadb-base
 	@-docker image rm -f $(PRODUCT_IMAGE_ID) $(MARIADB_IMAGE_ID)
 	@echo "Cleaning ZENDEV_ROOT=$(ZENDEV_ROOT) (requires sudo) ..."
 	@sudo rm -rf $(ZENDEV_ROOT)/zenhome/* $(ZENDEV_ROOT)/var_zenoss/*
-	@rm -f $(ACTIVEPYTHON_ARCHIVE) fixup_path.sh
+	@rm -f $(ACTIVEPYTHON_ARCHIVE)
 	@rm -rf activepython
 
 clean-devimg-base:
@@ -195,9 +195,6 @@ ifdef ZENPACK_BLACKLIST
 	@echo "Using the zenpack blacklist defined by $(ZENPACK_BLACKLIST)"
 	@cp $(ZENPACK_BLACKLIST) $(ZENDEV_ROOT)/zenhome/install_scripts/zp_blacklist.json
 endif
-
-fixup_path.sh: ../resmgr/fixup_path.sh
-	cp $< $@
 
 activepython/_install.py: | activepython
 	curl http://zenpip.zenoss.eng/packages/$(ACTIVEPYTHON_ARCHIVE) | tar --strip-components=1 -C activepython -xz
