@@ -155,35 +155,54 @@ node ('build-zenoss-product') {
             CZ_IMAGE.push("${promote_tag}")
         }
     }   
-    stage ('Compile service definitions') {
-        // Run the checkout in a separate directory. We have to clean it ourselves, because Jenkins doesn't (apparently)
-        sh("rm -rf svcdefs/build;mkdir -p svcdefs/build/zenoss-service")
-        dir('svcdefs/build/zenoss-service') {
-            // NOTE: The 'master' branch name here is only used to clone the github repo.
-            //       The next checkout command will align the build with the correct target revision.
-            echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
-            git branch: 'master', credentialsId: '${GIT_CREDENTIAL_ID}', url: 'https://github.com/zenoss/zenoss-service.git'
-            sh("pwd;git checkout ${SVCDEF_GIT_REF}")
+    stage ('Build service template package') {
+        def repo_dir = ""
+        // Run the checkout in a separate directory.
+        dir("svcdefs") {
+            // We have to clean it ourselves, because Jenkins doesn't (apparently)
+            sh("make clean")
+            repo_dir = sh(returnStdout: true, script: "make repo_dir").trim()
+            dir("${repo_dir}") {
+                echo "Cloning zenoss-service - ${SVCDEF_GIT_REF} with credentialsId=${GIT_CREDENTIAL_ID}"
+                // NOTE: The 'master' branch name here is only used to clone the github repo.
+                //       The next checkout command will align the build with the correct target revision.
+                git(
+                    branch: 'master',
+                    credentialsId: '${GIT_CREDENTIAL_ID}',
+                    url: 'https://github.com/zenoss/zenoss-service.git'
+                )
+                sh("git checkout ${SVCDEF_GIT_REF}")
+                // Log the current SHA of zenoss-service so, when building from a branch,
+                // we know exactly which commit went into a particular build
+                sh("echo zenoss/zenoss-service git SHA = \$(git rev-parse HEAD)")
+            }
+            // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own
+            // because we need to use Jenkins credentials instead
+            withEnv([
+                "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}",
+                "IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}",
+                "MATURITY=${TO_MATURITY}",
+                "SVCDEF_GIT_READY=true",
+                "RELEASE_PHASE=${BUILD_NUMBER}",
+                "TARGET_PRODUCT=${TARGET_PRODUCT}"
+            ]) {
+                sh("make build")
+            }
         }
-
-        // Note that SVDEF_GIT_READY=true tells the make to NOT attempt a git operation on its own because we need to use
-        //     Jenkins credentials instead
-        def makeArgs = "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}\
-        IMAGE_NUMBER=${PRODUCT_BUILD_NUMBER}\
-            MATURITY=${TO_MATURITY}\
-            SVCDEF_GIT_READY=true\
-            RELEASE_PHASE=${BUILD_NUMBER}\
-            TARGET_PRODUCT=${TARGET_PRODUCT}"
-        sh("cd svcdefs;make build ${makeArgs}")
         sh("mkdir -p artifacts")
-        sh("cp svcdefs/build/zenoss-service/output/*.json artifacts/.")
-        sh("cd artifacts; for file in *json; do tar -cvzf \$file.tgz \$file; done")
+        sh("cp svcdefs/${repo_dir}/output/*.json artifacts/.")
+        dir("artifacts") {
+            sh("for file in *json; do tar -cvzf \$file.tgz \$file; done")
+        }
         archive includes: 'artifacts/*.json*'
     }
 
-    stage('Upload service definitions') {
-        echo "upload..."
-        googleStorageUpload bucket: "gs://cz-${TO_MATURITY}/${TARGET_PRODUCT}/${ZENOSS_VERSION}", \
-         credentialsId: 'zing-registry-188222', pathPrefix: 'artifacts/', pattern: 'artifacts/*tgz'
+    stage('Upload service template package') {
+        googleStorageUpload(
+            bucket: "gs://cz-${TO_MATURITY}/${TARGET_PRODUCT}/${ZENOSS_VERSION}",
+            credentialsId: 'zing-registry-188222',
+            pathPrefix: 'artifacts/',
+            pattern: 'artifacts/*tgz'
+        )
     }
 }
