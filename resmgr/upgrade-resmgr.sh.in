@@ -13,7 +13,10 @@ export HUB_SERVICE_MIGRATION
 export UPGRADE_REINDEX
 export REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS
 export MIGRATE_MARIADB_SERVICES
-serviced snapshot untag $SERVICE_TENANT_ID preupgrade-resmgr-%VERSION%
+
+if serviced snapshot list -t | grep preupgrade-resmgr-%VERSION%; then
+    serviced snapshot untag $SERVICE_TENANT_ID preupgrade-resmgr-%VERSION%
+fi
 
 echo "Getting FROM_VERSION from the 'Version' setting."
 FROM_VERSION=$(serviced service list resmgr --format='{{.Version}}')
