@@ -249,7 +249,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PostgreSQL",
-        "requirement": "ZenPacks.zenoss.PostgreSQL===1.0.10",
+        "requirement": "ZenPacks.zenoss.PostgreSQL===1.0.12",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
