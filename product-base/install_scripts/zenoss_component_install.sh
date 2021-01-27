@@ -49,6 +49,16 @@ function download_artifact
     run "${ZENHOME}/install_scripts/artifact_download.py --out_dir /tmp --reportFile ${ZENHOME}/log/zenoss_component_artifact.log ${ZENHOME}/install_scripts/component_versions.json ${artifact}"
 }
 
+PIP_INSTALL="pip --no-python-version-warning install --no-index"
+
+# Install pydeps
+echo "Installing Zenoss Python dependencies..."
+download_artifact "pydeps"
+PYDEPS_DIR=/tmp/python_dependencies
+run "mkdir ${PYDEPS_DIR}"
+run "tar -C ${PYDEPS_DIR} --strip-components=1 -xf /tmp/pydeps*"
+run "cd ${PYDEPS_DIR}; ./install.sh"
+
 # Install Prodbin
 download_artifact "zenoss-prodbin"
 run "tar -C ${ZENHOME} -xzvf /tmp/prodbin*"
@@ -57,7 +67,7 @@ run "tar -C ${ZENHOME} -xzvf /tmp/prodbin*"
 run "mkdir -p ${ZENHOME}/etc/supervisor ${ZENHOME}/var/zauth ${ZENHOME}/libexec ${ZENHOME}/lib/python"
 run "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
 
-run "pip install --no-index ${ZENHOME}/dist/*.whl"
+run "${PIP_INSTALL} ${ZENHOME}/dist/*.whl"
 run "rm -rf ${ZENHOME}/dist"
 
 # Install zensocket
@@ -82,15 +92,15 @@ run "ln -s ${ZENHOME}/etc/central-query/central-query_supervisor.conf ${ZENHOME}
 
 # Install zenoss-protocols
 download_artifact "zenoss-protocols"
-run "pip install --no-index  /tmp/zenoss.protocols*.whl"
+run "${PIP_INSTALL} /tmp/zenoss.protocols*.whl"
 
 # Install pynetsnmp
 download_artifact "pynetsnmp"
-run "pip install --no-index  /tmp/pynetsnmp*.whl"
+run "${PIP_INSTALL} /tmp/pynetsnmp*.whl"
 
 # Install zenoss-extjs
 download_artifact "zenoss-extjs"
-run "pip install  --no-index  /tmp/zenoss.extjs*"
+run "${PIP_INSTALL} /tmp/zenoss.extjs*"
 
 # Install zep
 download_artifact "zenoss-zep"
@@ -114,11 +124,11 @@ run "tar --strip-components=2 -C ${ZENHOME} -xzvf /tmp/zproxy*"
 
 # Install zenoss.toolobx
 download_artifact "zenoss.toolbox"
-run "pip install --no-index  /tmp/zenoss.toolbox*.whl"
+run "${PIP_INSTALL} /tmp/zenoss.toolbox*.whl"
 
 # Install the service migration SDK
 download_artifact "service-migration"
-run "pip install --no-index  /tmp/servicemigration*"
+run "${PIP_INSTALL} /tmp/servicemigration*"
 
 # Install zenoss-solr
 download_artifact "solr-image"
@@ -129,7 +139,7 @@ chown -R zenoss:zenoss /var/solr
 download_artifact "modelindex"
 run "mkdir /tmp/modelindex"
 run "tar -C /tmp/modelindex -xzvf /tmp/modelindex-*"
-run "pip install --no-index /tmp/modelindex/dist/zenoss.modelindex*"
+run "${PIP_INSTALL} /tmp/modelindex/dist/zenoss.modelindex*"
 # Copy the modelindex configsets into solr for bootstrapping.
 #  TODO:  when we move to external zookeeper for solr, do something else
 cp -R /tmp/modelindex/zenoss/modelindex/solr/configsets/zenoss_model /opt/solr/server/solr/configsets
@@ -144,7 +154,7 @@ cp -R /tmp/modelindex/zenoss/modelindex/solr/configsets/zenoss_model /opt/solr/s
 chmod -R g+rw,o+r,+X ${ZENHOME}/*
 
 # Install the service migration package
-run "pip install --no-index ${ZENHOME}/install_scripts/zenservicemigration*.whl"
+run "${PIP_INSTALL} ${ZENHOME}/install_scripts/zenservicemigration*.whl"
 
 echo "Cleaning up after install..."
 find ${ZENHOME} -name \*.py[co] -delete

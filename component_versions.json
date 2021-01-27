@@ -95,5 +95,10 @@
         "type": "download",
         "version": "1.0.0",
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-x86_64.tar.gz"
+    },
+    {
+        "name": "pydeps",
+        "type": "jenkins",
+        "version": "develop"
     }
 ]

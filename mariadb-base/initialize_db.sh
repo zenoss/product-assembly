@@ -5,7 +5,7 @@ SQL_DB_IN=/home/zenoss/permissions.sql.in
 SQL_PERMS=/home/zenoss/permissions.sql
 
 install_toolbox() {
-	pip install /home/zenoss/zends.toolbox*whl --no-index
+	pip --no-python-version-warning install /home/zenoss/zends.toolbox*whl --no-index
 }
 
 start_db() {

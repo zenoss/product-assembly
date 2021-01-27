@@ -22,7 +22,7 @@ find /opt/zenoss -name \*.py[co] -delete
 
 # Create new .pyc files (using ActiveState Python)
 # Note: the '-x' argument excludes .py files that aren't Python 2 compatible.
-su - zenoss -c "python -m compileall -fq -x \"(/tests/|/skins/zenmodel|pexpect/_async.py|zodbpickle/.*_3.py)\" /opt/zenoss"
+su - zenoss -c "python -m compileall -fq -x \"(/tests/|/skins/zenmodel|pexpect/_async.py|zodbpickle/.*_3.py|attr/_next_gen.py)\" /opt/zenoss"
 
 # Fix zenoss' PATH variable
 su - zenoss -c "/mnt/devimg/fixup_path.sh"
