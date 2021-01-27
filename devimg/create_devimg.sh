@@ -25,9 +25,9 @@ rm -rf ${ZENHOME}/webapps/zeneventserver
 su - zenoss -c "ln -s ${SRCROOT}/zenoss-zep ${ZENHOME}/webapps/zeneventserver"
 
 echo "Linking in modelindex..."
-su - zenoss -c "pip uninstall -y zenoss.modelindex"
+su - zenoss -c "pip --no-python-version-warning uninstall -y zenoss.modelindex"
 su - zenoss -c "ln -s ${SRCROOT}/modelindex ${ZENHOME}/modelindex"
-su - zenoss -c "pip install -e ${ZENHOME}/modelindex"
+su - zenoss -c "pip --no-python-version-warning install -e ${ZENHOME}/modelindex"
 
 echo "Linking in solr configsets..."
 rm -rf /opt/solr/server/solr/configsets/zenoss_model

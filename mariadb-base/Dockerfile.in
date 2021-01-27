@@ -25,7 +25,7 @@ RUN ln -s /usr/bin/vi /usr/bin/vim; \
     rm /etc/mysql/mariadb.conf.d/50-server.cnf
 
 RUN wget -qO- https://bootstrap.pypa.io/2.7/get-pip.py | python; \
-    pip install --no-cache-dir supervisor requests "pymysql<1" \
+    pip --no-python-version-warning install --no-cache-dir supervisor requests "pymysql<1" \
     && ln -s /usr/local/bin/supervisord /bin/supervisord
 
 ADD exported.tar /
