@@ -6,6 +6,7 @@ ENV ZENHOME=/opt/zenoss
 ADD hubpasswd /opt/zenoss/etc/
 ADD install_scripts component_info /opt/zenoss/install_scripts/
 ADD %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
+ADD sitecustomize.py /opt/zenoss/lib/python2.7/
 
 RUN echo -e "export ZENOSS_VERSION=%VERSION%\nexport BUILD_NUMBER=%BUILD_NUMBER%" > /etc/profile.d/zenoss.sh
 
