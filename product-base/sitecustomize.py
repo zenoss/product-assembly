@@ -7,12 +7,14 @@ sys.setdefaultencoding('utf-8')
 site.addsitedir(os.path.join(os.getenv('ZENHOME'), 'ZenPacks'))
 site.addsitedir('/var/zenoss/ZenPacks')
 
-# Path to success:
-# 1. Ignore all warnings
-# 2. Import warning categories (classes derived from Warning)
-# 3. Reset warning filters
-# 4. Set the desired warning filters.
+# Path to filter warnings successfully:
+# 1. Copy original/default set of filters
+# 2. Ignore all warnings
+# 3. Import warning categories (classes derived from Warning)
+# 4. Restore original/default set of filters
+# 5. Add the additional filters.
 
+_og_filters = warnings.filters[:]
 warnings.filterwarnings('ignore', category=Warning)
 _categories = []
 try:
@@ -25,8 +27,6 @@ try:
     _categories.append(PipDeprecationWarning)
 except ImportError:
     pass
-warnings.resetwarnings()
-
-warnings.filterwarnings('ignore', '.*', DeprecationWarning)
+warnings.filters = _og_filters[:]
 for category in _categories:
-    warnings.filterwarnings('ignore', category=category)
+    warnings.simplefilter('ignore', category=category)
