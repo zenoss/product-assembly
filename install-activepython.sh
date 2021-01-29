@@ -1,8 +1,13 @@
 #!/bin/bash
 
+if [ -z "${MOUNTPATH}" ]; then
+	echo "MOUNTPATH environment variable is unset."
+	exit 1
+fi
+
 # Install ActiveState Python into /opt/activepython
 mkdir -p /opt/activepython
-/src/activepython/install.sh -I /opt/activepython
+${MOUNTPATH}/activepython/install.sh -I /opt/activepython
 
 # Update default zenoss shell variables.
 echo "export OPENSSLDIR=/etc/pki/tls" >> /etc/profile.d/zenoss.sh
@@ -22,7 +27,7 @@ find /opt/zenoss -name \*.py[co] -delete
 
 # Create new .pyc files (using ActiveState Python)
 # Note: the '-x' argument excludes .py files that aren't Python 2 compatible.
-su - zenoss -c "python -m compileall -fq -x \"(/tests/|/skins/zenmodel|pexpect/_async.py|zodbpickle/.*_3.py|attr/_next_gen.py)\" /opt/zenoss"
+su - zenoss -c "python -m compileall -fq -x \"(/tests/|/skins/zenmodel|pexpect/_async.py|zodbpickle/.*_3.py|attr/_next_gen.py|jinja2/async(filters|support).py)\" /opt/zenoss"
 
 # Fix zenoss' PATH variable
-su - zenoss -c "/src/fixup_path.sh"
+su - zenoss -c "${MOUNTPATH}/fixup_path.sh"

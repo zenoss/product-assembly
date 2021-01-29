@@ -11,6 +11,7 @@ create_zenoss
 echo
 echo "Installing ActiveState Python"
 docker container exec \
+	-e "MOUNTPATH=/src" \
 	-w /src \
 	${product_name} \
 	/bin/bash -l -c "./install-activepython.sh" \

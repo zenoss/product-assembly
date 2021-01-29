@@ -133,7 +133,7 @@ dumpdb:
 # 4. build.sh - Initialize zenoss, link-install zenpacks (if any), and setup other
 #    linkages like Java apps, zenoss-protocols, etc.
 #
-build: build-mariadb-base add-zenpack-file activepython/_install.py
+build: build-mariadb-base add-zenpack-file activepython/_install.py install-activepython.sh
 	@PRODUCT_BASE_IMAGE_ID=$(PRODUCT_BASE_IMAGE_ID) \
 	PRODUCT_IMAGE_ID=$(PRODUCT_IMAGE_ID) \
 	MARIADB_BASE_IMAGE_ID=$(MARIADB_BASE_IMAGE_ID) \
@@ -146,7 +146,7 @@ clean: clean-devimg-base clean-mariadb-base
 	@-docker image rm -f $(PRODUCT_IMAGE_ID) $(MARIADB_IMAGE_ID)
 	@echo "Cleaning ZENDEV_ROOT=$(ZENDEV_ROOT) (requires sudo) ..."
 	@sudo rm -rf $(ZENDEV_ROOT)/zenhome/* $(ZENDEV_ROOT)/var_zenoss/*
-	@rm -f $(ACTIVEPYTHON_ARCHIVE)
+	@rm -f $(ACTIVEPYTHON_ARCHIVE) install-activepython.sh
 	@rm -rf activepython
 
 clean-devimg-base:
@@ -201,3 +201,6 @@ activepython/_install.py: | activepython
 
 activepython:
 	@mkdir -p $@
+
+install-activepython.sh: ../install-activepython.sh
+	@cp $< $@

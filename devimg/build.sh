@@ -92,6 +92,8 @@ docker container create \
 
 docker container start ${mariadb_name} || fail "Could not start ${MARIADB_BASE_IMAGE_ID} container"
 
+DEVIMG_MOUNT=/mnt/devimg
+
 docker container create \
 	-it \
 	--name ${product_name} \
@@ -99,7 +101,7 @@ docker container create \
 	-v ${ZENDEV_ROOT}/zenhome:/opt/zenoss \
 	-v ${ZENDEV_ROOT}/var_zenoss:/var/zenoss \
 	-v ${SRCROOT}:/mnt/src \
-	-v ${PWD}:/mnt/devimg \
+	-v ${PWD}:${DEVIMG_MOUNT} \
 	-v ${HOME}/.m2:/home/zenoss/.m2 \
 	${PRODUCT_BASE_IMAGE_ID} \
 	/bin/bash \
@@ -110,12 +112,13 @@ docker container start ${product_name} || fail "Could not start ${PRODUCT_BASE_I
 docker container exec \
 	-e "DBHOST=${mariadb_name}" \
 	${product_name} \
-	/mnt/devimg/create_devimg.sh \
+	${DEVIMG_MOUNT}/create_devimg.sh \
 	|| fail "Could not execute create_devimg.sh script"
 
 docker container exec \
+	-e "MOUNTPATH=${DEVIMG_MOUNT}" \
 	${product_name} \
-	/mnt/devimg/install-activepython.sh \
+	${DEVIMG_MOUNT}/install-activepython.sh \
 	|| fail "Could not execute install-activepython.sh script"
 
 echo "Stopping the ${PRODUCT_BASE_IMAGE_ID} container."

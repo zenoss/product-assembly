@@ -7,16 +7,19 @@ include ../common.mk
 
 .PHONY: clean-resmgr
 
-build: activepython/_install.py
+build: activepython/_install.py install-activepython.sh
 
 clean: clean-resmgr
 
 clean-resmgr:
 	@rm -rf activepython
-	@rm -f $(ACTIVEPYTHON_ARCHIVE)
+	@rm -f $(ACTIVEPYTHON_ARCHIVE) install-activepython.sh
 
 activepython/_install.py: | activepython
 	curl http://zenpip.zenoss.eng/packages/$(ACTIVEPYTHON_ARCHIVE) | tar --strip-components=1 -C activepython -xz
 
 activepython:
 	@mkdir -p $@
+
+install-activepython.sh: ../install-activepython.sh
+	@cp $< $@
