@@ -67,9 +67,6 @@ run "tar -C ${ZENHOME} -xzvf /tmp/prodbin*"
 run "mkdir -p ${ZENHOME}/etc/supervisor ${ZENHOME}/var/zauth ${ZENHOME}/libexec ${ZENHOME}/lib/python"
 run "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
 
-run "${PIP_INSTALL} ${ZENHOME}/dist/*.whl"
-run "rm -rf ${ZENHOME}/dist"
-
 # Install zensocket
 download_artifact "zensocket"
 run "tar -C ${ZENHOME} -xzvf /tmp/zensocket*"
