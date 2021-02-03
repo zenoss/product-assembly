@@ -59,6 +59,9 @@ run "mkdir ${PYDEPS_DIR}"
 run "tar -C ${PYDEPS_DIR} --strip-components=1 -xf /tmp/pydeps*"
 run "cd ${PYDEPS_DIR}; ./install.sh"
 
+# Configure Zope's INSTANCE_HOME
+run "echo \"export INSTANCE_HOME=/opt/zenoss\" >> ~/.bashrc"
+
 # Install Prodbin
 download_artifact "zenoss-prodbin"
 run "tar -C ${ZENHOME} -xzvf /tmp/prodbin*"
