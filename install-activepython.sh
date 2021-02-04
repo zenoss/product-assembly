@@ -20,7 +20,6 @@ find /opt/zenoss/include -maxdepth 1 -type l -delete
 
 # (re) Install virtual environment with ActiveState Python
 su - zenoss -c "virtualenv --python=/opt/activepython/bin/python /opt/zenoss"
-su - zenoss -c "virtualenv --relocatable --python=/opt/activepython/bin/python /opt/zenoss"
 
 # Delete the existing .pyc files
 find /opt/zenoss -name \*.py[co] -delete
