@@ -51,9 +51,9 @@
     },
     {
         "name": "zenoss-prodbin",
-        "type": "jenkins",
-        "jenkins.server": "http://platform-jenkins.zenoss.eng",
-        "jenkins.job": "Components/job/zenoss-prodbin/job/branch"
+        "type": "download",
+        "version": "7.0.18",
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master.tar.gz"
     },
     {
         "name": "zenoss-protocols",
