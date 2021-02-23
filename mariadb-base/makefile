@@ -10,7 +10,7 @@ PACKAGES = $(shell tr '\n' ' ' < packages.txt)
 .PHONY: clean build
 
 build: exported.tar Dockerfile
-	@docker build -t $(MARIADB_BASE_IMAGE_ID) .
+	@docker build --pull -t $(MARIADB_BASE_IMAGE_ID) .
 
 push:
 	docker push $(MARIADB_BASE_IMAGE_ID)
