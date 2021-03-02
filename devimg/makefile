@@ -110,7 +110,7 @@ ZENPACK_FILE =
 ZENPACK_BLACKLIST =
 endif
 
-ACTIVEPYTHON_ARCHIVE = ActivePython-2.7.18.2.0000-linux-x86_64-glibc-2.17-db6b4da0.tar.gz
+ACTIVEPYTHON_ARCHIVE = ActivePython-2.7.18.3.0000-linux-x86_64-glibc-2.17-3df1e1cd.tar.gz
 
 .PHONY: clean clean-devimg-base clean-mariadb-base build build-devimg-base build-mariadb-base add-zenpack-file dumpdb initialize-zenhome make-dirs
 

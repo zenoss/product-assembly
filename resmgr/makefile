@@ -1,7 +1,7 @@
 TARGET_PRODUCT = resmgr
 ADDITIONAL_UPGRADE_SCRIPTS = upgrade-impact.txt
 
-ACTIVEPYTHON_ARCHIVE = ActivePython-2.7.18.2.0000-linux-x86_64-glibc-2.17-db6b4da0.tar.gz
+ACTIVEPYTHON_ARCHIVE = ActivePython-2.7.18.3.0000-linux-x86_64-glibc-2.17-3df1e1cd.tar.gz
 
 include ../common.mk
 
