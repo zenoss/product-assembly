@@ -24,7 +24,7 @@ RUN ln -s /usr/bin/vi /usr/bin/vim; \
     mkdir -p /opt/zenoss/bin /opt/zenoss/log /opt/zenoss/bin/metrics /opt/zenoss/var; \
     rm /etc/mysql/mariadb.conf.d/50-server.cnf
 
-RUN wget -qO- https://bootstrap.pypa.io/2.7/get-pip.py | python; \
+RUN wget -qO- https://bootstrap.pypa.io/pip/2.7/get-pip.py | python -W ignore::Warning; \
     pip install --no-cache-dir supervisor requests "pymysql<1" \
     && ln -s /usr/local/bin/supervisord /bin/supervisord
 
