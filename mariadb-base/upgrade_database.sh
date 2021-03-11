@@ -7,7 +7,7 @@ export MYSQL_PWD=""
 
 
 case $SERVICE in
-	mariadb-model)
+	mariadb-model|mariadb)
 		ADMIN_USER=$(grep -r "zodb-admin-user" $GLOBAL_CFG | awk '{print $2}')
 		MYSQL_PWD=$(grep -r "zodb-admin-password" $GLOBAL_CFG | awk '{print $2}')
 		;;
@@ -40,3 +40,4 @@ set -e
 
 start_db
 mysql_upgrade -u $ADMIN_USER
+mysql -u $ADMIN_USER < /opt/zenoss/bin/fix_permissions.sql
