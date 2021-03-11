@@ -36,7 +36,7 @@ dirs = exported_files exported_files/opt/zenoss/bin exported_files/home/zenoss e
 toolbox_wheel = zends.toolbox-$(VERSION)-py2-none-any.whl
 etc_files = exported_files/etc/my.cnf
 
-upgrade_files = fix_permissions.sql upgrade_database.sh
+upgrade_files = fix_permissions.sql.in upgrade_database.sh
 zenoss_bin_files := $(addprefix exported_files/opt/zenoss/bin/,$(upgrade_files))
 
 initialize_files = permissions.sql initialize_db.sh
