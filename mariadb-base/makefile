@@ -28,11 +28,12 @@ dirs = exported_files exported_files/opt/zenoss/bin exported_files/home/zenoss e
 
 toolbox_wheel = zends.toolbox-$(VERSION)-py2-none-any.whl
 etc_files = exported_files/etc/my.cnf
-zenoss_bin_files = exported_files/opt/zenoss/bin/upgrade_database.sh
-home_zenoss_files = \
-	exported_files/home/zenoss/permissions.sql.in \
-	exported_files/home/zenoss/permissions_common.sql.in \
-	exported_files/home/zenoss/initialize_db.sh \
+
+upgrade_files = fix_permissions.sql.in upgrade_database.sh
+zenoss_bin_files := $(addprefix exported_files/opt/zenoss/bin/,$(upgrade_files))
+
+initialize_files = permissions.sql initialize_db.sh
+home_zenoss_files := $(addprefix exported_files/home/zenoss/,$(initialize_files))
 
 exported.tar: | $(dirs)
 exported.tar: source_files_to_copy.txt $(etc_files) $(zenoss_bin_files) $(home_zenoss_files) tools/dist/$(toolbox_wheel)
