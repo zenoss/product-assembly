@@ -19,8 +19,8 @@
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
 #
 SHORT_VERSION=7.0
-SVCDEF_GIT_REF=7.0.17
-VERSION=7.0.17
+SVCDEF_GIT_REF=7.0.18
+VERSION=7.0.18
 VERSION_TAG=1
 
 #

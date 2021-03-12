@@ -52,7 +52,7 @@
     {
         "name": "zenoss-prodbin",
         "type": "download",
-        "version": "7.0.17",
+        "version": "7.0.18",
         "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master.tar.gz"
     },
     {
@@ -90,5 +90,11 @@
         "type": "download",
         "version": "2.3.1",
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-py2-none-any.whl"
+    },
+    {
+        "name": "zensocket",
+        "type": "download",
+        "version": "1.0.0",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-x86_64.tar.gz"
     }
 ]
