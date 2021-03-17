@@ -42,4 +42,4 @@ set -e
 
 start_db
 mysql_upgrade -u $ADMIN_USER
-mysql -u $ADMIN_USER < <(sed -e "s/!ZU!/${ZODB_USER}/g" -e "s/!EU!/${ZEP_USER}/g" /opt/zenoss/bin/fix_permissions.sql.in)
+sed -e "s/!ZU!/${ZODB_USER}/g" -e "s/!EU!/${ZEP_USER}/g" /opt/zenoss/bin/fix_permissions.sql.in | mysql -u $ADMIN_USER
