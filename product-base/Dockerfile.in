@@ -1,13 +1,13 @@
-FROM zenoss/%FROM_IMAGE%
+FROM %IMAGE%
 
 ENV ZENHOME=/opt/zenoss
 
 # TODO: fix this. The hubpasswd file should be in the service definition
-ADD hubpasswd /opt/zenoss/etc/
-ADD install_scripts component_info /opt/zenoss/install_scripts/
-ADD %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
-ADD sitecustomize.py /opt/zenoss/lib/python2.7/
+COPY hubpasswd /opt/zenoss/etc/
+COPY install_scripts component_info /opt/zenoss/install_scripts/
+COPY %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
+COPY sitecustomize.py /opt/zenoss/lib/python2.7/
 
 RUN echo -e "export ZENOSS_VERSION=%VERSION%\nexport BUILD_NUMBER=%BUILD_NUMBER%" > /etc/profile.d/zenoss.sh
 
-RUN /opt/zenoss/install_scripts/zenoss_component_install.sh %INSTALL_OPTIONS%
+RUN /opt/zenoss/install_scripts/zenoss_component_install.sh

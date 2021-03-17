@@ -1,42 +1,11 @@
 #!/bin/bash
 
-if [ $# -ne 0 -a $# -ne 2 ]
-then
-	echo "ERROR: $# is an invalid number of arguments; only 0 or 2 arguments are allowed"
-	exit 1
-elif [ $# -eq 2 ]
-then
-	if [ "$1" != "--change-uid" ]
-	then
-		echo "ERROR: invalid option '$1'; only --change-uid allowed"
-		exit 1
-	fi
-
-	# This section is typically used for devimg's to apply the uid/gid of the
-	# current user to the zenoss user/group in the image.
-	NEW_UID=$(echo $2 | cut -d: -f1)
-	NEW_GID=$(echo $2 | cut -d: -f1)
-	echo "Changing zenoss user/group ids to ${NEW_UID}:${NEW_GID}"
-
-	groupmod --gid ${NEW_GID} zenoss
-	usermod --uid ${NEW_UID} --gid ${NEW_GID} zenoss
-
-	# Fix BLD-215
-	mkdir -p /home/zenoss/.cache/pip/wheels
-	# End BLD-215
-
-	# Fix up ownership for zenoss-owned files outside of ZENHOME
-	chown zenoss:zenoss /var/spool/mail/zenoss
-	chown -Rf zenoss:zenoss /home/zenoss
-fi
-
 # Ensure ZENHOME has a log directory
 mkdir -p ${ZENHOME}/log/
 
 # Files added via docker will be owned by root, set to zenoss to start to avoid conflicts
 # as we unpack components into ZENHOME
 chown -Rf zenoss:zenoss ${ZENHOME}
-
 
 function run
 {
