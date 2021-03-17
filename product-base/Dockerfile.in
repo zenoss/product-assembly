@@ -1,13 +1,49 @@
-FROM %IMAGE%
+FROM %IMAGE% as base
 
 ENV ZENHOME=/opt/zenoss
 
-# TODO: fix this. The hubpasswd file should be in the service definition
-COPY hubpasswd /opt/zenoss/etc/
-COPY install_scripts component_info /opt/zenoss/install_scripts/
+RUN yum install -y --setopt=tsflags="nodocs" centos-release-scl \
+    && yum install -y --setopt=tsflags="nodocs" python27-python \
+    && /sbin/scrub.sh
+
 COPY %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
-COPY sitecustomize.py /opt/zenoss/lib/python2.7/
 
 RUN echo -e "export ZENOSS_VERSION=%VERSION%\nexport BUILD_NUMBER=%BUILD_NUMBER%" > /etc/profile.d/zenoss.sh
+
+FROM base AS build
+
+SHELL ["/bin/su", "-", "zenoss", "-c"]
+
+# Rework PATH variable definition
+RUN sed -i -e "/export PATH/d" ~/.bashrc
+RUN sed -i -e "\|export ZENHOME|i export PATH=/opt/zenoss/var/ext/bin:\$PATH" ~/.bashrc
+
+# TODO: fix this. The hubpasswd file should be in the service definition
+COPY --chown=zenoss:zenoss hubpasswd /opt/zenoss/etc/
+COPY --chown=zenoss:zenoss install_scripts component_info /opt/zenoss/install_scripts/
+COPY --chown=zenoss:zenoss sitecustomize.py /opt/zenoss/lib/python2.7/
+
+# Remove the artifacts of the previously created virtual environment.
+RUN find /opt/zenoss/lib/python2.7 -maxdepth 1 -type l -delete
+RUN find /opt/zenoss/include -maxdepth 1 -type l -delete
+
+# Delete the compilation artifacts from older Python runtime.
+RUN find /opt/zenoss -name \*.py[co] -delete
+
+# Add a line to enable the SCL Python distribution before activating the virtual environment.
+RUN sed -i -e "\|source /opt/zenoss/bin/activate|i source /opt/rh/python27/enable" /home/zenoss/.bashrc
+
+# Create a new virtual environment based on the SCL Python distribution.
+RUN virtualenv --python=/opt/rh/python27/root/usr/bin/python /opt/zenoss
+
+# Create new .pyc files using new SCL Python runtime
+RUN python -m compileall -fq /opt/zenoss
+
+SHELL ["/bin/sh", "-c"]
+
+FROM base
+
+COPY --from=build --chown=zenoss:zenoss /opt/zenoss /opt/zenoss/
+COPY --from=build --chown=zenoss:zenoss /home/zenoss /home/zenoss/
 
 RUN /opt/zenoss/install_scripts/zenoss_component_install.sh
