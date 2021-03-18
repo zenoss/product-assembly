@@ -2,9 +2,13 @@ SHELL := /bin/bash
 
 include ../variables.mk
 
-FROM_IMAGE ?= zenoss-centos-base:$(ZENOSS_CENTOS_BASE_VERSION)
+FROM_IMAGE ?= zenoss/zenoss-centos-base:$(ZENOSS_CENTOS_BASE_VERSION)
 
-.PHONY: change-from-image build-base-image build build-devimg push clean
+ifeq ($(USE_CACHE),)
+CACHE_OPTION = --no-cache=true
+else
+CACHE_OPTION =
+endif
 
 COPIED_DEPS = $(addprefix component_info/,artifact_download.py component_versions.json)
 
@@ -16,20 +20,12 @@ BUILD_DEPENDENCIES = \
 	component_info/versions.sh \
 	$(COPIED_DEPS)
 
+.PHONY: build-base-image build push clean
+
 build-base-image: $(BUILD_DEPENDENCIES)
-	docker build --no-cache=true -t $(PRODUCT_BASE_IMAGE_ID) .
+	docker build $(CACHE_OPTION) -t $(PRODUCT_BASE_IMAGE_ID) .
 
 build: component_info/${MIGRATION_WHEEL} build-base-image
-
-# To build the dev image, change the FROM_IMAGE value to use the .devtools base
-# image and then build like any other product-base image.
-build-devimg: change-from-image build-base-image
-
-change-from-image:
-	$(eval FROM_IMAGE = $(FROM_IMAGE).devtools)
-	@echo "Building an image for development with FROM_IMAGE=$(FROM_IMAGE)"
-	# Force creation of a new Dockerfile to minimize rebuild confusion
-	@rm -f Dockerfile
 
 push:
 	docker push $(PRODUCT_BASE_IMAGE_ID)
@@ -68,9 +64,8 @@ $(SHORT_VERSION).x/pull-docker-images.sh: pull-docker-images.sh.in
 
 Dockerfile: Dockerfile.in
 	@sed \
-		-e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g' \
-		-e 's/%FROM_IMAGE%/$(FROM_IMAGE)/g' \
-		-e 's/%INSTALL_OPTIONS%/$(INSTALL_OPTIONS)/g;' \
-		-e 's/%VERSION%/$(VERSION)/g;' \
-		-e 's/%BUILD_NUMBER%/$(BUILD_NUMBER)/g;' \
+		-e 's|%SHORT_VERSION%|$(SHORT_VERSION)|g' \
+		-e 's|%IMAGE%|$(FROM_IMAGE)|g' \
+		-e 's|%VERSION%|$(VERSION)|g;' \
+		-e 's|%BUILD_NUMBER%|$(BUILD_NUMBER)|g;' \
 		$< > $@
