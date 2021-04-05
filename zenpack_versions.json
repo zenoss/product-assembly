@@ -349,7 +349,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenWebTx",
-        "requirement": "ZenPacks.zenoss.ZenWebTx===3.0.3",
+        "requirement": "ZenPacks.zenoss.ZenWebTx===3.0.4",
         "type": "zenpack"
     }
 ]
