@@ -15,7 +15,6 @@ COPIED_DEPS = $(addprefix component_info/,artifact_download.py component_version
 MIGRATION_WHEEL = zenservicemigration-${VERSION}-py2-none-any.whl
 
 BUILD_DEPENDENCIES = \
-	$(SHORT_VERSION).x/pull-docker-images.sh \
 	Dockerfile \
 	component_info/versions.sh \
 	$(COPIED_DEPS)
@@ -32,10 +31,10 @@ push:
 
 clean:
 	@rm -f $(BUILD_DEPENDENCIES)
-	@rm -rf $(SHORT_VERSION).x component_info
+	@rm -rf component_info
 	@-docker image rm -f $(PRODUCT_BASE_IMAGE_ID)
 
-component_info $(SHORT_VERSION).x:
+component_info:
 	@mkdir -p $@
 
 $(COPIED_DEPS): | component_info
@@ -53,14 +52,6 @@ component_info/${MIGRATION_WHEEL}: ../svcdefs/${MIGRATION_WHEEL}
 
 ../svcdefs/${MIGRATION_WHEEL}:
 	@make -C ../svcdefs clean migrations
-
-$(SHORT_VERSION).x/pull-docker-images.sh: | $(SHORT_VERSION).x
-$(SHORT_VERSION).x/pull-docker-images.sh: pull-docker-images.sh.in
-	@sed \
-		-e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g' \
-		-e 's/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g' \
-		$< > $@
-	@chmod +x $@
 
 Dockerfile: Dockerfile.in
 	@sed \

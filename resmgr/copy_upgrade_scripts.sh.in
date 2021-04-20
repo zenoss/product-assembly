@@ -1,3 +1,4 @@
 #!/bin/bash
 
-cp /src/upgrade-resmgr.txt /src/upgrade-resmgr.sh /src/current_version.txt /src/upgrade-impact.txt /root/%SHORT_VERSION%.x/
+mkdir -p /root/%SHORT_VERSION%.x/
+cp /src/pull-docker-images.sh /src/upgrade-resmgr.txt /src/upgrade-resmgr.sh /src/current_version.txt /src/upgrade-impact.txt /root/%SHORT_VERSION%.x/

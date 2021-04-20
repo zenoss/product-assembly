@@ -21,37 +21,57 @@
 #
 ###################################################################################
 
-DESCRIPTION  Zenoss Core %VERSION% upgrade
-VERSION   core-%VERSION%
+DESCRIPTION Zenoss Core %VERSION% upgrade
+VERSION core-%VERSION%
 REQUIRE_SVC
 SNAPSHOT preupgrade-core-%VERSION%
 
 # Choose image to upgrade to
-SVC_USE zenoss/core_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/core_5.0 zenoss/core_5.1 zenoss/core_5.2 zenoss/core_5.3 zenoss/core_6.0 zenoss/core_6.1 zenoss/core_6.2
+SVC_USE zenoss/core_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/core_5.0 zenoss/core_5.1 zenoss/core_5.2 zenoss/core_5.3 zenoss/core_6.0 zenoss/core_6.1 zenoss/core_6.2 zenoss/core_6.3 zenoss/core_6.4 zenoss/core_6.5
 SVC_USE zenoss/hbase:%HBASE_VERSION%
 SVC_USE zenoss/opentsdb:%OPENTSDB_VERSION%
+SVC_USE zenoss/mariadb-core:%VERSION%_%VERSION_TAG% zenoss/mariadb
 
 # Stop Zenoss
-# SVC_STOP Zenoss.core auto
-# SVC_WAIT Zenoss.core stopped 600
+SVC_STOP Zenoss.core auto
+SVC_WAIT Zenoss.core stopped 600
+
+# Add timeout here as a temporary workaround for unknown issue when 
+# underlying SVC_EXEC commands running using old images or old service definitions
+SVC_EXEC NO_COMMIT "Zenoss.core" sleep 120
+
+# Run the service migrations
+SVC_EXEC NO_COMMIT "Zenoss.core" runuser -l zenoss -c "/opt/zenoss/bin/zensvcmigrate --from %FROM_VERSION%"
+
+# Run mariadb migration if we upgrade from core < 6.4.0
+# - override image for mariadb services to a new one
+# - start mariadb services and run mysql_upgrade
+%MIGRATE_MARIADB_SERVICES%
+
+# Run mysql_upgrade
+SVC_EXEC NO_COMMIT Zenoss.core/Infrastructure/mariadb /opt/zenoss/bin/upgrade_database.sh mariadb
 
 # Start all our dependent services
 SVC_START Zenoss.core/Infrastructure/mariadb
 SVC_START Zenoss.core/Infrastructure/RabbitMQ
 SVC_START Zenoss.core/Zenoss/Events/zeneventserver
 SVC_START Zenoss.core/Infrastructure/redis
+SVC_START Zenoss.core/Infrastructure/memcached
 
 # Wait for our services to start
-SVC_WAIT Zenoss.core/Infrastructure/mariadb Zenoss.core/Infrastructure/RabbitMQ Zenoss.core/Zenoss/Events/zeneventserver Zenoss.core/Infrastructure/redis started 1200
+SVC_WAIT Zenoss.core/Infrastructure/mariadb Zenoss.core/Infrastructure/RabbitMQ Zenoss.core/Zenoss/Events/zeneventserver Zenoss.core/Infrastructure/redis Zenoss.core/Infrastructure/memcached started 1200
 
 # Run migration to add solr first
-SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump
+SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" runuser -l zenoss -c "/opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump"
 SVC_START Zenoss.core/Infrastructure/solr
 SVC_RESTART Zenoss.core/Zenoss/Events/zeneventserver
 SVC_WAIT Zenoss.core/Infrastructure/solr Zenoss.core/Zenoss/Events/zeneventserver started 600
 
 # Run migration to remove product class instance relationships
-SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump
+SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" runuser -l zenoss -c "/opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump"
+
+# Run migrations for zenhubworker services
+%HUB_SERVICE_MIGRATION%
 
 # Run the upgrade 'run'
 SVC_RUN "Zenoss.core/Zenoss/User Interface/Zope" upgrade
