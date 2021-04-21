@@ -2,7 +2,7 @@ include ../variables.mk
 
 FROM_IMAGE = product-base:$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)
 
-UPGRADE_SCRIPTS = upgrade-$(PRODUCT).txt upgrade-$(PRODUCT).sh $(ADDITIONAL_UPGRADE_SCRIPTS)
+UPGRADE_SCRIPTS = pull-docker-images.sh upgrade-$(PRODUCT).txt upgrade-$(PRODUCT).sh $(ADDITIONAL_UPGRADE_SCRIPTS)
 
 ZENPACK_DIR = zenpacks
 
@@ -72,6 +72,15 @@ upgrade-%.sh: upgrade-%.sh.in
 		-e 's/%UCSPM_VERSION%/$(UCSPM_VERSION)/g' \
 		-e 's/%VERSION_TAG%/$(VERSION_TAG)/g' \
 		$^ > $@
+	@chmod +x $@
+
+pull-docker-images.sh: ../product-base/pull-docker-images.sh.in
+	@sed \
+		-e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g' \
+		-e 's/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g' \
+		-e 's/%PRODUCT%/$(PRODUCT)/g' \
+		-e 's/%VERSION%/$(VERSION)/g' \
+		$< > $@
 	@chmod +x $@
 
 run-tests:

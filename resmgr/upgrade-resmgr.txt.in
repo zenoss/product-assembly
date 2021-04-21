@@ -21,7 +21,7 @@
 #
 ###################################################################################
 
-DESCRIPTION Zenoss RM %VERSION% upgrade
+DESCRIPTION Zenoss Service Dynamics %VERSION% upgrade
 VERSION resmgr-%VERSION%
 REQUIRE_SVC
 SNAPSHOT preupgrade-resmgr-%VERSION%
@@ -36,7 +36,7 @@ SVC_USE zenoss/mariadb-resmgr:%VERSION%_%VERSION_TAG% zenoss/mariadb
 SVC_STOP Zenoss.resmgr auto
 SVC_WAIT Zenoss.resmgr stopped 600
 
-# Add timeout here as a temporary workaround for unknown issue when 
+# Add timeout here as a temporary workaround for unknown issue when
 # underlying SVC_EXEC commands running using old images or old service definitions
 SVC_EXEC NO_COMMIT "Zenoss.resmgr" sleep 120
 

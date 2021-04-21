@@ -21,7 +21,7 @@
 #
 ###################################################################################
 
-DESCRIPTION Zenoss RM %VERSION% with Impact upgrade
+DESCRIPTION Zenoss Service Dynamics %VERSION% with Impact upgrade
 VERSION resmgr-%VERSION%
 REQUIRE_SVC
 SNAPSHOT preupgrade-resmgr-%VERSION%
