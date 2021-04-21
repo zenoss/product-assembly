@@ -6,8 +6,6 @@ RUN yum install -y --setopt=tsflags="nodocs" centos-release-scl \
     && yum install -y --setopt=tsflags="nodocs" python27-python \
     && /sbin/scrub.sh
 
-COPY %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
-
 RUN echo -e "export ZENOSS_VERSION=%VERSION%\nexport BUILD_NUMBER=%BUILD_NUMBER%" > /etc/profile.d/zenoss.sh
 
 FROM base AS build
