@@ -78,7 +78,7 @@ sed -i \
 	-e "s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g" \
 	-e "s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g" \
 	-e "s@%HUB_SERVICE_MIGRATION%@${HUB_SERVICE_MIGRATION}@g" \
-	-e "s@%FROM_VERSION%/${FROM_VERSION}@" \
+	-e "s@%FROM_VERSION%@${FROM_VERSION}@g" \
 	/root/%SHORT_VERSION%.x/upgrade-resmgr.txt
 
 sed -i \
@@ -86,7 +86,7 @@ sed -i \
 	-e "s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g" \
 	-e "s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g" \
 	-e "s@%HUB_SERVICE_MIGRATION%@${HUB_SERVICE_MIGRATION}@g" \
-	-e "s@%FROM_VERSION%/${FROM_VERSION}@" \
+	-e "s@%FROM_VERSION%@${FROM_VERSION}@g" \
 	/root/%SHORT_VERSION%.x/upgrade-impact.txt
 
 if [ $(serviced service status --show-fields Name  Zenoss.resmgr/Infrastructure/Impact | grep Impact) ]; then
