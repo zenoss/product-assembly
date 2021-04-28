@@ -2,7 +2,7 @@
 apt-get install -y gcc python-dev openjdk-8-jdk libpython2.7 libxml2-dev libxslt1-dev snmp redis-server rabbitmq-server jq
 echo "127.0.0.1 rbt0" >> /etc/hosts
 echo -e "NODENAME=rabbit@rbt0\nNODE_IP_ADDRESS=0.0.0.0" > /etc/rabbitmq/rabbitmq-env.conf
-wget -qO- https://bootstrap.pypa.io/get-pip.py | python;
+wget -qO- https://bootstrap.pypa.io/pip/2.7/get-pip.py | python;
 chown -R zenoss:zenoss $ZENHOME
 chown -R zenoss:zenoss /opt/solr/
 chmod +x $ZENHOME/install_scripts/artifact_download.py
