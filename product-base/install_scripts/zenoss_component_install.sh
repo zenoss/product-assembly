@@ -57,7 +57,6 @@ run "mkdir -p ${ZENHOME}/etc/supervisor ${ZENHOME}/var/zauth ${ZENHOME}/libexec"
 run "ln -s ${ZENHOME}/etc/zauth/zauth_supervisor.conf ${ZENHOME}/etc/supervisor/zauth_supervisor.conf"
 
 run "pip install --no-index ${ZENHOME}/dist/*.whl"
-run "mv ${ZENHOME}/legacy/sitecustomize.py ${ZENHOME}/lib/python2.7/"
 run "rm -rf ${ZENHOME}/dist ${ZENHOME}/legacy"
 
 # Install zensocket
