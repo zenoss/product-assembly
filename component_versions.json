@@ -50,9 +50,9 @@
     },
     {
         "name": "zenoss-prodbin",
-        "type": "jenkins",
-        "version": "support/6.x",
-        "jenkins.job": "Components/job/zenoss-prodbin/job/support-6.x/"
+        "type": "download",
+        "version": "6.6.0",
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6x.tar.gz"
     },
     {
         "name": "zenoss-protocols",
@@ -98,7 +98,8 @@
     },
     {
         "name": "pydeps",
-        "type": "jenkins",
-        "version": "develop"
+        "type": "download",
+        "version": "5.7.4",
+        "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-el7-1.tar.gz"
     }
 ]
