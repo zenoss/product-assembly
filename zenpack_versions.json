@@ -17,11 +17,11 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.AWS",
-        "requirement": "ZenPacks.zenoss.AWS===5.0.1",
+        "requirement": "ZenPacks.zenoss.AWS===5.1.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.BigIpMonitor",
-        "requirement": "ZenPacks.zenoss.BigIpMonitor===2.7.1",
+        "requirement": "ZenPacks.zenoss.BigIpMonitor===2.7.2",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CalculatedPerformance",
@@ -33,11 +33,11 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoAPIC",
-        "requirement": "ZenPacks.zenoss.CiscoAPIC===1.2.3",
+        "requirement": "ZenPacks.zenoss.CiscoAPIC===1.3.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoMonitor",
-        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.11.1",
+        "requirement": "ZenPacks.zenoss.CiscoMonitor===5.12.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.CiscoUCS",
@@ -57,7 +57,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Dashboard",
-        "requirement": "ZenPacks.zenoss.Dashboard===1.3.10",
+        "requirement": "ZenPacks.zenoss.Dashboard===1.3.12",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DatabaseMonitor",
@@ -81,7 +81,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DistributedCollector",
-        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.10",
+        "requirement": "ZenPacks.zenoss.DistributedCollector===3.1.11",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DnsMonitor",
@@ -89,7 +89,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Docker",
-        "requirement": "ZenPacks.zenoss.Docker===2.0.4",
+        "requirement": "ZenPacks.zenoss.Docker===2.0.5",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DurationThreshold",
@@ -97,7 +97,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.DynamicView",
-        "requirement": "ZenPacks.zenoss.DynamicView===1.7.1",
+        "requirement": "ZenPacks.zenoss.DynamicView===2.0.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.EMC.base",
@@ -125,7 +125,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.GoogleCloudPlatform",
-        "requirement": "ZenPacks.zenoss.GoogleCloudPlatform===1.0.2",
+        "requirement": "ZenPacks.zenoss.GoogleCloudPlatform===1.2.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.HP.Proliant",
@@ -157,11 +157,11 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Kubernetes",
-        "requirement": "ZenPacks.zenoss.Kubernetes===1.0.1",
+        "requirement": "ZenPacks.zenoss.Kubernetes===1.1.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Layer2",
-        "requirement": "ZenPacks.zenoss.Layer2===1.4.3",
+        "requirement": "ZenPacks.zenoss.Layer2===1.4.4",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.LDAPAuthenticator",
@@ -185,7 +185,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Azure",
-        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.1.0",
+        "requirement": "ZenPacks.zenoss.Microsoft.Azure===2.2.1",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Exchange",
@@ -193,7 +193,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.HyperV",
-        "requirement": "ZenPacks.zenoss.Microsoft.HyperV===1.3.3",
+        "requirement": "ZenPacks.zenoss.Microsoft.HyperV===2.1.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.Microsoft.Lync",
@@ -213,11 +213,11 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetAppMonitor",
-        "requirement": "ZenPacks.zenoss.NetAppMonitor===4.0.0",
+        "requirement": "ZenPacks.zenoss.NetAppMonitor===4.1.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetScaler",
-        "requirement": "ZenPacks.zenoss.NetScaler===1.0.6",
+        "requirement": "ZenPacks.zenoss.NetScaler===2.0.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.NetScreenMonitor",
@@ -249,7 +249,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PostgreSQL",
-        "requirement": "ZenPacks.zenoss.PostgreSQL===1.0.10",
+        "requirement": "ZenPacks.zenoss.PostgreSQL===1.0.12",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.PredictiveThreshold",
@@ -265,7 +265,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RabbitMQ",
-        "requirement": "ZenPacks.zenoss.RabbitMQ===1.0.8",
+        "requirement": "ZenPacks.zenoss.RabbitMQ===1.0.9",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.RMMonitor",
@@ -289,7 +289,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.UCSCapacity",
-        "requirement": "ZenPacks.zenoss.UCSCapacity===1.4.0",
+        "requirement": "ZenPacks.zenoss.UCSCapacity===2.0.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.UCSXSkin",
@@ -301,7 +301,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.vSphere",
-        "requirement": "ZenPacks.zenoss.vSphere===4.0.3",
+        "requirement": "ZenPacks.zenoss.vSphere===4.1.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.WBEM",
@@ -329,7 +329,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenJMX",
-        "requirement": "ZenPacks.zenoss.ZenJMX===3.12.1",
+        "requirement": "ZenPacks.zenoss.ZenJMX===3.13.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenMail",
@@ -337,7 +337,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenOperatorRole",
-        "requirement": "ZenPacks.zenoss.ZenOperatorRole===2.2.0",
+        "requirement": "ZenPacks.zenoss.ZenOperatorRole===2.3.0",
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenPackLib",
@@ -349,7 +349,7 @@
         "type": "zenpack"
     },{
         "name": "ZenPacks.zenoss.ZenWebTx",
-        "requirement": "ZenPacks.zenoss.ZenWebTx===3.0.3",
+        "requirement": "ZenPacks.zenoss.ZenWebTx===3.0.4",
         "type": "zenpack"
     }
 ]

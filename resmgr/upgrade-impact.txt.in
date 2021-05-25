@@ -21,13 +21,13 @@
 #
 ###################################################################################
 
-DESCRIPTION  Zenoss RM %VERSION% with Impact upgrade
-VERSION   resmgr-%VERSION%
+DESCRIPTION Zenoss Service Dynamics %VERSION% with Impact upgrade
+VERSION resmgr-%VERSION%
 REQUIRE_SVC
 SNAPSHOT preupgrade-resmgr-%VERSION%
 
 # Choose image to upgrade to
-SVC_USE zenoss/resmgr_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/resmgr_5.0 zenoss/resmgr_5.1 zenoss/resmgr_5.2 zenoss/resmgr_5.3 zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4
+SVC_USE zenoss/resmgr_%SHORT_VERSION%:%VERSION%_%VERSION_TAG% zenoss/resmgr_5.0 zenoss/resmgr_5.1 zenoss/resmgr_5.2 zenoss/resmgr_5.3 zenoss/resmgr_6.0 zenoss/resmgr_6.1 zenoss/resmgr_6.2 zenoss/resmgr_6.3 zenoss/resmgr_6.4 zenoss/resmgr_6.5
 SVC_USE zenoss/hbase:%HBASE_VERSION%
 SVC_USE zenoss/opentsdb:%OPENTSDB_VERSION%
 SVC_USE zenoss/mariadb-resmgr:%VERSION%_%VERSION_TAG% zenoss/mariadb
@@ -41,7 +41,7 @@ SVC_WAIT Zenoss.resmgr stopped 600
 SVC_EXEC NO_COMMIT "Zenoss.resmgr" sleep 120
 
 # Run the service migrations
-SVC_EXEC NO_COMMIT "Zenoss.resmgr" /opt/zenoss/bin/zensvcmigrate --from %FROM_VERSION%
+SVC_EXEC NO_COMMIT "Zenoss.resmgr" runuser -l zenoss -c "/opt/zenoss/bin/zensvcmigrate --from %FROM_VERSION%"
 
 # Run mariadb migration if we upgrade from resmgr < 6.4.0
 # - override image for mariadb services to a new one
@@ -65,13 +65,13 @@ SVC_START Zenoss.resmgr/Infrastructure/memcached
 SVC_WAIT Zenoss.resmgr/Infrastructure/mariadb-model Zenoss.resmgr/Infrastructure/mariadb-events Zenoss.resmgr/Infrastructure/RabbitMQ Zenoss.resmgr/Zenoss/Events/zeneventserver Zenoss.resmgr/Infrastructure/redis Zenoss.resmgr/Infrastructure/Impact Zenoss.resmgr/Infrastructure/memcached started 1200
 
 # Run migration to add solr first
-SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump
+SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" runuser -l zenoss -c "/opt/zenoss/bin/zenmigrate --step=AddSolrService --dont-bump"
 SVC_START Zenoss.resmgr/Infrastructure/solr
 SVC_RESTART Zenoss.resmgr/Zenoss/Events/zeneventserver
 SVC_WAIT Zenoss.resmgr/Infrastructure/solr Zenoss.resmgr/Zenoss/Events/zeneventserver started 600
 
 # Run migration to remove product class instance relationships
-SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump
+SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" runuser -l zenoss -c "/opt/zenoss/bin/zenmigrate --step=RemoveProductClassInstancesRelationship --dont-bump"
 
 # Run script to completely remove Catalog Service ZenPack
 SVC_EXEC NO_COMMIT "Zenoss.resmgr/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/remove_CatalogServiceZenPack.sh"

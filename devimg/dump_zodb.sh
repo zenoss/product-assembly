@@ -10,6 +10,10 @@ source ${ZENHOME}/install_scripts/install_lib.sh
 cleanup() {
 	set +x
 	set +e
+	if [ -f $ZENHOME/zensocket ]; then
+		mv $ZENHOME/zensocket $ZENHOME/bin/zensocket
+		chmod 04750 $ZENHOME/bin/zensocket
+	fi
 	stop_solr
 	stop_rabbitmq
 	stop_redis
@@ -21,6 +25,8 @@ sync_zope_conf || die "Failed to sync globals.conf to zope config files"
 start_redis
 start_rabbitmq
 start_solr
+
+mv $ZENHOME/bin/zensocket $ZENHOME/zensocket
 
 set -e
 set -x

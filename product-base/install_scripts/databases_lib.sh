@@ -53,6 +53,15 @@ load_zodb() {
 		|| die "Unable to load Zenoss ZODB SQL dump"
 }
 
+migrate_zodb() {
+	echo "Migrating ZODB..."
+	local cmd="zenmigrate --dont-bump"
+	if [[ $EUID -eq 0 ]]; then
+		cmd="su - zenoss -c \"${cmd}\""
+	fi
+	eval ${cmd} || die "Unable to migrate ZODB"
+}
+
 pack_zodb() {
 	echo "Packing the ZODB database..."
 	local cmd="zodbpack ${ZENHOME}/install_scripts/zodbpack.conf"

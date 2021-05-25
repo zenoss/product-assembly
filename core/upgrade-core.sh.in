@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 ###############################################################################
 #
@@ -7,44 +7,80 @@
 ###############################################################################
 set -e
 export SERVICE_TENANT_ID="`serviced service list core --format='{{.ID}}'`"
+export VER_6_3_0="6.3.0"
+export VER_6_4_0="6.4.0"
+export HUB_SERVICE_MIGRATION
 export UPGRADE_REINDEX
 export REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS
-serviced snapshot untag $SERVICE_TENANT_ID preupgrade-core-%VERSION%
+export MIGRATE_MARIADB_SERVICES
 
+if serviced snapshot list -t | grep preupgrade-core-%VERSION%; then
+    serviced snapshot untag $SERVICE_TENANT_ID preupgrade-core-%VERSION%
+fi
+
+echo "Getting FROM_VERSION from the 'Version' setting."
 FROM_VERSION=$(serviced service list core --format='{{.Version}}')
 TO_VERSION=%VERSION%
 
-if [ -z "$FROM_VERSION" ];
-then
-    FROM_VERSION=$(serviced service list core --format '{{.ImageID}}' | awk '{ print "localhost:5000/"$0" cat /opt/zenoss/Products/ZenModel/ZVersion.py" }' | xargs docker run --rm | grep VERSION | cut -d'"' -f2)
+if [ -z "$FROM_VERSION" ]; then
+	# This only works when upgrading from before 6.6.0
+	echo "Getting FROM_VERSION from Products/ZenModel/ZVersion.py."
+	FROM_VERSION=$(serviced service list core --format '{{.ImageID}}' | awk '{ print "localhost:5000/"$0" cat /opt/zenoss/Products/ZenModel/ZVersion.py" }' | xargs docker run --rm | grep VERSION | cut -d'"' -f2)
 fi
 
-if [ -z "$FROM_VERSION" ];
-then
-    FROM_VERSION=$(grep 'SVC_USE zenoss/resmgr_[^:_]*:.*' /root/%SHORT_VERSION%.x/current_version.txt | cut -d':' -f2 | cut -d'_' -f1)
-    if [ -z "$FROM_VERSION" ];
-    then
-        echo "Could not get the previous Core version number from serviced, please edit current_version.txt to set it."
-        echo "Change this line 'SVC_USE zenoss/core_REPLACE_1' to reflect the pre-upgrade version, for example:"
-        echo "SVC_USE zenoss/core_5.2:5.2.6_1"
-        exit 1
-    else
-        echo "Using FROM_VERSION provided by change to current_version.txt"
-    fi
+if [ -z "$FROM_VERSION" ]; then
+	echo "Getting FROM_VERSION from the current_version.txt file."
+	FROM_VERSION=$(grep 'SVC_USE zenoss/core_[^:_]*:.*' /root/%SHORT_VERSION%.x/current_version.txt | cut -d':' -f2 | cut -d'_' -f1)
+	if [ -z "$FROM_VERSION" ]; then
+		echo "Could not get the previous Core version number from serviced, please edit current_version.txt to set it."
+		echo "Change this line 'SVC_USE zenoss/core_REPLACE_1' to reflect the pre-upgrade version, for example:"
+		echo "SVC_USE zenoss/core_5.2:5.2.6_1"
+		exit 1
+	else
+		echo "Using FROM_VERSION provided by change to current_version.txt"
+	fi
 fi
 
-FROM_VERSION_SHORT=$(cut -d'.' -f1,2 <<< $FROM_VERSION)
+echo "Preparing to update from "$FROM_VERSION" to "$TO_VERSION" version."
+FROM_VERSION_SHORT=$(echo $FROM_VERSION | cut -d'.' -f1,2)
 sed -i 's/REPLACE/'"$FROM_VERSION_SHORT:$FROM_VERSION"'/g' /root/%SHORT_VERSION%.x/current_version.txt
 sed -i "s/%FROM_VERSION%/$FROM_VERSION/g" /root/%SHORT_VERSION%.x/current_version.txt
 serviced script run /root/%SHORT_VERSION%.x/current_version.txt --service Zenoss.core
 
 if [ $(echo "${FROM_VERSION}" | cut -c1) -eq 5 ] && [ $(echo "${TO_VERSION}" | cut -c1) -eq 6 ];
 then
+    echo "Adding step to reindex ZODB with Solr."
     UPGRADE_REINDEX='SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" su - zenoss -c "/opt/zenoss/bin/upgrade_reindex.sh Zenoss.core"'
     REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS='SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=RemoveEmptyProductClassRelationships --dont-bump'
 fi
 
-sed -i "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g; s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g;" /root/%SHORT_VERSION%.x/upgrade-core.txt
+# Run mariadb migration in case we upgrade from older than 6.4.0
+if [ $(echo -e "$FROM_VERSION\n$VER_6_4_0" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $VER_6_4_0 ];
+then
+	MIGRATE_MARIADB_SERVICES="SVC_USE zenoss/mariadb-core:%VERSION%_%VERSION_TAG% zenoss/core_6.3 zenoss/core_6.2 zenoss/core_6.1 service Zenoss.core/Infrastructure/mariadb"
+fi
 
+# Due to limitation of service-migration if a migration adds service then it is invisible to subsequent migrations in the same migration run what causes missed migrations.
+# To mitigate that we run migrations by hand before upgrade. Fixes ZEN-32266 and ZEN-32165
+if [ $(echo -e "$FROM_VERSION\n$VER_6_3_0" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $VER_6_3_0 ];
+then
+    HUB_SERVICE_MIGRATION='SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddZenHubWorkerService --dont-bump\n'
+fi
+
+if [ $(echo -e "$FROM_VERSION\n$VER_6_4_0" | sort -V | head -1) == $FROM_VERSION ] && [ $FROM_VERSION != $VER_6_4_0 ];
+then
+    HUB_SERVICE_MIGRATION+='SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" /opt/zenoss/bin/zenmigrate --step=AddADMZenHubWorkerService --dont-bump\n'
+fi
+
+sed -i \
+	-e "s@%UPGRADE_REINDEX%@${UPGRADE_REINDEX}@g" \
+	-e "s@%REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS%@${REMOVE_EMPTY_PRODUCT_CLASS_RELATIONSHIPS}@g" \
+	-e "s@%MIGRATE_MARIADB_SERVICES%@${MIGRATE_MARIADB_SERVICES}@g" \
+	-e "s@%HUB_SERVICE_MIGRATION%@${HUB_SERVICE_MIGRATION}@g" \
+	-e "s@%FROM_VERSION%@${FROM_VERSION}@g" \
+	/root/%SHORT_VERSION%.x/upgrade-core.txt
+
+echo "Starting core upgrade."
 serviced script run /root/%SHORT_VERSION%.x/upgrade-core.txt --service Zenoss.core
+
 /opt/serviced/bin/serviced-set-version Zenoss.core %VERSION%

@@ -52,6 +52,9 @@ su - zenoss -c "${ZENHOME}/bin/zendmd --script ${ZENHOME}/bin/addSystemUser.py"
 # link installs for zendev/devimg
 ensure_dfs_dirs
 
+# Migrate ZODB
+migrate_zodb
+
 install_zenpacks
 
 # Pass along arguments to this function (e.g. --no-quickstart)

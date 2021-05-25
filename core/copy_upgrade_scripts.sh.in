@@ -1,3 +1,4 @@
 #!/bin/bash
 
-cp /src/upgrade-core.txt /src/upgrade-core.sh /src/current_version.txt /root/%SHORT_VERSION%.x/
+mkdir -p /root/%SHORT_VERSION%.x/
+cp /src/pull-docker-images.sh /src/upgrade-core.txt /src/upgrade-core.sh /src/current_version.txt /root/%SHORT_VERSION%.x/

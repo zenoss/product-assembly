@@ -9,10 +9,10 @@ SVC_START Zenoss.core/Infrastructure/mariadb
 SVC_START Zenoss.core/Infrastructure/RabbitMQ
 SVC_START Zenoss.core/Zenoss/Events/zeneventserver
 SVC_START Zenoss.core/Infrastructure/redis
+SVC_START Zenoss.core/Infrastructure/memcached
 
 # Wait for services to start
-SVC_WAIT Zenoss.core/Infrastructure/mariadb Zenoss.core/Infrastructure/RabbitMQ Zenoss.core/Zenoss/Events/zeneventserver Zenoss.core/Infrastructure/redis started 1200
+SVC_WAIT Zenoss.core/Infrastructure/mariadb Zenoss.core/Infrastructure/RabbitMQ Zenoss.core/Zenoss/Events/zeneventserver Zenoss.core/Infrastructure/memcached Zenoss.core/Infrastructure/redis started 1200
 
 # Write current version to file
 SVC_EXEC NO_COMMIT "Zenoss.core/Zenoss/User Interface/Zope" sh -c "echo %FROM_VERSION% > /var/zenoss/upgrade_from_version.txt && chown zenoss:zenoss /var/zenoss/upgrade_from_version.txt"
-

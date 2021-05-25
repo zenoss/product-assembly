@@ -1,0 +1,18 @@
+# Delete anonymous users
+DELETE FROM mysql.user WHERE user = '';
+
+# Remove remote access from root user
+DELETE FROM mysql.user WHERE user = 'root' and host != 'localhost';
+
+# Allow access from any host for zenoss user
+DELETE FROM mysql.user WHERE user = '!ZU!' and host != '%';
+
+# Grant privileges to zodb and zep users.
+GRANT SELECT ON mysql.proc TO '!ZU!';
+GRANT REPLICATION SLAVE ON *.* TO '!ZU!';
+GRANT PROCESS ON *.* TO '!ZU!';
+GRANT ALL ON zodb.* TO '!ZU!';
+GRANT ALL ON zodb_session.* TO '!ZU!';
+GRANT ALL ON zenoss_zep.* TO '!EU!';
+
+FLUSH PRIVILEGES;
