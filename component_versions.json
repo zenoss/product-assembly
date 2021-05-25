@@ -52,7 +52,7 @@
         "name": "zenoss-prodbin",
         "type": "download",
         "version": "6.6.0",
-        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6x.tar.gz"
+        "URL": "http://zenpip.zenoss.eng/packages/prodbin-{version}-master-6.x.tar.gz"
     },
     {
         "name": "zenoss-protocols",
