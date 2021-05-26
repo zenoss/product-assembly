@@ -12,16 +12,18 @@
 # OPENTSDB_VERSION  the opentsdb image version
 # ZING_CONNECTOR_VERSION the version tag for the zing-connector image
 # OTSDB_BIGTABLE_VERSION  version of the otsdb with bigtable support image
-# SHORT_VERSION     the two-digit Zenoss product version; e.g. 5.2
 # SVCDEF_GIT_REF    the git branch name, tag name or SHA for the version of the
 #                   github.com:zenoss/zenoss-service repo to checkout and build
 # VERSION           the full Zenoss product version; e.g. 5.2.0
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
 #
-SHORT_VERSION=7.1
-SVCDEF_GIT_REF=develop
 VERSION=7.1.0
 VERSION_TAG=1
+SVCDEF_GIT_REF=develop
+
+# SHORT_VERSION is the two-digit Zenoss version; e.g. 7.1
+space := $(subst ,, )
+SHORT_VERSION = $(subst $(space),.,$(wordlist 1,2,$(subst ., ,$(VERSION))))
 
 #
 # Currently, HDFS and OpenTSDB use the same image as HBASE
