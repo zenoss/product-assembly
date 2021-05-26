@@ -7,14 +7,18 @@ UID ?= 1202
 
 PACKAGES = $(shell tr '\n' ' ' < packages.txt)
 
+export MARIADB_BASE_IMAGE_ID
+
+.DEFAULT_GOAL := build
+
 .PHONY: clean build
 
 build: exported.tar Dockerfile
-	@docker build -t $(MARIADB_BASE_IMAGE_ID) .
+	@./build_base_image.sh
 
 clean: clean-toolbox
 	@-docker image rm -f $(MARIADB_BASE_IMAGE_ID) 2>/dev/null
-	@rm -f exported.tar Dockerfile
+	@rm -f exported.tar Dockerfile permissions.sql
 	@rm -rf exported_files
 
 Dockerfile: Dockerfile.in
@@ -28,11 +32,12 @@ dirs = exported_files exported_files/opt/zenoss/bin exported_files/home/zenoss e
 
 toolbox_wheel = zends.toolbox-$(VERSION)-py2-none-any.whl
 etc_files = exported_files/etc/my.cnf
-zenoss_bin_files = exported_files/opt/zenoss/bin/upgrade_database.sh
-home_zenoss_files = \
-	exported_files/home/zenoss/permissions.sql.in \
-	exported_files/home/zenoss/permissions_common.sql.in \
-	exported_files/home/zenoss/initialize_db.sh \
+
+upgrade_files = fix_permissions.sql.in upgrade_database.sh
+zenoss_bin_files := $(addprefix exported_files/opt/zenoss/bin/,$(upgrade_files))
+
+initialize_files = permissions.sql initialize_db.sh
+home_zenoss_files := $(addprefix exported_files/home/zenoss/,$(initialize_files))
 
 exported.tar: | $(dirs)
 exported.tar: source_files_to_copy.txt $(etc_files) $(zenoss_bin_files) $(home_zenoss_files) tools/dist/$(toolbox_wheel)
@@ -54,6 +59,13 @@ $(zenoss_bin_files): exported_files/opt/zenoss/bin/%: %
 $(home_zenoss_files): | exported_files/home/zenoss
 $(home_zenoss_files): exported_files/home/zenoss/%: %
 	cp $< $@
+
+permissions.sql: permissions.sql.in permissions_common.sql.in
+	@sed -e "s/!USER!/zenoss/g" -e "s/!PASSWD!/zenoss/g" permissions_common.sql.in > $@
+	@sed -e "s/!NAME!/zodb/g" -e "s/!USER!/zenoss/g" -e "s/!PASSWD!/zenoss/g" permissions.sql.in >> $@
+	@sed -e "s/!NAME!/zodb_session/g" -e "s/!USER!/zenoss/g" -e "s/!PASSWD!/zenoss/g" permissions.sql.in >> $@
+	@sed -e "s/!NAME!/zenoss_zep/g" -e "s/!USER!/zenoss/g" -e "s/!PASSWD!/zenoss/g" permissions.sql.in >> $@
+	@echo "FLUSH PRIVILEGES;" >> $@
 
 tools/dist/$(toolbox_wheel):
 	@make -C tools package
