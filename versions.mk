@@ -8,18 +8,20 @@
 # HBASE_VERSION     the HBase image version
 # HDFS_VERSION      the HDFS image version
 # OPENTSDB_VERSION  the opentsdb image version
-# SHORT_VERSION     the two-digit Zenoss product version; e.g. 5.2
 # SVCDEF_GIT_REF    the git branch name, tag name or SHA for the version of the
 #                   github.com:zenoss/zenoss-service repo to checkout and build
 # VERSION           the full Zenoss product version; e.g. 5.2.0
 # UCSPM_VERSION     the version of the ucspm release; e.g 2.1.0
 #
-SHORT_VERSION=6.6
-SVCDEF_GIT_REF=6.6.0
-VERSION=6.6.0
+VERSION=6.7.0
+SVCDEF_GIT_REF=support/6.x
 UCSPM_VERSION=3.0.0
 VERSION_TAG=1
 ZENOSS_CENTOS_BASE_VERSION=1.4.0
+
+# SHORT_VERSION is the two-digit Zenoss version; e.g. 6.5
+space := $(subst ,, )
+SHORT_VERSION = $(subst $(space),.,$(wordlist 1,2,$(subst ., ,$(VERSION))))
 
 #
 # Currently, HDFS and OpenTSDB use the same image as HBASE
@@ -51,9 +53,9 @@ OPENTSDB_VERSION=24.0.8
 #
 #    If SERVICED_BRANCH is specified, then SERVICED_MATURITY must be 'unstable'.
 #    If SERVICED_VERSION and SERVICED_BUILD_NUMBER are specified, then the
-#    SERVICED_BRANCH should be 'testing' or 'stable'
+#    SERVICED_MATURITY should be 'testing' or 'stable'
 #
-SERVICED_BRANCH=
-SERVICED_MATURITY=stable
-SERVICED_VERSION=1.9.0
-SERVICED_BUILD_NUMBER=1
+SERVICED_BRANCH=develop
+SERVICED_MATURITY=unstable
+SERVICED_VERSION=
+SERVICED_BUILD_NUMBER=
