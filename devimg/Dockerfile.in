@@ -1,0 +1,6 @@
+FROM %IMAGE%
+
+RUN groupmod --gid %GID% zenoss
+RUN usermod --uid %UID% --gid %GID% zenoss
+
+RUN chown -Rf zenoss:zenoss /opt/zenoss /var/spool/mail/zenoss /home/zenoss

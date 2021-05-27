@@ -43,7 +43,7 @@ SVC_WAIT Zenoss.cse stopped 600
 SVC_EXEC NO_COMMIT "Zenoss.cse" sleep 120
 
 # Run the service migrations
-SVC_EXEC NO_COMMIT "Zenoss.cse" /opt/zenoss/bin/zensvcmigrate --from %FROM_VERSION%
+SVC_EXEC NO_COMMIT "Zenoss.cse" runuser -l zenoss -c /"opt/zenoss/bin/zensvcmigrate --from %FROM_VERSION%"
 
 # Run impact upgrade if we upgrade from Impact < $UPGRADE_IMPACT_VERSION
 %UPGRADE_IMPACT_SERVICE%
