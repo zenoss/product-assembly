@@ -1,15 +1,18 @@
 include ../variables.mk
 
-FROM_IMAGE = product-base:$(VERSION)_$(BUILD_NUMBER)_$(MATURITY)_$(PRODUCT)
-
-UPGRADE_SCRIPTS = upgrade-$(PRODUCT).txt upgrade-$(PRODUCT).sh $(ADDITIONAL_UPGRADE_SCRIPTS)
+UPGRADE_SCRIPTS = pull-docker-images.sh upgrade-$(PRODUCT).txt upgrade-$(PRODUCT).sh $(ADDITIONAL_UPGRADE_SCRIPTS)
 
 ZENPACK_DIR = zenpacks
+
+export PRODUCT_IMAGE_ID
+export PRODUCT_BASE_IMAGE_ID
+export MARIADB_IMAGE_ID
+export MARIADB_BASE_IMAGE_ID
 
 .PHONY: build build-deps push clean getDownloadLogs download_zenpacks
 
 build: build-deps
-	PRODUCT_IMAGE_ID="$(PRODUCT_IMAGE_ID)" PRODUCT_BASE_IMAGE_ID="$(PRODUCT_BASE_IMAGE_ID)" MARIADB_IMAGE_ID="$(MARIADB_IMAGE_ID)" MARIADB_BASE_IMAGE_ID="$(MARIADB_BASE_IMAGE_ID)" ../build_images.sh
+	@./build.sh
 
 build-deps: $(UPGRADE_SCRIPTS) copy_upgrade_scripts.sh download_zenpacks
 
@@ -24,13 +27,6 @@ mariadb-image-id:
 
 mariadb-image-tag:
 	@echo $(MARIADB_IMAGE_TAG)
-
-# Dockerfile: Dockerfile.in
-# 	@echo $(FROM_IMAGE)
-# 	@sed \
-# 		-e 's/%FROM_IMAGE%/$(FROM_IMAGE)/g' \
-# 		-e 's/%SHORT_VERSION%/$(SHORT_VERSION)/g' \
-# 		$^ > $@
 
 copy_upgrade_scripts.sh: copy_upgrade_scripts.sh.in
 	@sed -e "s/%SHORT_VERSION%/$(SHORT_VERSION)/g" $< > $@
@@ -78,5 +74,14 @@ upgrade-%.sh: upgrade-%.sh.in
 		$^ > $@
 	@chmod +x $@
 
+pull-docker-images.sh: ../product-base/pull-docker-images.sh.in
+	@sed \
+		-e 's/%HBASE_VERSION%/$(HBASE_VERSION)/g' \
+		-e 's/%OPENTSDB_VERSION%/$(OPENTSDB_VERSION)/g' \
+		-e 's/%PRODUCT%/$(PRODUCT)/g' \
+		-e 's/%VERSION%/$(VERSION)/g' \
+		$< > $@
+	@chmod +x $@
+
 run-tests:
-	@PRODUCT_IMAGE_ID="$(PRODUCT_IMAGE_ID)" MARIADB_IMAGE_ID="$(MARIADB_IMAGE_ID)" ../test_image.sh
+	@../test_image.sh

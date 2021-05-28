@@ -25,9 +25,9 @@ rm -rf ${ZENHOME}/webapps/zeneventserver
 su - zenoss -c "ln -s ${SRCROOT}/zenoss-zep ${ZENHOME}/webapps/zeneventserver"
 
 echo "Linking in modelindex..."
-su - zenoss -c "pip uninstall -y zenoss.modelindex"
+su - zenoss -c "pip --no-python-version-warning uninstall -y zenoss.modelindex"
 su - zenoss -c "ln -s ${SRCROOT}/modelindex ${ZENHOME}/modelindex"
-su - zenoss -c "pip install -e ${ZENHOME}/modelindex"
+su - zenoss -c "pip --no-python-version-warning install -e ${ZENHOME}/modelindex"
 
 echo "Linking in solr configsets..."
 rm -rf /opt/solr/server/solr/configsets/zenoss_model
@@ -53,9 +53,7 @@ echo "Configuring maven..."
 cat /home/zenoss/.bashrc
 rm /opt/maven/conf/settings.xml
 cp /mnt/devimg/settings.xml /opt/maven/conf/settings.xml
-cat <<EOF >> /home/zenoss/.bashrc
-export PATH=/opt/maven/bin:\$PATH
-EOF
+sed -i -e 's|PATH=\(.*\)|PATH=/opt/maven/bin:\1|' /home/zenoss/.bashrc
 
 # Copy the devimg version of prepare.sh into the install_scripts directory.
 cp ${SRCROOT}/product-assembly/devimg/prepare.sh ${ZENHOME}/install_scripts/prepare.sh
@@ -67,7 +65,7 @@ cat /home/zenoss/.bashrc
 echo "Install Zenoss ..."
 export BUILD_DEVIMG=1
 export SRCROOT
-${ZENHOME}/install_scripts/create_zenoss.sh --no-quickstart
+${ZENHOME}/install_scripts/create_zenoss.sh
 echo "Finished create_zenoss.sh"
 
 echo "Link in Java apps"

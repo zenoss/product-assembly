@@ -1,16 +1,27 @@
-FROM zenoss/%FROM_IMAGE%
+FROM %IMAGE% as base
 
-ENV ZENHOME=/opt/zenoss BUILD_NUMBER=%BUILD_NUMBER%
-
-# Configure ZENHOME for all users
-RUN echo "ZENHOME=/opt/zenoss" >> /etc/environment
-
-# TODO: fix this. The hubpasswd file should be in the service definition
-ADD hubpasswd /opt/zenoss/etc/
-ADD install_scripts component_info /opt/zenoss/install_scripts/
-ADD %SHORT_VERSION%.x /root/%SHORT_VERSION%.x
-ADD sitecustomize.py /opt/zenoss/lib/python2.7/
+ENV ZENHOME=/opt/zenoss
 
 RUN echo -e "export ZENOSS_VERSION=%VERSION%\nexport BUILD_NUMBER=%BUILD_NUMBER%" > /etc/profile.d/zenoss.sh
 
-RUN /opt/zenoss/install_scripts/zenoss_component_install.sh %INSTALL_OPTIONS%
+FROM base AS build
+
+SHELL ["/bin/su", "-", "zenoss", "-c"]
+
+# Rework PATH variable definition
+RUN sed -i -e "/export PATH/d" ~/.bashrc
+RUN sed -i -e "\|export ZENHOME|i export PATH=/opt/zenoss/var/ext/bin:\$PATH" ~/.bashrc
+
+# TODO: fix this. The hubpasswd file should be in the service definition
+COPY --chown=zenoss:zenoss hubpasswd /opt/zenoss/etc/
+COPY --chown=zenoss:zenoss install_scripts component_info /opt/zenoss/install_scripts/
+COPY --chown=zenoss:zenoss sitecustomize.py /opt/zenoss/lib/python2.7/
+
+SHELL ["/bin/sh", "-c"]
+
+FROM base
+
+COPY --from=build --chown=zenoss:zenoss /opt/zenoss /opt/zenoss/
+COPY --from=build --chown=zenoss:zenoss /home/zenoss /home/zenoss/
+
+RUN /opt/zenoss/install_scripts/zenoss_component_install.sh

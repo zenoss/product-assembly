@@ -96,5 +96,11 @@
         "type": "download",
         "version": "1.0.0",
         "URL": "http://zenpip.zenoss.eng/packages/{name}-{version}-x86_64.tar.gz"
+    },
+    {
+        "name": "zenoss-py-deps",
+        "type": "download",
+        "version": "5.7.4",
+        "URL": "http://zenpip.zenoss.eng/packages/pydeps-{version}-el7-1.tar.gz"
     }
 ]

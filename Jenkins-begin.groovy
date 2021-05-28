@@ -152,7 +152,6 @@ node('build-zenoss-product') {
         }
 
         stage('Build Images') {
-
             dir("${TARGET_PRODUCT}") {
                 withEnv(["MATURITY=${MATURITY}", "BUILD_NUMBER=${PRODUCT_BUILD_NUMBER}"]) {
                     productImageTag = sh(returnStdout: true, script: "make product-image-tag").trim()
