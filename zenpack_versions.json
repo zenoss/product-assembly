@@ -56,7 +56,7 @@
     },
     {
         "name": "ZenPacks.zenoss.Dashboard",
-        "requirement": "ZenPacks.zenoss.Dashboard===1.3.11",
+        "requirement": "ZenPacks.zenoss.Dashboard===1.3.13",
         "type": "zenpack"
     },
     {
