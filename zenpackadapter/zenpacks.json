@@ -16,7 +16,9 @@
         "ZenPacks.zenoss.WBEM",
         "ZenPacks.zenoss.EMC.base",
         "ZenPacks.zenoss.EMC.Isilon",
-        "ZenPacks.zenoss.NetAppMonitor"
+        "ZenPacks.zenoss.NetAppMonitor",
+        "ZenPacks.zenoss.LinuxMonitor",
+        "ZenPacks.zenoss.Microsoft.Windows"
     ],
     "included_not_installed": [
     ],

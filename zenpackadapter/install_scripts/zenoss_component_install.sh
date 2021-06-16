@@ -70,6 +70,11 @@ su - zenoss -c "pip install --no-index  /tmp/zenoss.protocols*.whl"
 artifactDownload "pynetsnmp"
 su - zenoss -c "pip install --no-index  /tmp/pynetsnmp*.whl"
 
+# Install celery, wrapt, kerberos
+su - zenoss -c "pip install celery==3.1.11"
+su - zenoss -c "pip install wrapt==1.12.1"
+su - zenoss -c "pip install kerberos==1.3.1"
+
 # Install the service migration SDK
 artifactDownload "service-migration"
 su - zenoss -c "pip install --no-index  /tmp/servicemigration*"
