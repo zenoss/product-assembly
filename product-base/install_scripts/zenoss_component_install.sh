@@ -22,7 +22,7 @@ PIP_INSTALL="pip --no-python-version-warning install --no-index"
 
 # Install pydeps
 echo "Installing Zenoss Python dependencies..."
-download_artifact "pydeps"
+download_artifact "zenoss-py-deps"
 PYDEPS_DIR=/tmp/python_dependencies
 run "mkdir ${PYDEPS_DIR}"
 run "tar -C ${PYDEPS_DIR} --strip-components=1 -xf /tmp/pydeps*"
